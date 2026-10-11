@@ -1,0 +1,10 @@
+{
+  "totalPlaces": 775,
+  "overlaySize": 775,
+  "verifiedRatings": 0,
+  "notFound": 0,
+  "needsReview": 0,
+  "mapsSearchOnly": 775,
+  "ranPlacesApi": false,
+  "note": "Bez Places API nelze získat skutečná hodnocení. Každý podnik má vyhledávací odkaz název + adresa."
+}

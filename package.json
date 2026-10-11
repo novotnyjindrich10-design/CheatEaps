@@ -1,0 +1,35 @@
+{
+  "name": "cheapeats",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "test": "node --test src/utils/price.test.js src/utils/filterRestaurants.test.js src/utils/geo.test.js src/utils/routeDistance.test.js",
+    "preview": "vite preview",
+    "data:osm": "node scripts/fetch-osm.mjs && node scripts/generate-osm-places.mjs",
+    "check:places": "node scripts/check-places.mjs",
+    "data:price-estimates": "node scripts/generate-price-estimates.mjs",
+    "data:google-ratings": "node scripts/fetch-google-ratings.mjs",
+    "data:google-maps-links": "node scripts/generate-google-maps-links.mjs",
+    "data:place-enrichment": "node scripts/generate-place-enrichment.mjs",
+    "data:osm-coords": "node scripts/fetch-osm-coords.mjs && node scripts/generate-place-coordinates.mjs",
+    "data:coordinates": "node scripts/generate-place-coordinates.mjs",
+    "data:official-photos": "node scripts/scan-official-photos.mjs",
+    "data:food-photo-pilot": "node scripts/pilot-food-photos.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "vite": "^8.3.0"
+  }
+}

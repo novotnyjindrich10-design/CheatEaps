@@ -1,0 +1,11 @@
+{
+  "totalPlaces": 775,
+  "verifiedKept": 68,
+  "estimates": 707,
+  "coverage": 775,
+  "confidence": {
+    "high": 0,
+    "medium": 512,
+    "low": 195
+  }
+}

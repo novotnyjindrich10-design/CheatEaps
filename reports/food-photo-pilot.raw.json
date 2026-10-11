@@ -1,0 +1,1449 @@
+{
+  "generatedAt": "2026-10-10",
+  "method": {
+    "paidApi": false,
+    "sources": [
+      "official_website_html",
+      "osm_image_tag",
+      "wikimedia_commons_api",
+      "openverse_api"
+    ],
+    "excluded": [
+      "Google Images (není licence)",
+      "Wolt/Foodora",
+      "Unsplash jako jídlo podniku"
+    ]
+  },
+  "places": [
+    {
+      "id": "dhaba-beas-panska",
+      "name": "Dhaba Beas Panská",
+      "address": "Panská 12, 602 00 Brno",
+      "category": "vegetarianske",
+      "officialWebsite": "https://dhababeas.cz/",
+      "previousOgImage": null,
+      "notes": [
+        "web https://dhababeas.cz/menu → 404",
+        "web https://dhababeas.cz/nabidka → 404",
+        "web https://dhababeas.cz/nabídka → 404"
+      ],
+      "candidateCount": 14,
+      "candidates": [
+        {
+          "url": "https://dhababeas.cz/img/home-kitchen-img1.jpg",
+          "sourceUrl": "https://dhababeas.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "&quot;Jídlo nás musí bavit. Proto je náš bohatý bufet neustále pod „tlakem“ originálních a původních receptur z celého světa.&quot;",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://dhababeas.cz/img/home-kitchen-img2.jpg",
+          "sourceUrl": "https://dhababeas.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "&quot;Jídlo nás musí bavit. Proto je náš bohatý bufet neustále pod „tlakem“ originálních a původních receptur z celého světa.&quot;",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://dhababeas.cz/img/instagram-photo-1.jpg",
+          "sourceUrl": "https://dhababeas.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "DhabaBeas - Instagram",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://dhababeas.cz/img/instagram-photo-2.jpg",
+          "sourceUrl": "https://dhababeas.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "DhabaBeas - Instagram",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://dhababeas.cz/img/instagram-photo-3.jpg",
+          "sourceUrl": "https://dhababeas.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "DhabaBeas - Instagram",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://dhababeas.cz/img/instagram-photo-4.jpg",
+          "sourceUrl": "https://dhababeas.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "DhabaBeas - Instagram",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://dhababeas.cz/img/instagram-photo-5.jpg",
+          "sourceUrl": "https://dhababeas.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "DhabaBeas - Instagram",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://dhababeas.cz/img/instagram-photo-6.jpg",
+          "sourceUrl": "https://dhababeas.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "DhabaBeas - Instagram",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        }
+      ]
+    },
+    {
+      "id": "forkys-vankovka",
+      "name": "Forky's Galerie Vaňkovka",
+      "address": "Ve Vaňkovce 1, 602 00 Brno (Galerie Vaňkovka)",
+      "category": "veganske",
+      "officialWebsite": "https://www.forkys.cz/pobocka/oc-vankovka/",
+      "previousOgImage": null,
+      "notes": [
+        "web https://www.forkys.cz/nabidka → 404",
+        "web https://www.forkys.cz/nabídka → 404"
+      ],
+      "candidateCount": 51,
+      "candidates": [
+        {
+          "url": "https://www.forkys.cz/wp-content/uploads/2025/07/Kebabish-750.png",
+          "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Kebabish",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.forkys.cz/wp-content/uploads/2023/05/1.-forkys-burger-750.png",
+          "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Forky&#8217;s burger",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.forkys.cz/wp-content/uploads/2023/04/2.-cheez-burger-750.png",
+          "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Cheez burger",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.forkys.cz/wp-content/uploads/2023/04/3.-spicy-burger-750.png",
+          "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Spicy burger",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.forkys.cz/wp-content/uploads/2025/07/Falawrap-750.png",
+          "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Falawrap",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.forkys.cz/wp-content/uploads/2023/04/29.-strips.png",
+          "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Stripswrap",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.forkys.cz/wp-content/uploads/2023/04/Kebabwrap-750.png",
+          "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Kebabwrap",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.forkys.cz/wp-content/uploads/2023/04/shawarma_wrap_3000_x_3000_px-1.png",
+          "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Shawrap",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        }
+      ]
+    },
+    {
+      "id": "rebio-velky-spalicek",
+      "name": "Rebio Velký Špalíček",
+      "address": "Mečová 2, 602 00 Brno",
+      "category": "zdrave",
+      "officialWebsite": "https://rebio.cz/",
+      "previousOgImage": null,
+      "notes": [
+        "web https://rebio.cz/nabidka → 404",
+        "web https://rebio.cz/nabídka → 404"
+      ],
+      "candidateCount": 13,
+      "candidates": [
+        {
+          "url": "https://rebio.cz/wp-content/uploads/brizy/imgs/Rebio_BAREVNE-225x124x0x0x225x124x1709817974.png",
+          "sourceUrl": "https://rebio.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://rebio.cz/wp-content/uploads/brizy/imgs/Rebio_BAREVNE-576x318x0x0x576x318x1709817974.png",
+          "sourceUrl": "https://rebio.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://rebio.cz/wp-content/uploads/brizy/imgs/rebio-velky-spalicek-22-scaled-456x285x38x0x380x285x1709818071.jpg",
+          "sourceUrl": "https://rebio.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://rebio.cz/wp-content/uploads/brizy/imgs/rebio-velky-spalicek-22-scaled-516x323x43x0x430x323x1709818071.jpg",
+          "sourceUrl": "https://rebio.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://rebio.cz/wp-content/uploads/brizy/imgs/rebio-velky-orli-24-scaled-461x288x46x0x370x288x1709818187.jpg",
+          "sourceUrl": "https://rebio.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://rebio.cz/wp-content/uploads/brizy/imgs/rebio-velky-orli-24-scaled-537x335x53x0x430x335x1709818187.jpg",
+          "sourceUrl": "https://rebio.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://rebio.cz/wp-content/uploads/brizy/imgs/IMG_0014-scaled-457x286x38x0x381x286x1709818032.jpg",
+          "sourceUrl": "https://rebio.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://rebio.cz/wp-content/uploads/brizy/imgs/IMG_0014-scaled-516x323x43x0x430x323x1709818032.jpg",
+          "sourceUrl": "https://rebio.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "bistro-franz",
+      "name": "Bistro FRANZ",
+      "address": "Veveří 14, 602 00 Brno",
+      "category": "zdrave",
+      "officialWebsite": "https://www.bistrofranz.cz/kontakty/",
+      "previousOgImage": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/front_images/ogImage/hp.jpg?t=1791654507",
+      "notes": [
+        "web https://www.bistrofranz.cz/menu → 404",
+        "web https://www.bistrofranz.cz/nabidka → 404",
+        "web https://www.bistrofranz.cz/nabídka → 404"
+      ],
+      "candidateCount": 15,
+      "candidates": [
+        {
+          "url": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/system/instagram/320_773251784_1691649029634113_1111239055351167255_n.jpg",
+          "sourceUrl": "https://www.bistrofranz.cz/kontakty/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Krásné pondělí! Stavte se na kávu @poppybeanscoffee pro energii do nového týdne... 🫶 ☕ #bistrofranz #poppybeans",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/system/instagram/320_760172640_1672519481547068_6077558144412143493_n.jpg",
+          "sourceUrl": "https://www.bistrofranz.cz/kontakty/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Přijďte na oběd k nám, a užijte si chvíli jen pro sebe, nebo si jej vychutnejte se svými nejbližšími! Obědové menu pro vás...",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/shop/related/7165_838946853-1421455126759781-9050660519849491309-n.jpg?ff=1&x=100&y=100&q=85&ts=6ac95890&sg=8dda0505",
+          "sourceUrl": "https://www.bistrofranz.cz/kontakty/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "838946853 1421455126759781 9050660519849491309 n",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/shop/related/7162_anglicka-snidane--1.jpg?ff=1&x=100&y=100&q=85&ts=6ac95827&sg=8dda0505",
+          "sourceUrl": "https://www.bistrofranz.cz/kontakty/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "anglicka snidane (1)",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/shop/related/7159_841885308-2106202640102050-3544062526168637073-n.jpg?ff=1&x=100&y=100&q=85&ts=6ac956eb&sg=8dda0505",
+          "sourceUrl": "https://www.bistrofranz.cz/kontakty/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "841885308 2106202640102050 3544062526168637073 n",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/system/instagram/320_837011585_1747075217424827_318876469865602820_n.jpg",
+          "sourceUrl": "https://www.bistrofranz.cz/kontakty/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Koho by tyhle dobroty od @kejky nezlákaly? Dejte si k nim u nás něco na zahřátí, a super chvíle je zaručena 😉 👌...",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/system/instagram/320_837091246_1746193540846328_2378535209297216032_n.jpg",
+          "sourceUrl": "https://www.bistrofranz.cz/kontakty/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Už pár dní na něčem pracujeme - nevíme, jak vy, ale my se nemohli dočkat podzimu! Proto vám tento týden představíme...",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://cdn.myshoptet.com/usr/www.bistrofranz.cz/user/system/instagram/320_819300831_1730771685721847_7518821345605143063_n.jpg",
+          "sourceUrl": "https://www.bistrofranz.cz/kontakty/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Podzim už dorazil i k nám do bistra. 🤎 A s ním i vaše oblíbené podzimní chutě - v nabídce už teď naleznete Pumpkin Spice...",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "lokal-u-caipla",
+      "name": "Lokál U Caipla",
+      "address": "Kozí 115/3, 602 00 Brno",
+      "category": "ceske",
+      "officialWebsite": "https://lokal-ucaipla.ambi.cz/cz/",
+      "previousOgImage": "https://lokal-ucaipla.ambi.cz/assets/fb/lokal-42.jpg",
+      "notes": [
+        "web https://lokal-ucaipla.ambi.cz/menu → 404",
+        "web https://lokal-ucaipla.ambi.cz/nabidka → 404",
+        "web https://lokal-ucaipla.ambi.cz/nabídka → 404"
+      ],
+      "candidateCount": 5,
+      "candidates": [
+        {
+          "url": "https://live.staticflickr.com/65535/54212020912_54df324d76_b.jpg",
+          "sourceUrl": "https://www.flickr.com/photos/39423133@N04/54212020912",
+          "sourceType": "openverse",
+          "imageKindGuess": "likely_food",
+          "license": "by-sa",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "licenseNote": "Openverse licence by-sa. Nutné uvést autora.",
+          "creator": "Debarshi Ray",
+          "title": "Lokál U Caipla",
+          "venueNameInMetadata": true,
+          "score": 65
+        },
+        {
+          "url": "https://lokal-ucaipla.ambi.cz/assets/fb/lokal-42.jpg",
+          "sourceUrl": "https://lokal-ucaipla.ambi.cz/cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://lokal-ucaipla.ambi.cz/data/title/title-42d-1.jpg",
+          "sourceUrl": "https://lokal-ucaipla.ambi.cz/cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://lokal-ucaipla.ambi.cz/data/title/title-42d-2.jpg",
+          "sourceUrl": "https://lokal-ucaipla.ambi.cz/cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://lokal-ucaipla.ambi.cz/data/title/title-42d-4.jpg",
+          "sourceUrl": "https://lokal-ucaipla.ambi.cz/cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "stopkova-plzenska-pivnice",
+      "name": "Stopkova Plzeňská pivnice",
+      "address": "Česká 163/5, 602 00 Brno",
+      "category": "ceske",
+      "officialWebsite": "https://stopkova.kolkovna.cz/",
+      "previousOgImage": "https://stopkova.kolkovna.cz/temp/images/front/ophp/changer/brno-stopkova-5_1920x1920_0.jpg",
+      "notes": [
+        "web https://stopkova.kolkovna.cz/menu → 404",
+        "web https://stopkova.kolkovna.cz/nabidka → 404",
+        "web https://stopkova.kolkovna.cz/nabídka → 404"
+      ],
+      "candidateCount": 90,
+      "candidates": [
+        {
+          "url": "https://stopkova.kolkovna.cz/img/strokes-icon.png",
+          "sourceUrl": "https://stopkova.kolkovna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Menu",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://stopkova.kolkovna.cz/temp/images/front/opmenu/zverina-web_7_740x0_0.jpg",
+          "sourceUrl": "https://stopkova.kolkovna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "ZVĚŘINA V KOLKOVNÁCH 16.10. – 25.10.",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://stopkova.kolkovna.cz/upload/front/ophp/delivery/foodora-1-_7.png",
+          "sourceUrl": "https://stopkova.kolkovna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Foodora",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Brno%2C_%C4%8Cesk%C3%A1%2C_Stopkova_pivnice_%282022-06-26%3B_01%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ABrno%2C%20%C4%8Cesk%C3%A1%2C%20Stopkova%20pivnice%20(2022-06-26%3B%2001).jpg",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "CC BY-SA 4.0",
+          "licenseNote": "Wikimedia: CC BY-SA 4.0. Autor: Harold.",
+          "creator": "Harold",
+          "title": "File:Brno, Česká, Stopkova pivnice (2022-06-26; 01).jpg",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://stopkova.kolkovna.cz/temp/images/front/ophp/changer/brno-stopkova-5_256x0_0.jpg",
+          "sourceUrl": "https://stopkova.kolkovna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://stopkova.kolkovna.cz/temp/images/front/ophp/changer/brno-stopkova-5_2560x0_0.jpg",
+          "sourceUrl": "https://stopkova.kolkovna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://stopkova.kolkovna.cz/temp/images/front/article/image/bannery-eshop-pivovar-doprava-zdarma-novinka_74x74_8.jpg",
+          "sourceUrl": "https://stopkova.kolkovna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://stopkova.kolkovna.cz/temp/images/front/article/image/bannery-eshop-pivovar-doprava-zdarma-novinka_740x740_8.jpg",
+          "sourceUrl": "https://stopkova.kolkovna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "la-strada-brno",
+      "name": "La Strada",
+      "address": "Kounicova 53, 602 00 Brno",
+      "category": "pizza",
+      "officialWebsite": "https://lastrada-brno.cz/kontakt/",
+      "previousOgImage": "https://lastrada-brno.cz/wp-content/uploads/2025/01/foto_web-5.jpg",
+      "notes": [
+        "web https://lastrada-brno.cz/menu → 500",
+        "web https://lastrada-brno.cz/nabídka → 404"
+      ],
+      "candidateCount": 8,
+      "candidates": [
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/a/ab/La_Stampa_%281868-12-15%29_%28IA_lastampa_1868-12-15%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ALa%20Stampa%20(1868-12-15)%20(IA%20lastampa%201868-12-15).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: \nEditrice La Stampa.",
+          "creator": "\nEditrice La Stampa",
+          "title": "File:La Stampa (1868-12-15) (IA lastampa 1868-12-15).pdf",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/e/eb/La_Nostra_Bandiera_17_%281917%29_%28IA_LaNostraBandiera17-1917%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ALa%20Nostra%20Bandiera%2017%20(1917)%20(IA%20LaNostraBandiera17-1917).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: neuveden.",
+          "creator": "",
+          "title": "File:La Nostra Bandiera 17 (1917) (IA LaNostraBandiera17-1917).pdf",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/La_Nostra_Bandiera_38_%281914%29_%28IA_LaNostraBandiera38-1914%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ALa%20Nostra%20Bandiera%2038%20(1914)%20(IA%20LaNostraBandiera38-1914).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: neuveden.",
+          "creator": "",
+          "title": "File:La Nostra Bandiera 38 (1914) (IA LaNostraBandiera38-1914).pdf",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/6/61/La_Nostra_Bandiera_7_%281915%29_%28IA_LaNostraBandiera7-1915%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ALa%20Nostra%20Bandiera%207%20(1915)%20(IA%20LaNostraBandiera7-1915).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: neuveden.",
+          "creator": "",
+          "title": "File:La Nostra Bandiera 7 (1915) (IA LaNostraBandiera7-1915).pdf",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/3/32/La_Patria_del_Friuli_1905-11-22_%28IA_LaPatriadelFriuli1905-326%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ALa%20Patria%20del%20Friuli%201905-11-22%20(IA%20LaPatriadelFriuli1905-326).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: \nLa Patria del Friuli.",
+          "creator": "\nLa Patria del Friuli",
+          "title": "File:La Patria del Friuli 1905-11-22 (IA LaPatriadelFriuli1905-326).pdf",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://lastrada-brno.cz/wp-content/uploads/2025/01/foto_web-5.jpg",
+          "sourceUrl": "https://lastrada-brno.cz/kontakt/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "og:image",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://lastrada-brno.cz/wp-content/uploads/2015/11/bezlepek-maly.png",
+          "sourceUrl": "https://lastrada-brno.cz/nabidka",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "bezlepek-maly",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://lastrada-brno.cz/wp-content/uploads/2015/11/vegos_maly.png",
+          "sourceUrl": "https://lastrada-brno.cz/nabidka",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "vegos_maly",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "prova-bistro-pizza",
+      "name": "Prova Bistro & Pizza",
+      "address": "Tábor 2, 616 00 Brno",
+      "category": "pizza",
+      "officialWebsite": "https://provapizza.cz/menu/",
+      "previousOgImage": null,
+      "notes": [
+        "web https://provapizza.cz/nabidka → 404",
+        "web https://provapizza.cz/nabídka → 404"
+      ],
+      "candidateCount": 4,
+      "candidates": [
+        {
+          "url": "https://provapizza.cz/wp-content/uploads/2024/04/margherita-pizza-menu.png",
+          "sourceUrl": "https://provapizza.cz/menu/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://provapizza.cz/wp-content/uploads/2024/04/ventricina-friarieli.png",
+          "sourceUrl": "https://provapizza.cz/menu/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://provapizza.cz/wp-content/uploads/2024/04/burrata-tr.png",
+          "sourceUrl": "https://provapizza.cz/menu/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://provapizza.cz/wp-content/uploads/2024/04/map-italy-e1714400146799.png",
+          "sourceUrl": "https://provapizza.cz/menu/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        }
+      ]
+    },
+    {
+      "id": "mamas-burger",
+      "name": "Mama's Burger",
+      "address": "Lazaretní 1/7, 615 00 Brno-Židenice",
+      "category": "burger",
+      "officialWebsite": "https://mamasburgerbrno.cz/",
+      "previousOgImage": "https://mamasburgerbrno.cz/wp-content/uploads/2024/10/seo_mamasburger_social.jpg",
+      "notes": [
+        "web https://mamasburgerbrno.cz/menu → 404",
+        "web https://mamasburgerbrno.cz/nabidka → 404",
+        "web https://mamasburgerbrno.cz/nabídka → 404"
+      ],
+      "candidateCount": 6,
+      "candidates": [
+        {
+          "url": "https://mamasburgerbrno.cz/wp-content/uploads/2024/09/2024_09_26-Mama-s-burger_0011.jpg",
+          "sourceUrl": "https://mamasburgerbrno.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://mamasburgerbrno.cz/wp-content/uploads/2024/09/2024_09_26-Mama-s-burger_0050.jpg",
+          "sourceUrl": "https://mamasburgerbrno.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://mamasburgerbrno.cz/wp-content/uploads/2024/09/2024_09_26-Mama-s-burger_0031.jpg",
+          "sourceUrl": "https://mamasburgerbrno.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://mamasburgerbrno.cz/wp-content/uploads/2024/09/DSC8621.jpg",
+          "sourceUrl": "https://mamasburgerbrno.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://mamasburgerbrno.cz/wp-content/uploads/2024/09/DSC8829.jpg",
+          "sourceUrl": "https://mamasburgerbrno.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://mamasburgerbrno.cz/wp-content/uploads/2024/10/seo_mamasburger_social.jpg",
+          "sourceUrl": "https://mamasburgerbrno.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "og:image",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        }
+      ]
+    },
+    {
+      "id": "uvozna-burger",
+      "name": "Úvozna burger & beer",
+      "address": "Úvoz 82/39, 602 00 Brno-Veveří",
+      "category": "burger",
+      "officialWebsite": "https://www.uvozna.cz/",
+      "previousOgImage": null,
+      "notes": [
+        "web https://www.uvozna.cz/nabidka → 404",
+        "web https://www.uvozna.cz/nabídka → 404"
+      ],
+      "candidateCount": 16,
+      "candidates": [
+        {
+          "url": "https://www.uvozna.cz/wp-content/uploads/2018/12/fotka-1.jpg",
+          "sourceUrl": "https://www.uvozna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.uvozna.cz/wp-content/uploads/2018/12/Uvozna-19.jpg",
+          "sourceUrl": "https://www.uvozna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.uvozna.cz/wp-content/uploads/2019/02/wywar-300x300.png",
+          "sourceUrl": "https://www.uvozna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.uvozna.cz/wp-content/uploads/2019/02/wywar.png",
+          "sourceUrl": "https://www.uvozna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.uvozna.cz/wp-content/uploads/2018/12/Uvozna-33.jpg",
+          "sourceUrl": "https://www.uvozna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.uvozna.cz/wp-content/uploads/slider/cache/cd69fd414e573ea69467215638de027e/Uvozna-42.jpg",
+          "sourceUrl": "https://www.uvozna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.uvozna.cz/wp-content/uploads/slider/cache/f6bb94c08eb887571407a5b41cdd5746/Uvozna-33.jpg",
+          "sourceUrl": "https://www.uvozna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.uvozna.cz/wp-content/uploads/slider/cache/e7a7793265db7a222e862bb9515f54a1/Uvozna-34.jpg",
+          "sourceUrl": "https://www.uvozna.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "kurdsky-kebab-cejl",
+      "name": "Kurdský Kebab Cejl",
+      "address": "Cejl 538/93, 602 00 Brno",
+      "category": "kebab",
+      "officialWebsite": null,
+      "previousOgImage": null,
+      "notes": [
+        "bez oficiálního webu"
+      ],
+      "candidateCount": 0,
+      "candidates": []
+    },
+    {
+      "id": "lokofu",
+      "name": "Lokofu",
+      "address": "Kounicova 67a, 602 00 Brno",
+      "category": "cina",
+      "officialWebsite": "https://www.lokofu.cz/cs/",
+      "previousOgImage": null,
+      "notes": [
+        "web https://www.lokofu.cz/menu → 404",
+        "web https://www.lokofu.cz/nabidka → 404",
+        "web https://www.lokofu.cz/nabídka → 404"
+      ],
+      "candidateCount": 4,
+      "candidates": [
+        {
+          "url": "https://www.lokofu.cz/cs/img/gallery/food_icon.png",
+          "sourceUrl": "https://www.lokofu.cz/cs/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Kuřecí Kung-pao s pálivou, sladkokyselou omáčkou s rýží",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.lokofu.cz/cs/assets/img/blank.gif",
+          "sourceUrl": "https://www.lokofu.cz/cs/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Miso polévka",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.lokofu.cz/cs/img/gallery/18-7.jpg",
+          "sourceUrl": "https://www.lokofu.cz/cs/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Miso polévka",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.lokofu.cz/cs/img/gallery/18-1.jpg",
+          "sourceUrl": "https://www.lokofu.cz/cs/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Kyselá pálivá polévka",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "oh-pho",
+      "name": "Oh! Phở",
+      "address": "Veveří 339/34, 602 00 Brno",
+      "category": "asijske",
+      "officialWebsite": "https://ohphobrno.cz/",
+      "previousOgImage": null,
+      "notes": [],
+      "candidateCount": 5,
+      "candidates": [
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/9/9d/In_Sacram_Theologiam_scholasticam_brevis_tractatus_%28IA_A331024%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AIn%20Sacram%20Theologiam%20scholasticam%20brevis%20tractatus%20(IA%20A331024).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: \nCamarero, José, O.F.M\nMartín, Manuel José, fl. 1759-1785.",
+          "creator": "\nCamarero, José, O.F.M\nMartín, Manuel José, fl. 1759-1785",
+          "title": "File:In Sacram Theologiam scholasticam brevis tractatus (IA A331024).pdf",
+          "venueNameInMetadata": false,
+          "score": 20
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/d/de/Alice_Needham_School_Fund_%281836-1871%29%2C_Sandra_Buffum_Poor_Fund_%281847-1878%29_%28IA_aliceneedhamsch9022sale_0%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AAlice%20Needham%20School%20Fund%20(1836-1871)%2C%20Sandra%20Buffum%20Poor%20Fund%20(1847-1878)%20(IA%20aliceneedhamsch9022sale%200).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: \nSalem Preparative.",
+          "creator": "\nSalem Preparative",
+          "title": "File:Alice Needham School Fund (1836-1871), Sandra Buffum Poor Fund (1847-1878) (IA aliceneedhamsch9022sale 0).pdf",
+          "venueNameInMetadata": false,
+          "score": 20
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/7/7a/An_end_of_doctrinal_controversies_..._1691_%28IA_bim_early-english-books-1641-1700_an-end-of-doctrinal-cont_baxter-richard_1691%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AAn%20end%20of%20doctrinal%20controversies%20...%201691%20(IA%20bim%20early-english-books-1641-1700%20an-end-of-doctrinal-cont%20baxter-richard%201691).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "likely_food",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: \nBaxter, Richard..",
+          "creator": "\nBaxter, Richard.",
+          "title": "File:An end of doctrinal controversies ... 1691 (IA bim early-english-books-1641-1700 an-end-of-doctrinal-cont baxter-richard 1691).pdf",
+          "venueNameInMetadata": false,
+          "score": 20
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/The_official_Catholic_directory_for_the_year_of_Our_Lord_%28IA_officialcatholic1923unse%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AThe%20official%20Catholic%20directory%20for%20the%20year%20of%20Our%20Lord%20(IA%20officialcatholic1923unse).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "Public domain",
+          "licenseNote": "Wikimedia: Public domain. Autor: neuveden.",
+          "creator": "",
+          "title": "File:The official Catholic directory for the year of Our Lord (IA officialcatholic1923unse).pdf",
+          "venueNameInMetadata": false,
+          "score": 20
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Manoscritto_n._P_MSS_1528_VII_Fondo_Principale_%28Biblioteca_%27Joppi%27_-_Udine%29_%28IA_P_MSS_1528_VII%29.pdf?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3AManoscritto%20n.%20P%20MSS%201528%20VII%20Fondo%20Principale%20(Biblioteca%20'Joppi'%20-%20Udine)%20(IA%20P%20MSS%201528%20VII).pdf",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "unclassified",
+          "license": "",
+          "licenseNote": "Wikimedia: neznámá. Autor: neuveden.",
+          "creator": "",
+          "title": "File:Manoscritto n. P MSS 1528 VII Fondo Principale (Biblioteca 'Joppi' - Udine) (IA P MSS 1528 VII).pdf",
+          "venueNameInMetadata": false,
+          "score": 20
+        }
+      ]
+    },
+    {
+      "id": "ilegal-restaurant",
+      "name": "Ilegal Restaurant",
+      "address": "Husova 255/8, 602 00 Brno",
+      "category": "mexiko",
+      "officialWebsite": "https://www.ilegalrestaurant.cz/",
+      "previousOgImage": null,
+      "notes": [
+        "web https://www.ilegalrestaurant.cz/nabidka → 404",
+        "web https://www.ilegalrestaurant.cz/nabídka → 404"
+      ],
+      "candidateCount": 0,
+      "candidates": []
+    },
+    {
+      "id": "skog-urban-hub",
+      "name": "SKØG",
+      "address": "Dominikánské náměstí 187/5, 602 00 Brno",
+      "category": "kava",
+      "officialWebsite": "https://www.skog.cz/",
+      "previousOgImage": null,
+      "notes": [
+        "web https://www.skog.cz/menu → 404",
+        "web https://www.skog.cz/nabídka → 404"
+      ],
+      "candidateCount": 29,
+      "candidates": [
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Brno%2C_Oct-2022_%2852452320804%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ABrno%2C%20Oct-2022%20(52452320804).jpg",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "likely_food",
+          "license": "CC BY-SA 2.0",
+          "licenseNote": "Wikimedia: CC BY-SA 2.0. Autor: Mitch Altman from Berlin, Germany.",
+          "creator": "Mitch Altman from Berlin, Germany",
+          "title": "File:Brno, Oct-2022 (52452320804).jpg",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Brno%2C_Oct-2022_%2852452320739%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ABrno%2C%20Oct-2022%20(52452320739).jpg",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "likely_food",
+          "license": "CC BY-SA 2.0",
+          "licenseNote": "Wikimedia: CC BY-SA 2.0. Autor: Mitch Altman from Berlin, Germany.",
+          "creator": "Mitch Altman from Berlin, Germany",
+          "title": "File:Brno, Oct-2022 (52452320739).jpg",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Brno%2C_Oct-2022_%2852452320599%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ABrno%2C%20Oct-2022%20(52452320599).jpg",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "likely_food",
+          "license": "CC BY-SA 2.0",
+          "licenseNote": "Wikimedia: CC BY-SA 2.0. Autor: Mitch Altman from Berlin, Germany.",
+          "creator": "Mitch Altman from Berlin, Germany",
+          "title": "File:Brno, Oct-2022 (52452320599).jpg",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Brno%2C_Oct-2022_%2852452320414%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ABrno%2C%20Oct-2022%20(52452320414).jpg",
+          "sourceType": "wikimedia_commons",
+          "imageKindGuess": "likely_food",
+          "license": "CC BY-SA 2.0",
+          "licenseNote": "Wikimedia: CC BY-SA 2.0. Autor: Mitch Altman from Berlin, Germany.",
+          "creator": "Mitch Altman from Berlin, Germany",
+          "title": "File:Brno, Oct-2022 (52452320414).jpg",
+          "venueNameInMetadata": true,
+          "score": 70
+        },
+        {
+          "url": "https://live.staticflickr.com/65535/53422741048_9b5d9a3136_b.jpg",
+          "sourceUrl": "https://www.flickr.com/photos/39423133@N04/53422741048",
+          "sourceType": "openverse",
+          "imageKindGuess": "likely_food",
+          "license": "by-sa",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "licenseNote": "Openverse licence by-sa. Nutné uvést autora.",
+          "creator": "Debarshi Ray",
+          "title": "SKØG Urban Hub",
+          "venueNameInMetadata": true,
+          "score": 65
+        },
+        {
+          "url": "https://www.skog.cz/wp-content/uploads/2019/10/IMG_13732.jpg",
+          "sourceUrl": "https://www.skog.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.skog.cz/wp-content/uploads/2019/10/1.jpg",
+          "sourceUrl": "https://www.skog.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.skog.cz/wp-content/uploads/2019/10/DSC00529.jpg",
+          "sourceUrl": "https://www.skog.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "cukrarna-vetrnik-lidicka",
+      "name": "Cukrárna Větrník Lidická",
+      "address": "Lidická 38, 602 00 Brno",
+      "category": "sladke",
+      "officialWebsite": "https://vetrnik.cz/lidicka",
+      "previousOgImage": null,
+      "notes": [],
+      "candidateCount": 12,
+      "candidates": [
+        {
+          "url": "https://vetrnik.cz/pictures/cukrarny/venhudova/venhudova1_titulka.jpg",
+          "sourceUrl": "https://vetrnik.cz/lidicka",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Zmrzlinárna Venhudova",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://vetrnik.cz/pictures/cukrarny/zmrzlinarna-reckovice/uvodni.jpg",
+          "sourceUrl": "https://vetrnik.cz/lidicka",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "Zmrzlinářství Řečkovice",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://vetrnik.cz/pictures/cukrarny/lidicka/lidicka1.jpg",
+          "sourceUrl": "https://vetrnik.cz/lidicka",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Provozovna Lidická Brno – cukrárna Větrník",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://vetrnik.cz/pictures/cukrarny/lidicka/lidicka2.jpg",
+          "sourceUrl": "https://vetrnik.cz/lidicka",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Provozovna Lidická Brno – cukrárna Větrník",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://vetrnik.cz/pictures/cukrarny/reckovice/reckovice1_titulka.jpg",
+          "sourceUrl": "https://vetrnik.cz/lidicka",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Provozovna Řečkovice s kavárnou",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://vetrnik.cz/pictures/cukrarny/krpole/krpole1_titulka.jpg",
+          "sourceUrl": "https://vetrnik.cz/lidicka",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Cukrárna v NC Královo pole",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://vetrnik.cz/pictures/cukrarny/campus-square/titulni.jpg",
+          "sourceUrl": "https://vetrnik.cz/lidicka",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Provozovna OC Campus Square Brno - Bohunice",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://vetrnik.cz/pictures/cukrarny/lidicka/lidicka_titulka.jpg",
+          "sourceUrl": "https://vetrnik.cz/lidicka",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Provozovna Lidická",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "bageterie-boulevard-vankovka",
+      "name": "Bageterie Boulevard Galerie Vaňkovka",
+      "address": "Ve Vaňkovce 1, 602 00 Brno",
+      "category": "fastfood",
+      "officialWebsite": "https://www.bb.cz/pobocky/bb-galerie-vankovka-brno",
+      "previousOgImage": "https://www.bb.cz/assets/cs/images/fb.png",
+      "notes": [],
+      "candidateCount": 5,
+      "candidates": [
+        {
+          "url": "https://www.bb.cz/files/miniico-creperie-hneda.png",
+          "sourceUrl": "https://www.bb.cz/pobocky/bb-galerie-vankovka-brno",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.bb.cz/files/default/320/180/brno-vankovka-564x344px1.jpg",
+          "sourceUrl": "https://www.bb.cz/pobocky/bb-galerie-vankovka-brno",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Galerie Vaňkovka, Brno",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.bb.cz/files/default/320/180/brno-vankovka-564x344px2.jpg",
+          "sourceUrl": "https://www.bb.cz/pobocky/bb-galerie-vankovka-brno",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Galerie Vaňkovka, Brno",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.bb.cz/files/default/320/180/brno-vankovka-564x344px3.jpg",
+          "sourceUrl": "https://www.bb.cz/pobocky/bb-galerie-vankovka-brno",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "Galerie Vaňkovka, Brno",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        },
+        {
+          "url": "https://www.bb.cz/assets/cs/images/fb.png",
+          "sourceUrl": "https://www.bb.cz/pobocky/bb-galerie-vankovka-brno",
+          "sourceType": "official_website",
+          "imageKindGuess": "unclassified",
+          "alt": "og:image",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "id": "antalya-doner-kebap-palavske-namesti-3c",
+      "name": "Antalya Döner Kebap",
+      "address": "Pálavské náměstí 3c, Brno",
+      "category": "kebab",
+      "officialWebsite": null,
+      "previousOgImage": null,
+      "notes": [
+        "bez oficiálního webu"
+      ],
+      "candidateCount": 0,
+      "candidates": []
+    },
+    {
+      "id": "7days-videnska-132-100",
+      "name": "7days",
+      "address": "Vídeňská 132/100, 619 00 Brno",
+      "category": "asijske",
+      "officialWebsite": "https://www.7days-restaurace.cz/",
+      "previousOgImage": "https://www.7days-restaurace.cz/wp-content/uploads/2024/01/Bektas-Seite-1-1024x724.jpg",
+      "notes": [
+        "web https://www.7days-restaurace.cz/menu → 404",
+        "web https://www.7days-restaurace.cz/nabidka → 404",
+        "web https://www.7days-restaurace.cz/nabídka → 404"
+      ],
+      "candidateCount": 55,
+      "candidates": [
+        {
+          "url": "https://www.7days-restaurace.cz/wp-content/uploads/2020/06/Gigante-Pizza-1-225x300.jpg",
+          "sourceUrl": "https://www.7days-restaurace.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.7days-restaurace.cz/wp-content/uploads/2020/06/Burger-225x300.jpg",
+          "sourceUrl": "https://www.7days-restaurace.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.7days-restaurace.cz/wp-content/uploads/2020/09/Pizza-di-bufala-225x300.jpg",
+          "sourceUrl": "https://www.7days-restaurace.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.7days-restaurace.cz/wp-content/uploads/2019/03/Mittagsmenu%CC%88-Oktober-2018-019-860x575.jpg",
+          "sourceUrl": "https://www.7days-restaurace.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.7days-restaurace.cz/wp-content/uploads/2019/03/Mittagsmenu%CC%88-Valentinstag-19-006-860x575.jpg",
+          "sourceUrl": "https://www.7days-restaurace.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.7days-restaurace.cz/wp-content/uploads/2020/06/sehr-sch%C3%B6n-Calzone-Pizza-860x575.jpg",
+          "sourceUrl": "https://www.7days-restaurace.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.7days-restaurace.cz/wp-content/uploads/2020/06/Stadtcafe-Spezial-Pizza-860x575.jpg",
+          "sourceUrl": "https://www.7days-restaurace.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        },
+        {
+          "url": "https://www.7days-restaurace.cz/wp-content/uploads/2019/02/pizza-pasta-more-860x575.jpg",
+          "sourceUrl": "https://www.7days-restaurace.cz/",
+          "sourceType": "official_website",
+          "imageKindGuess": "likely_food",
+          "alt": "",
+          "license": "restaurant-copyright",
+          "licenseNote": "Fotografie z webu podniku. Autorské právo zůstává restauraci; nález na webu není CC licence.",
+          "score": 80
+        }
+      ]
+    },
+    {
+      "id": "monogram-espresso-bar",
+      "name": "Monogram Espresso Bar",
+      "address": "Kapucínské náměstí 310/12, 602 00 Brno",
+      "category": "kava",
+      "officialWebsite": "https://www.monogramespressobar.cz/kontakt",
+      "previousOgImage": null,
+      "notes": [
+        "web https://www.monogramespressobar.cz/menu → 404",
+        "web https://www.monogramespressobar.cz/nabidka → 404",
+        "web https://www.monogramespressobar.cz/nabídka → 404"
+      ],
+      "candidateCount": 1,
+      "candidates": [
+        {
+          "url": "https://www.krpolenc.cz/data/tenants-store-11/90/dsc-8733.940x620.exact.q85.jpg",
+          "sourceUrl": "OpenStreetMap tag image",
+          "sourceType": "osm_image",
+          "imageKindGuess": "unclassified",
+          "license": "unknown-osm",
+          "licenseNote": "OSM tag image= odkazuje na cizí URL; licence se musí ověřit u zdroje.",
+          "score": 35
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

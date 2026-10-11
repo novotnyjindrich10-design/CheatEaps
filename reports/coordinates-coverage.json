@@ -1,0 +1,71 @@
+{
+  "totalPlaces": 775,
+  "dumpUsed": "osm-brno-coords.json",
+  "dumpElements": 1397,
+  "dumpWithGeometry": 1397,
+  "withCoordinates": 763,
+  "missingCoordinates": 12,
+  "missingSample": [
+    {
+      "id": "forkys-vankovka",
+      "name": "Forky's Galerie Vaňkovka",
+      "address": "Ve Vaňkovce 1, 602 00 Brno (Galerie Vaňkovka)"
+    },
+    {
+      "id": "statl-brno",
+      "name": "Restaurace ŠTATL",
+      "address": "nám. Svobody 97/3, 602 00 Brno"
+    },
+    {
+      "id": "prova-bistro-pizza",
+      "name": "Prova Bistro & Pizza",
+      "address": "Tábor 2, 616 00 Brno"
+    },
+    {
+      "id": "mamas-burger",
+      "name": "Mama's Burger",
+      "address": "Lazaretní 1/7, 615 00 Brno-Židenice"
+    },
+    {
+      "id": "smash-burgers-moravske",
+      "name": "Smash burgers Moravské náměstí",
+      "address": "Moravské nám. 4, 602 00 Brno"
+    },
+    {
+      "id": "cukrarna-vetrnik-lidicka",
+      "name": "Cukrárna Větrník Lidická",
+      "address": "Lidická 38, 602 00 Brno"
+    },
+    {
+      "id": "cukrarstvi-martinak",
+      "name": "Cukrářství Martinák Veveří",
+      "address": "Veveří 461/14, 602 00 Brno"
+    },
+    {
+      "id": "bageterie-boulevard-vankovka",
+      "name": "Bageterie Boulevard Galerie Vaňkovka",
+      "address": "Ve Vaňkovce 1, 602 00 Brno"
+    },
+    {
+      "id": "chicken-inn-svobody",
+      "name": "Chicken Inn nám. Svobody",
+      "address": "nám. Svobody 97/3, 602 00 Brno"
+    },
+    {
+      "id": "campus-river-palachovo-namesti-2",
+      "name": "Campus river",
+      "address": "Palachovo náměstí 2, 62500 Brno"
+    },
+    {
+      "id": "kavarna-cukrarna-smile-s-r-o-namesti-28-dubna-10-40",
+      "name": "Kavárna - cukrárna Smile s.r.o.",
+      "address": "náměstí 28. dubna 10/40, 63500;635 00 Brno"
+    },
+    {
+      "id": "la-corrida-namesti-28-dubna-2",
+      "name": "La Corrida",
+      "address": "náměstí 28. dubna 2, 63500 Brno"
+    }
+  ],
+  "note": "Souřadnice jen z OSM, bez vymýšlení."
+}

@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-10-10",
+  "pilotSize": 20,
+  "paidApi": false,
+  "mergedIntoApp": false,
+  "sourcesTried": [
+    "official website HTML + /menu",
+    "OSM image tag",
+    "Wikimedia Commons API",
+    "Openverse API (CC, commercial)"
+  ],
+  "sourcesExcluded": [
+    "Google Images (nález ≠ licence)",
+    "Wolt / Foodora / Tripadvisor",
+    "Unsplash jako jídlo podniku"
+  ],
+  "counts": {
+    "verified_dish": 3,
+    "needs_review": 5,
+    "rejected": 10,
+    "not_found": 2
+  },
+  "licenseSummary": {
+    "verified_dish_all_restaurant_copyright": true,
+    "ccImagesUsableForTheseVenues": 0,
+    "googleImagesUsed": 0
+  }
+}

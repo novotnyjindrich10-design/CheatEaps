@@ -1,0 +1,13 @@
+{
+  "totalPlaces": 775,
+  "officialWebsites": 435,
+  "withoutOfficialWebsite": 340,
+  "skippedSocialOrCatalog": 32,
+  "osmFacts": 750,
+  "glutenFreeOsm": 6,
+  "lunchMenuOsm": 2,
+  "googleVerified": 0,
+  "googleNotFound": 0,
+  "googleNeedsReview": 0,
+  "googleMapsSearchOnly": 775
+}

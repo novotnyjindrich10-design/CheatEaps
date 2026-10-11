@@ -1,0 +1,776 @@
+id,source,name,address,category,type,website,price,vegetarianFriendly,veganFriendly,hasPostcode
+dhaba-beas-panska,curated,Dhaba Beas Panská,"Panská 12, 602 00 Brno",vegetarianske,Vegetariánské,https://dhababeas.cz/,,1,1,1
+forkys-vankovka,curated,Forky's Galerie Vaňkovka,"Ve Vaňkovce 1, 602 00 Brno (Galerie Vaňkovka)",veganske,Veganské,https://www.forkys.cz/pobocka/oc-vankovka/,169,1,1,1
+rebio-velky-spalicek,curated,Rebio Velký Špalíček,"Mečová 2, 602 00 Brno",zdrave,Zdravé,https://rebio.cz/,,,,1
+rebio-orli,curated,Rebio Orlí,"Orlí 26, 602 00 Brno",zdrave,Zdravé,https://rebio.cz/,,,,1
+bistro-franz,curated,Bistro FRANZ,"Veveří 14, 602 00 Brno",zdrave,Zdravé,https://www.bistrofranz.cz/kontakty/,165,1,1,1
+lokal-u-caipla,curated,Lokál U Caipla,"Kozí 115/3, 602 00 Brno",ceske,České,https://lokal-ucaipla.ambi.cz/cz/,,,,1
+stopkova-plzenska-pivnice,curated,Stopkova Plzeňská pivnice,"Česká 163/5, 602 00 Brno",ceske,České,https://stopkova.kolkovna.cz/,239,1,,1
+statl-brno,curated,Restaurace ŠTATL,"nám. Svobody 97/3, 602 00 Brno",ceske,České,https://www.statlbrno.cz/kontakt/,,,,1
+la-strada-brno,curated,La Strada,"Kounicova 53, 602 00 Brno",pizza,Pizza,https://lastrada-brno.cz/kontakt/,,,,1
+prova-bistro-pizza,curated,Prova Bistro & Pizza,"Tábor 2, 616 00 Brno",pizza,Pizza,https://provapizza.cz/menu/,,,,1
+pizzerie-viva,curated,Pizzerie VIVA,"Králova 1, 616 00 Brno",pizza,Pizza,https://pizzerie-viva.cz/,,,,1
+mamas-burger,curated,Mama's Burger,"Lazaretní 1/7, 615 00 Brno-Židenice",burger,Burger,https://mamasburgerbrno.cz/,,,,1
+smash-burgers-moravske,curated,Smash burgers Moravské náměstí,"Moravské nám. 4, 602 00 Brno",burger,Burger,https://smashburgersbrno.cz/,,,,1
+uvozna-burger,curated,Úvozna burger & beer,"Úvoz 82/39, 602 00 Brno-Veveří",burger,Burger,https://www.uvozna.cz/,,,,1
+kurdsky-kebab-cejl,curated,Kurdský Kebab Cejl,"Cejl 538/93, 602 00 Brno",kebab,Kebab,https://wolt.com/cs/cze/brno/restaurant/kurdsk-kebab-cejl,,,,1
+lokofu,curated,Lokofu,"Kounicova 67a, 602 00 Brno",cina,Čína,https://www.lokofu.cz/cs/,145,1,,1
+new-era-restaurace,curated,New Era Restaurace,"Solniční 13, 602 00 Brno",cina,Čína,https://newerafood.cz/,,,,1
+oh-pho,curated,Oh! Phở,"Veveří 339/34, 602 00 Brno",asijske,Asijské,https://ohphobrno.cz/,,,,1
+annapurna-brno,curated,Indická restaurace Annapurna,"Josefská 427/14, 602 00 Brno",asijske,Asijské,https://indicka-restaurace-annapurna.cz/brno/cz/home.html,,1,,1
+ilegal-restaurant,curated,Ilegal Restaurant,"Husova 255/8, 602 00 Brno",mexiko,Mexiko,https://www.ilegalrestaurant.cz/,179,1,,1
+roburrito-pekarska,curated,Roburrito Pekařská,"Pekařská 408/20, 602 00 Brno",mexiko,Mexiko,https://roburrito.cz/,,,,1
+skog-urban-hub,curated,SKØG,"Dominikánské náměstí 187/5, 602 00 Brno",kava,Kavárna,https://www.skog.cz/,,,,1
+monogram-espresso-bar,curated,Monogram Espresso Bar,"Kapucínské náměstí 310/12, 602 00 Brno",kava,Kavárna,https://www.monogramespressobar.cz/kontakt,,,,1
+cukrarna-vetrnik-lidicka,curated,Cukrárna Větrník Lidická,"Lidická 38, 602 00 Brno",sladke,Sladké,https://vetrnik.cz/lidicka,52,,,1
+cukrarstvi-martinak,curated,Cukrářství Martinák Veveří,"Veveří 461/14, 602 00 Brno",sladke,Sladké,https://www.cukrarstvimartinak.cz/,,,,1
+bageterie-boulevard-vankovka,curated,Bageterie Boulevard Galerie Vaňkovka,"Ve Vaňkovce 1, 602 00 Brno",fastfood,Fast food,https://www.bb.cz/pobocky/bb-galerie-vankovka-brno,,,,1
+chicken-inn-svobody,curated,Chicken Inn nám. Svobody,"nám. Svobody 97/3, 602 00 Brno",fastfood,Fast food,https://burger-inn.cz/,,,,1
+but-first-coffee-jezuitska-11,osm,...but first coffee,"Jezuitská 11, 60200 Brno",kava,Kavárna,https://m.facebook.com/p/But-first-coffee-Brno-61558857376003/&ved=2ahUKEwjt3bT57bqOAxWAhP0HHa_8CA0Qjjh6BAhMEAE&usg=AOvVaw2a3b0BC6S6C7WxfpGWajIi,,,,1
+1-doubravnicka-milady-horakove-1920-1a,osm,1. Doubravnická,"Milady Horákové 1920/1a, 60200 Brno",ceske,České,https://www.prvnidoubravnicka.cz/,,,,1
+3f-by-mori-janska-11,osm,3F by Mori,"Jánská 11, 60200 Brno",asijske,Asijské,https://www.facebook.com/3f-by-Mori-228346031237238/,,,,1
+4-slices-pizza-focaccia-technicka-17,osm,4 Slices Pizza & Focaccia,"Technická 17, Brno",pizza,Pizza,,,,,
+7days-videnska-132-100,osm,7days,"Vídeňská 132/100, 619 00 Brno",asijske,Asijské,https://www.7days-restaurace.cz/,,,,1
+adria-masarykova-31,osm,Adria,"Masarykova 31, 60200 Brno",,Restaurace,,,1,,1
+adrinela-cafe-zivotskeho-195-14,osm,Adrinela Cafe,"Životského 195/14, 61800 Brno",kava,Kavárna,http://www.adrinelacafe.cz,,,,1
+aida-cafe-restaurant-josefska-21,osm,AIDA Cafe & Restaurant,"Josefská 21, 60200 Brno",kava,Kavárna,https://www.ladolcevita-aida.cz/,,1,,1
+aida-la-dolce-vita-kozi-9,osm,Aida La Dolce Vita,"Kozí 9, 60200 Brno",sladke,Sladké,https://www.cukrarnaaida.cz/,,,,1
+air-cafe-zelny-trh-8,osm,Air Cafe,"Zelný trh 8, 60200 Brno",kava,Kavárna,https://www.aircafe-brno.com/,,,,1
+aloha-grill-kozi-8,osm,Aloha Grill,"Kozí 8, 60200 Brno",,Restaurace,https://alohagrill.cz/,,,,1
+alvin-hudcova-2,osm,Alvin,"Hudcova 2, 62100 Brno",,Restaurace,https://www.alvinrestaurace.cz,,,,1
+amici-pizza-burgers-palackeho-trida-82,osm,Amici Pizza & Burgers,"Palackého třída 82, 61200 Brno",pizza,Pizza,https://www.amici.cz/,,,,1
+amsterdam-grill-namesti-svobody-16,osm,Amsterdam Grill,"náměstí Svobody 16, 60200 Brno",,Restaurace,,,,,1
+an-wok-grill-krizova-55-5,osm,AN wok & grill,"Křížová 55/5, 60300 Brno",asijske,Asijské,,,,,1
+annapurna-josefska-14,osm,Annapurna,"Josefská 14, 60200 Brno",asijske,Asijské,http://www.indicka-restaurace-annapurna.cz/,,1,,1
+antalya-doner-kebap-palavske-namesti-3c,osm,Antalya Döner Kebap,"Pálavské náměstí 3c, Brno",kebab,Kebab,,,,,
+arctica-gelato-orli-4,osm,Arctica Gelato,"Orlí 4, 60200 Brno",sladke,Sladké,https://www.facebook.com/Arctica-Gelato-107339965306190/,,,,1
+armen-fast-food-cimburkova-593-4,osm,Armen Fast Food,"Cimburkova 593/4, 61200 Brno-Královo Pole",fastfood,Fast food,,,,,1
+arny-s-food-josefska-5,osm,Arny's Food,"Josefská 5, 60200 Brno",zdrave,Zdravé,,,,,1
+aroha-cafe-krenova-183-57,osm,Aroha café,"Křenová 183/57, 60200 Brno",kava,Kavárna,https://www.facebook.com/Arohabistrocafe/,,,,1
+aroma-cofee-stefanikova-4,osm,Aroma cofee,"Štefánikova 4, 60200 Brno",kava,Kavárna,,,,,1
+art-cihlarska-19,osm,Art,"Cihlářská 19, 60200 Brno",kava,Kavárna,,,,,1
+asijske-bistro-t-h-cejl-45,osm,Asijské bistro T&H,"Cejl 45, 60200 Brno",asijske,Asijské,,,,,1
+astorka-novobranska-3,osm,Astorka,"Novobranská 3, 60200 Brno",,Restaurace,,,,,1
+atelier-cocktail-bar-bistro-koblizna-71-2,osm,Atelier Cocktail Bar & Bistro,"Kobližná 71/2, 60200 Brno",kava,Kavárna,https://www.atelierbar.cz/,,1,,1
+au-lait-espresso-bar-gorkeho-96-54,osm,Au Lait espresso bar,"Gorkého 96/54, 602 00 Brno",kava,Kavárna,https://www.instagram.com/aulait_espressobar/,,,,1
+aurum-caffe-restaurant-palackeho-trida-124,osm,Aurum caffe restaurant,"Palackého třída 124, 61200 Brno",kava,Kavárna,,,,,1
+avanti-stredni-61,osm,Avanti,"Střední 61, 60200 Brno",,Restaurace,,,,,1
+bageterie-boulevard-masarykova-7,osm,Bageterie Boulevard,"Masarykova 7, 60200 Brno",fastfood,Fast food,https://www.bb.cz,,1,,1
+bageterie-boulevard-netroufalky-770-16,osm,Bageterie Boulevard,"Netroufalky 770/16, 625 00 Brno",fastfood,Fast food,https://www.bb.cz/pobocky/campus-brno,,1,,1
+bar-gril-u-nas-masarova-11a,osm,Bar & Gril U NÁS,"Masarova 11a, 62800 Brno - Líšeň",,Restaurace,https://www.baragrilunas.cz/,,,,1
+bar-caffe-elephant-lidicka-43,osm,Bar Caffe elephant,"Lidická 43, 60200 Brno",kava,Kavárna,,,1,,1
+barcelato-malatova-20,osm,Barčelato,"Malátova 20, 61200 Brno",sladke,Sladké,,,,,1
+baroko-orli-17,osm,Baroko,"Orlí 17, 60200 Brno",,Restaurace,https://www.baroko.org,,,,1
+barrio-gotico-kozi-12,osm,Barrio Gotico,"Kozí 12, 60200 Brno",,Restaurace,,,,,1
+bat-beerhouse-julianovske-namesti-3878-2,osm,Bat Beerhouse,"Juliánovské náměstí 3878/2, 63600 Brno",pizza,Pizza,,,,,1
+bavard-cafe-postovska-4,osm,Bavard Cafe,"Poštovská 4, 60200 Brno",kava,Kavárna,,,,,1
+bella-pizza-videnska-132-100,osm,Bella pizza,"Vídeňská 132/100, 619 00 Brno",pizza,Pizza,https://futurum.bellapizza.cz/,,,,1
+bella-pizza-palackeho-trida-175-54,osm,Bella Pizza,"Palackého třída 175/54, 61200 Brno",pizza,Pizza,https://bellapizza.cz/,,,,1
+beo-dukelska-22,osm,Béo,"Dukelská 22, 61400 Brno",asijske,Asijské,https://beoasianfusion.cz/,,,,1
+bep-vietnamese-village-cuisine-koblizna-9,osm,BẾP Vietnamese Village Cuisine,"Kobližná 9, 60200 Brno",asijske,Asijské,https://www.instagram.com/bep.brno/,,,,1
+bez-cukru-semilasso-palackeho-trida-126,osm,Bez cukru Semilasso,"Palackého třída 126, 61200 Brno",kava,Kavárna,,,,,1
+bibus-videnska-125,osm,Bibus,"Vídeňská 125, 61900 Brno",,Restaurace,,,,,1
+big-food-point-koblizna-9,osm,Big Food Point,"Kobližná 9, 60200 Brno",fastfood,Fast food,,,1,,1
+big-food-point-masarykova-33,osm,Big Food Point,"Masarykova 33, 60200 Brno",fastfood,Fast food,,,1,,1
+biograf-cafe-grohova-3,osm,Biograf Cafe,"Grohova 3, 60200 Brno",zdrave,Zdravé,,,,,1
+bistro-53-palackeho-trida-53,osm,Bistro 53,"Palackého třída 53, 61200 Brno",asijske,Asijské,,,,,1
+bistro-77-francouzska-77,osm,Bistro 77,"Francouzská 77, 60200 Brno",,Restaurace,http://www.facebook.com/1000089662892491,,,,1
+bistro-bastardo-namesti-svobody-92-21,osm,Bistro Bastardo,"náměstí Svobody 92/21, 60200 Brno",mexiko,Mexiko,https://www.facebook.com/bistrobastardo,,1,,1
+bistro-bastardo-stefanikova-20,osm,Bistro Bastardo,"Štefánikova 20, 60200 Brno",mexiko,Mexiko,,,1,,1
+bistro-franz-veveri-461-14,osm,Bistro Franz,"Veveří 461/14, 60200 Brno",,Restaurace,https://www.bistrofranz.cz/,,1,,1
+bistro-hiro-kotlarska-669-36,osm,Bistro Hiro,"Kotlářská 669/36, 60200 Brno",fastfood,Fast food,,,,,1
+bistro-la-terra-lesnicka-40,osm,Bistro La Terra,"Lesnická 40, 61300 Brno",,Restaurace,,,1,,1
+bistro-matyho-chalka-zabrdovicka-10a,osm,Bistro Matyho chálka,"Zábrdovická 10a, Brno",ceske,České,http://www.matyhochalka.cz/restaurace/,,,,
+bistro-ministerio-kotlarska-902-53,osm,Bistro Ministerio,"Kotlářská 902/53, 60200 Brno",ceske,České,https://ministerio.cz/,,,,1
+bistro-pod-schody-kabatnikova-219-7,osm,Bistro Pod Schody,"Kabátníkova 219/7, 60200 Brno",fastfood,Fast food,https://www.bistropodschody.cz/,,,,1
+bistro-provaz-provaznikova-15,osm,Bistro Provaz,"Provazníkova 15, 61300 Brno",burger,Burger,https://bistroprovaz.cz/,,1,,1
+blokk-husova-536-14,osm,BLOKK,"Husova 536/14, 60200 Brno",kava,Kavárna,,,,,1
+blue-demon-bistro-udolni-223-7,osm,Blue Demon Bistro,"Údolní 223/7, Brno",mexiko,Mexiko,,,1,1,
+blue-mango-holandska-8,osm,Blue Mango,"Holandská 8, 63900 Brno",fastfood,Fast food,,,,,1
+bon-ami-restaurant-komarovska-352-7,osm,Bon Ami restaurant,"Komárovská 352/7, 61700 Brno",,Restaurace,https://www.bonamirestaurant.cz/,,,,1
+bonjour-vietnam-vaclavska-39-1,osm,Bonjour Vietnam,"Václavská 39/1, 60300 Brno",asijske,Asijské,https://www.facebook.com/Bonjour-Vietnam-100107981688480,,,,1
+borgeska-palackeho-trida-47,osm,Borgeska,"Palackého třída 47, 61200 Brno",,Restaurace,https://www.restauraceborgeska.cz/,,,,1
+borgo-agnese-kopecna-43,osm,Borgo Agnese,"Kopečná 43, 60200 Brno",,Restaurace,https://www.borgoagnese.cz/,,,,1
+borsalino-orli-20,osm,Borsalino,"Orlí 20, 60200 Brno",,Restaurace,,,,,1
+brana-ke-zdravi-orli-17,osm,Brána ke zdraví,"Orlí 17, 60200 Brno",kava,Kavárna,https://branakezdravi.cz/,,,,1
+break-feast-dvorakova-43-12,osm,Break Feast,"Dvořákova 43/12, 602 00 Brno",,Restaurace,https://www.eggofoodtruck.cz/,,,,1
+brunche-s-vodova-63,osm,Brunche's,"Vodova 63, 61200 Brno",kava,Kavárna,,,,,1
+bubblify-ceska-26,osm,Bubblify,"Česká 26, 60200 Brno",fastfood,Fast food,,,,,1
+bubblify-netroufalky-770,osm,Bubblify,"Netroufalky 770, 625 00 Brno",kava,Kavárna,https://bubblify.cz/,,,,1
+bubblify-videnska-132-100,osm,Bubblify,"Vídeňská 132/100, 619 00 Brno",kava,Kavárna,https://www.bubblify.cz/,,,,1
+buddha-namesti-svobody-92-21,osm,Buddha,"náměstí Svobody 92/21, 60200 Brno",asijske,Asijské,https://www.indian-restaurant-buddha.cz/,,1,,1
+buddy-s-street-23-libusina-trida-826-23,osm,Buddy's Street 23,"Libušina třída 826/23, 62300 Brno",burger,Burger,http://www.buddy-street23.cz,,,,1
+buffalo-american-steakhouse-krizkovskeho-416-22,osm,Buffalo American Steakhouse,"Křížkovského 416/22, Brno",kava,Kavárna,https://restauracebuffalo.cz/,,,,
+buffalo-express-nadrazni-4,osm,Buffalo Express,"Nádražní 4, 60200 Brno",,Restaurace,,,1,,1
+bucheck-zelny-trh-325-18,osm,Būcheck,"Zelný trh 325/18, Brno",fastfood,Fast food,,,,,
+buchta-c-zelny-trh-10,osm,Buchta C,"Zelný trh 10, 602 00 Brno",kava,Kavárna,https://zelnytrh10.cz/podniky/buchta-c/,,,,1
+bukovsky-medlanecka-2286,osm,Bukovský,"Medlánecká 2286, Brno",kava,Kavárna,https://bukovskycukrarstvi.cz/kavarna,,,,
+bun-dvorakova-16,osm,Bún,"Dvořákova 16, 602 00 Brno",,Restaurace,,,,,1
+burger-inn-beethovenova-7,osm,Burger Inn,"Beethovenova 7, 60200 Brno",burger,Burger,https://burger-inn-beethovenova.cz/,,,,1
+burger-king-u-dalnice-777,osm,Burger King,"U Dálnice 777, 664 42 Brno",burger,Burger,https://burgerking.cz/,,1,,1
+burger-king-nadrazni-10,osm,Burger King,"Nádražní 10, 60200 Brno",burger,Burger,https://burgerking.cz/cs/store-locator/store/restaurant_887366,,1,,1
+burger-king-ceska-142-29,osm,Burger King,"Česká 142/29, 60200 Brno",burger,Burger,,,1,,1
+burger-king-videnska-132-100,osm,Burger King,"Vídeňská 132/100, 619 00 Brno",burger,Burger,https://www.burgerking.cz/,,1,,1
+burger-king-netroufalky-770,osm,Burger King,"Netroufalky 770, 625 00 Brno",burger,Burger,https://www.burgerking.cz/,,1,,1
+buro-pizza-trida-kpt-jarose-1967-39a,osm,Büro pizza,"Třída kpt. Jaroše 1967/39a, 60200 Brno",pizza,Pizza,,,,,1
+butcher-s-dobrovskeho-96-29,osm,Butcher's,"Dobrovského 96/29, 61200 Brno",kava,Kavárna,https://www.butchers.cz/,,,,1
+bystrcka-oaza-lyskova-1031-2,osm,Bystrcká Oáza,"Lýskova 1031/2, 63500 Brno",,Restaurace,https://bystrckaoaza.cz/,,,,1
+ca-phe-xin-chao-jezuitska-6-1,osm,Ca Phe Xin Chao,"Jezuitská 6/1, 60200 Brno",asijske,Asijské,,,,,1
+cafe-bistro-bila-vrana-kristenova-1,osm,Café & Bistro Bílá Vrána,"Kristenova 1, 62400 Brno",kava,Kavárna,,,,,1
+cafe-bistro-napoli-videnska-132-100,osm,Café & bistro NaPoli,"Vídeňská 132/100, 619 00 Brno",kava,Kavárna,https://www.cafenapoli.cz/,,,,1
+cafe-wine-art-mendlovo-namesti-12,osm,Cafe & Wine Art,"Mendlovo náměstí 12, 60300 Brno",kava,Kavárna,,,,,1
+cafe-1805-taborskeho-nabrezi-3,osm,Café 1805,"Táborského nábřeží 3, 63900 Brno",kava,Kavárna,,,,,1
+cafe-atelier-palackeho-trida-95,osm,Café Ateliér,"Palackého třída 95, Brno",kava,Kavárna,https://malovanikreslenibrno.cz/cafe-atelier/,,,,
+cafe-falk-gorkeho-12,osm,Café Falk,"Gorkého 12, 60200 Brno",sladke,Sladké,http://www.cafefalk.cz/,,,,1
+cafe-gemini-cimburkova-4,osm,Café Gemini,"Cimburkova 4, 61200 Brno-Královo Pole",kava,Kavárna,https://www.cafegemini.cz/,,,,1
+cafe-globus-hradecka-40,osm,Café Globus,"Hradecká 40, 62100 Brno",sladke,Sladké,https://www.globus.cz/globus/sluzby-a-produkty/cafe-globus,,,,1
+cafe-in-the-ghetto-bratislavska-65,osm,Café In The Ghetto,"Bratislavská 65, 60200 Brno",kava,Kavárna,,,,,1
+cafe-laundry-lidicka-46,osm,Café Laundry,"Lidická 46, 60200 Brno",kava,Kavárna,,,,,1
+cafe-low-beer-drobneho-22,osm,Café Löw-Beer,"Drobného 22, 60200 Brno",sladke,Sladké,https://www.facebook.com/cafelowbeer/,,,,1
+cafe-luna-pekarska-54,osm,Café Luna,"Pekařská 54, 60200 Brno",kava,Kavárna,,,,,1
+cafe-mezzanine-udolni-15,osm,Café Mezzanine,"Údolní 15, 60200 Brno",kava,Kavárna,https://www.cafe-mezzanine.cz/,,1,,1
+cafe-minor-sukova-2,osm,Cafe Minor,"Sukova 2, 60200 Brno",kava,Kavárna,,,1,1,1
+cafe-placzek-minoritska-4,osm,Café Placzek,"Minoritská 4, 60200 Brno",kava,Kavárna,https://www.cafeplaczek.cz/,,1,,1
+cafe-podnebi-udolni-5,osm,Cafe Podnebi,"Údolní 5, 60200 Brno",kava,Kavárna,https://www.podnebi.cz/,,,,1
+cafe-rudolf-namesti-svobody-17,osm,Café Rudolf,"náměstí Svobody 17, 60200 Brno",,Restaurace,https://rudolfcafe.cz/,,,,1
+cafe-seoul-trida-kpt-jarose-26,osm,Cafe Seoul,"třída Kpt. Jaroše 26, 60200 Brno",kava,Kavárna,https://cafeseoul.cz/,,,,1
+cafe-steiner-gorkeho-38,osm,Café Steiner,"Gorkého 38, 60200 Brno",kava,Kavárna,,,,,1
+cafe-veranda-vachova-5,osm,Café Veranda,"Vachova 5, 60200 Brno",kava,Kavárna,,,,,1
+caffe-del-saggio-helceletova-2,osm,Caffé del Saggio,"Helceletova 2, 60200 Brno",kava,Kavárna,http://www.saggio.cz/,,,,1
+caffe-dieci-josefska-7,osm,Caffé Dieci,"Josefská 7, 60200 Brno",kava,Kavárna,,,,,1
+caffe-mnau-josefska-1,osm,Caffé Mňau,"Josefská 1, 60200 Brno",kava,Kavárna,https://www.mnaucafe.cz/,,,,1
+caffe-park-slovanak-slovanske-namesti-3089-20,osm,CAFFE PARK Slovaňák,"Slovanské náměstí 3089/20, 61200 Brno",kava,Kavárna,http://www.caffepark.cz/,,,,1
+camel-mojmirovo-namesti-303-4,osm,Camel,"Mojmírovo náměstí 303/4, 61200 Brno",,Restaurace,,,,,1
+campo-vodova-336-108,osm,Campo,"Vodova 336/108, 61200 Brno",,Restaurace,,,,,1
+campus-river-palachovo-namesti-2,osm,Campus river,"Palachovo náměstí 2, 62500 Brno",ceske,České,,,1,,1
+carmel-cejl-282-86,osm,Carmel,"Cejl 282/86, 60200 Brno",pizza,Pizza,,,,,1
+cartel-grohova-19,osm,Cartel,"Grohova 19, 60200 Brno",pizza,Pizza,https://www.cartelpizza.cz,,,,1
+cartel-pizzeria-prazska-156,osm,CARTEL PIZZERIA,"Pražská 156, 64200 Brno",pizza,Pizza,https://www.cartelpizza.cz/bosonohy#home,,,,1
+caruso-pizza-bayerova-6,osm,Caruso Pizza,"Bayerova 6, 60200 Brno",pizza,Pizza,https://www.carusopizza.cz/,,1,,1
+castellana-trattoria-novobranska-4,osm,Castellana trattoria,"Novobranská 4, 60200 Brno",,Restaurace,https://www.castellana.cz/,,1,,1
+cat-cafe-martinkova-7,osm,Cat Cafe,"Martinkova 7, 60200 Brno",kava,Kavárna,https://thecatcafe.cz/,,,,1
+club-bar-semilasso-palackeho-trida-126,osm,Club bar Semilasso,"Palackého třída 126, 61200 Brno",,Restaurace,,,,,1
+coffee-bar-story-lidicka-15,osm,Coffee Bar Story,"Lidická 15, 60200 Brno",kava,Kavárna,https://cbstory.cz,,,,1
+coffee-point-trida-generala-piky-2057-3c,osm,Coffee Point,"třída Generála Píky 2057/3c, Brno",kava,Kavárna,,,,,
+coffee-trail-bar-stefanikova-93-22,osm,Coffee Trail Bar,"Štefánikova 93/22, 60200 Brno",kava,Kavárna,https://www.coffeetrail.cz/,,,,1
+coffee-trail-lidicka-lidicka-46,osm,Coffee Trail Lidická,"Lidická 46, 60200 Brno",kava,Kavárna,https://www.coffeetrail.cz/,,,,1
+coffee-trail-river-jundrov-175,osm,Coffee Trail River,"Jundrov 175, Brno",kava,Kavárna,https://www.coffeetrail.cz,,,,
+coffee4all-chironova-8,osm,Coffee4all,"Chironova 8, 63400 Brno",pizza,Pizza,https://coffee4all.cz,,,,1
+coffeeshop-company-nove-sady-25,osm,Coffeeshop Company,"Nové sady 25, 60200 Brno",kava,Kavárna,,,,,1
+colatransport-pisniky-409,osm,Colatransport,"Písníky 409, 62000 Brno – Tuřany",ceske,České,https://colatransport.cz/,,,,1
+cosmopolis-kozi-5,osm,Cosmopolis,"Kozí 5, 60200 Brno",,Restaurace,,,1,,1
+costa-josefska-14,osm,Costa,"Josefská 14, 60200 Brno",kava,Kavárna,https://www.costa-coffee.cz/,,1,,1
+cukrarna-bali-minska-52,osm,Cukrárna Bali,"Minská 52, 61600 Brno",sladke,Sladké,http://www.cukrarna-bali.cz,,1,,1
+cukrarna-kokoo-premyslovo-namesti-26,osm,Cukrárna Kokoo,"Přemyslovo náměstí 26, 62700 Brno",sladke,Sladké,,,,,1
+cukrarstvi-bukovsky-minska-2,osm,Cukrářství Bukovský,"Minská 2, 61600 Brno",kava,Kavárna,,,1,,1
+cukrove-nebe-orli-20,osm,Cukrové nebe,"Orlí 20, 60200 Brno",kava,Kavárna,,,,,1
+curry-house-jiraskova-248-48,osm,Curry House,"Jiráskova 248/48, 60200 Brno",asijske,Asijské,https://nepalbrno.cz/CurryHouse/,,,,1
+cajovna-hostimil-capkova-3,osm,Čajovna Hostimil,"Čápkova 3, 60200 Brno",kava,Kavárna,,,,,1
+cajovna-za-zrcadlem-jaselska-16,osm,Čajovna za zrcadlem,"Jaselská 16, 60200 Brno",kava,Kavárna,https://cajovnazazrcadlem.cz/,,1,1,1
+carokavarna-josefska-697-7,osm,Čarokavárna,"Josefská 697/7, 60200 Brno",kava,Kavárna,,,,,1
+cesky-mekac-u-medveda-videnska-132-100,osm,Český Mekáč u Medvěda,"Vídeňská 132/100, 619 00 Brno",fastfood,Fast food,https://www.ceskymekac.cz/,,,,1
+ctyri-ruze-veveri-32,osm,Čtyři růže,"Veveří 32, 60200 Brno",,Restaurace,https://ctyriruze.restaurace-laguna.cz/,,,,1
+daynight-palavske-namesti-3b,osm,Daynight,"Pálavské náměstí 3b, Brno",kava,Kavárna,,,,,
+deca-bulla-kopecna-21,osm,Deca bulla,"Kopečná 21, 60200 Brno",kava,Kavárna,https://www.deccabulla.cz/,,1,,1
+deja-vu-uvoz-26,osm,Deja Vu,"Úvoz 26, 60200 Brno",,Restaurace,,,,,1
+detska-kavarna-u-bedrunky-komarovska-3,osm,Dětská kavárna - U Bedrunky,"Komárovská 3, 61700 Brno",kava,Kavárna,,,,,1
+detsky-kabinet-sukova-4,osm,Dětský kabinet,"Sukova 4, 60200 Brno",kava,Kavárna,,,,,1
+di-napoli-stefanikova-20,osm,Di Napoli,"Štefánikova 20, 60200 Brno",pizza,Pizza,,,,,1
+diandi-namesti-svobody-91-20,osm,Diandi,"náměstí Svobody 91/20, 60200 Brno",asijske,Asijské,https://diandi.cz/,,1,,1
+dilna-matilda-palackeho-trida-95,osm,Dílna Matilda,"Palackého třída 95, 61200 Brno",kava,Kavárna,https://www.dilnamatilda.cz/,,,,1
+diwa-orli-19,osm,Diwa,"Orlí 19, 60200 Brno",kava,Kavárna,,,,,1
+dno-restaurant-orli-19,osm,Dno restaurant,"Orlí 19, 60200 Brno",,Restaurace,http://www.dnobrno.cz/,,,,1
+dobra-cajovna-frantiskanska-6,osm,Dobrá čajovna,"Františkánská 6, 60200 Brno",kava,Kavárna,https://www.tea.cz/cajovna/,,,,1
+dobrovsky-jostova-6,osm,Dobrovský,"Joštova 6, 60200 Brno",kava,Kavárna,,,,,1
+doe-boy-pizza-napoletana-brno-stefanikova-39,osm,"Doe boy, Pizza Napoletana Brno","Štefánikova 39, 60200 Brno",pizza,Pizza,,,,,1
+dohoda-beer-house-biskupska-6,osm,Dohoda beer house,"Biskupská 6, 60200 Brno",ceske,České,https://www.dohodabeerhouse.cz/,,,,1
+dolce-e-salato-hornikova-36a,osm,Dolce e Salato,"Horníkova 36a, 62800 Brno-Líšeň",kava,Kavárna,https://www.facebook.com/pages/category/Bar/Dolce-Salato-109971470623323/,,,,1
+dolce-omcia-uvoz-43,osm,Dolce Omcia,"Úvoz 43, 60200 Brno",pizza,Pizza,,,,,1
+don-antonio-pizza-burger-taborska-3216-78,osm,Don Antonio Pizza & Burger,"Táborská 3216/78, 61500 Brno",pizza,Pizza,https://www.donantonio.cz,,1,,1
+don-miguel-s-palackeho-trida-35,osm,Don Miguel's,"Palackého třída 35, 61200 Brno",,Restaurace,https://www.donmiguels.cz/,,,,1
+don-pacinko-kounicova-512-60,osm,Don Pačínko,"Kounicova 512/60, Brno-Královo Pole-Ponava",cina,Čína,https://donpacinko.cz/,,,,
+doner-kebab-futurum-videnska-132-100,osm,Döner Kebab Futurum,"Vídeňská 132/100, 619 00 Brno",kebab,Kebab,,,,,1
+dragon-iii-krizova-8,osm,Dragon III,"Křížová 8, 60300 Brno",asijske,Asijské,,,,,1
+duhovy-raj-okruzni-433-1,osm,Duhový Ráj,"Okružní 433/1, 63800 Brno",kava,Kavárna,https://duhovyraj.cz/,,,,1
+dukat-loosova-1,osm,Dukát,"Loosova 1, 63800 Brno",,Restaurace,https://www.restauracedukat.cz/,,,,1
+dvorek-pod-petrovem-petrov-1,osm,Dvorek pod Petrovem,"Petrov 1, 60200 Brno",kava,Kavárna,http://www.kavarnavbrne.cz,,,,1
+east-village-jaselska-2,osm,East Village,"Jaselská 2, 60200 Brno",burger,Burger,https://east-village6.webnode.cz/kontakt/,,1,1,1
+eatology-holandska-6,osm,Eatology,"Holandská 6, 63900 Brno",,Restaurace,http://www.iqrestaurant.cz/brno/home.html,,,,1
+efi-pivovar-zelny-trh-4,osm,Efi pivovar,"Zelný trh 4, 60200 Brno",ceske,České,https://efihostinec.cz/zelnak/,,1,,1
+element-restaurant-bar-behounska-108-7,osm,Element Restaurant & Bar,"Běhounská 108/7, 60200 Brno",ceske,České,https://www.elementbrno.com,,,,1
+empire-svobodak-namesti-svobody-16,osm,Empire Svoboďák,"náměstí Svobody 16, 60200 Brno",,Restaurace,http://www.facebook.com/Fempiresvobodak,,,,1
+everest-veveri-61,osm,Everest,"Veveří 61, 60200 Brno",asijske,Asijské,https://www.everestbrno.cz/,,,,1
+fabrik-urban-house-rooseveltova-9,osm,Fabrik Urban House,"Rooseveltova 9, 60200 Brno",,Restaurace,,,1,1,1
+f-ncy-fries-radnicka-11,osm,FÆNCY FRIES,"Radnická 11, 60200 Brno",fastfood,Fast food,https://www.faencyfries.cz/pobocky/faency-brno,,,,1
+faine-janackovo-namesti-654-2a,osm,FAINE,"Janáčkovo náměstí 654/2a, 60200 Brno",kava,Kavárna,https://faine.eu,,,,1
+faircafe-rybarska-202-19,osm,Faircafe,"Rybářská 202/19, 60300 Brno",kava,Kavárna,https://www.fairhotel.cz/restaurace,,,,1
+fako-club-hasicska-16-18,osm,FAKO CLUB,"Hasičská 16/18, 62000 Brno",,Restaurace,https://fako-club.cz/,,,,1
+falafelo-pekarska-19,osm,Falafelo,"Pekařská 19, 60200 Brno",fastfood,Fast food,https://www.falafelo.cz/,,1,1,1
+fansipan-stefanikova-7,osm,Fansipan,"Štefánikova 7, 60200 Brno",asijske,Asijské,,,,,1
+fansipan-asian-cuisine-sushi-kolarikova-1497,osm,FANSIPAN asian cuisine & sushi,"Kolaříkova 1497, 62100 Brno",asijske,Asijské,https://www.facebook.com/profile.php?id=61552598167979,,,,1
+fatfuck-smash-burgers-brno-hybesova-45,osm,FATFUCK smash burgers BRNO,"Hybešova 45, 60200 Brno",burger,Burger,https://brno.ftfck.cz/,,,,1
+faust-burger-pub-jiraskova-34,osm,Faust Burger Pub,"Jiráskova 34, 60200 Brno",burger,Burger,https://www.faustburgerpub.cz/,,,,1
+fenix-lounge-restaurace-masarykova-32,osm,FÉNIX Lounge restaurace,"Masarykova 32, 60200 Brno",pizza,Pizza,,,,,1
+fika-dominikanske-namesti-197-3,osm,FIKA,"Dominikánské náměstí 197/3, 60200 Brno",kava,Kavárna,https://fikacafe.cz/,,,,1
+flank-botanicka-598-72,osm,Flank,"Botanická 598/72, 60200 Brno",,Restaurace,https://www.flank.cz/,,,,1
+flek-veveri-453-6,osm,Flek,"Veveří 453/6, 60200 Brno",,Restaurace,,,,,1
+forky-s-cimburkova-593-4,osm,Forky's,"Cimburkova 593/4, 61200 Brno-Královo Pole",veganske,Veganské,https://www.forkys.cz/pobocka/nc-kralovo-pole/,,,,1
+forky-s-technicka-17,osm,Forky's,"Technická 17, Brno",veganske,Veganské,https://www.forkys.cz/pobocka/technologicky-park-brno/,,,,
+formanka-masova-8,osm,Formanka,"Mášova 8, 60200 Brno",,Restaurace,,,,,1
+fresh-bar-bistro-narohu-videnska-132-100,osm,Fresh bar & bistro NaRohu,"Vídeňská 132/100, 619 00 Brno",sladke,Sladké,,,,,1
+fresh-cafe-medispol-makovskeho-namesti-2,osm,Fresh Café Medispol,"Makovského náměstí 2, 61600 Brno",kava,Kavárna,https://bitperia.cz/board/fresh-cafe,,,,1
+fresh-fitpeople-videnska-132-100,osm,Fresh FitPeople,"Vídeňská 132/100, 619 00 Brno",fastfood,Fast food,https://freshfitpeople.cz/,,,,1
+fresh-pasta-pekarska-18,osm,Fresh Pasta,"Pekařská 18, 60200 Brno",pizza,Pizza,,,1,,1
+fresh-point-sushi-express-hradecka-408-40,osm,Fresh Point Sushi Express,"Hradecká 408/40, 621 00 Brno",asijske,Asijské,,,,,1
+fryends-ceska-31,osm,Fryends,"Česká 31, 60200 Brno",,Restaurace,https://www.fryends.cz/,,,,1
+garden-restaurant-pub-benesova-605-18,osm,Garden Restaurant & Pub,"Benešova 605/18, 60200 Brno",,Restaurace,https://www.gardenpub.cz/,,,,1
+geicha-masarykova-12,osm,Geicha,"Masarykova 12, 60200 Brno",kava,Kavárna,,,,,1
+gelateria-piazza-namesti-svobody-9,osm,Gelateria Piazza,"náměstí Svobody 9, 60200 Brno",kava,Kavárna,,,,,1
+gemini-halasovo-namesti-918-6b,osm,Gemini,"Halasovo náměstí 918/6b, 63800 Brno",kava,Kavárna,https://www.cafegemini.cz/,,,,1
+gill-s-espresso-bar-veveri-9,osm,Gill’s Espresso Bar,"Veveří 9, 60200 Brno",kava,Kavárna,,,,,1
+gimmi-lounge-cafe-slovanske-namesti-1,osm,GIMMI lounge café,"Slovanské náměstí 1, 61200 Brno",kava,Kavárna,https://www.gimmicafe.cz/,,,,1
+globus-bistro-reckovicka-555-3,osm,Globus Bistro,"Řečkovická 555/3, 621 00 Brno",fastfood,Fast food,,,,,1
+go-brno-behounska-4,osm,Gỗ Brno,"Běhounská 4, 60200 Brno",asijske,Asijské,,,1,1,1
+golden-sun-vesela-5,osm,Golden Sun,"Veselá 5, 60200 Brno",cina,Čína,http://www.goldensunbrno.cz/,,,,1
+gopal-trida-kpt-jarose-10,osm,Gopal,"třída Kpt. Jaroše 10, 60200 Brno",asijske,Asijské,https://gopal.menu/,,,,1
+grandezza-zelny-trh-2,osm,Grandezza,"Zelný trh 2, 60200 Brno",,Restaurace,,,,,1
+gth-multicatering-jana-babaka-11,osm,GTH multicatering,"Jana Babáka 11, 61200 Brno",,Restaurace,https://gth.cz/provoz/jb-brno,,,,1
+gusto-plzenka-husova-16,osm,GUSTO Plzeňka,"Husova 16, 60200 Brno",,Restaurace,https://gustoplzenka.cz/,,,,1
+guty-skandinavska-128-2,osm,Guty,"Skandinávská 128/2, 619 00 Brno",cina,Čína,https://gutydelivery.com/,,,,1
+gyros-taverna-athena-stefanikova-4,osm,Gyros Taverna Athena,"Štefánikova 4, 60200 Brno",kebab,Kebab,https://tavernaathena.cz/,,1,,1
+han-food-netroufalky-770,osm,Han Food,"Netroufalky 770, 625 00 Brno",asijske,Asijské,https://hanfood.cz/han-food-brno/,,1,1,1
+happy-teahouse-koblizna-5,osm,Happy teahouse,"Kobližná 5, 602 00 Brno",kava,Kavárna,https://www.veselacajovna.cz/,,,,1
+haribol-luzanecka-4,osm,Haribol,"Lužánecká 4, 60200 Brno",,Restaurace,https://www.haribol.cz/,,1,1,1
+hatsu-udolni-33,osm,Hatsu,"Údolní 33, 60200 Brno",asijske,Asijské,https://www.hatsurestaurant.cz/,,,,1
+hatsu-restaurant-mecova-4,osm,Hatsu restaurant,"Mečová 4, 60200 Brno",,Restaurace,,,,,1
+havana-restaurant-masarova-9,osm,Havana Restaurant,"Masarova 9, 62800 Brno - Líšeň",,Restaurace,https://www.havana-restaurant.cz/,,,,1
+hele-zmrzka-technicka-17,osm,Hele! Zmrzka,"Technická 17, Brno",sladke,Sladké,,,,,
+hladovy-vlk-jiraskova-51,osm,Hladový Vlk,"Jiráskova 51, 60200 Brno",pizza,Pizza,https://www.pizzavlk-brno.cz/,,,,1
+hoa-mai-bayerova-10,osm,Hoa Mai,"Bayerova 10, 60200 Brno",asijske,Asijské,,,1,,1
+hodne-nekde-pekarenska-12,osm,Hodně Někde,"Pekárenská 12, 60200 Brno",kava,Kavárna,,,,,1
+hospudka-u-kola-elplova-2492-1,osm,Hospůdka U Kola,"Elplova 2492/1, 62800 Brno",ceske,České,,,,,1
+hostinec-u-blahovky-gorkeho-54,osm,Hostinec U Bláhovky,"Gorkého 54, 60200 Brno",,Restaurace,,,,,1
+hostinec-u-ferdinanda-karaskovo-namesti-2457-17,osm,Hostinec U Ferdinanda,"Karáskovo náměstí 2457/17, 61500 Brno",,Restaurace,,,,,1
+hostinec-u-seminaru-smetanova-30,osm,Hostinec U Semináru,"Smetanova 30, 60200 Brno",ceske,České,https://www.useminaru.cz/,,,,1
+hostinec-u-vedru-tilhonova-2,osm,Hostinec u Vedrů,"Tilhonova 2, 62700 Brno",,Restaurace,,,,,1
+hradek-plny-hratek-volejnikova-1805-2,osm,Hrádek plný hrátek,"Volejníkova 1805/2, 61300 Brno",kava,Kavárna,,,,,1
+hrana-stolu-uvoz-8,osm,Hrana Stolu,"Úvoz 8, 60200 Brno",,Restaurace,,,,,1
+husovicka-sokolovna-dukelska-9,osm,Husovická Sokolovna,"Dukelská 9, 61400 Brno",,Restaurace,,,,,1
+cha-do-zelny-trh-10,osm,Cha Dō,"Zelný trh 10, 60200 Brno",cina,Čína,https://www.facebook.com/chadobrno/,,,,1
+cha-cha-husitska-8a,osm,Cha-Cha,"Husitská 8a, 61200 Brno",,Restaurace,https://cha-cha.cz/,,,,1
+chajovna-dominikanske-namesti-6,osm,Chajovna,"Dominikánské náměstí 6, 60200 Brno",kava,Kavárna,http://chajovna.cz/,,,,1
+charlie-s-koblizna-12,osm,Charlie's,"Kobližná 12, 60200 Brno",,Restaurace,,,,,1
+charlie-s-mill-restaurant-palackeho-trida-91,osm,Charlie's Mill Restaurant,"Palackého třída 91, 61200 Brno",ceske,České,https://www.charliesmill.cz/,,,,1
+charlie-s-park-kolejni-3015,osm,Charlie's Park,"Kolejní 3015, 61200 Brno",,Restaurace,https://charliespark.cz/,,,,1
+chef-viet-kounicova-292-59,osm,CHEF-VIET,"Kounicova 292/59, 60200 Brno",asijske,Asijské,https://chefviet.cz/,,1,,1
+chicago-haasova-1599-54,osm,Chicago,"Haasova 1599/54, 616 00 Brno",ceske,České,,,,,1
+chilli-garden-purkynova-3049-35g,osm,Chilli Garden,"Purkyňova 3049/35g, 61200 Brno",asijske,Asijské,https://chilligardenvn.com/,,1,,1
+chuang-shi-ji-koblizna-13,osm,Chuang Shi Ji,"Kobližná 13, 60200 Brno",cina,Čína,,,,,1
+chut-viet-lidicka-37,osm,Chuť Viet,"Lidická 37, 60200 Brno",asijske,Asijské,,,,,1
+chutne-stesti-lidicka-1874-38,osm,Chutné štěstí,"Lidická 1874/38, 60200 Brno",cina,Čína,https://chutnestesti.cz/,,,,1
+iguana-halasovo-namesti-7,osm,Iguana,"Halasovo náměstí 7, 63800 Brno",,Restaurace,,,,,1
+il-capo-merhautova-977-101,osm,IL Capo,"Merhautova 977/101, 61300 Brno",pizza,Pizza,https://www.ilcapo.cz/,,,,1
+il-mondo-jirova-4,osm,IL Mondo,"Jírova 4, 62800 Brno-Líšeň",pizza,Pizza,http://www.ilmondo-lisen.cz/,,,,1
+inaris-stefanikova-27,osm,Inaris,"Štefánikova 27, 60200 Brno",kava,Kavárna,http://inaris.cz/,,,,1
+india-thali-trida-kpt-jarose-13,osm,India Thali,"třída Kpt. Jaroše 13, 60200 Brno",asijske,Asijské,https://www.indiathali.cz/,,1,,1
+industra-coffee-masna-9,osm,Industra Coffee,"Masná 9, 60200 Brno-Trnitá",kava,Kavárna,https://facebook.com/IndustraCoffee,,,,1
+istanbul-kebab-banskobystricka-1259-1,osm,İstanbul kebab,"Banskobystrická 1259/1, 621 00 Brno",kebab,Kebab,,,,,1
+it-s-not-a-phase-mom-kotlarska-668-34,osm,It's not a phase mom!!!,"Kotlářská 668/34, Brno",kava,Kavárna,,,,,
+jaga-zerotinovo-namesti-6,osm,JAGA,"Žerotínovo náměstí 6, 60200 Brno",kava,Kavárna,,,,,1
+jakoby-jakubske-namesti-128-6,osm,Jakoby,"Jakubské náměstí 128/6, 60200 Brno",,Restaurace,https://www.restauracejakoby.cz/,,1,,1
+jazzmin-holandska-12,osm,Jazzmin,"Holandská 12, 63900 Brno",,Restaurace,,,,,1
+jean-paul-s-zelny-trh-10,osm,Jean Paul's,"Zelný trh 10, 60200 Brno",,Restaurace,https://www.jpbistro.cz/zelny-trh/,,,,1
+jean-paul-s-holandska-10,osm,Jean Paul's,"Holandská 10, 63900 Brno",,Restaurace,https://www.jpbistro.cz/spielberk/,,,,1
+jean-paul-s-netroufalky-770,osm,Jean Paul's,"Netroufalky 770, 625 00 Brno",fastfood,Fast food,https://www.jpbistro.cz/campus/,,1,,1
+jean-paul-s-purkynova-2950-105,osm,Jean Paul's,"Purkyňova 2950/105, 61200 Brno",,Restaurace,https://www.jpbistro.cz/muzeum.html,,,,1
+jean-paul-s-restaurant-behounska-4,osm,Jean Paul's restaurant,"Běhounská 4, 60200 Brno",,Restaurace,,,,,1
+jeste-jednu-minoritska-2,osm,Ještě jednu,"Minoritská 2, 60200 Brno",sladke,Sladké,,,,,1
+jidelna-100-chuti-kolejni-14,osm,Jídelna 100 chutí,"Kolejní 14, 61200 Brno",,Restaurace,https://jidelna100chuti.cz/,,,,1
+jidelna-beta-namesti-svobody-92-21,osm,Jídelna Beta,"náměstí Svobody 92/21, 60200 Brno",,Restaurace,,,1,,1
+jidelna-k2-cejl-62,osm,Jídelna K2,"Cejl 62, 60200 Brno",,Restaurace,,,,,1
+jidelna-kocourek-hlinky-105,osm,Jídelna Kocourek,"Hlinky 105, 60200 Brno",,Restaurace,http://www.jidelnakocourek.cz/,,,,1
+jidelna-maj-divadelni-3,osm,Jídelna Máj,"Divadelní 3, 60200 Brno",ceske,České,,,,,1
+jidelna-sindelar-a-syn-cejl-60,osm,Jídelna Šindelář a Syn,"Cejl 60, 60200 Brno",,Restaurace,https://www.sindelar.cz/,,,,1
+jidelna-u-bileho-konicka-sochorova-3232-36,osm,Jídelna U Bílého koníčka,"Sochorova 3232/36, 61600 Brno",,Restaurace,,,,,1
+jomsom-belohorska-61,osm,Jomsom,"Bělohorská 61, 63600 Brno",asijske,Asijské,https://www.jomsom.cz/,,1,,1
+julius-meinl-netroufalky-770,osm,Julius Meinl,"Netroufalky 770, 625 00 Brno",kava,Kavárna,https://juliusmeinl.com/,,,,1
+kabaret-spacek-kopecna-46,osm,Kabaret Špaček,"Kopečná 46, 60200 Brno",,Restaurace,,,,,1
+kafara-frycajova-78-16,osm,Kafara,"Fryčajova 78/16, 61400 Brno",kava,Kavárna,https://www.kafara.cz/,,,,1
+kafe-kobliha-pekarska-68,osm,KAFE & KOBLIHA,"Pekařská 68, Brno",kava,Kavárna,,,,,
+kafe-a-slanina-bohmova-1077-13,osm,Kafe a slanina,"Böhmova 1077/13, 62100 Brno",kava,Kavárna,,,,,1
+kafe-friedrich-smetanova-45,osm,Kafe Friedrich,"Smetanova 45, 60200 Brno",kava,Kavárna,http://kafefriedrich.cz/,,1,1,1
+kafec-orli-16,osm,Kafec,"Orlí 16, 60200 Brno",sladke,Sladké,https://www.kafec.cz/,,,,1
+kachna-cafe-cernopolni-33,osm,Kachna café,"Černopolní 33, 61300 Brno",kava,Kavárna,https://www.kachnadortuje.cz/kachna-cafe-cernopolni/,,,,1
+kachna-cafe-stankova-379-33,osm,Kachna café,"Staňkova 379/33, 61200 Brno",kava,Kavárna,https://www.kachnadortuje.cz/,,,,1
+kakheti-kounicova-2,osm,Kakheti,"Kounicova 2, 60200 Brno",,Restaurace,,,,,1
+kancl-bistro-purkynova-127,osm,KANCL Bistro,"Purkyňova 127, 61200 Brno",kava,Kavárna,https://www.facebook.com/profile.php?id=100089043302243,,,,1
+kartouza-cafe-bozetechova-1,osm,Kartouza Café,"Božetěchova 1, 61200 Brno",kava,Kavárna,,,,,1
+kaskada-taborskeho-nabrezi-3,osm,Kaskáda,"Táborského nábřeží 3, 63900 Brno",,Restaurace,,,,,1
+kavarna-cukrarna-smile-s-r-o-namesti-28-dubna-10-40,osm,Kavárna - cukrárna Smile s.r.o.,"náměstí 28. dubna 10/40, 63500;635 00 Brno",sladke,Sladké,https://www.cukrarna-kvetiny.cz/,,,,1
+kavarna-bemovka-vsetinska-527-20,osm,Kavárna Bémovka,"Vsetínská 527/20, 639 00 Brno",kava,Kavárna,,,,,1
+kavarna-cyro-anenska-9,osm,Kavárna Cyro,"Anenská 9, 60200 Brno",kava,Kavárna,,,,,1
+kavarna-dallmayr-hradecka-408-40,osm,Kavárna Dallmayr,"Hradecká 408/40, 621 00 Brno",kava,Kavárna,,,,,1
+kavarna-nevyprahnu-plovdivska-2560-7,osm,kavárna nevyPRAHnu,"Plovdivská 2560/7, Brno",kava,Kavárna,https://www.prahjm.cz/socialni-podnikani/nevyprahnu/,,,,
+kavarna-spolek-orli-22,osm,Kavárna Spolek,"Orlí 22, 60200 Brno",kava,Kavárna,,,,,1
+kavarna-u-kapucinu-kapucinske-namesti-7,osm,Kavárna u Kapucínů,"Kapucínské náměstí 7, 60200 Brno",sladke,Sladké,,,,,1
+kavarna-u-zambocha-kollarova-9,osm,Kavárna U Žambocha,"Kollárova 9, 61200 Brno",kava,Kavárna,,,,,1
+kebab-99-palackeho-trida-92,osm,Kebab 99!,"Palackého třída 92, 61200 Brno",kebab,Kebab,,,,,1
+kebab-abu-rami-lidicka-47,osm,Kebab Abu Rami,"Lidická 47, 60200 Brno",kebab,Kebab,,,,,1
+kebab-kotlarska-kotlarska-5,osm,Kebab Kotlářská,"Kotlářská 5, 60200 Brno",kebab,Kebab,,,,,1
+kebab-sach-behounska-109-9,osm,Kebab Šach,"Běhounská 109/9, 602 00 Brno",kebab,Kebab,,,1,,1
+kelimek-lidicka-971-25,osm,Kelímek,"Lidická 971/25, 602 00 Brno",kava,Kavárna,https://www.instagram.com/kelimek_brno/,,,,1
+kfc-rasinova-2,osm,KFC,"Rašínova 2, 60200 Brno",fastfood,Fast food,https://kfc.cz,,,,1
+kfc-masarykova-39,osm,KFC,"Masarykova 39, 60200 Brno",fastfood,Fast food,https://kfc.cz/restaurace/kfc-brno-masarykova-877,,,,1
+kfc-videnska-132-100,osm,KFC,"Vídeňská 132/100, 619 00 Brno",fastfood,Fast food,https://kfc.cz/restaurace/kfc-brno-futurum-dt-879,,,,1
+kfc-netroufalky-770-16,osm,KFC,"Netroufalky 770/16, 625 00 Brno",fastfood,Fast food,https://kfc.cz/restaurace/kfc-brno-campus-square-dt-888,,,,1
+khao-niew-thai-bistro-zemedelska-1693-38,osm,Khao Niew Thai Bistro,"Zemědělská 1693/38, 61300 Brno",asijske,Asijské,https://khaoniewthai.cz/,,,,1
+khaybar-slepa-27,osm,Khaybar,"Slepá 27, 61300 Brno",asijske,Asijské,,,1,,1
+kimono-bayerova-572-2,osm,KIMONO,"Bayerova 572/2, 60200 Brno",asijske,Asijské,https://europeancoffeetrip.com/cafe/kimono-brno/,,,,1
+klub-cestovatelu-veleslavinova-14,osm,Klub cestovatelů,"Veleslavínova 14, 61200 Brno",asijske,Asijské,https://www.klubcestovatelubrno.cz/,,1,1,1
+knedlikovy-raj-nadrazni-2a,osm,Knedlíkový ráj,"Nádražní 2a, 60200 Brno",,Restaurace,,,,,1
+kocici-kavarna-pelisek-trida-kpt-jarose-37a,osm,Kočičí kavárna Pelíšek,"třída Kpt. Jaroše 37a, 60200 Brno",kava,Kavárna,http://kocicipelisek.cz/,,1,1,1
+kockafe-schrodinger-dominikanske-namesti-5,osm,Kočkafé Schrödinger,"Dominikánské náměstí 5, 602 00 Brno",kava,Kavárna,https://www.kockafe.com/,,,,1
+koffein-gorkeho-82-37,osm,Koffein,"Gorkého 82/37, 60200 Brno",kava,Kavárna,https://koffein.eatbu.com/,,,,1
+kofi-kofi-holandska-873-6,osm,Kofi kofi,"Holandská 873/6, Brno",kava,Kavárna,,,,,
+kofi-kofi-technicka-17,osm,Kofi Kofi,"Technická 17, Brno",kava,Kavárna,,,,,
+koinobori-videnska-132-100,osm,Koinobori,"Vídeňská 132/100, 619 00 Brno",asijske,Asijské,http://www.koinobori.cz/,,,,1
+kometa-pub-kridlovicka-34,osm,Kometa Pub,"Křídlovická 34, 60300 Brno",,Restaurace,http://arena.kometapub.cz/,,,,1
+kometa-pub-miki-makovskeho-namesti-3166-2,osm,Kometa Pub MIKI,"Makovského náměstí 3166/2, 61600 Brno",,Restaurace,https://www.kometapub.cz/miki,,,,1
+kominska-rychta-kristenova-14,osm,Komínská rychta,"Kristenova 14, 62400 Brno",,Restaurace,https://www.kominskarychta.cz/,,,,1
+korzar-minska-26,osm,Korzár,"Minská 26, 61600 Brno",,Restaurace,https://www.korzar.com/,,,,1
+kosilka-nerudova-4,osm,Košilka,"Nerudova 4, 60200 Brno",kava,Kavárna,,,,,1
+kousek-recka-na-taliri-anenska-4,osm,Kousek Řecka Na Talíři,"Anenska 4, Brno",,Restaurace,https://kousekreckanataliri.cz,,,,
+kratky-kafe-mathonova-2,osm,Krátký Kafe,"Mathonova 2, 61300 Brno",kava,Kavárna,,,,,1
+kravalna-palavske-namesti-5,osm,Kraválna,"Pálavské náměstí 5, 62800 Brno",kava,Kavárna,http://www.kravalna.cz/,,,,1
+kult-cafe-husitska-1127-6,osm,Kult Cafe,"Husitská 1127/6, 61200 Brno",kava,Kavárna,,,,,1
+kurdish-grill-divadelni-603-3,osm,Kurdish grill,"Divadelní 603/3, Brno",kebab,Kebab,https://www.instagram.com/kurdish.kebab/,,,,
+kurdsky-kebab-cejl-93,osm,Kurdský kebab,"Cejl 93, 60200 Brno",kebab,Kebab,,,,,1
+kurdsky-kebab-lidicka-33,osm,Kurdský kebab,"Lidická 33, 60200 Brno",kebab,Kebab,,,,,1
+kytkafe-mecova-8,osm,Kytkafe,"Mečová 8, 60200 Brno",kava,Kavárna,,,,,1
+l-eau-vive-petrov-2,osm,L'Eau Vive,"Petrov 2, 60200 Brno",,Restaurace,,,,,1
+l-osteria-prizova-285-3,osm,L'Osteria,"Přízova 285/3, 60200 Brno",,Restaurace,https://losteria.net/cz/restaurace/restaurant/brno/,,,,1
+la-canttina-cejl-16,osm,La Canttina,"Cejl 16, Brno",pizza,Pizza,,,,,
+la-casa-verde-taborska-256-232,osm,La Casa Verde,"Táborská 256/232, 61500 Brno",kava,Kavárna,https://www.facebook.com/LaCasaVerde.Cz/,,,,1
+la-catedral-uvoz-432-80,osm,La catedral,"Úvoz 432/80, 60200 Brno",pizza,Pizza,,,,,1
+la-corrida-namesti-28-dubna-2,osm,La Corrida,"náměstí 28. dubna 2, 63500 Brno",pizza,Pizza,https://www.lacorrida.cz,,,,1
+la-cristina-zahradnicka-298-19,osm,La Cristina,"Zahradnická 298/19, 60300 Brno",pizza,Pizza,https://www.la-cristina.cz,,,,1
+la-cucina-nera-dukelska-trida-58,osm,La Cucina Nera,"Dukelská třída 58, 61400 Brno",pizza,Pizza,https://www.lacucinanera.cz/,,,,1
+la-dolce-speranza-lidicka-32,osm,La Dolce Speranza,"Lidická 32, 60200 Brno",pizza,Pizza,https://lasperanza-bistro.cz/,,,,1
+la-famiglia-udolni-4,osm,La Famiglia,"Údolní 4, 60200 Brno",pizza,Pizza,https://www.lafamigliabrno.cz,,1,1,1
+la-peda-krizova-16,osm,La Peda,"Křížová 16, 60300 Brno",pizza,Pizza,,,,,1
+la-vanille-milady-horakove-1954-7,osm,la Vanille,"Milady Horákové 1954/7, 60200 Brno",sladke,Sladké,,,,,1
+la-vaza-behounska-2,osm,La Váza,"Běhounská 2, 60200 Brno",kava,Kavárna,https://www.lavazacafe.cz/,,,,1
+labyrint-smetanova-51,osm,Labyrint,"Smetanova 51, 60200 Brno",kava,Kavárna,,,,,1
+laguna-smetanova-2,osm,Laguna,"Smetanova 2, 60200 Brno",,Restaurace,https://restaurace-laguna.cz/,,,,1
+le-brunch-smetanova-284-13,osm,Le Brunch,"Smetanova 284/13, 60200 Brno",kava,Kavárna,,,,,1
+le-petit-cafe-minska-14,osm,Le Petit cafe,"Minská 14, 61600 Brno",kava,Kavárna,,,1,,1
+leharo-potocka-53-2,osm,Leháro,"Potocká 53/2, 62300 Brno",,Restaurace,https://www.bistroleharo.cz,,,,1
+leonardo-stefanikova-12,osm,Leonardo,"Štefánikova 12, 60200 Brno",,Restaurace,https://www.sanatoriumhelios.cz/restaurace-leonardo/,,,,1
+let-s-steaking-dominikanska-3,osm,Let´s STEAKing,"Dominikánská 3, 60200 Brno",burger,Burger,https://www.steaking.cz/,,,,1
+leyaly-koliste-1907-3,osm,Leyaly,"Koliště 1907/3, 60200 Brno",kava,Kavárna,https://loungeleyaly.cz/,,,,1
+liberty-cafe-radnicka-7,osm,Liberty Cafe,"Radnická 7, 60200 Brno",kava,Kavárna,https://www.libertycafe.cz/,,,,1
+light-of-india-stefanikova-35,osm,Light of India,"Štefánikova 35, 60200 Brno",asijske,Asijské,http://lightofindia.cz/,,1,,1
+limonade-cafe-ksirova-107,osm,Limonade cafe,"Kšírova 107, 617 00 Brno",kava,Kavárna,https://www.facebook.com/people/Limonado/100083266510913/,,,,1
+lion-kebab-milady-horakove-1957-15,osm,Lion Kebab,"Milady Horákové 1957/15, 60200 Brno",kebab,Kebab,,,,,1
+little-saigon-spitalka-124-37,osm,Little Saigon,"Špitálka 124/37, 60200 Brno",asijske,Asijské,https://www.facebook.com/littlesaigonbrno/,,,,1
+local-barber-shop-smetanova-5,osm,LOCAL BARBER SHOP,"Smetanova 5, 60200 Brno",kava,Kavárna,http://www.localbarber-shop.cz/,,,,1
+local-cafe-restaurant-majdalenky-10,osm,LOCAL Cafe&Restaurant,"Majdalenky 10, 63800 Brno",kava,Kavárna,http://www.rendez-vous-cafe.cz/,,,,1
+lokahi-jiraskova-15,osm,Lōkahi,"Jiráskova 15, 60200 Brno",kava,Kavárna,https://lokahi.cz/,,,,1
+lokal-u-caipla-kozi-3,osm,Lokál U Caipla,"Kozí 3, 60200 Brno",ceske,České,https://lokal-ucaipla.ambi.cz/,,1,,1
+los-capolitos-zelny-trh-1,osm,Los Capolitos,"Zelný trh 1, 60200 Brno",mexiko,Mexiko,https://capolitos.cz/,,,,1
+los-capolitos-netroufalky-770,osm,Los Capolitos,"Netroufalky 770, 625 00 Brno",mexiko,Mexiko,https://www.capolitos.cz/pobocka/brno-campus,,1,,1
+lotebi-rezacova-5,osm,Lotebi,"Řezáčova 5, 62400 Brno",,Restaurace,https://lotebi.cz/,,,,1
+lotus-restaurant-grill-sushi-bar-silingrovo-namesti-257-3,osm,Lotus Restaurant - Grill & Sushi bar,"Šilingrovo náměstí 257/3, 602 00 Brno",asijske,Asijské,http://lotusrestaurant.cz,,,,1
+lucullus-husova-200-16,osm,Lucullus,"Husova 200/16, 60200 Brno",,Restaurace,http://www.hotelinternational.cz/rs/restaurace-lucullus,,,,1
+lumos-krizova-20,osm,Lumos,"Křížová 20, 60300 Brno",kava,Kavárna,,,,,1
+luzanka-buresova-2,osm,Lužánka,"Burešova 2, 60200 Brno",ceske,České,https://luzankabrno.cz/,,,,1
+m-coffee-bar-palackeho-trida-25,osm,M coffee bar,"Palackého třída 25, 61200 Brno",kava,Kavárna,,,,,1
+m13-rock-pub-benesova-612-22,osm,M13 rock & pub,"Benešova 612/22, 60200 Brno",ceske,České,https://www.m13.cz/,,,,1
+ma-hostina-stefanikova-78,osm,Má hostina,"Štefánikova 78, 61200 Brno",,Restaurace,,,1,1,1
+mada-ice-cream-kapucinske-namesti-11,osm,Mada ice cream,"Kapucínské náměstí 11, 60200 Brno",kava,Kavárna,,,1,,1
+maison-restaurant-taste-of-asia-jakubske-namesti-109-1,osm,Maison Restaurant - Taste of Asia,"Jakubské náměstí 109/1, 60200 Brno",asijske,Asijské,,,,,1
+mamakafe-uvoz-525-21,osm,Mamakafe,"Úvoz 525/21, Brno",kava,Kavárna,https://www.mamakafe.cz/,,,,
+mandarin-pruchodni-1,osm,Mandarin,"Průchodní 1, 60200 Brno",cina,Čína,,,,,1
+mandlarna-dominikanska-1,osm,Mandlarna,"Dominikánská 1, 60200 Brno",kava,Kavárna,,,,,1
+manya-pruchodni-2,osm,Manya,"Průchodní 2, 602 00 Brno",asijske,Asijské,https://www.manyabrno.cz,,,,1
+marhaba-kebab-cejl-39,osm,Marhaba Kebab,"Cejl 39, 60200 Brno",kebab,Kebab,,,,,1
+marmite-cafe-hrncirska-891-17,osm,Marmite café,"Hrnčířská 891/17, 60200 Brno",kava,Kavárna,https://marmite.cz/,,,,1
+maximus-resort-restaurace-portum-hrazni-327-4a,osm,Maximus Resort - Restaurace Portum,"Hrázní 327/4a, 63500 Brno",,Restaurace,https://www.maximus-resort.cz/restaurace-portum-brnenska-prehrada/,,,,1
+mayada-prikop-843-6,osm,Mayada,"Příkop 843/6, 60200 Brno",,Restaurace,,,1,1,1
+maybe-coffee-bistro-videnska-18a,osm,Maybe coffee & bistro,"Vídeňská 18a, 63900 Brno",kava,Kavárna,https://maybecoffee.cz/,,,,1
+mcdonald-s-masarykova-32,osm,McDonald's,"Masarykova 32, 60200 Brno",burger,Burger,,,1,,1
+mcdonald-s-namesti-svobody-19,osm,McDonald's,"náměstí Svobody 19, 60200 Brno",burger,Burger,https://www.mcdonalds.cz/,,1,,1
+meet-me-veveri-464-17,osm,Meet Me,"Veveří 464/17, 60200 Brno",kava,Kavárna,,,,,1
+menu2go-podebradova-61,osm,Menu2Go,"Poděbradova 61, 61200 Brno",fastfood,Fast food,https://menu2go.cz/,,,,1
+menza-fch-purkynova-118,osm,Menza FCH,"Purkyňova 118, Brno",,Restaurace,https://www.kam.vutbr.cz/21default.aspx?p=menu&provoz=16,,,,
+menza-kolejni-kolejni-2905-2,osm,Menza Kolejní,"Kolejní 2905/2, 612 00 Brno",fastfood,Fast food,https://www.kam.vutbr.cz/,,,,1
+menza-purkynova-purkynova-93,osm,Menza Purkyňova,"Purkyňova 93, Brno",,Restaurace,http://www.kam.vutbr.cz/?p=nabs#castclanku68,,,,
+menza-vinarska-vinarska-499-5,osm,Menza Vinařská,"Vinařská 499/5, 50300 Brno",ceske,České,https://www.skm.muni.cz/,,,,1
+mikulasek-elgartova-263-8,osm,Mikulášek,"Elgartova 263/8, 61400 Brno",,Restaurace,http://www.restauracemikulasek.cz/,,,,1
+minach-postovska-6,osm,Minach,"Poštovská 6, 60200 Brno",kava,Kavárna,http://www.cokoladovna.com/,,,,1
+minach-cejl-62,osm,Minach,"Cejl 62, 60200 Brno",kava,Kavárna,http://www.cokoladovna.com/,,,,1
+mistogalerie-sklenena-louka-kounicova-276-23,osm,Místogalerie Skleněná louka,"Kounicova 276/23, 60200 Brno",kava,Kavárna,,,,,1
+mitrovski-veletrzni-13,osm,Mitrovski,"Veletržní 13, 60300 Brno",ceske,České,https://www.mitrovski.cz/,,,,1
+mix-grill-netroufalky-770,osm,Mix Grill,"Netroufalky 770, 625 00 Brno",ceske,České,https://www.mixgrill.cz/,,,,1
+mj-holiday-svratecka-11,osm,MJ Holiday,"Svratecká 11, 624 00 Brno",ceske,České,https://www.holidayrestaurace.cz/,,,,1
+moc-bbq-house-premyslovo-namesti-49,osm,Mộc BBQ House,"Přemyslovo náměstí 49, 627 00 Brno",asijske,Asijské,https://mocbbqhouse.cz/,,,,1
+mochi-botanicka-605-19,osm,Mochi,"Botanická 605/19, Brno",pizza,Pizza,,,,,
+monogram-espresso-bar-kapucinske-namesti-12,osm,Monogram Espresso Bar,"Kapucínské náměstí 12, 60200 Brno",kava,Kavárna,https://www.monogramespressobar.cz/,,,,1
+monte-bu-udolni-76,osm,Monte Bú,"Údolní 76, 60200 Brno",kava,Kavárna,https://www.monte-bu.cz/,,,,1
+monte-cristi-empanady-starobrnenska-14,osm,Monte Cristi empanády,"Starobrněnská 14, 60200 Brno",fastfood,Fast food,https://www.montecristi.cz/,,,,1
+moravanska-rychta-stredni-55-9,osm,Moravanská rychta,"Střední 55/9, 66448 Brno",ceske,České,,,,,1
+moravska-chalupa-krizkovskeho-489-47a,osm,Moravská chalupa,"Křížkovského 489/47a, 60300 Brno",,Restaurace,,,,,1
+moravske-muzeum-pavilon-anthropos-pisarecka-273-5,osm,Moravské muzeum - Pavilon Anthropos,"Pisárecká 273/5, 60300 Brno",kava,Kavárna,https://mzm.cz,,,,1
+morgal-husova-18,osm,Morgal,"Husova 18, 60200 Brno",kava,Kavárna,https://www.morgal.cz/,,,,1
+mori-sportovni-559-2a,osm,Mori,"Sportovní 559/2a, 60200 Brno",asijske,Asijské,https://www.themori.cz/,,,,1
+mors-art-rooseveltova-6,osm,Mors Art,"Rooseveltova 6, 60200 Brno",kava,Kavárna,http://www.morsart.cz/,,,,1
+mr-turecky-kebap-hlavni-1129-129,osm,Mr. Turecký Kebap,"Hlavní 1129/129, 62400 Brno",kebab,Kebab,,,,,1
+mr-sushito-janska-10,osm,Mr.Sushito,"Jánská 10, 60200 Brno",asijske,Asijské,http://mrsushito.cz,,,,1
+mulgogi-veveri-51,osm,Mulgogi,"Veveří 51, 60200 Brno",asijske,Asijské,https://mulgogi.cz/,,1,,1
+muni-cafeteria-faculty-of-arts-arne-novaka-1,osm,muni cafeteria faculty of Arts,"Arne Nováka 1, 60200 Brno",sladke,Sladké,https://knihovna.phil.muni.cz,,,,1
+na-halach-stredni-26,osm,Na Halách,"Střední 26, 60200 Brno",,Restaurace,,,,,1
+na-hasicce-jeneweinova-4,osm,Na Hasičce,"Jeneweinova 4, 61700 Brno",,Restaurace,http://nahasicce.sweb.cz/,,,,1
+na-knofliku-behounska-9,osm,Na Knoflíku,"Běhounská 9, 60200 Brno",ceske,České,http://www.naknofliku.cz,,,,1
+na-mlatech-mikulcicka-2b,osm,Na Mlatech,"Mikulčická 2b, 62700 Brno",,Restaurace,,,,,1
+na-ruzku-stefanikova-25,osm,Na Růžku,"Štefánikova 25, 60200 Brno",,Restaurace,https://www.naruzkubrno.cz/,,,,1
+na-skopek-provaznikova-890-40,osm,Na Škopek,"Provazníkova 890/40, 61300 Brno",ceske,České,https://naskopek.cz/,,,,1
+na-spilberk-spilberk-1,osm,Na Špilberk,"Špilberk 1, 60200 Brno",ceske,České,https://naspilberk.cz/,,,,1
+na-trati-libusina-trida-880-25,osm,Na Trati,"Libušina třída 880/25, 62300 Brno",pizza,Pizza,https://www.restauracenatrati.cz/,,,,1
+na-zmrzlinu-bayerova-589-18,osm,Na zmrzlinu,"Bayerova 589/18, 60200 Brno",sladke,Sladké,https://www.iceinvest.cz/,,,,1
+na-tahu-basty-2,osm,Na-Tahu,"Bašty 2, 60200 Brno",ceske,České,https://www.na-tahu.cz/,,,,1
+naber-si-rosickeho-namesti-196-9,osm,Naber si,"Rosického náměstí 196/9, 61600 Brno",,Restaurace,https://nabersi.cz/,,,,1
+nadiia-koliste-1908-5,osm,Nadiia,"Koliště 1908/5, 60200 Brno",,Restaurace,,,,,1
+nality-caj-dymkarna-cajovna-videnska-80,osm,"Nalitý Čaj - dymkárna, čajovna","Vídeňská 80, 63900 Brno",kava,Kavárna,https://www.nalitycaj.cz/,,,,1
+namaskar-starobrnenska-287-9,osm,Namaskar,"Starobrněnská 287/9, Brno",asijske,Asijské,https://www.namaskar.cz/,,,,
+nase-vase-bistro-jaselska-8,osm,Naše Vaše Bistro,"Jaselská 8, 60200 Brno",,Restaurace,https://nasevasebistro.cz/,,,,1
+nase-veci-jiraskova-16,osm,Naše věci,"Jiráskova 16, 60200 Brno",kava,Kavárna,,,,,1
+nefertiti-namesti-svobody-17,osm,Nefertiti,"náměstí Svobody 17, 60200 Brno",kava,Kavárna,,,,,1
+nekonecno-lidicka-14,osm,Nekonečno,"Lidická 14, 60200 Brno",ceske,České,http://www.nekonecnorestaurant.cz/,,,,1
+nel-forno-namesti-svobody-17,osm,Nel Forno,"náměstí Svobody 17, 60200 Brno",,Restaurace,,,,,1
+nem-cimburkova-593-4,osm,NEM,"Cimburkova 593/4, 61200 Brno-Královo Pole",asijske,Asijské,,,,,1
+nepal-tyrsova-2,osm,Nepal,"Tyršova 2, 61200 Brno",asijske,Asijské,https://nepalbrno.cz/,,1,,1
+neva-pekarska-14,osm,Neva,"Pekařská 14, 60200 Brno",kava,Kavárna,,,,,1
+nihao-stefanikova-15,osm,Nihao,"Štefánikova 15, 60200 Brno",asijske,Asijské,,,,,1
+no-a-co-merhautova-8,osm,No a Co,"Merhautova 8, 61300 Brno",,Restaurace,,,,,1
+no-feet-vankovo-namesti-1a,osm,No Feet,"Vaňkovo náměstí 1a, 60200 Brno",kava,Kavárna,https://www.nofeet.cz/,,,,1
+no-gluten-no-problem-zamecnicka-181-3,osm,No Gluten No Problem!,"Zámečnická 181/3, Brno",,Restaurace,https://nogluten-noproblem.cz/,,,,
+no-limit-starobrnenska-285-15,osm,No Limit,"Starobrněnská 285/15, Brno",kebab,Kebab,,,,,
+no-ne-janska-11,osm,No-Nê,"Jánská 11, 60200 Brno",asijske,Asijské,,,,,1
+noem-arch-restaurant-cimburkova-9,osm,Noem Arch Restaurant,"Cimburkova 9, 61200 Brno",,Restaurace,,,,,1
+nok-nok-restaurant-zamecnicka-1,osm,NOK NOK Restaurant,"Zámečnická 1, 60200 Brno",ceske,České,https://www.noknokrestaurant.cz/nok-nok-restaurant-brno/,,1,,1
+numi-izakaya-trida-kpt-jarose-28,osm,Numi Izakaya,"třída Kpt. Jaroše 28, 60200 Brno",asijske,Asijské,https://numi-izakaya.cz/,,,,1
+oaza-slovakova-2,osm,Oaza,"Slovákova 2, 60200 Brno",zdrave,Zdravé,https://oaza-brno.cz/,,1,1,1
+oaza-lidicka-7,osm,Oáza,"Lidická 7, 60200 Brno",,Restaurace,,,,,1
+obelix-stefanikova-26,osm,Obelix,"Štefánikova 26, 60200 Brno",pizza,Pizza,,,1,1,1
+okruh-pub-rybnicka-75,osm,Okruh Pub,"Rybnická 75, 63400 Brno",,Restaurace,https://www.okruhpub.cz/,,,,1
+olymp-durdakova-46,osm,Olymp,"Durďákova 46, 61300 Brno",,Restaurace,,,,,1
+omega-pizza-husitska-9,osm,Omega Pizza,"Husitská 9, 61200 Brno",pizza,Pizza,,,1,,1
+omni-cafe-brunch-pekarska-56,osm,omni café brunch,"Pekařská 56, 60200 Brno",kava,Kavárna,,,,,1
+onyx-kopernikova-17,osm,Onyx,"Koperníkova 17, 61500 Brno",,Restaurace,,,1,,1
+ortica-pizza-palackeho-trida-110,osm,Ortica pizza,"Palackého třída 110, 61200 Brno",pizza,Pizza,https://www.orticapizza.cz,,,,1
+pablo-esco-bar-minska-88,osm,Pablo Esco Bar,"Minská 88, 61600 Brno",,Restaurace,http://www.pabloescobar.cz/,,,,1
+padagali-kotlarska-51a,osm,Padagali,"Kotlářská 51a, 60200 Brno",asijske,Asijské,https://padagali.cz/,,1,1,1
+padowetz-masarykova-34,osm,Padowetz,"Masarykova 34, 60200 Brno",,Restaurace,https://www.restaurant-padowetz.cz/,,,,1
+padthai-palackeho-trida-124,osm,PadThai,"Palackého třída 124, 61200 Brno",asijske,Asijské,https://www.padthairestaurace.cz/,,,,1
+pagoda-minska-3,osm,Pagoda,"Minská 3, 61600 Brno",asijske,Asijské,,,,,1
+palac-food-skandinavska-128-2,osm,Palác Food,"Skandinávská 128/2, 619 00 Brno",cina,Čína,https://www.palacfood.cz/,,,,1
+palavsky-senk-palavske-namesti-4290-2a,osm,Pálavský šenk,"Pálavské náměstí 4290/2A, 62800 Brno",ceske,České,,,,,1
+palazzo-silingrovo-namesti-2,osm,Palazzo,"Šilingrovo náměstí 2, 60200 Brno",,Restaurace,http://https%3A%2F%2Fwww.facebook.com%2Fpalazzorestaurant%2F&usg=AOvVaw3yBQYudER_eHv7rZYdfAsZ&opi=89978449,,,,1
+panda-cimburkova-593-4,osm,Panda,"Cimburkova 593/4, 61200 Brno-Královo Pole",asijske,Asijské,,,,,1
+panda-netroufalky-770,osm,Panda,"Netroufalky 770, 625 00 Brno",cina,Čína,,,1,,1
+panksy-jaselska-19,osm,Panksy,"Jaselská 19, 60200 Brno",sladke,Sladké,,,1,,1
+panorama-pristavni-1064-38,osm,Panorama,"Přístavní 1064/38, 63500 Brno",,Restaurace,,,,,1
+panska-licha-panska-licha-632-6,osm,Panská lícha,"Panská lícha 632/6, 64400 Brno-Obřany",ceske,České,,,,,1
+paolo-caffe-kopecna-24,osm,Paolo Caffé,"Kopečná 24, 60200 Brno",kava,Kavárna,,,,,1
+park-lane-luzanecka-4a,osm,Park Lane,"Lužánecká 4a, 60200 Brno",kava,Kavárna,http://www.parklanecafe.cz/,,1,,1
+parkhotel-restaurant-veslarska-347-250,osm,Parkhotel Restaurant,"Veslařská 347/250, 63700 Brno",,Restaurace,,,,,1
+parodie-vachova-8,osm,Parodie,"Vachova 8, 60200 Brno",,Restaurace,,,,,1
+pauzza-turanka-115,osm,Pauzza,"Tuřanka 115, 62700 Brno",fastfood,Fast food,https://www.pauzza.cz/,,,,1
+pavillon-jezuitska-6,osm,Pavillon,"Jezuitská 6, 60200 Brno",,Restaurace,http://www.restaurant-pavillon.cz/,,,,1
+pegas-jiraskova-44,osm,Pegas,"Jiráskova 44, 60200 Brno",,Restaurace,https://www.pegas-jiraskova.cz/,,,,1
+pellegrini-namesti-svobody-18,osm,Pellegrini,"náměstí Svobody 18, 60200 Brno",,Restaurace,http://www.cafe-cocktailbar-pizzeria.cz/,,1,,1
+pepe-food-gym-skrobarenska-502-1,osm,PEPE FOOD & GYM,"Škrobárenská 502/1, 61700 Brno",,Restaurace,,,,,1
+periferie-kafe-libusina-trida-580,osm,Periferie kafe,"Libušina třída 580, 62300 Brno",kava,Kavárna,,,,,1
+pf-cafe-dominikanske-namesti-685,osm,PF Café,"Dominikánské náměstí 685, 602 00 Brno",kava,Kavárna,,,,,1
+pho-43-trida-kpt-jarose-20,osm,PHO 43,"třída Kpt. Jaroše 20, 60200 Brno",asijske,Asijské,,,,,1
+pho-ha-noi-jakubske-namesti-1,osm,Pho Ha Noi,"Jakubské náměstí 1, 60200 Brno",asijske,Asijské,,,,,1
+pho-viet-palackeho-trida-31,osm,Phở Việt,"Palackého třída 31, 61200 Brno",asijske,Asijské,,,,,1
+pho-viet-nam-divadelni-6,osm,Pho Viet nam,"Divadelní 6, 60200 Brno",asijske,Asijské,,,1,,1
+piccadilly3-jungmannova-2,osm,Piccadilly3,"Jungmannova 2, 61200 Brno",kava,Kavárna,,,,,1
+piccolo-merhautova-93,osm,Piccolo,"Merhautova 93, 61300 Brno",ceske,České,https://piccolobar.cz/,,,,1
+pikola-jakubska-5,osm,Pikola,"Jakubská 5, 60200 Brno",kava,Kavárna,https://kafepikola.cz/,,,,1
+pivni-opice-jostova-138-4,osm,Pivní opice,"Joštova 138/4, 60200 Brno",,Restaurace,https://www.pivniopice.cz/,,,,1
+pivnice-masny-ruzek-krenova-70,osm,Pivnice Masný růžek,"Křenová 70, 60200 Brno",,Restaurace,https://www.pivnicemasnyruzek.cz,,,,1
+pivnice-na-piskach-bayerova-23,osm,Pivnice Na pískách,"Bayerova 23, 60200 Brno",,Restaurace,,,,,1
+pivnice-na-rohu-divadelni-divadelni-6,osm,Pivnice na rohu Divadelní,"Divadelní 6, 60200 Brno",ceske,České,https://www.pivnicenarohu.cz/,,,,1
+pivnice-pegas-jakubska-120-4,osm,Pivnice Pegas,"Jakubská 120/4, 60200 Brno",,Restaurace,https://brnorestauracepivnice.hotelpegas.com/,,,,1
+pivnice-u-capa-obilni-trh-10,osm,Pivnice U Čápa,"Obilní trh 10, 60200 Brno",ceske,České,,,1,,1
+pivnice-u-tygra-vrchlickeho-sad-3,osm,Pivnice U Tygra,"Vrchlického sad 3, 60200 Brno",,Restaurace,https://www.pivniceutygra.cz/,,,,1
+pivovarska-brno-mendlovo-namesti-158-20,osm,Pivovarská Brno,"Mendlovo náměstí 158/20, 60300 Brno",ceske,České,https://www.pivovarska-starobrno.cz/,,,,1
+pivovarska-restaurace-moravia-kytnerova-6,osm,Pivovarská restaurace Moravia,"Kytnerova 6, 62100 Brno",ceske,České,https://www.pivovarskarestauracemoravia.cz/,,,,1
+pizza-bombastica-teyschlova-38a,osm,Pizza Bombastica,"Teyschlova 38a, 63500 Brno",pizza,Pizza,https://bystrc.pizzabombastica.cz/,,,,1
+pizza-bombastica-jilkova-2301-165,osm,Pizza Bombastica,"Jílkova 2301/165, Brno",pizza,Pizza,https://www.bombasticapub.cz,,,,
+pizza-bombastica-vychodilova-2565-17,osm,Pizza Bombastica,"Vychodilova 2565/17, 61600 Brno",pizza,Pizza,https://www.bombastica.cz/,,,,1
+pizza-bombastica-hybesova-307-59,osm,Pizza Bombastica,"Hybešova 307/59, 60200 Brno",pizza,Pizza,https://www.pizzabombastica.cz/,,,,1
+pizza-bombastica-palackeho-namesti-820-20a,osm,Pizza Bombastica,"Palackého náměstí 820/20a, 62100 Brno",pizza,Pizza,https://www.pizzabombastica.cz/,,,,1
+pizza-hot-masarykova-12,osm,Pizza Hot,"Masarykova 12, 60200 Brno",pizza,Pizza,,,1,,1
+pizza-panzon-lidicka-43,osm,Pizza Panzón,"Lidická 43, 60200 Brno",pizza,Pizza,,,,,1
+pizza-punk-uvoz-80,osm,Pizza Punk,"Úvoz 80, 60200 Brno",pizza,Pizza,,,,,1
+pizzeria-al-capone-hrncirska-6,osm,Pizzeria Al Capone,"Hrnčířská 6, 60200 Brno",pizza,Pizza,https://www.pizzaalcapone.cz/brno/,,1,,1
+pizzeria-la-gamba-okruzni-9b,osm,Pizzeria La Gamba,"Okružní 9b, 63800 Brno",pizza,Pizza,https://www.pizzeria-lagamba.com/,,,,1
+pizzeria-ristorante-sul-campo-fanderlikova-3083-17,osm,Pizzeria Ristorante Sul Campo,"Fanderlíkova 3083/17, 616 00 Brno",pizza,Pizza,https://www.sulcampobrno.cz/,,,,1
+pizzerie-mozzarella-kolejni-2905-2,osm,Pizzerie Mozzarella,"Kolejní 2905/2, 61200 Brno",pizza,Pizza,,,,,1
+pizzerie-sharingham-videnska-1,osm,Pizzerie Sharingham,"Vídeňská 1, 63900 Brno",pizza,Pizza,https://www.sharingham.cz/,,,,1
+pizzerie-u-montyho-provaznikova-40,osm,Pizzerie U Montyho,"Provazníkova 40, 61300 Brno",pizza,Pizza,https://www.pizzerieumontyho.cz/,,1,1,1
+plac-kounicova-15-73,osm,PLAC,"Kounicova 15/73, 60200 Brno",fastfood,Fast food,https://bistroplac.cz/,,,,1
+plzensky-dvur-sumavska-29a,osm,Plzeňský dvůr,"Šumavská 29a, 60200 Brno",kava,Kavárna,https://www.plzenskydvur.cz/,,,,1
+pod-hodinami-ceska-31,osm,POD HODINAMI,"Česká 31, 602 00 Brno",kava,Kavárna,,,,,1
+pod-lekarnou-slovakova-1,osm,Pod lékárnou,"Slovákova 1, 60200 Brno",burger,Burger,https://podlekarnoubrno.eatbu.com/,,,,1
+podloubi-smetanova-593-41,osm,Podloubí,"Smetanova 593/41, 60200 Brno",ceske,České,https://www.podloubi-brno.cz/,,,,1
+podnik-peroutkova-5,osm,Podnik,"Peroutková 5, 60200 Brno",kava,Kavárna,,,,,1
+pohadkova-pizzerie-selska-63,osm,Pohádková Pizzerie,"Selská 63, 61400 Brno",pizza,Pizza,,,,,1
+pohosteni-u-sroubka-taborska-224,osm,Pohoštění U Šroubka,"Táborská 224, 61500 Brno",,Restaurace,https://www.shopusroubka.cz/,,,,1
+point-burger-namesti-svobody-8,osm,Point Burger,"náměstí Svobody 8, 60200 Brno",burger,Burger,,,,,1
+point-cafe-namesti-svobody-8,osm,Point Cafe,"náměstí Svobody 8, 60200 Brno",kava,Kavárna,,,,,1
+point-restaurant-vranovska-58,osm,Point Restaurant,"Vranovská 58, 61400 Brno",,Restaurace,,,,,1
+pokecz-basty-414,osm,Pokecz,"Bašty 414, 60200 Brno",fastfood,Fast food,https://www.pokecz.cz/,,1,1,1
+polevkove-okynko-koliste-1907-3,osm,Polévkové okýnko,"Koliště 1907/3, 60200 Brno",,Restaurace,https://www.polevkoveokynko.cz,,,,1
+pome-merhautova-448-42,osm,POMè,"Merhautova 448/42, 61300 Brno",pizza,Pizza,https://pomebrno.cz/,,,,1
+pomlka-tresnova-330-2,osm,Pomlka,"Třešňová 330/2, 621 00 Brno",kava,Kavárna,,,,,1
+porta-cafe-provaznikova-1655-82,osm,Porta Cafe,"Provazníkova 1655/82, 61300 Brno",kava,Kavárna,,,,,1
+portoriko-srbska-2653-51,osm,Portoriko,"Srbská 2653/51, 61200 Brno",,Restaurace,https://restauraceportoriko.cz,,,,1
+potrefena-husa-jirova-2,osm,Potrefená husa,"Jírova 2, 62800 Brno-Líšeň",ceske,České,https://www.husalisen.cz/,,,,1
+potrefena-husa-starobrnenska-3,osm,Potrefená husa,"Starobrněnská 3, 60200 Brno",ceske,České,https://www.husabrno.cz/,,,,1
+potrefena-husa-u-hriste-21b,osm,Potrefená husa,"U hřiště 21b, 62500 Brno",ceske,České,https://staropramen.cz/,,,,1
+poupe-dominikanska-342-15,osm,Poupě,"Dominikánská 342/15, 60200 Brno",,Restaurace,https://www.pivovar-poupe.cz/,,,,1
+prima-basta-videnska-132-100,osm,Prima bašta,"Vídeňská 132/100, 619 00 Brno",ceske,České,https://www.primabasta.cz/restaurace-futurum,,,,1
+prime-steak-palackeho-trida-162,osm,Prime Steak,"Palackého třída 162, 61200 Brno",kava,Kavárna,https://www.primesteak.cz/,,,,1
+pub-pred-zrcadlem-jaselska-17,osm,Pub Před Zrcadlem,"Jaselská 17, 60200 Brno",,Restaurace,https://cajovnazazrcadlem.cz/,,1,,1
+punkt-stefanikova-61,osm,Punkt,"Štefánikova 61, 61200 Brno",kava,Kavárna,https://punkt.coffee/,,,,1
+punkt-bayerova-577-7,osm,Punkt.,"Bayerova 577/7, 60200 Brno",kava,Kavárna,https://punkt.coffee/pages/kavarny,,,,1
+putra-taborska-3238-102,osm,Putra,"Táborská 3238/102, 61500 Brno",kava,Kavárna,,,,,1
+queen-s-pub-behounska-22,osm,Queen's Pub,"Běhounská 22, 60200 Brno",,Restaurace,,,,,1
+quido-stankova-12e,osm,QUIDO,"Staňkova 12e, 602 00 Brno",kava,Kavárna,,,,,1
+radegast-sportbar-namesti-svobody-96-2,osm,Radegast Sportbar,"náměstí Svobody 96/2, 60200 Brno",burger,Burger,https://www.radegast-sportbar.cz/,,,,1
+raj-hlinky-hlinky-118,osm,Ráj Hlinky,"Hlinky 118, 60300 Brno",,Restaurace,http://www.rajhlinky.wz.cz/,,,,1
+rakovec-rakovecka-13,osm,Rakovec,"Rakovecká 13, 63500 Brno",,Restaurace,,,,,1
+ramyeon-brno-jakubske-namesti-580-4,osm,Ramyeon Brno,"Jakubské náměstí 580/4, Brno",asijske,Asijské,,,,,
+rast-coffee-bistro-jarmily-kurandove-121-8,osm,Rast coffee & bistro,"Jarmily Kurandové 121/8, 612 00 Brno",kava,Kavárna,https://www.instagram.com/rast_coffee_/,,,,1
+re-set-lazaretni-925-9,osm,re.SET,"Lazaretní 925/9, 61500 Brno",,Restaurace,https://resetfood.cz/,,,,1
+rebelbean-prizova-5,osm,Rebelbean,"Přízova 5, 60200 Brno",kava,Kavárna,https://www.rebelbean.cz/,,,,1
+rebelbean-pole-durdakova-5,osm,Rebelbean Pole,"Durďákova 5, 61300 Brno",sladke,Sladké,,,,,1
+rebio-holandska-1,osm,Rebio,"Holandská 1, 63900 Brno",zdrave,Zdravé,http://www.rebio.cz,,1,1,1
+remet-videnska-127,osm,Remet,"Vídeňská 127, 61900 Brno",ceske,České,https://www.remet.net/club-restaurant-remet,,,,1
+restaurace-betlem-krkoskova-502-27,osm,Restaurace Betlém,"Krkoškova 502/27, 61300 Brno",ceske,České,https://betlem-restaurant.cz/,,,,1
+restaurace-ctyrlistek-novolisenska-2474-5,osm,Restaurace Čtyřlístek,"Novolíšeňská 2474/5, 62800 Brno",pizza,Pizza,https://www.restauracectyrlistek.cz/,,,,1
+restaurace-diva-bara-stefanikova-21,osm,Restaurace Divá Bára,"Štefánikova 21, 60200 Brno",,Restaurace,,,,,1
+restaurace-domov-tuckova-9,osm,Restaurace Domov,"Tučkova 9, Brno",,Restaurace,,,1,1,
+restaurace-globus-hradecka-40,osm,Restaurace Globus,"Hradecká 40, 62100 Brno",pizza,Pizza,https://www.globus.cz/brno/sluzby-a-produkty/restaurace,,,,1
+restaurace-gol-u-olafa-u-zoologicke-zahrady-4,osm,Restaurace GÓL (U Olafa),"U zoologické zahrady 4, 63500 Brno",ceske,České,,,,,1
+restaurace-hotel-lazaretni-lazaretni-6,osm,Restaurace Hotel Lazaretní,"Lazaretní 6, 61500 Brno",,Restaurace,https://hotel-lazaretni.cz/,,,,1
+restaurace-na-dornychu-dornych-120,osm,Restaurace Na Dornychu,"Dornych 120, 61700 Brno",,Restaurace,,,,,1
+restaurace-na-chate-cernopolni-54,osm,Restaurace na Chatě,"Černopolní 54, 61300 Brno",ceske,České,https://www.restauracenachate.cz/,,,,1
+restaurace-na-musilce-musilova-2,osm,Restaurace Na Musilce,"Musilova 2, 61400 Brno",,Restaurace,,,,,1
+restaurace-our-story-masarova-2407-7,osm,Restaurace Our Story,"Masarova 2407/7, 62800 Brno - Líšeň",,Restaurace,https://our-story.cz/,,,,1
+restaurace-racek-jungmannova-700-5,osm,Restaurace Racek,"Jungmannova 700/5, 61200 Brno",ceske,České,http://www.restaurace-racek.cz,,,,1
+restaurace-rubin-makovskeho-namesti-2574-1,osm,Restaurace Rubín,"Makovského náměstí 2574/1, 61600 Brno",,Restaurace,https://www.restauracerubin.cz/,,,,1
+restaurace-stary-dvur-mendlovo-namesti-11,osm,Restaurace Starý dvůr,"Mendlovo náměstí 11, 60300 Brno",,Restaurace,,,,,1
+restaurace-u-badinu-tomaskova-2,osm,Restaurace U Badinů,"Tomáškova 2, 61500 Brno",,Restaurace,https://www.ubadinu.cz/,,,,1
+restaurace-u-latalu-breclavska-49,osm,Restaurace U Látalů,"Břeclavská 49, 61900 Brno",,Restaurace,https://restauraceulatalu.webnode.cz/,,,,1
+restaurace-u-prumyslovky-jana-uhra-159-1,osm,Restaurace u Průmyslovky,"Jana Uhra 159/1, 60200 Brno",ceske,České,https://www.uprumyslovky.cz/,,,,1
+restaurace-v-zatacce-absolonova-836-10a,osm,Restaurace v zatáčce,"Absolonova 836/10a, 62400 Brno",,Restaurace,https://restaurace-v-zatacce.eatbu.com/,,,,1
+restaurace-valoria-bohunicka-2,osm,Restaurace Valoria,"Bohunická 2, 61900 Brno",,Restaurace,https://www.valoria.cz/,,,,1
+restaurace-za-kaplickou-burianovo-namesti-5,osm,Restaurace Za Kapličkou,"Burianovo náměstí 5, 61600 Brno",,Restaurace,,,1,,1
+restaurant-m-cejl-68,osm,Restaurant M,"Cejl 68, 60200 Brno",,Restaurace,,,,,1
+restaurant-namaskar-smetanova-3,osm,Restaurant Namaskar,"Smetanova 3, 60200 Brno",asijske,Asijské,https://www.namaskar.cz/,,1,,1
+risto-pizza-pub-tusto-titanium-nove-sady-25,osm,Risto Pizza Pub Tusto Titanium,"Nové sady 25, 60200 Brno",pizza,Pizza,https://titanium.tusto.cz/,,,,1
+ristorante-piazza-namesti-svobody-9,osm,Ristorante Piazza,"náměstí Svobody 9, 60200 Brno",pizza,Pizza,https://www.piazza.cz/,,1,,1
+roburrito-pekarska-20,osm,Roburrito,"Pekařská 20, 60200 Brno",mexiko,Mexiko,https://www.facebook.com/roburrito.brno/,,,,1
+roburrito-foodtruck-purkynova-647-111,osm,Roburrito foodtruck,"Purkyňova 647/111, 62100 Brno",mexiko,Mexiko,https://roburrito.cz/foodtruck/,,,,1
+rock-kebab-kastanova-579-76,osm,Rock kebab,"Kaštanová 579/76, Brno",kebab,Kebab,,,,,
+roj-divadelni-4,osm,ROJ,"Divadelní 4, 60200 Brno",kebab,Kebab,,,,,1
+roj-kebab-panska-1,osm,Roj Kebab,"Panská 1, 60200 Brno",kebab,Kebab,,,,,1
+royal-nepal-svatopluka-cecha-81,osm,Royal Nepal,"Svatopluka Čecha 81, 61200 Brno",asijske,Asijské,https://www.royalnepal.cz/,,1,,1
+royal-ricc-starobrnenska-10,osm,Royal Ricc,"Starobrněnská 10, 60200 Brno",,Restaurace,,,,,1
+rud-s-pizza-cimburkova-593-4,osm,Rud's Pizza,"Cimburkova 593/4, 612 00 Brno-Královo Pole",pizza,Pizza,https://rudspizza.cz/,,,,1
+sabaidy-trida-kpt-jarose-29,osm,Sabaidy,"třída Kpt. Jaroše 29, 60200 Brno",asijske,Asijské,https://www.amphone.eu/restaurace,,1,,1
+saffron-persian-food-uvoz-419-37,osm,Saffron Persian Food,"Úvoz 419/37, 60200 Brno",fastfood,Fast food,,,,,1
+samoobsluzna-restaurace-rybkova-1,osm,Samoobslužná restaurace,"Rybkova 1, 60200 Brno",,Restaurace,,,,,1
+santorini-grill-bar-pristavni-1,osm,Santorini Grill & Bar,"Přístavní 1, 63500 Brno",,Restaurace,https://www.foodora.cz/restaurant/kjrs/santorini-grill-and-bar,,,,1
+satyam-cimburkova-593-4,osm,Satyam,"Cimburkova 593/4, 61200 Brno-Královo Pole",asijske,Asijské,https://www.satyam.cz/,,,,1
+satyam-videnska-132-100,osm,Satyam,"Vídeňská 132/100, 619 00 Brno",asijske,Asijské,https://www.satyam.cz/,,,,1
+scala-moravske-namesti-3,osm,Scala,"Moravské náměstí 3, 60200 Brno",kava,Kavárna,,,,,1
+scuk-na-ceske-ceska-19,osm,Scuk na České,"Česká 19, 60200 Brno",kava,Kavárna,,,,,1
+sesamo-purkynova-97c,osm,Sesamo,"Purkyňova 97c, Brno",,Restaurace,https://sesamobrno.cz/,,,,
+severka-tuckova-30,osm,Severka,"Tučkova 30, 60200 Brno",,Restaurace,,,,,1
+shark-pizza-brno-kotlarska-907-41,osm,Shark pizza Brno,"Kotlářská 907/41, 60200 Brno",pizza,Pizza,,,,,1
+sherwood-rokytova-1933,osm,Sherwood,"Rokytova 1933, 61500 Brno",,Restaurace,https://www.restauracesherwood.cz/,,,,1
+siesta-lobby-wine-restaurant-husova-16,osm,Siesta Lobby & Wine Restaurant,"Husova 16, 60200 Brno",,Restaurace,,,,,1
+singha-orli-6,osm,Singha,"Orlí 6, 60200 Brno",asijske,Asijské,,,1,1,1
+siwa-orient-grill-veveri-34,osm,SIWA Orient Grill,"Veveří 34, 60200 Brno",,Restaurace,http://www.siwaorient.cz/,,1,1,1
+sklizeno-netroufalky-770,osm,Sklizeno,"Netroufalky 770, 625 00 Brno",,Restaurace,https://www.sklizeno.cz/o-nas/sklizeno-campus-2/,,1,,1
+sk-g-urban-hub-dominikanske-namesti-5,osm,SKØG Urban Hub,"Dominikánské náměstí 5, 60200 Brno",kava,Kavárna,https://www.skog.cz/,,1,1,1
+slatina-bistro-turanka-1519-115a,osm,Slatina Bistro,"Tuřanka 1519/115a, 627 00 Brno",,Restaurace,https://www.slatinabistro.cz,,,,1
+slatinsky-senk-zlinska-12,osm,Slatinský šenk,"Zlínská 12, 62700 Brno",,Restaurace,,,,,1
+slunecnice-pub-svermova-9,osm,Slunečnice Pub,"Švermova 9, 62500 Brno",ceske,České,https://www.slunecnicepub.cz,,,,1
+sono-veveri-113,osm,SONO,"Veveří 113, 61600 Brno",ceske,České,,,,,1
+soul-bistro-jakubska-9,osm,Soul bistro,"Jakubská 9, 60200 Brno",,Restaurace,,,,,1
+soyshi-masarova-2407-7,osm,Soyshi,"Masarova 2407/7, 62800 Brno - Líšeň",asijske,Asijské,https://www.soyshi.cz,,,,1
+spaghetti-d-amore-panska-2,osm,Spaghetti d'Amore,"Panská 2, 60200 Brno",,Restaurace,,,,,1
+spaghetti-parmigiano-cimburkova-593-4,osm,Spaghetti Parmigiano,"Cimburkova 593/4, 612 00 Brno-Královo Pole",fastfood,Fast food,https://spaghettiparmigiano.cz/,,,,1
+spaghetti-parmigiano-videnska-132-100,osm,Spaghetti Parmigiano,"Vídeňská 132/100, 619 00 Brno",fastfood,Fast food,https://spaghettiparmigiano.cz/,,,,1
+sport-balkan-jugoslavska-5,osm,Sport Balkán,"Jugoslávská 5, 61300 Brno",pizza,Pizza,http://www.sportbalkan.cz,,,,1
+sport-bar-arena-hybesova-21,osm,Sport Bar Arena,"Hybešova 21, 60200 Brno",ceske,České,,,,,1
+srdecno-smetanova-631-30,osm,Srdečno,"Smetanova 631/30, 60200 Brno",kava,Kavárna,https://www.kavarnasrdecno.cz/,,,,1
+stara-tkalcovna-bratislavska-52,osm,Stará Tkalcovna,"Bratislavská 52, 60200 Brno",ceske,České,http://www.stara-tkalcovna.cz/,,,,1
+starbucks-namesti-svobody-5,osm,Starbucks,"náměstí Svobody 5, 60200 Brno",kava,Kavárna,https://www.starbuckscoffee.cz/,,1,,1
+stavba-grohova-2,osm,Stavba,"Grohova 2, 60200 Brno",ceske,České,https://www.restauracestavba.cz/,,,,1
+steak-house-k1-zarosicka-24,osm,Steak House K1,"Žarošická 24, 62800 Brno",pizza,Pizza,https://k1steakhouse.cz/pizzerie/take-away,,,,1
+steak-house-k1-bubenickova-11,osm,Steak House K1,"Bubeníčkova 11, 61500 Brno",kava,Kavárna,https://k1steakhouse.cz/restaurace/take-away,,1,,1
+stopkova-plzenska-pivnice-ceska-5,osm,Stopkova plzeňská pivnice,"Česká 5, 60200 Brno",ceske,České,https://www.kolkovna.cz/,,,,1
+storey-josefska-9,osm,Storey,"Josefská 9, 60200 Brno",,Restaurace,http://www.storey.cz/,,,,1
+stribrna-ruze-vranovska-1168-110,osm,Stříbrná růže,"Vranovská 1168/110, 61400 Brno",kava,Kavárna,https://www.thewhiskyshop.cz/,,,,1
+styl-pub-bubenickova-24,osm,Styl Pub,"Bubeníčkova 24, 61500 Brno",,Restaurace,,,,,1
+subway-ve-vankovce-1,osm,Subway,"Ve Vaňkovce 1, 60200 Brno",fastfood,Fast food,https://www.sendvice.com/,,,,1
+suchi-gorkeho-15,osm,Suchi,"Gorkého 15, 60200 Brno",asijske,Asijské,https://suchibrno.cz/,,1,1,1
+sun-cafe-cimburkova-4,osm,Sun Café,"Cimburkova 4, 612 00 Brno-Královo Pole",sladke,Sladké,https://www.krpolenc.cz/sun-cafe,,,,1
+sushi-mix-veveri-2218-131,osm,Sushi Mix,"Veveří 2218/131, 61600 Brno",asijske,Asijské,https://sushimix.cz/,,,,1
+suzie-s-steak-pub-kounicova-10,osm,Suzie's steak pub,"Kounicova 10, 60200 Brno",kava,Kavárna,https://www.suzies.cz/,,,,1
+svaca-holandska-873-6,osm,Sváča,"Holandská 873/6, Brno",kava,Kavárna,,,,,
+svatoboj-cacovicka-12,osm,Svatoboj,"Cacovická 12, 61400 Brno",,Restaurace,,,,,1
+svatovavrinecky-dvur-tukan-palackeho-namesti-2050-9a,osm,Svatovavřinecký dvůr (Tukan),"Palackého náměstí 2050/9a, 62100 Brno",,Restaurace,https://www.svatovavrineckydvur.cz/,,,,1
+svijansky-senk-stefanikova-21,osm,Svijanský šenk,"Štefánikova 21, 60200 Brno",,Restaurace,,,,,1
+sweet-fruit-brno-kozi-2,osm,Sweet Fruit Brno,"Kozí 2, 60200 Brno",sladke,Sladké,,,,,1
+sesta-vetev-moravske-namesti-12,osm,Šestá Větev,"Moravské náměstí 12, 60200 Brno",kava,Kavárna,,,,,1
+skolni-jidelna-brno-horni-16,osm,Školní jídelna Brno,"Horní 16, 63900 Brno - střed",,Restaurace,,,,,1
+snyt-palavanka-palavske-namesti-5,osm,Šnyt Pálavanka,"Pálavské náměstí 5, 62800 Brno",ceske,České,https://www.snyt-brno.cz/,,,,1
+spageta-bistro-ceska-14,osm,Špageta bistro,"Česká 14, 60200 Brno",,Restaurace,https://spageta-bistro.business.site/,,1,1,1
+statl-namesti-svobody-3,osm,Štatl,"náměstí Svobody 3, 60200 Brno",ceske,České,https://www.statlbrno.cz/,,1,,1
+svedska-kavarna-skandinavska-4,osm,Švédská kavárna,"Skandinávská 4, 619 00 Brno",kava,Kavárna,,,,,1
+svedska-restaurace-skandinavska-4,osm,Švédská restaurace,"Skandinávská 4, 619 00 Brno",fastfood,Fast food,,,1,,1
+table-talk-zamecnicka-87-1,osm,Table Talk,"Zámečnická 87/1, Brno",kava,Kavárna,,,,,
+tackarna-londynske-namesti-1,osm,Táckárna,"Londýnské náměstí 1, 63900 Brno",kava,Kavárna,https://www.tackarna.cz/,,,,1
+tackarna-turanka-turanka-1387-100,osm,Táckárna Tuřanka,"Tuřanka 1387/100, 62700 Brno",,Restaurace,https://turanka.tackarna.cz/,,,,1
+taiwan-bento-josefska-25,osm,TaiWan Bento,"Josefská 25, 60200 Brno",asijske,Asijské,,,1,,1
+taiyo-solnicni-636-3a,osm,Taiyō,"Solniční 636/3a, 60200 Brno",asijske,Asijské,https://taiyo-restaurant-cz.webnode.page,,,,1
+tao-viet-nam-home-cooking-sushi-bar-hrncirska-5,osm,Táo Viet Nam Home Cooking & Sushi Bar,"Hrnčířská 5, 60200 Brno",asijske,Asijské,https://www.taorestaurant.cz/,,,,1
+tao-viet-nam-home-cooking-sushi-bar-horova-35,osm,Táo Viet Nam Home Cooking & Sushi Bar,"Horova 35, 61600 Brno",asijske,Asijské,,,1,,1
+teatr-lidicka-1862-14,osm,Teátr,"Lidická 1862/14, 60200 Brno",,Restaurace,https://www.restaurant-teatr.cz/,,,,1
+teeholic-koblizna-14,osm,Teeholic,"Kobližná 14, 60200 Brno",kava,Kavárna,,,,,1
+tenis-bar-bubenickova-52,osm,Tenis bar,"Bubeníčkova 52, 61500 Brno",,Restaurace,,,,,1
+tenis-pub-luzanky-luzanecka-1883-3,osm,Tenis Pub Lužánky,"Lužánecká 1883/3, 60200 Brno",,Restaurace,https://www.tenispub.cz/,,,,1
+terasa-hnevkovskeho-26,osm,Terasa,"Hněvkovského 26, 61700 Brno",,Restaurace,https://www.terasabrno.cz/,,,,1
+tereza-chocolate-kolarikova-1144-5,osm,Tereza Chocolate,"Kolaříkova 1144/5, 62100 Brno",kava,Kavárna,https://www.terezachocolate.cz/,,,,1
+testo-slovakova-6,osm,Těsto,"Slovákova 6, 60200 Brno",kava,Kavárna,,,,,1
+thali-of-india-netroufalky-770,osm,Thali of India,"Netroufalky 770, 625 00 Brno",asijske,Asijské,,,1,,1
+thalie-rooseveltova-14,osm,Thalie,"Rooseveltova 14, 60200 Brno",,Restaurace,https://www.thalie.cz/,,,,1
+thang-long-bistro-cejl-62,osm,Thang Long bistro,"Cejl 62, 60200 Brno",asijske,Asijské,,,,,1
+the-erin-s-flag-irish-pub-biskupska-3,osm,The Erin's Flag Irish Pub,"Biskupská 3, 60200 Brno",,Restaurace,https://www.facebook.com/erinsflag/,,,,1
+the-grill-bar-boby-sportovni-2a,osm,The Grill Bar Boby,"Sportovní 2a, 60200 Brno",burger,Burger,,,,,1
+the-himalaya-nadrazni-8,osm,The Himalaya,"Nádražní 8, 60200 Brno",asijske,Asijské,https://www.himalayarestaurace.cz/,,1,,1
+the-miners-behounska-20,osm,The Miners,"Běhounská 20, 60200 Brno",kava,Kavárna,,,,,1
+timido-grohova-20a,osm,Timido,"Grohova 20a, 60200 Brno",kava,Kavárna,,,,,1
+tivoli-konecneho-namesti-539-6,osm,Tivoli,"Konečného náměstí 539/6, 60200 Brno",,Restaurace,http://tivolicafe.cz/,,1,,1
+toppu-ramen-behounska-129-13,osm,TOPPU RAMEN,"Běhounská 129/13, 60200 Brno",asijske,Asijské,https://www.toppuramen.cz/,,,,1
+trdlo-cafe-koblizna-24,osm,Trdlo cafe,"Kobližná 24, 60200 Brno",kava,Kavárna,,,,,1
+trdlokafe-videnska-132-100,osm,Trdlokafe,"Vídeňská 132/100, 619 00 Brno",sladke,Sladké,https://trdlokafe.cz/pobocky/trdlokafe-futurum-brno/,,,,1
+trinity-trnita-7,osm,Trinity,"Trnitá 7, 60200 Brno",kava,Kavárna,,,,,1
+trinity-ristorante-trnita-9,osm,Trinity ristorante,"Trnitá 9, 60200 Brno",,Restaurace,http://restaurace-triniti.cz/,,,,1
+tripoli-starobrnenska-1,osm,Tripoli,"Starobrněnská 1, 60200 Brno",,Restaurace,https://www.tripoli.cz/,,,,1
+trojka-dominikanska-9,osm,Trojka,"Dominikánská 9, 60200 Brno",kava,Kavárna,https://www.3trojka.cz/,,,,1
+tri-kocketyri-nadrazni-22,osm,Tři Kočketýři,"Nádražní 22, 60200 Brno",burger,Burger,https://www.instagram.com/tri_kocketyri/,,,,1
+tri-zrnka-jemelkova-722-31,osm,Tři Zrnka,"Jemelkova 722/31, 62500 Brno",kava,Kavárna,,,,,1
+tungsram-kapucinske-namesti-7,osm,Tungsram,"Kapucínské náměstí 7, 60200 Brno",kava,Kavárna,,,,,1
+turecky-kebab-hybesova-30,osm,Turecký kebab,"Hybešova 30, 60200 Brno",kebab,Kebab,,,1,,1
+turecky-kebab-masarykova-25,osm,Turecký kebab,"Masarykova 25, 60200 Brno",kebab,Kebab,,,1,,1
+turanska-beseda-podlipna-140-25,osm,Tuřanská Beseda,"Podlipná 140/25, 62000 Brno",,Restaurace,https://turanskabeseda.cz/,,,,1
+tutti-frutti-jiraskova-1a,osm,Tutti Frutti,"Jiráskova 1a, 60200 Brno",sladke,Sladké,https://cukrarna-tutti-frutti.webnode.cz/,,1,1,1
+tutti-frutti-mendlovo-namesti-18,osm,Tutti Frutti,"Mendlovo náměstí 18, 60300 Brno",kava,Kavárna,https://www.tuttifrutti.cz/,,1,1,1
+u-3-opic-palackeho-trida-77,osm,U 3 opic,"Palackého třída 77, 61200 Brno",ceske,České,https://www.u3opic.cz/,,,,1
+u-divosky-trtilkova-24,osm,U Divošky,"Trtílkova 24, 61200 Brno",pizza,Pizza,https://www.udivosky.cz/,,,,1
+u-drevaka-beer-grill-drevarska-22,osm,U Dřeváka Beer & Grill,"Dřevařská 22, 60200 Brno",,Restaurace,https://www.udrevaka.cz/,,1,,1
+u-dreveneho-orla-orli-3,osm,U Dřevěného orla,"Orlí 3, 60200 Brno",burger,Burger,https://www.drevenyorel.cz/,,,,1
+u-dreveneho-vlka-zelny-trh-1,osm,U Dřevěného vlka,"Zelný trh 1, 60200 Brno",,Restaurace,https://www.drevenyvlk.cz/,,,,1
+u-dvoraku-hlavni-119,osm,U Dvořáků,"Hlavní 119, 62400 Brno",,Restaurace,https://www.udvoraku-brno.cz/,,,,1
+u-dvou-kosu-stranskeho-3033-28,osm,U Dvou kosů,"Stránského 3033/28, 616 00 Brno",ceske,České,,,,,1
+u-emila-hybesova-13,osm,U Emila,"Hybešova 13, 60200 Brno",ceske,České,https://www.restauraceuemila.cz/,,1,,1
+u-horkeho-konce-zizkova-257-2,osm,U Hořkého konce,"Žižkova 257/2, 60200 Brno",,Restaurace,https://www.facebook.com/uhorkehokonce/,,,,1
+u-hoveziho-pupku-videnska-55,osm,U Hovězího pupku,"Vídeňská 55, 63900 Brno",,Restaurace,,,,,1
+u-kajmana-krizkovskeho-206-33a,osm,U Kajmana,"Křížkovského 206/33a, 60300 Brno",ceske,České,https://www.ukajmanabrno.cz/,,,,1
+u-karla-bayerova-8,osm,U Karla,"Bayerova 8, 60200 Brno",ceske,České,,,,,1
+u-kastanu-cernopolni-10,osm,U Kaštanů,"Černopolní 10, 61300 Brno",ceske,České,,,,,1
+u-kola-skopalikova-20,osm,U Kola,"Skopalíkova 20, 61500 Brno",,Restaurace,,,,,1
+u-kormidla-kounicova-43,osm,U Kormidla,"Kounicova 43, 60200 Brno",,Restaurace,https://www.ukormidla.cz,,,,1
+u-kozaka-horova-30,osm,U Kozáka,"Horova 30, 61600 Brno",ceske,České,https://pivni-restaurace-u-kozaka2.webnode.cz/,,,,1
+u-krale-jiriho-brenkova-1,osm,U Krále Jiřího,"Břenkova 1, 61300 Brno",ceske,České,https://www.menicka.cz/5457-u-krale-jiriho.html,,,,1
+u-krizu-zelny-trh-12,osm,U Křížů,"Zelný trh 12, 60200 Brno",,Restaurace,https://www.restaurantukrizu.cz/,,,,1
+u-lasa-merhautova-110,osm,U Lasa,"Merhautova 110, 61300 Brno",ceske,České,,,,,1
+u-lucerny-slovakova-2,osm,U Lucerny,"Slovákova 2, 60200 Brno",,Restaurace,,,,,1
+u-malchru-vancurova-3152-1,osm,U Malchrů,"Vančurova 3152/1, 61500 Brno",,Restaurace,https://www.restaurace-menu.cz/u-malchru,,,,1
+u-mamlasu-namesti-svobody-74-10,osm,U Mamlasů,"náměstí Svobody 74/10, 60200 Brno",ceske,České,https://www.koberestaurant.cz/,,1,,1
+u-nemilosrdnych-bratri-kounicova-83,osm,U Nemilosrdných bratří,"Kounicova 83, 60200 Brno",ceske,České,https://unemilosrdnychbratri.cz/,,,,1
+u-primu-minska-20,osm,U Primů,"Minská 20, 61600 Brno",ceske,České,https://www.uprimu.cz/,,,,1
+u-putny-vaclavska-10,osm,U Putny,"Václavská 10, 60300 Brno",ceske,České,,,,,1
+u-richarda-risova-12,osm,U Richarda,"Ríšova 12, 64100 Brno",,Restaurace,http://www.uricharda.eu/,,,,1
+u-sajmona-pod-hajkem-botanicka-28,osm,U Sajmona pod Hájkem,"Botanická 28, 60200 Brno",ceske,České,https://www.usajmona.cz,,,,1
+u-staryho-billa-kudelova-5,osm,U Starýho Billa,"Kudelova 5, 60200 Brno",burger,Burger,https://www.bill.cz/,,1,,1
+u-tesare-grmelova-9,osm,U Tesaře,"Grmelova 9, 63900 Brno",,Restaurace,http://www.utesare.cz,,,,1
+u-tetiany-zvonarka-411,osm,U Tetiany,"Zvonařka 411, 60200 Brno",,Restaurace,,,,,1
+u-tety-kubickova-23,osm,U Tety,"Kubíčkova 23, 635 00 Brno",,Restaurace,,,,,1
+u-tomana-namesti-svobody-93-22,osm,U Tomana,"náměstí Svobody 93/22, 60200 Brno",ceske,České,https://www.utomana.cz/,,,,1
+u-trech-certu-starobrnenska-7,osm,U Třech čertů,"Starobrněnská 7, 60200 Brno",ceske,České,,,,,1
+u-trech-certu-dvorakova-8,osm,U Třech Čertů,"Dvořákova 8, 60200 Brno",ceske,České,http://ucertu.cz/dvorakova/,,,,1
+u-zlate-hrusky-tvrdeho-3,osm,U Zlaté hrušky,"Tvrdého 3, 60200 Brno",,Restaurace,,,,,1
+u-zlate-konve-udolni-34,osm,U Zlaté konve,"Údolní 34, 60200 Brno",ceske,České,https://uzlatekonve.gastrocollective.cz,,,,1
+ugo-cimburkova-4,osm,UGO,"Cimburkova 4, 612 00 Brno-Královo Pole",fastfood,Fast food,https://www.ugo.cz/kde-koupim-ugo/75-ugo-freshbar-oc-kralovo-pole-brno,,,,1
+ugo-netroufalky-770-14,osm,UGO,"Netroufalky 770/14, 625 00 Brno",zdrave,Zdravé,https://www.ugo.cz/kde-koupim-ugo/40-ugo-salaterie-campus-square-brno,,1,,1
+university-cafeteria-arne-novaka-1,osm,University Cafeteria,"Arne Nováka 1, 60200 Brno",sladke,Sladké,,,,,1
+utopia-centrum-koblizna-24,osm,Utopia Centrum,"Kobližná 24, 60200 Brno",kava,Kavárna,https://www.utopiabrno.cz/,,,,1
+utopia-cajovna-divadelni-3,osm,Utopia Čajovna,"Divadelní 3, 60200 Brno",kava,Kavárna,https://www.utopiabrno.cz/,,,,1
+uvozna-uvoz-39,osm,Úvozna,"Úvoz 39, 60200 Brno",burger,Burger,https://uvozna.cz/,,,,1
+varadero-molakova-25,osm,Varadero,"Molákova 25, 62800 Brno",,Restaurace,,,,,1
+vecerka-pekarska-382-9,osm,Večerka,"Pekařská 382/9, 60200 Brno",kava,Kavárna,,,,,1
+veg8cafe-krenova-45,osm,Veg8café,"Křenová 45, 60200 Brno",kava,Kavárna,https://www.veg8cafe.cz/,,1,1,1
+vegalite-slovakova-10,osm,Vegalité,"Slovákova 10, 60200 Brno",,Restaurace,https://vegalite.cz,,,,1
+vegan-af-ramen-maresova-14,osm,Vegan AF Ramen,"Marešova 14, 60200 Brno",veganske,Veganské,https://www.veganaframen.cz/,,,,1
+velka-klajdovka-jedovnicka-7,osm,Velká Klajdovka,"Jedovnická 7, Brno",,Restaurace,,,,,
+vesela-cajovna-koblizna-5,osm,Veselá čajovna,"Kobližná 5, 60200 Brno",asijske,Asijské,https://www.veselacajovna.cz/,,1,,1
+videnka-videnska-15,osm,Vídeňka,"Vídeňská 15, 63900 Brno",kava,Kavárna,,,,,1
+viet-ha-kuklenska-1,osm,Viet Ha,"Kuklenská 1, 61500 Brno",,Restaurace,,,,,1
+viet-mac-stefanikova-23,osm,Viet Mac,"Štefánikova 23, 60200 Brno",asijske,Asijské,,,,,1
+viet-tam-koblizna-8,osm,Viet Tam,"Kobližná 8, 60200 Brno",asijske,Asijské,https://www.viettam.cz/,,1,1,1
+vietpalace-olomoucka-63,osm,VietPalace,"Olomoucká 63, 62700 Brno",asijske,Asijské,http://vietpalace.cz/,,,,1
+vilgain-fast-food-smetanova-19,osm,vilgain fast food,"Smetanova 19, 60200 Brno",fastfood,Fast food,https://aktin.cz/prodejny/vilgain-r-fast-food/7,,,,1
+vinarna-u-kralovny-elisky-mendlovo-namesti-1b,osm,Vinárna u Královny Elišky,"Mendlovo náměstí 1b, 60300 Brno",ceske,České,,,,,1
+vista-hudcova-72,osm,Vista,"Hudcova 72, 62100 Brno",,Restaurace,,,,,1
+vittorio-pekarska-4,osm,Vittorio,"Pekařská 4, 60200 Brno",,Restaurace,,,,,1
+vosime-cz-stefanikova-93-22,osm,Vosíme.cz,"Štefánikova 93/22, 60200 Brno",pizza,Pizza,https://vosime.cz/pobocka/brno-sever,,,,1
+vyssi-princip-behounska-22,osm,Vyšší princip,"Běhounská 22, 60200 Brno",kava,Kavárna,,,,,1
+wang-noodles-namesti-svobody-92-21,osm,Wang Noodles,"náměstí Svobody 92/21, 60200 Brno",asijske,Asijské,,,1,,1
+wang-noodles-masarykova-37,osm,Wang Noodles,"Masarykova 37, 602 00 Brno",cina,Čína,,,1,,1
+wang-running-sushi-janska-9,osm,Wang Running Sushi,"Jánská 9, 60200 Brno",asijske,Asijské,,,1,,1
+willy-videnska-12,osm,Willy,"Vídeňská 12, 63900 Brno",pizza,Pizza,,,,,1
+wok-99-cejl-544-99,osm,Wok 99,"Cejl 544/99, Brno",asijske,Asijské,,,,,
+wokin-masarykova-22,osm,Wokin,"Masarykova 22, 60200 Brno",asijske,Asijské,,,1,1,1
+yakitori-cimburkova-593-4,osm,Yakitori,"Cimburkova 593/4, 61200 Brno-Královo Pole",asijske,Asijské,https://www.ykf.cz/fastfood-yakitori-brno-nc-kralovo-pole,,,,1
+yakitori-netroufalky-770,osm,YAKITORI,"Netroufalky 770, 625 00 Brno",asijske,Asijské,https://www.ykf.cz/fastfood-yakitori-oc-brno-campus/,,,,1
+yakitori-sushi-poke-bar-netroufalky-770,osm,Yakitori Sushi Poke Bar,"Netroufalky 770, 625 00 Brno",asijske,Asijské,https://www.ykf.cz/poke-bar-oc-campus-square/poke-bar-campus-square-poke,,1,,1
+yumm-veveri-254-71,osm,yumm,"Veveří 254/71, Brno",sladke,Sladké,,,,,
+yummy-jostova-3,osm,Yummy!,"Joštova 3, 60200 Brno",fastfood,Fast food,,,,,1
+zagreb-palackeho-trida-162,osm,Zágreb,"Palackého třída 162, 61200 Brno",ceske,České,https://www.zagreb.cz/,,,,1
+zamilec-podhaji-13,osm,Zamilec,"Podhájí 13, 62100 Brno",,Restaurace,http://www.zamilec.cz/,,,,1
+zannam-selska-1057-76,osm,Zannam,"Selská 1057/76, 61400 Brno",ceske,České,,,,,1
+zaza-brno-vachova-46-4,osm,ZAZA Brno,"Vachova 46/4, 60200 Brno",pizza,Pizza,https://www.zazabrno.cz/,,,,1
+zdravy-zivot-jaselska-11,osm,Zdravý Život,"Jaselská 11, 60200 Brno",,Restaurace,https://www.zzbrno.cz/,,1,1,1
+zemanova-kavarna-josefska-493-4,osm,Zemanova kavárna,"Josefská 493/4, 60200 Brno",kava,Kavárna,https://www.zemanovakavarna.cz/,,,,1
+zlata-lod-namesti-svobody-5,osm,Zlatá loď,"náměstí Svobody 5, 60200 Brno",ceske,České,https://www.zlatalod.com/,,1,,1
+zlata-miska-maresova-14,osm,Zlatá miska,"Marešova 14, 60200 Brno",cina,Čína,,,1,1,1
+zlate-hulky-palavske-namesti-4c,osm,zlaté hůlky,"Pálavské náměstí 4c, 62800 Brno",asijske,Asijské,,,,,1
+zlaty-orel-videnska-132-100,osm,Zlatý orel,"Vídeňská 132/100, 619 00 Brno",cina,Čína,https://www.futurumbrno.cz/zlaty-orel/,,,,1
+zmrzka-moravske-namesti-14b,osm,Zmrzka.,"Moravské náměstí 14B, 60200 Brno",sladke,Sladké,https://zmrzkatecka.cz/,,,,1
+zmrzlina-buresova-23,osm,Zmrzlina,"Burešova 23, 60200 Brno",sladke,Sladké,,,,,1
+zmrzlina-palavske-namesti-2d,osm,Zmrzlina,"Pálavské náměstí 2d, Brno",sladke,Sladké,,,,,
+zmrzlina-fabbri-svratecka-1a,osm,Zmrzlina Fabbri,"Svratecká 1a, 62400 Brno",sladke,Sladké,,,,,1
+zmrzlinova-kavarna-kotlanova-2521-1b,osm,Zmrzlinová kavárna,"Kotlanova 2521/1b, 62800 Brno",sladke,Sladké,https://www.facebook.com/zmrzlinovakavarnacukrarna,,,,1
+zo-bayerova-10,osm,Zo,"Bayerova 10, 60200 Brno",asijske,Asijské,https://zobrno.cz/,,1,1,1
+zozumi-kvetinarska-2,osm,Zozumi,"Květinářská 2, 60200 Brno",,Restaurace,,,,,1
