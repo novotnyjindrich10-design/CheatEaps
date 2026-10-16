@@ -1231,7 +1231,7 @@ export const googleRatings = {
   },
   "kavarna-cukrarna-smile-s-r-o-namesti-28-dubna-10-40": {
     "googleRatingStatus": "maps_search",
-    "googleMapsSearchUrl": "https://www.google.com/maps/search/?api=1&query=Kav%C3%A1rna%20-%20cukr%C3%A1rna%20Smile%20s.r.o.%2C%20n%C3%A1m%C4%9Bst%C3%AD%2028.%20dubna%2010%2F40%2C%2063500%3B635%2000%20Brno"
+    "googleMapsSearchUrl": "https://www.google.com/maps/search/?api=1&query=Kav%C3%A1rna%20-%20cukr%C3%A1rna%20Smile%20s.r.o.%2C%20n%C3%A1m%C4%9Bst%C3%AD%2028.%20dubna%2010%2F40%2C%20635%2000%20Brno"
   },
   "kavarna-bemovka-vsetinska-527-20": {
     "googleRatingStatus": "maps_search",

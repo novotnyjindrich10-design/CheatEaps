@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { FOOD_CATEGORIES } from '../constants/filters.js'
-import { filterAndSortRestaurants } from './filterRestaurants.js'
+import { filterAndSortRestaurants, foldSearchText, parseResultsSearchParams } from './filterRestaurants.js'
 
 const SOURCE = 'https://example.com/menu'
 const VERIFIED_AT = '2026-10-10'
@@ -46,9 +46,10 @@ function ids(list, budget) {
 
 describe('filtr maximální ceny', () => {
   const places = [
-    range('range-under', 120, 300),
-    range('range-over', 180, 300),
-    range('range-edge', 150, 300),
+    range('range-under', 100, 140),
+    range('range-over-max', 120, 300),
+    range('range-over-min', 180, 300),
+    range('range-edge', 120, 150),
     menu('menu-149', 149),
     menu('menu-150', 150),
     menu('menu-151', 151),
@@ -60,10 +61,11 @@ describe('filtr maximální ceny', () => {
     place('no-price', { description: 'hlavní jídlo od 100 Kč' }),
   ]
 
-  it('rozmezí 120–300 se při limitu 150 zobrazí, 180–300 ne', () => {
+  it('rozmezí projde jen když horní mez je do limitu', () => {
     const matched = ids(places, 150)
     assert.ok(matched.includes('range-under'))
-    assert.equal(matched.includes('range-over'), false)
+    assert.equal(matched.includes('range-over-max'), false)
+    assert.equal(matched.includes('range-over-min'), false)
   })
 
   it('konkrétní cena 149 a 150 projde, 151 ne', () => {
@@ -73,7 +75,7 @@ describe('filtr maximální ceny', () => {
     assert.equal(matched.includes('menu-151'), false)
   })
 
-  it('dolní mez přesně na limitu projde', () => {
+  it('horní mez přesně na limitu projde, nad limitem ne', () => {
     assert.ok(ids(places, 150).includes('range-edge'))
     assert.equal(ids(places, 149).includes('range-edge'), false)
   })
@@ -88,6 +90,20 @@ describe('filtr maximální ceny', () => {
     const matched = filterAndSortRestaurants(places, { maxBudget: '' }).map((item) => item.id)
     assert.ok(matched.includes('estimate'))
     assert.ok(matched.includes('no-price'))
+  })
+
+  it('řazení od nejlevnějšího bere u rozmezí dolní mez, filtr horní', () => {
+    const list = [
+      range('wide', 120, 360),
+      range('tight', 130, 145),
+      menu('exact', 140),
+      place('estimate-cheap', { price: 80, priceMax: 100, priceKind: 'estimate' }),
+      place('unknown', {}),
+    ]
+    const sorted = filterAndSortRestaurants(list, { sortBy: 'price-asc' }).map((item) => item.id)
+    assert.deepEqual(sorted, ['wide', 'tight', 'exact', 'estimate-cheap', 'unknown'])
+    const budgeted = ids(list, 150)
+    assert.deepEqual(budgeted, ['tight', 'exact'])
   })
 })
 
@@ -112,6 +128,60 @@ describe('hledání restaurace', () => {
       filterAndSortRestaurants(places, { search: 'pekařská' }).map((item) => item.id),
       ['street'],
     )
+    assert.deepEqual(
+      filterAndSortRestaurants(places, { search: 'pekarska' }).map((item) => item.id),
+      ['street'],
+    )
+    assert.equal(foldSearchText('  Šťatl   Brno '), 'statl brno')
+  })
+})
+
+describe('filtry dohromady', () => {
+  const places = [
+    {
+      ...menu('pizza-cheap', 140),
+      name: 'Štatl',
+      address: 'Pekařská 1',
+      category: 'pizza',
+      distanceKm: 1,
+    },
+    { ...menu('pizza-far', 140), name: 'Štatl', category: 'pizza', distanceKm: 4 },
+    { ...menu('burger-cheap', 140), name: 'Štatl', category: 'burger', distanceKm: 1 },
+    { ...range('pizza-high', 180, 300), name: 'Štatl', category: 'pizza', distanceKm: 1 },
+    place('pizza-est', {
+      name: 'Štatl',
+      category: 'pizza',
+      distanceKm: 1,
+      price: 100,
+      priceMax: 140,
+      priceKind: 'estimate',
+    }),
+  ]
+
+  it('hledání, kategorie, ověřená cena a vzdálenost platí najednou', () => {
+    const matched = filterAndSortRestaurants(places, {
+      search: 'statl',
+      maxBudget: '150',
+      cuisineType: 'pizza',
+      maxDistance: '2',
+      hasOrigin: true,
+      sortBy: 'distance',
+    }).map((item) => item.id)
+    assert.deepEqual(matched, ['pizza-cheap'])
+  })
+
+  it('nečíselný rozpočet a vzdálenost v URL se ignorují', () => {
+    const parsed = parseResultsSearchParams(new URLSearchParams('budget=abc&distance=daleko'))
+    assert.equal(parsed.maxBudget, '')
+    assert.equal(parsed.maxDistance, '')
+  })
+
+  it('během výpočtu trasy chybějící vzdálenost limit nesplní', () => {
+    const matched = filterAndSortRestaurants(
+      [place('wait', { distanceKm: null, distanceState: 'loading' })],
+      { maxDistance: '2', hasOrigin: true },
+    )
+    assert.equal(matched.length, 0)
   })
 })
 

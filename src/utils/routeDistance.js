@@ -1,4 +1,4 @@
-import { formatDistance, hasCoordinates, hasFiniteLatLon } from './geo.js'
+import { coordinateIssue, formatDistance, hasFiniteLatLon, hasVerifiedCoordinates } from './geo.js'
 
 /**
  * Veřejná pěší instance OSRM od FOSSGIS (OpenStreetMap).
@@ -22,7 +22,7 @@ function formatCoord(lat, lon) {
 }
 
 function samePoint(origin, place) {
-  if (!hasFiniteLatLon(origin?.lat, origin?.lon) || !hasCoordinates(place)) return false
+  if (!hasFiniteLatLon(origin?.lat, origin?.lon) || !hasVerifiedCoordinates(place)) return false
   return formatCoord(origin.lat, origin.lon) === formatCoord(place.lat, place.lon)
 }
 
@@ -50,25 +50,77 @@ export function distancesFromTable(payload, destinations) {
   return distances
 }
 
-export function applyRouteDistances(places, distanceById, { hasOrigin = false, pending = false } = {}) {
+function originDistanceState(originStatus) {
+  if (originStatus === 'denied') return 'denied'
+  if (originStatus === 'locating') return 'locating'
+  if (originStatus === 'idle' || originStatus == null || originStatus === '') return 'no-origin'
+  return 'origin-failed'
+}
+
+export function applyRouteDistances(places, distanceById, { hasOrigin = false, pending = false, originStatus = 'idle' } = {}) {
   return places.map((place) => {
-    if (!hasOrigin || !hasCoordinates(place)) {
-      return { ...place, distanceKm: null, distanceState: 'missing' }
+    const issue = coordinateIssue(place)
+    if (issue) {
+      return {
+        ...place,
+        distanceKm: null,
+        distanceState: issue === 'invalid' ? 'invalid' : 'unverified',
+        locationVerified: false,
+      }
+    }
+    if (!hasOrigin) {
+      return {
+        ...place,
+        distanceKm: null,
+        distanceState: originDistanceState(originStatus),
+        locationVerified: true,
+      }
     }
     if (!distanceById?.has(place.id)) {
-      return { ...place, distanceKm: null, distanceState: pending ? 'loading' : 'unavailable' }
+      return { ...place, distanceKm: null, distanceState: pending ? 'loading' : 'unavailable', locationVerified: true }
     }
     const km = distanceById.get(place.id)
     if (typeof km !== 'number' || !Number.isFinite(km)) {
-      return { ...place, distanceKm: null, distanceState: 'unavailable' }
+      return { ...place, distanceKm: null, distanceState: 'unavailable', locationVerified: true }
     }
-    return { ...place, distanceKm: km, distanceState: 'route' }
+    return { ...place, distanceKm: km, distanceState: 'route', locationVerified: true }
   })
 }
 
 export function formatRouteDistance(km, state) {
-  if (state === 'loading') return '…'
-  return formatDistance(km)
+  if (state === 'loading' || state === 'locating') return '…'
+  if (state === 'route') return formatDistance(km)
+  return '—'
+}
+
+/** Krátký popisek pod hodnotou. U známé trasy je to „pěšky“, jinak důvod, proč číslo není. */
+export function routeDistanceCaption(state) {
+  switch (state) {
+    case 'route':
+      return 'pěšky'
+    case 'unverified':
+    case 'invalid':
+      return 'bez ověřené polohy'
+    case 'denied':
+      return 'poloha nepovolena'
+    case 'no-origin':
+      return 'zapni polohu'
+    case 'origin-failed':
+      return 'poloha není dostupná'
+    case 'unavailable':
+      return 'trasa není k dispozici'
+    case 'locating':
+      return 'zjišťuji polohu'
+    default:
+      return ''
+  }
+}
+
+export function presentRouteDistance(km, state) {
+  return {
+    value: formatRouteDistance(km, state),
+    caption: routeDistanceCaption(state),
+  }
 }
 
 export async function collectRouteDistances(origin, places, options = {}) {
@@ -78,7 +130,7 @@ export async function collectRouteDistances(origin, places, options = {}) {
     onChunk,
     chunkSize = ROUTE_CHUNK_DESTINATIONS,
   } = options
-  const targets = places.filter((place) => hasCoordinates(place))
+  const targets = places.filter((place) => hasVerifiedCoordinates(place))
   const chunks = chunkItems(targets, chunkSize)
   const distances = new Map()
   let failedChunks = 0

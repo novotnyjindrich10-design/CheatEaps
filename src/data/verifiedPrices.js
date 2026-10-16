@@ -20,7 +20,6 @@ function range({ min, max, item, source, channel = 'venue', sourceType = 'offici
     price: min,
     priceMax: max,
     priceKind: PRICE_KIND_RANGE,
-    priceEstimate: true,
     priceItem: item,
     priceSource: source,
     priceSourceType: sourceType,

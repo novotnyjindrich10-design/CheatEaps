@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { hasCoordinates, hasFiniteLatLon } from '../utils/geo'
+import { hasFiniteLatLon, hasVerifiedCoordinates } from '../utils/geo'
+import { foldSearchText } from '../utils/filterRestaurants'
 import { useLocationState } from '../context/LocationContext'
 
 function LocationPin() {
@@ -16,7 +17,8 @@ function LocationPin() {
 }
 
 export default function LocationBar({ places = [], variant = 'default' }) {
-  const { origin, status, errorMessage, locate, setManualOrigin, routeStatus, routeMessage } = useLocationState()
+  const { origin, status, errorMessage, locate, clearOrigin, setManualOrigin, routeStatus, routeMessage } =
+    useLocationState()
   const activeGps = origin?.type === 'gps' && hasFiniteLatLon(origin.lat, origin.lon)
   const activeManual = origin?.type === 'manual' && hasFiniteLatLon(origin.lat, origin.lon)
   const active = activeGps || activeManual
@@ -24,15 +26,15 @@ export default function LocationBar({ places = [], variant = 'default' }) {
   const [manualOpen, setManualOpen] = useState(false)
   const [query, setQuery] = useState('')
   const missingCoords = useMemo(
-    () => places.filter((place) => !hasCoordinates(place)).length,
+    () => places.filter((place) => !hasVerifiedCoordinates(place)).length,
     [places],
   )
   const suggestions = useMemo(() => {
-    const needle = query.trim().toLowerCase()
+    const needle = foldSearchText(query)
     if (needle.length < 2) return []
     return places
-      .filter((place) => hasCoordinates(place))
-      .filter((place) => `${place.name} ${place.address ?? ''}`.toLowerCase().includes(needle))
+      .filter((place) => hasVerifiedCoordinates(place))
+      .filter((place) => foldSearchText(`${place.name} ${place.address ?? ''}`).includes(needle))
       .slice(0, 6)
   }, [places, query])
 
@@ -55,6 +57,11 @@ export default function LocationBar({ places = [], variant = 'default' }) {
       <button type="button" className="location-manual-toggle" onClick={() => setManualOpen((open) => !open)}>
         Zadat místo
       </button>
+      {active ? (
+        <button type="button" className="location-manual-toggle" onClick={clearOrigin}>
+          Vypnout polohu
+        </button>
+      ) : null}
       <p className={`location-bar-status${active ? ' is-on' : ''}`} role="status">
         {statusText}
       </p>
@@ -95,15 +102,17 @@ export default function LocationBar({ places = [], variant = 'default' }) {
           ) : null}
         </div>
       ) : null}
-      {active && routeStatus === 'loading' ? <p className="location-bar-caption">Počítám vzdálenost po trase…</p> : null}
+      {active && routeStatus === 'loading' ? <p className="location-bar-caption">Počítám pěší vzdálenost…</p> : null}
       {active && routeMessage ? (
         <p className="location-bar-note" role="status">
           {routeMessage}
         </p>
       ) : null}
       <p className="location-bar-caption">
-        Přesná poloha se na náš server neposílá. Trasu počítá veřejná služba OpenStreetMap.
-        {missingCoords > 0 ? ` Souřadnice chybí u ${missingCoords} podniků.` : ''}
+        Přesná poloha se na náš server neposílá. Vzdálenost je pěší trasa z OpenStreetMap.
+        {missingCoords > 0
+          ? ` Bez ověřené polohy u ${missingCoords} ${missingCoords === 1 ? 'podniku' : 'podniků'}.`
+          : ''}
       </p>
     </section>
   )

@@ -2,6 +2,23 @@ import { normalizeCategoryParam } from '../constants/filters.js'
 import { getRestaurantCategory } from './restaurantTags.js'
 import { compareByPrice, getBudgetComparePrice, hasVerifiedPrice } from './price.js'
 
+/** Hledání bez háčků a čárek, se sloučenými mezerami. */
+export function foldSearchText(value) {
+  return String(value ?? '')
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function finiteParam(value) {
+  if (value == null || String(value).trim() === '') return ''
+  const n = Number(value)
+  if (!Number.isFinite(n) || n < 0) return ''
+  return String(n)
+}
+
 function missingLast(a, b, pick, direction = 'asc') {
   const av = pick(a)
   const bv = pick(b)
@@ -15,7 +32,7 @@ function missingLast(a, b, pick, direction = 'asc') {
 
 /**
  * Filtruje a řadí restaurace. Hledání bere název a adresu, ne typ jídla.
- * Rozpočet porovnává nejnižší ověřenou cenu. Odhad ani chybějící cena filtr nesplní.
+ * Rozpočet bere horní ověřenou cenu (u rozmezí max). Odhad ani chybějící cena filtr nesplní.
  * Podniky bez vzdálenosti se při filtru vzdálenosti vynechají.
  */
 export function filterAndSortRestaurants(restaurants, options) {
@@ -31,7 +48,7 @@ export function filterAndSortRestaurants(restaurants, options) {
     hasOrigin = false,
   } = options
 
-  const query = search.trim().toLowerCase()
+  const query = foldSearchText(search)
   const categoryFilter = normalizeCategoryParam(cuisineType)
 
   let list = restaurants.filter((r) => {
@@ -59,7 +76,7 @@ export function filterAndSortRestaurants(restaurants, options) {
     }
 
     if (query) {
-      const haystack = `${r.name} ${r.address ?? ''}`.toLowerCase()
+      const haystack = foldSearchText(`${r.name} ${r.address ?? ''}`)
       if (!haystack.includes(query)) return false
     }
 
@@ -94,9 +111,9 @@ export function parseResultsSearchParams(searchParams) {
 
   return {
     search: searchParams.get('q') ?? '',
-    maxBudget: searchParams.get('budget') ?? '',
+    maxBudget: finiteParam(searchParams.get('budget')),
     cuisineType: normalizeCategoryParam(searchParams.get('type') ?? ''),
-    maxDistance: searchParams.get('distance') ?? '',
+    maxDistance: finiteParam(searchParams.get('distance')),
     sortBy: searchParams.get('sort') ?? 'rating',
     veganOnly,
     vegetarianOnly: veganOnly ? false : vegetarianOnly,

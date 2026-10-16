@@ -7,6 +7,7 @@ import {
   collectRouteDistances,
   distancesFromTable,
   formatRouteDistance,
+  presentRouteDistance,
 } from './routeDistance.js'
 
 const origin = { lat: 49.1955, lon: 16.6065 }
@@ -110,9 +111,87 @@ describe('vzdálenost po trase', () => {
     assert.equal(byId.wait.distanceKm, null)
     assert.equal(byId.wait.distanceState, 'loading')
     assert.equal(byId.none.distanceState, 'unavailable')
-    assert.equal(byId.nocoords.distanceState, 'missing')
+    assert.equal(byId.nocoords.distanceState, 'unverified')
+    assert.equal(byId.nocoords.locationVerified, false)
     assert.equal(formatRouteDistance(byId.known.distanceKm, byId.known.distanceState), '1,2 km')
     assert.equal(formatRouteDistance(byId.wait.distanceKm, byId.wait.distanceState), '…')
     assert.equal(formatRouteDistance(byId.none.distanceKm, byId.none.distanceState), '—')
+    assert.deepEqual(presentRouteDistance(byId.known.distanceKm, byId.known.distanceState), {
+      value: '1,2 km',
+      caption: 'pěšky',
+    })
+  })
+
+  it('platné souřadnice předá dál a spočítá z nich pěší vzdálenost', () => {
+    const [place] = applyRouteDistances(
+      [{ id: 'known', name: 'Známá', lat: 49.2, lon: 16.6 }],
+      new Map([['known', 0.35]]),
+      { hasOrigin: true, originStatus: 'ready' },
+    )
+    assert.equal(place.lat, 49.2)
+    assert.equal(place.lon, 16.6)
+    assert.equal(place.locationVerified, true)
+    assert.deepEqual(presentRouteDistance(place.distanceKm, place.distanceState), {
+      value: '350 m',
+      caption: 'pěšky',
+    })
+  })
+
+  it('chybějící a neplatné souřadnice nezobrazí smyšlenou vzdálenost', () => {
+    const places = applyRouteDistances(
+      [
+        { id: 'missing', name: 'Bez bodu' },
+        { id: 'nan', lat: Number.NaN, lon: 16.6 },
+        { id: 'text', lat: '49.2', lon: '16.6' },
+        { id: 'swapped', lat: 16.6, lon: 49.2 },
+        { id: 'outside', lat: 50.08, lon: 14.42 },
+      ],
+      new Map([
+        ['missing', 1],
+        ['nan', 1],
+        ['text', 1],
+        ['swapped', 1],
+        ['outside', 1],
+      ]),
+      { hasOrigin: true, originStatus: 'ready' },
+    )
+    for (const place of places) {
+      assert.equal(place.distanceKm, null)
+      assert.equal(place.locationVerified, false)
+      assert.equal(presentRouteDistance(place.distanceKm, place.distanceState).value, '—')
+      assert.equal(presentRouteDistance(place.distanceKm, place.distanceState).caption, 'bez ověřené polohy')
+    }
+    assert.equal(places.find((place) => place.id === 'missing').distanceState, 'unverified')
+    assert.equal(places.find((place) => place.id === 'swapped').distanceState, 'invalid')
+    assert.equal(places.find((place) => place.id === 'outside').distanceState, 'invalid')
+  })
+
+  it('bez povolené polohy neukáže vzdálenost ani u podniku se souřadnicemi', () => {
+    const place = { id: 'known', lat: 49.2, lon: 16.6 }
+    const denied = applyRouteDistances([place], new Map([['known', 1.2]]), {
+      hasOrigin: false,
+      originStatus: 'denied',
+    })[0]
+    const idle = applyRouteDistances([place], new Map([['known', 1.2]]), {
+      hasOrigin: false,
+      originStatus: 'idle',
+    })[0]
+    const failed = applyRouteDistances([place], new Map([['known', 1.2]]), {
+      hasOrigin: false,
+      originStatus: 'timeout',
+    })[0]
+    assert.equal(denied.distanceKm, null)
+    assert.deepEqual(presentRouteDistance(denied.distanceKm, denied.distanceState), {
+      value: '—',
+      caption: 'poloha nepovolena',
+    })
+    assert.deepEqual(presentRouteDistance(idle.distanceKm, idle.distanceState), {
+      value: '—',
+      caption: 'zapni polohu',
+    })
+    assert.deepEqual(presentRouteDistance(failed.distanceKm, failed.distanceState), {
+      value: '—',
+      caption: 'poloha není dostupná',
+    })
   })
 })

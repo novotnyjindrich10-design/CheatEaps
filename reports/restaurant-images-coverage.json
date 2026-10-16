@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-10-16T21:30:09.191Z",
+  "totalPlaces": 775,
+  "withDetailPhoto": 775,
+  "officialVerified": 93,
+  "illustrationOpenverse": 682,
+  "missingDetailPhoto": 0,
+  "uniqueIllustrationAssets": 236,
+  "maxIllustrationReuse": 3,
+  "imagesOverReuseCap": 0,
+  "coveragePct": 100,
+  "notes": {
+    "official": "Oficiální fotky z placePhotos – nepřepisují se.",
+    "illustration": "Openverse CC0/PDM/BY/BY-SA; max 3× stejný obrázek.",
+    "quality": "Viz restaurant-images-diversity-audit.md a restaurant-images-quality-audit.md."
+  }
+}

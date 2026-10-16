@@ -4,6 +4,7 @@ import Logo from './Logo'
 export default function Header() {
   const { pathname } = useLocation()
   const onResults = pathname.startsWith('/results') || pathname.startsWith('/restaurant')
+  const onBusiness = pathname.startsWith('/pro-podniky')
 
   return (
     <header className="site-header">
@@ -14,15 +15,24 @@ export default function Header() {
             CheapEats <em>Brno</em>
           </span>
         </Link>
-        {onResults ? (
-          <Link to="/results" className="header-link">
-            Výsledky
+        <nav className="header-actions" aria-label="Hlavní navigace">
+          {onResults ? (
+            <Link to="/results" className="header-link">
+              Výsledky
+            </Link>
+          ) : (
+            <Link to="/results" className="btn btn-header">
+              Najít jídlo
+            </Link>
+          )}
+          <Link
+            to="/pro-podniky"
+            className={`header-link${onBusiness ? ' is-active' : ''}`}
+            aria-current={onBusiness ? 'page' : undefined}
+          >
+            Pro podniky
           </Link>
-        ) : (
-          <Link to="/results" className="btn btn-header">
-            Najít jídlo
-          </Link>
-        )}
+        </nav>
       </div>
     </header>
   )

@@ -12,7 +12,7 @@ import { officialWebsiteOf } from '../utils/website'
 import { buildDetailParagraphs, cardExcerpt, studentFacts } from '../utils/placeCopy'
 import StarRating from '../components/StarRating'
 import FoodHero from '../components/FoodHero'
-import { formatRouteDistance } from '../utils/routeDistance'
+import { presentRouteDistance } from '../utils/routeDistance'
 import { useLocationState } from '../context/LocationContext'
 
 export default function RestaurantDetail() {
@@ -64,6 +64,7 @@ export default function RestaurantDetail() {
   const located = attachDistances([restaurant])[0]
   const distanceKm = located?.distanceKm
   const distanceState = located?.distanceState
+  const distance = presentRouteDistance(distanceKm, distanceState)
   const lede = cardExcerpt(restaurant, 220)
   const verified = hasVerifiedPrice(restaurant)
   const estimated = hasEstimatePrice(restaurant)
@@ -98,9 +99,19 @@ export default function RestaurantDetail() {
           </div>
           <div className="detail-metric">
             <dt>Vzdálenost</dt>
-            <dd aria-label={distanceState === 'loading' ? 'Počítám vzdálenost' : undefined}>
-              {formatRouteDistance(distanceKm, distanceState)}
+            <dd
+              aria-label={
+                distanceState === 'loading' || distanceState === 'locating'
+                  ? 'Počítám pěší vzdálenost'
+                  : undefined
+              }
+            >
+              {distance.value}
+              {distanceState === 'route' ? ' pěšky' : ''}
             </dd>
+            {distance.caption && distanceState !== 'route' ? (
+              <p className="detail-metric-note">{distance.caption}</p>
+            ) : null}
           </div>
           <div className="detail-metric">
             <dt>Adresa</dt>

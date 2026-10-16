@@ -1,0 +1,257 @@
+{
+  "generatedAt": "2026-10-16T21:30:09.191Z",
+  "totalPlaces": 775,
+  "officialKept": 93,
+  "illustrated": 682,
+  "missingIllustration": 0,
+  "uniqueIllustrationAssets": 236,
+  "maxUsesRule": 3,
+  "imagesAtMaxUses": 213,
+  "imagesOverMaxUses": 0,
+  "overCapFallbackCount": 0,
+  "poolSizes": {
+    "vegetarianske": 1,
+    "veganske": 1,
+    "zdrave": 2,
+    "kebab": 7,
+    "cina": 5,
+    "asijske": 21,
+    "mexiko": 3,
+    "kava": 59,
+    "sladke": 10,
+    "neuvedeno": 58,
+    "pizza": 19,
+    "burger": 8,
+    "ceske": 25,
+    "baguette": 1,
+    "fried_chicken": 2,
+    "sushi": 3,
+    "fries": 1,
+    "fastfood": 8,
+    "pho": 2,
+    "ramen": 1
+  },
+  "neededVsHave": {
+    "vegetarianske": {
+      "places": 1,
+      "needed": 1,
+      "have": 1
+    },
+    "veganske": {
+      "places": 1,
+      "needed": 1,
+      "have": 1
+    },
+    "zdrave": {
+      "places": 5,
+      "needed": 2,
+      "have": 2
+    },
+    "ceske": {
+      "places": 73,
+      "needed": 25,
+      "have": 25
+    },
+    "pizza": {
+      "places": 55,
+      "needed": 19,
+      "have": 19
+    },
+    "burger": {
+      "places": 22,
+      "needed": 8,
+      "have": 8
+    },
+    "kebab": {
+      "places": 21,
+      "needed": 7,
+      "have": 7
+    },
+    "cina": {
+      "places": 14,
+      "needed": 5,
+      "have": 5
+    },
+    "pho": {
+      "places": 5,
+      "needed": 2,
+      "have": 2
+    },
+    "asijske": {
+      "places": 63,
+      "needed": 21,
+      "have": 21
+    },
+    "mexiko": {
+      "places": 7,
+      "needed": 3,
+      "have": 3
+    },
+    "kava": {
+      "places": 176,
+      "needed": 59,
+      "have": 59
+    },
+    "sladke": {
+      "places": 28,
+      "needed": 10,
+      "have": 10
+    },
+    "fried_chicken": {
+      "places": 5,
+      "needed": 2,
+      "have": 2
+    },
+    "neuvedeno": {
+      "places": 172,
+      "needed": 58,
+      "have": 58
+    },
+    "fastfood": {
+      "places": 24,
+      "needed": 8,
+      "have": 8
+    },
+    "sushi": {
+      "places": 7,
+      "needed": 3,
+      "have": 3
+    },
+    "baguette": {
+      "places": 1,
+      "needed": 1,
+      "have": 1
+    },
+    "ramen": {
+      "places": 2,
+      "needed": 1,
+      "have": 1
+    }
+  },
+  "unmetSample": [],
+  "overCapSample": [],
+  "topUsed": [
+    {
+      "openverseId": "c95a7712-38a1-4372-a2df-6d3b02de3ae2",
+      "uses": 3
+    },
+    {
+      "openverseId": "6631ca2f-8412-43ad-8ee3-14515babcda0",
+      "uses": 3
+    },
+    {
+      "openverseId": "d7505e8f-61d5-4937-9ad9-d072a1bc2867",
+      "uses": 3
+    },
+    {
+      "openverseId": "917ae3ac-96df-4f58-962e-ea4edc3f6306",
+      "uses": 3
+    },
+    {
+      "openverseId": "de27f2de-8b96-4d4a-9be8-8a99a057a388",
+      "uses": 3
+    },
+    {
+      "openverseId": "3932563b-6593-41c0-bf25-479165a776f1",
+      "uses": 3
+    },
+    {
+      "openverseId": "6923026d-5235-45a0-89d5-6e592a949a49",
+      "uses": 3
+    },
+    {
+      "openverseId": "52e41a7d-0807-4177-b3e2-f4222c2bc50b",
+      "uses": 3
+    },
+    {
+      "openverseId": "81450792-d96f-4b2c-893c-8c48f69089f8",
+      "uses": 3
+    },
+    {
+      "openverseId": "15f80f4f-f8b2-4ca1-b186-8dc89765ef59",
+      "uses": 3
+    },
+    {
+      "openverseId": "3e0ece6b-f376-4564-8a63-de12b407c0b7",
+      "uses": 3
+    },
+    {
+      "openverseId": "5227ff3d-44b0-4583-9114-2a853530bea2",
+      "uses": 3
+    },
+    {
+      "openverseId": "e9bbd531-5283-488f-b0d6-e9296face8cd",
+      "uses": 3
+    },
+    {
+      "openverseId": "982cb905-daa4-4a2d-b4d7-acc4fa72feaf",
+      "uses": 3
+    },
+    {
+      "openverseId": "8a4d5ce1-96cf-4e58-87b3-670dd8585c20",
+      "uses": 3
+    },
+    {
+      "openverseId": "4bf2be7d-9e3e-4487-a866-0ce26f5f7b3d",
+      "uses": 3
+    },
+    {
+      "openverseId": "5e389854-5a18-4207-bf0f-6f32ba8fad5f",
+      "uses": 3
+    },
+    {
+      "openverseId": "5a536f31-7f62-4b86-aa77-155ae210b1cc",
+      "uses": 3
+    },
+    {
+      "openverseId": "3b63ab37-0a30-455e-877a-5882e044dc74",
+      "uses": 3
+    },
+    {
+      "openverseId": "6051ce73-277e-41dd-80da-1c265729b5ab",
+      "uses": 3
+    },
+    {
+      "openverseId": "746bd43e-0c1c-48bb-a7cf-fb01c5c0732a",
+      "uses": 3
+    },
+    {
+      "openverseId": "163d1437-54e9-47cd-921f-cf549f513fd8",
+      "uses": 3
+    },
+    {
+      "openverseId": "9944be89-0124-4297-bdc3-76c554eacd75",
+      "uses": 3
+    },
+    {
+      "openverseId": "e65ebf24-e670-4189-a62b-f17e6631f648",
+      "uses": 3
+    },
+    {
+      "openverseId": "f174d73a-b512-48c8-8c93-9194ca3225b8",
+      "uses": 3
+    },
+    {
+      "openverseId": "26408fe5-6975-4e5b-a7a1-3d1f0c5e9402",
+      "uses": 3
+    },
+    {
+      "openverseId": "9dd6215b-a44f-4aa5-8c07-74a2789611bd",
+      "uses": 3
+    },
+    {
+      "openverseId": "62807f62-5d1c-4662-a482-6b15a730743c",
+      "uses": 3
+    },
+    {
+      "openverseId": "319ea736-d9c3-433d-be6a-282009a30250",
+      "uses": 3
+    },
+    {
+      "openverseId": "74da5d73-b27e-4aca-8a0f-3697321fd510",
+      "uses": 3
+    }
+  ],
+  "verificationNote": "Tematická shoda: scoring Openverse title/tags + dish rules. Plná vizuální kontrola všech fotek člověkem neproběhla; tvrzení o 100% vizuální správnosti neuvádíme.",
+  "visualSpotChecks": "Spot-check nových assetů probíhá samostatně po běhu (viz report / agent log)."
+}

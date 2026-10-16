@@ -199,6 +199,19 @@ a {
   color: var(--text);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.header-link.is-active {
+  color: #0c6b58;
+  background: rgba(140, 255, 74, 0.35);
+}
+
 .header-nav {
   display: flex;
   align-items: center;
@@ -1116,6 +1129,16 @@ a {
   line-height: 1.3;
 }
 
+.meta-price-caption--verified {
+  color: #0c7d68;
+  font-weight: 750;
+}
+
+.meta-price-caption--estimate {
+  color: #8a5a12;
+  font-weight: 750;
+}
+
 .restaurant-card-tag-row {
   display: flex;
   flex-wrap: wrap;
@@ -1279,6 +1302,18 @@ a {
   margin-top: 10px;
   color: var(--muted);
   font-size: 0.78rem;
+}
+
+.detail-hero-credit {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.detail-hero-credit a {
+  color: inherit;
+  text-underline-offset: 2px;
 }
 
 .detail-metrics {

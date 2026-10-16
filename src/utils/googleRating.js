@@ -25,6 +25,17 @@ export function mapsLinkFor(restaurant) {
   return buildMapsSearchUrl(restaurant?.name, restaurant?.address)
 }
 
+/** Navigace na cíl. Polohu uživatele do odkazu nevkládá. */
+export function mapsDirectionsUrl(restaurant) {
+  const lat = restaurant?.lat
+  const lon = restaurant?.lon
+  if (typeof lat === 'number' && typeof lon === 'number' && Number.isFinite(lat) && Number.isFinite(lon)) {
+    return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`
+  }
+  const query = [restaurant?.name, restaurant?.address].filter(Boolean).join(', ')
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`
+}
+
 export function googleStatusLabel(restaurant) {
   if (hasGoogleRating(restaurant)) return 'Ověřené Google hodnocení'
   if (restaurant?.googleRatingStatus === GOOGLE_STATUS_NEEDS_REVIEW) {

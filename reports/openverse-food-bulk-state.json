@@ -1,0 +1,4904 @@
+{
+  "version": 1,
+  "dishAssets": {
+    "vegetarianske": {
+      "key": "vegetarianske",
+      "dish": "indické vegetariánské jídlo",
+      "openverseId": "bc54e815-76de-4042-8ee3-3e2d2ba43376",
+      "license": "by-sa",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "creator": "birdsey7",
+      "creatorUrl": "https://www.flickr.com/photos/57841116@N03",
+      "sourceUrl": "https://www.flickr.com/photos/57841116@N03/54504949645",
+      "attribution": "\"Vegetable curry, brown rice, salt and pepper tofu\" by birdsey7 is licensed under CC BY-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/2.0/.",
+      "originalUrl": "https://live.staticflickr.com/65535/54504949645_d29a16d6c3_b.jpg",
+      "publicUrl": "/food-illustrations/shared/vegetarianske-bc54e815.jpg",
+      "seededFrom": "dhaba-beas-panska"
+    },
+    "veganske": {
+      "key": "veganske",
+      "dish": "veganský burger",
+      "openverseId": "16cac81b-1c8e-49eb-901e-ff3d9ed37988",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Nilo Velez",
+      "creatorUrl": "https://www.nilovelez.com",
+      "sourceUrl": "https://wordpress.org/photos/photo/851628dd93/",
+      "attribution": "\"Vegan miniburgers\" by Nilo Velez is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://pd.w.org/2022/05/851628dd931a733c3.17297262-2048x1365.jpg",
+      "publicUrl": "/food-illustrations/shared/veganske-16cac81b.jpg",
+      "seededFrom": "forkys-vankovka"
+    },
+    "zdrave": {
+      "key": "zdrave",
+      "dish": "salát / zdravá porce",
+      "openverseId": "c95a7712-38a1-4372-a2df-6d3b02de3ae2",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Jeffrey Betts",
+      "creatorUrl": "http://mmtstock.com",
+      "sourceUrl": "https://stocksnap.io/photo/salad-lettuce-Z0133GNPXT",
+      "attribution": "\"Salad Lettuce\" by Jeffrey Betts is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://cdn.stocksnap.io/img-thumbs/960w/Z0133GNPXT.jpg",
+      "publicUrl": "/food-illustrations/shared/zdrave-c95a7712.jpg",
+      "seededFrom": "rebio-velky-spalicek"
+    },
+    "kebab": {
+      "key": "kebab",
+      "dish": "kebab",
+      "openverseId": "5cc7a1d6-658c-4a8b-9841-9bd72dab486f",
+      "license": "by",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "creator": "France1978",
+      "creatorUrl": "https://www.flickr.com/photos/51764518@N02",
+      "sourceUrl": "https://www.flickr.com/photos/51764518@N02/54373715714",
+      "attribution": "\"Dining Out - The Big Greek Cafe In Columbia, Maryland - Gyro Pita Sandwich (March 2025)\" by France1978 is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+      "originalUrl": "https://live.staticflickr.com/65535/54373715714_c947b33c1c_b.jpg",
+      "publicUrl": "/food-illustrations/shared/kebab-5cc7a1d6.jpg",
+      "seededFrom": "kurdsky-kebab-cejl"
+    },
+    "cina": {
+      "key": "cina",
+      "dish": "kung-pao / čínské jídlo",
+      "openverseId": "322060b2-60e1-4278-8d77-865165dd5660",
+      "license": "by",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "creator": "Wheeler Cowperthwaite",
+      "creatorUrl": "https://www.flickr.com/photos/60756254@N07",
+      "sourceUrl": "https://www.flickr.com/photos/60756254@N07/51431406734",
+      "attribution": "\"Kung Pao Chicken with white rice\" by Wheeler Cowperthwaite is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+      "originalUrl": "https://live.staticflickr.com/65535/51431406734_84632f9e21_b.jpg",
+      "publicUrl": "/food-illustrations/shared/cina-322060b2.jpg",
+      "seededFrom": "lokofu"
+    },
+    "asijske": {
+      "key": "asijske",
+      "dish": "pho",
+      "openverseId": "1cea8c77-f1dc-4e12-84b6-e4ddee94f35e",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "",
+      "creatorUrl": "",
+      "sourceUrl": "https://www.rawpixel.com/image/5906642/photo-image-public-domain-food-free",
+      "attribution": "\"Free Pho image\" is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL3B4NzA5NzU5LWltYWdlLWt3dnY2eW5lLmpwZw.jpg",
+      "publicUrl": "/food-illustrations/shared/asijske-1cea8c77.jpg",
+      "seededFrom": "oh-pho"
+    },
+    "mexiko": {
+      "key": "mexiko",
+      "dish": "tacos",
+      "openverseId": "a170c6ca-84c2-4199-a106-514f8d484927",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Tim Sullivan",
+      "creatorUrl": "https://www.secretagencygroup.com",
+      "sourceUrl": "https://stocksnap.io/photo/mexican-tacos-UPG7YS3LGW",
+      "attribution": "\"Mexican Tacos\" by Tim Sullivan is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://cdn.stocksnap.io/img-thumbs/960w/UPG7YS3LGW.jpg",
+      "publicUrl": "/food-illustrations/shared/mexiko-a170c6ca.jpg",
+      "seededFrom": "ilegal-restaurant"
+    },
+    "kava": {
+      "key": "kava",
+      "dish": "káva",
+      "openverseId": "4e63f343-75c5-4f33-b968-e6bad4257413",
+      "license": "by",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "creator": "Bex.Walton",
+      "creatorUrl": "https://www.flickr.com/photos/7831824@N04",
+      "sourceUrl": "https://www.flickr.com/photos/7831824@N04/51706667301",
+      "attribution": "\"Flat white at Fábrica Coffee Roasters, Porto\" by Bex.Walton is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+      "originalUrl": "https://live.staticflickr.com/65535/51706667301_89b618d0b0_b.jpg",
+      "publicUrl": "/food-illustrations/shared/kava-4e63f343.jpg",
+      "seededFrom": "skog-urban-hub"
+    },
+    "sladke": {
+      "key": "sladke",
+      "dish": "dort",
+      "openverseId": "995cd451-8205-450b-86a4-c2b834eca24c",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "",
+      "creatorUrl": "",
+      "sourceUrl": "https://www.rawpixel.com/image/5905356/photo-image-background-public-domain-food",
+      "attribution": "\"Free strawberry layer cake image\" is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL3B4Nzg1MjgwLWltYWdlLWt3dnV6eW82LmpwZw.jpg",
+      "publicUrl": "/food-illustrations/shared/sladke-995cd451.jpg",
+      "seededFrom": "cukrarna-vetrnik-lidicka"
+    },
+    "neuvedeno": {
+      "key": "neuvedeno",
+      "dish": "těsto / hlavní jídlo",
+      "openverseId": "8aaa845a-9048-48c1-a998-651e87acd52f",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "",
+      "creatorUrl": "",
+      "sourceUrl": "https://www.rawpixel.com/image/5918682/image-public-domain-food-white",
+      "attribution": "\"Free spaghetti image\" is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL2ZmMjQ0My1pbWFnZS1rd3Z4MXk5eC5qcGc.jpg",
+      "publicUrl": "/food-illustrations/shared/neuvedeno-8aaa845a.jpg",
+      "seededFrom": "adria-masarykova-31"
+    },
+    "pizza": {
+      "key": "pizza",
+      "dish": "pizza",
+      "openverseId": "f174d73a-b512-48c8-8c93-9194ca3225b8",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "sarahstierch",
+      "creatorUrl": "https://www.flickr.com/photos/7633518@N08",
+      "sourceUrl": "https://www.flickr.com/photos/7633518@N08/55252067993",
+      "attribution": "\"Margherita pizza from Slice Pizzeria\" by sarahstierch is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://live.staticflickr.com/65535/55252067993_53dabc563c_b.jpg",
+      "publicUrl": "/food-illustrations/shared/pizza-f174d73a.jpg",
+      "seededFrom": "prova-bistro-pizza"
+    },
+    "burger": {
+      "key": "burger",
+      "dish": "burger",
+      "openverseId": "0ef49110-3ede-41ea-9738-284dafc2bc24",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Dana Tentis",
+      "creatorUrl": "https://www.linkedin.com/in/dana-tentis-540516b2",
+      "sourceUrl": "https://stocksnap.io/photo/hamburger-dinner-7QH4K6AESO",
+      "attribution": "\"Hamburger Dinner\" by Dana Tentis is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://cdn.stocksnap.io/img-thumbs/960w/7QH4K6AESO.jpg",
+      "publicUrl": "/food-illustrations/shared/burger-0ef49110.jpg",
+      "seededFrom": "smash-burgers-moravske"
+    },
+    "ceske": {
+      "key": "ceske",
+      "dish": "české jídlo",
+      "openverseId": "6631ca2f-8412-43ad-8ee3-14515babcda0",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "",
+      "creatorUrl": "",
+      "sourceUrl": "https://www.rawpixel.com/image/6058700/free-public-domain-cc0-photo",
+      "attribution": "This work is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvZnJrZXR0bGVfZ291bGFzaF9mb29kXzE2NDUyMDctaW1hZ2Uta3ljZ2s5NXguanBn.jpg",
+      "publicUrl": "/food-illustrations/shared/ceske-6631ca2f.jpg",
+      "title": null,
+      "score": 9,
+      "query": "goulash stew food",
+      "status": "ok"
+    },
+    "baguette": {
+      "key": "baguette",
+      "dish": "bageta / sendvič",
+      "openverseId": "3bf431be-3488-4a0c-9673-c1423fc8b5a2",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Drew Burrows",
+      "creatorUrl": "https://www.multymedia.net",
+      "sourceUrl": "https://stocksnap.io/photo/bread-baguette-75TIOJXZEF",
+      "attribution": "\"Bread Baguette\" by Drew Burrows is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://cdn.stocksnap.io/img-thumbs/960w/75TIOJXZEF.jpg",
+      "publicUrl": "/food-illustrations/shared/baguette-3bf431be.jpg",
+      "title": "Bread Baguette",
+      "score": 9,
+      "query": "baguette sandwich food",
+      "status": "ok"
+    },
+    "fried_chicken": {
+      "key": "fried_chicken",
+      "dish": "smažené kuře / stripsy",
+      "openverseId": "73034d3c-9b72-4eec-864e-560f5eb69066",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "sarahstierch",
+      "creatorUrl": "https://www.flickr.com/photos/7633518@N08",
+      "sourceUrl": "https://www.flickr.com/photos/7633518@N08/54278879244",
+      "attribution": "\"Chicken strips and sweet potato fries\" by sarahstierch is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://live.staticflickr.com/65535/54278879244_0f38787c2d_b.jpg",
+      "publicUrl": "/food-illustrations/shared/fried_chicken-73034d3c.jpg",
+      "title": "Chicken strips and sweet potato fries",
+      "status": "ok"
+    },
+    "sushi": {
+      "key": "sushi",
+      "dish": "sushi",
+      "openverseId": "26b6141c-6a9c-47d3-ac1e-8b868aebd24f",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Jamie Hamel-Smith",
+      "creatorUrl": "https://plus.google.com/+JamieHamelSmith/posts",
+      "sourceUrl": "https://stocksnap.io/photo/sushi-sake-EZWO30D5TV",
+      "attribution": "\"Sushi Sake\" by Jamie Hamel-Smith is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://cdn.stocksnap.io/img-thumbs/960w/EZWO30D5TV.jpg",
+      "publicUrl": "/food-illustrations/shared/sushi-26b6141c.jpg",
+      "title": "Sushi Sake",
+      "status": "ok"
+    },
+    "fries": {
+      "key": "fries",
+      "dish": "hranolky",
+      "openverseId": "4674fe1f-8254-4a2b-9536-91349c8bf12e",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "sarahstierch",
+      "creatorUrl": "https://www.flickr.com/photos/7633518@N08",
+      "sourceUrl": "https://www.flickr.com/photos/7633518@N08/54235252804",
+      "attribution": "\"French fries\" by sarahstierch is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://live.staticflickr.com/65535/54235252804_c1f4a92dd0_b.jpg",
+      "publicUrl": "/food-illustrations/shared/fries-4674fe1f.jpg",
+      "title": "French fries",
+      "status": "ok"
+    },
+    "fastfood": {
+      "key": "fastfood",
+      "dish": "fast food / hranolky",
+      "openverseId": "4674fe1f-8254-4a2b-9536-91349c8bf12e",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "sarahstierch",
+      "creatorUrl": "https://www.flickr.com/photos/7633518@N08",
+      "sourceUrl": "https://www.flickr.com/photos/7633518@N08/54235252804",
+      "attribution": "\"French fries\" by sarahstierch is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://live.staticflickr.com/65535/54235252804_c1f4a92dd0_b.jpg",
+      "publicUrl": "/food-illustrations/shared/fries-4674fe1f.jpg",
+      "title": "French fries",
+      "status": "ok"
+    },
+    "pho": {
+      "key": "pho",
+      "dish": "pho",
+      "openverseId": "1cea8c77-f1dc-4e12-84b6-e4ddee94f35e",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "",
+      "creatorUrl": "",
+      "sourceUrl": "https://www.rawpixel.com/image/5906642/photo-image-public-domain-food-free",
+      "attribution": "\"Free Pho image\" is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL3B4NzA5NzU5LWltYWdlLWt3dnY2eW5lLmpwZw.jpg",
+      "publicUrl": "/food-illustrations/shared/asijske-1cea8c77.jpg",
+      "seededFrom": "oh-pho",
+      "status": "ok",
+      "aliasedFrom": "asijske"
+    },
+    "ramen": {
+      "key": "ramen",
+      "dish": "ramen",
+      "openverseId": "a01ecc5c-176b-4d1f-a445-655ff2184e3a",
+      "license": "cc0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Foodie Girl",
+      "creatorUrl": "https://stocksnap.io/author/121423",
+      "sourceUrl": "https://stocksnap.io/photo/ramen-noodles-KKMQPWQK6H",
+      "attribution": "\"Ramen Noodles\" by Foodie Girl is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+      "originalUrl": "https://cdn.stocksnap.io/img-thumbs/960w/KKMQPWQK6H.jpg",
+      "publicUrl": "/food-illustrations/shared/ramen-a01ecc5c.jpg",
+      "title": "Ramen Noodles",
+      "status": "ok"
+    }
+  },
+  "queryCache": {
+    "goulash stew food": [
+      {
+        "id": "6631ca2f-8412-43ad-8ee3-14515babcda0",
+        "title": null,
+        "license": "cc0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "creator": null,
+        "creator_url": null,
+        "foreign_landing_url": "https://www.rawpixel.com/image/6058700/free-public-domain-cc0-photo",
+        "attribution": "This work is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+        "url": "https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvZnJrZXR0bGVfZ291bGFzaF9mb29kXzE2NDUyMDctaW1hZ2Uta3ljZ2s5NXguanBn.jpg",
+        "filetype": "jpg",
+        "width": 3072,
+        "height": 2304,
+        "mature": false,
+        "tags": [
+          {
+            "name": "fire",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "fire bowl",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "goulash",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "hot pot food",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "stew",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "stew pot",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          }
+        ]
+      },
+      {
+        "id": "d7505e8f-61d5-4937-9ad9-d072a1bc2867",
+        "title": "Free beef stew image",
+        "license": "cc0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "creator": null,
+        "creator_url": null,
+        "foreign_landing_url": "https://www.rawpixel.com/image/5908873/image-light-public-domain-green",
+        "attribution": "\"Free beef stew image\" is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+        "url": "https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL3B4NDg1NTM4LWltYWdlLWt3dnZpMTU1LmpwZw.jpg",
+        "filetype": "jpg",
+        "width": 5472,
+        "height": 3080,
+        "mature": false,
+        "tags": [
+          {
+            "name": "beef stew",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "chili",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "chili curry",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "curry",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "goulash",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "green soup",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "light",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          },
+          {
+            "name": "spicy food",
+            "accuracy": null,
+            "unstable__provider": "rawpixel"
+          }
+        ]
+      }
+    ],
+    "baguette sandwich food": [
+      {
+        "id": "ad069e6c-c43f-45de-924b-372c639546eb",
+        "title": "Jambon-Beurre de Truffe sandwich",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "sarahstierch",
+        "creator_url": "https://www.flickr.com/photos/7633518@N08",
+        "foreign_landing_url": "https://www.flickr.com/photos/7633518@N08/52674578928",
+        "attribution": "\"Jambon-Beurre de Truffe sandwich\" by sarahstierch is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/52674578928_170b64bbe4_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 768,
+        "mature": false,
+        "tags": [
+          {
+            "name": "baguette",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "butter",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "fattedcalf",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "frenchbread",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "ham",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "jambonbeurredetruffe",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "lunch",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napa",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napacounty",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napavalley",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "oxbowpublicmarket",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandos",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwich",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwiches",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "snack",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "takeout",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "truffles",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      },
+      {
+        "id": "1cebf3dc-fc5f-4cd4-8cfb-3d96f25e2a7a",
+        "title": "Ham and truffle butter sandwich",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "sarahstierch",
+        "creator_url": "https://www.flickr.com/photos/7633518@N08",
+        "foreign_landing_url": "https://www.flickr.com/photos/7633518@N08/53641633366",
+        "attribution": "\"Ham and truffle butter sandwich\" by sarahstierch is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/53641633366_40726dc5c8_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 768,
+        "mature": false,
+        "tags": [
+          {
+            "name": "america",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "baguette",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "blacktruffles",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "bread",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "butter",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "california",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "fattedcalf",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "ham",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "lunch",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napa",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napacounty",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napavalley",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwich",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "truffle",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "unitedstates",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "usa",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      },
+      {
+        "id": "125a5c18-3a5d-43f7-b421-a8373d9a915d",
+        "title": "Brie LT bagel at La Baguette",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "Ruth and Dave",
+        "creator_url": "https://www.flickr.com/photos/95142644@N00",
+        "foreign_landing_url": "https://www.flickr.com/photos/95142644@N00/52178505329",
+        "attribution": "\"Brie LT bagel at La Baguette\" by Ruth and Dave is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/52178505329_e9350ca69c_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 768,
+        "mature": false,
+        "tags": [
+          {
+            "name": "bagel",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "brie",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "brielt",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "cafe",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "cheese",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "coffeeshop",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "labaguette",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "lettuce",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "lunch",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "meal",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "revelstoke",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "revelstokemountainresort",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "salad",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwich",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sesameseeds",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      },
+      {
+        "id": "3c0f1ceb-d030-4004-b071-c95ca417c53d",
+        "title": "Cheese sandwich",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "Ruth and Dave",
+        "creator_url": "https://www.flickr.com/photos/95142644@N00",
+        "foreign_landing_url": "https://www.flickr.com/photos/95142644@N00/52104498030",
+        "attribution": "\"Cheese sandwich\" by Ruth and Dave is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/52104498030_d97f1f265b_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 768,
+        "mature": false,
+        "tags": [
+          {
+            "name": "baguette",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "cheddar",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "cheese",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "cucumber",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "homemade",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "lunch",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "meal",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "salad",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwich",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sourdough",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      },
+      {
+        "id": "cc79e539-f6ff-44c0-a321-e983a3c6d3c4",
+        "title": "BLT bagel at La Baguette",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "Ruth and Dave",
+        "creator_url": "https://www.flickr.com/photos/95142644@N00",
+        "foreign_landing_url": "https://www.flickr.com/photos/95142644@N00/52178257776",
+        "attribution": "\"BLT bagel at La Baguette\" by Ruth and Dave is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/52178257776_7d8421b922_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 768,
+        "mature": false,
+        "tags": [
+          {
+            "name": "bacon",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "bagel",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "blt",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "cafe",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "coffeeshop",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "eating",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "holding",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "labaguette",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "lunch",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "meal",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "revelstoke",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "revelstokemountainresort",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "salad",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwich",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      },
+      {
+        "id": "56560f1c-8cd0-4ef6-99d9-ee78d4bac413",
+        "title": "[food] [meat] Do I Dare To Eat A Peach?",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "David Jackmanson",
+        "creator_url": "https://www.flickr.com/photos/58301516@N00",
+        "foreign_landing_url": "https://www.flickr.com/photos/58301516@N00/52625893201",
+        "attribution": "\"[food] [meat] Do I Dare To Eat A Peach?\" by David Jackmanson is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/52625893201_98daca7a7f_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 636,
+        "mature": false,
+        "tags": []
+      },
+      {
+        "id": "f3fb909a-a9d6-4bbe-bc83-9b4588a0d54d",
+        "title": "Bocadillo Sandwich",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "Thank You (24 Millions ) views",
+        "creator_url": "https://www.flickr.com/photos/34128007@N04",
+        "foreign_landing_url": "https://www.flickr.com/photos/34128007@N04/53498586164",
+        "attribution": "\"Bocadillo Sandwich\" by Thank You (24 Millions ) views is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/53498586164_1a083162ec_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 459,
+        "mature": false,
+        "tags": [
+          {
+            "name": "baquette",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "bocadillo",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "cheese",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "chili",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "demallorca",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "españa",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "ham",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "local",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "mallorca",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "palma",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "quesso",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "roti",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwich",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "serano",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "spain",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "spanish",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "spanyon",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "traditional",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      },
+      {
+        "id": "3bf431be-3488-4a0c-9673-c1423fc8b5a2",
+        "title": "Bread Baguette",
+        "license": "cc0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "creator": "Drew Burrows",
+        "creator_url": "https://www.multymedia.net",
+        "foreign_landing_url": "https://stocksnap.io/photo/bread-baguette-75TIOJXZEF",
+        "attribution": "\"Bread Baguette\" by Drew Burrows is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.",
+        "url": "https://cdn.stocksnap.io/img-thumbs/960w/75TIOJXZEF.jpg",
+        "filetype": "jpg",
+        "width": 3968,
+        "height": 2976,
+        "mature": false,
+        "tags": [
+          {
+            "name": "baguette",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          },
+          {
+            "name": "bakery",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          },
+          {
+            "name": "bread",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          },
+          {
+            "name": "carbs",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          },
+          {
+            "name": "deli",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          },
+          {
+            "name": "pastry",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          },
+          {
+            "name": "sandwich",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          },
+          {
+            "name": "seeds",
+            "accuracy": null,
+            "unstable__provider": "stocksnap"
+          }
+        ]
+      },
+      {
+        "id": "7bb46c5f-9259-4536-bf90-597e4ba28278",
+        "title": "Goat Rock Cider and jamon and truffle butter sandwich",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "sarahstierch",
+        "creator_url": "https://www.flickr.com/photos/7633518@N08",
+        "foreign_landing_url": "https://www.flickr.com/photos/7633518@N08/52844412394",
+        "attribution": "\"Goat Rock Cider and jamon and truffle butter sandwich\" by sarahstierch is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/52844412394_c0864b843c_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 768,
+        "mature": false,
+        "tags": [
+          {
+            "name": "baguette",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "beverage",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "california",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "can",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "cider",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "ciders",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "drink",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "fattedcalf",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "food",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "ham",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "lunch",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napa",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napacounty",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "napavalley",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "oxbowmarket",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwich",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "sandwiches",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          },
+          {
+            "name": "truffle",
+            "accuracy": null,
+            "unstable__provider": "flickr"
+          }
+        ]
+      },
+      {
+        "id": "4ddba819-2339-404a-b1d0-60b7082a7abe",
+        "title": "[food] [meat] Markdown Lunch Original",
+        "license": "by",
+        "license_url": "https://creativecommons.org/licenses/by/2.0/",
+        "creator": "David Jackmanson",
+        "creator_url": "https://www.flickr.com/photos/58301516@N00",
+        "foreign_landing_url": "https://www.flickr.com/photos/58301516@N00/52606048529",
+        "attribution": "\"[food] [meat] Markdown Lunch Original\" by David Jackmanson is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.",
+        "url": "https://live.staticflickr.com/65535/52606048529_98b98a8a73_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 922,
+        "mature": false,
+        "tags": []
+      },
+      {
+        "id": "75541073-b5a6-4e22-af0e-608de16ea707",
+        "title": "20240304_Vietnam_3447 stamp+multi Hanoi sRGB",
+        "license": "by-sa",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "creator": "Dan Lundberg",
+        "creator_url": "https://www.flickr.com/photos/9508280@N07",
+        "foreign_landing_url": "https://www.flickr.com/photos/9508280@N07/53750112431",
+        "attribution": "\"20240304_Vietnam_3447 stamp+multi Hanoi sRGB\" by Dan Lundberg is licensed under CC BY-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/2.0/.",
+        "url": "https://live.staticflickr.com/65535/53750112431_59987086e3_b.jpg",
+        "filetype": "jpg",
+        "width": 1024,
+        "height": 164,
+        "mature": false,
+        "tags": []
+      }
+    ]
+  },
+  "placeRows": {
+    "dhaba-beas-panska": {
+      "status": "kept_pilot",
+      "dishKey": "vegetarianske",
+      "dishSource": "pilot"
+    },
+    "forkys-vankovka": {
+      "status": "kept_pilot",
+      "dishKey": "veganske",
+      "dishSource": "pilot"
+    },
+    "rebio-velky-spalicek": {
+      "status": "kept_pilot",
+      "dishKey": "zdrave",
+      "dishSource": "pilot"
+    },
+    "kurdsky-kebab-cejl": {
+      "status": "kept_pilot",
+      "dishKey": "kebab",
+      "dishSource": "pilot"
+    },
+    "lokofu": {
+      "status": "kept_pilot",
+      "dishKey": "cina",
+      "dishSource": "pilot"
+    },
+    "oh-pho": {
+      "status": "kept_pilot",
+      "dishKey": "pho",
+      "dishSource": "pilot"
+    },
+    "ilegal-restaurant": {
+      "status": "kept_pilot",
+      "dishKey": "mexiko",
+      "dishSource": "pilot"
+    },
+    "skog-urban-hub": {
+      "status": "kept_pilot",
+      "dishKey": "kava",
+      "dishSource": "pilot"
+    },
+    "cukrarna-vetrnik-lidicka": {
+      "status": "kept_pilot",
+      "dishKey": "sladke",
+      "dishSource": "pilot"
+    },
+    "adria-masarykova-31": {
+      "status": "kept_pilot",
+      "dishKey": "neuvedeno",
+      "dishSource": "pilot"
+    },
+    "rebio-orli": {
+      "status": "kept_pilot",
+      "dishKey": "zdrave",
+      "dishSource": "pilot"
+    },
+    "prova-bistro-pizza": {
+      "status": "kept_pilot",
+      "dishKey": "pizza",
+      "dishSource": "pilot"
+    },
+    "smash-burgers-moravske": {
+      "status": "kept_pilot",
+      "dishKey": "burger",
+      "dishSource": "pilot"
+    },
+    "antalya-doner-kebap-palavske-namesti-3c": {
+      "status": "kept_pilot",
+      "dishKey": "kebab",
+      "dishSource": "pilot"
+    },
+    "new-era-restaurace": {
+      "status": "kept_pilot",
+      "dishKey": "cina",
+      "dishSource": "pilot"
+    },
+    "bistro-franz": {
+      "status": "kept_official"
+    },
+    "lokal-u-caipla": {
+      "status": "kept_official"
+    },
+    "stopkova-plzenska-pivnice": {
+      "status": "kept_official"
+    },
+    "la-strada-brno": {
+      "status": "kept_official"
+    },
+    "mamas-burger": {
+      "status": "kept_official"
+    },
+    "roburrito-pekarska": {
+      "status": "kept_official"
+    },
+    "bageterie-boulevard-vankovka": {
+      "status": "kept_official"
+    },
+    "7days-videnska-132-100": {
+      "status": "kept_official"
+    },
+    "amici-pizza-burgers-palackeho-trida-82": {
+      "status": "kept_official"
+    },
+    "bageterie-boulevard-masarykova-7": {
+      "status": "kept_official"
+    },
+    "bageterie-boulevard-netroufalky-770-16": {
+      "status": "kept_official"
+    },
+    "bistro-franz-veveri-461-14": {
+      "status": "kept_official"
+    },
+    "bistro-pod-schody-kabatnikova-219-7": {
+      "status": "kept_official"
+    },
+    "bistro-provaz-provaznikova-15": {
+      "status": "kept_official"
+    },
+    "borgeska-palackeho-trida-47": {
+      "status": "kept_official"
+    },
+    "buffalo-american-steakhouse-krizkovskeho-416-22": {
+      "status": "kept_official"
+    },
+    "cafe-gemini-cimburkova-4": {
+      "status": "kept_official"
+    },
+    "cafe-globus-hradecka-40": {
+      "status": "kept_official"
+    },
+    "cafe-podnebi-udolni-5": {
+      "status": "kept_official"
+    },
+    "costa-josefska-14": {
+      "status": "kept_official"
+    },
+    "cajovna-za-zrcadlem-jaselska-16": {
+      "status": "kept_official"
+    },
+    "deca-bulla-kopecna-21": {
+      "status": "kept_official"
+    },
+    "eatology-holandska-6": {
+      "status": "kept_official"
+    },
+    "efi-pivovar-zelny-trh-4": {
+      "status": "kept_official"
+    },
+    "f-ncy-fries-radnicka-11": {
+      "status": "kept_official"
+    },
+    "faine-janackovo-namesti-654-2a": {
+      "status": "kept_official"
+    },
+    "fako-club-hasicska-16-18": {
+      "status": "kept_official"
+    },
+    "flank-botanicka-598-72": {
+      "status": "kept_official"
+    },
+    "forky-s-cimburkova-593-4": {
+      "status": "kept_official"
+    },
+    "forky-s-technicka-17": {
+      "status": "kept_official"
+    },
+    "gemini-halasovo-namesti-918-6b": {
+      "status": "kept_official"
+    },
+    "han-food-netroufalky-770": {
+      "status": "kept_official"
+    },
+    "haribol-luzanecka-4": {
+      "status": "kept_official"
+    },
+    "hatsu-udolni-33": {
+      "status": "kept_official"
+    },
+    "cha-cha-husitska-8a": {
+      "status": "kept_official"
+    },
+    "chef-viet-kounicova-292-59": {
+      "status": "kept_official"
+    },
+    "chilli-garden-purkynova-3049-35g": {
+      "status": "kept_official"
+    },
+    "jakoby-jakubske-namesti-128-6": {
+      "status": "kept_official"
+    },
+    "jidelna-sindelar-a-syn-cejl-60": {
+      "status": "kept_official"
+    },
+    "julius-meinl-netroufalky-770": {
+      "status": "kept_official"
+    },
+    "kafec-orli-16": {
+      "status": "kept_official"
+    },
+    "kominska-rychta-kristenova-14": {
+      "status": "kept_official"
+    },
+    "kravalna-palavske-namesti-5": {
+      "status": "kept_official"
+    },
+    "la-dolce-speranza-lidicka-32": {
+      "status": "kept_official"
+    },
+    "laguna-smetanova-2": {
+      "status": "kept_official"
+    },
+    "leonardo-stefanikova-12": {
+      "status": "kept_official"
+    },
+    "lokal-u-caipla-kozi-3": {
+      "status": "kept_official"
+    },
+    "lotus-restaurant-grill-sushi-bar-silingrovo-namesti-257-3": {
+      "status": "kept_official"
+    },
+    "lucullus-husova-200-16": {
+      "status": "kept_official"
+    },
+    "maximus-resort-restaurace-portum-hrazni-327-4a": {
+      "status": "kept_official"
+    },
+    "mcdonald-s-namesti-svobody-19": {
+      "status": "kept_official"
+    },
+    "menu2go-podebradova-61": {
+      "status": "kept_official"
+    },
+    "mj-holiday-svratecka-11": {
+      "status": "kept_official"
+    },
+    "moc-bbq-house-premyslovo-namesti-49": {
+      "status": "kept_official"
+    },
+    "monte-bu-udolni-76": {
+      "status": "kept_official"
+    },
+    "monte-cristi-empanady-starobrnenska-14": {
+      "status": "kept_official"
+    },
+    "na-skopek-provaznikova-890-40": {
+      "status": "kept_official"
+    },
+    "na-spilberk-spilberk-1": {
+      "status": "kept_official"
+    },
+    "nality-caj-dymkarna-cajovna-videnska-80": {
+      "status": "kept_official"
+    },
+    "oaza-slovakova-2": {
+      "status": "kept_official"
+    },
+    "padthai-palackeho-trida-124": {
+      "status": "kept_official"
+    },
+    "piccolo-merhautova-93": {
+      "status": "kept_official"
+    },
+    "pizza-bombastica-jilkova-2301-165": {
+      "status": "kept_official"
+    },
+    "pizzeria-la-gamba-okruzni-9b": {
+      "status": "kept_official"
+    },
+    "pome-merhautova-448-42": {
+      "status": "kept_official"
+    },
+    "prime-steak-palackeho-trida-162": {
+      "status": "kept_official"
+    },
+    "pub-pred-zrcadlem-jaselska-17": {
+      "status": "kept_official"
+    },
+    "re-set-lazaretni-925-9": {
+      "status": "kept_official"
+    },
+    "rebelbean-prizova-5": {
+      "status": "kept_official"
+    },
+    "restaurace-globus-hradecka-40": {
+      "status": "kept_official"
+    },
+    "restaurace-rubin-makovskeho-namesti-2574-1": {
+      "status": "kept_official"
+    },
+    "ristorante-piazza-namesti-svobody-9": {
+      "status": "kept_official"
+    },
+    "roburrito-foodtruck-purkynova-647-111": {
+      "status": "kept_official"
+    },
+    "sklizeno-netroufalky-770": {
+      "status": "kept_official"
+    },
+    "slatina-bistro-turanka-1519-115a": {
+      "status": "kept_official"
+    },
+    "stopkova-plzenska-pivnice-ceska-5": {
+      "status": "kept_official"
+    },
+    "suchi-gorkeho-15": {
+      "status": "kept_official"
+    },
+    "sun-cafe-cimburkova-4": {
+      "status": "kept_official"
+    },
+    "suzie-s-steak-pub-kounicova-10": {
+      "status": "kept_official"
+    },
+    "tackarna-londynske-namesti-1": {
+      "status": "kept_official"
+    },
+    "tackarna-turanka-turanka-1387-100": {
+      "status": "kept_official"
+    },
+    "tao-viet-nam-home-cooking-sushi-bar-hrncirska-5": {
+      "status": "kept_official"
+    },
+    "terasa-hnevkovskeho-26": {
+      "status": "kept_official"
+    },
+    "tereza-chocolate-kolarikova-1144-5": {
+      "status": "kept_official"
+    },
+    "the-himalaya-nadrazni-8": {
+      "status": "kept_official"
+    },
+    "turanska-beseda-podlipna-140-25": {
+      "status": "kept_official"
+    },
+    "u-emila-hybesova-13": {
+      "status": "kept_official"
+    },
+    "u-krale-jiriho-brenkova-1": {
+      "status": "kept_official"
+    },
+    "u-krizu-zelny-trh-12": {
+      "status": "kept_official"
+    },
+    "u-staryho-billa-kudelova-5": {
+      "status": "kept_official"
+    },
+    "u-trech-certu-dvorakova-8": {
+      "status": "kept_official"
+    },
+    "viet-tam-koblizna-8": {
+      "status": "kept_official"
+    },
+    "zlaty-orel-videnska-132-100": {
+      "status": "kept_official"
+    },
+    "statl-brno": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "pizzerie-viva": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "uvozna-burger": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "annapurna-brno": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "monogram-espresso-bar": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cukrarstvi-martinak": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "chicken-inn-svobody": {
+      "status": "assigned_shared",
+      "dishKey": "fried_chicken",
+      "dishSource": "name_specific"
+    },
+    "but-first-coffee-jezuitska-11": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "1-doubravnicka-milady-horakove-1920-1a": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "3f-by-mori-janska-11": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "4-slices-pizza-focaccia-technicka-17": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "adrinela-cafe-zivotskeho-195-14": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "aida-cafe-restaurant-josefska-21": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "name"
+    },
+    "aida-la-dolce-vita-kozi-9": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "air-cafe-zelny-trh-8": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "aloha-grill-kozi-8": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "alvin-hudcova-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "amsterdam-grill-namesti-svobody-16": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "an-wok-grill-krizova-55-5": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "name_specific"
+    },
+    "annapurna-josefska-14": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "arctica-gelato-orli-4": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "armen-fast-food-cimburkova-593-4": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "arny-s-food-josefska-5": {
+      "status": "assigned_shared",
+      "dishKey": "zdrave",
+      "dishSource": "category"
+    },
+    "aroha-cafe-krenova-183-57": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "aroma-cofee-stefanikova-4": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "art-cihlarska-19": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "asijske-bistro-t-h-cejl-45": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "astorka-novobranska-3": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "atelier-cocktail-bar-bistro-koblizna-71-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "au-lait-espresso-bar-gorkeho-96-54": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "aurum-caffe-restaurant-palackeho-trida-124": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "avanti-stredni-61": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "bar-gril-u-nas-masarova-11a": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "bar-caffe-elephant-lidicka-43": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "barcelato-malatova-20": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "baroko-orli-17": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "barrio-gotico-kozi-12": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "bat-beerhouse-julianovske-namesti-3878-2": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "bavard-cafe-postovska-4": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "bella-pizza-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "bella-pizza-palackeho-trida-175-54": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "beo-dukelska-22": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "bep-vietnamese-village-cuisine-koblizna-9": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "name"
+    },
+    "bez-cukru-semilasso-palackeho-trida-126": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "bibus-videnska-125": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "big-food-point-koblizna-9": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "big-food-point-masarykova-33": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "biograf-cafe-grohova-3": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "bistro-53-palackeho-trida-53": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "bistro-77-francouzska-77": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "bistro-bastardo-namesti-svobody-92-21": {
+      "status": "assigned_shared",
+      "dishKey": "mexiko",
+      "dishSource": "category"
+    },
+    "bistro-bastardo-stefanikova-20": {
+      "status": "assigned_shared",
+      "dishKey": "mexiko",
+      "dishSource": "category"
+    },
+    "bistro-hiro-kotlarska-669-36": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "bistro-la-terra-lesnicka-40": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "bistro-matyho-chalka-zabrdovicka-10a": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "bistro-ministerio-kotlarska-902-53": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "blokk-husova-536-14": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "blue-demon-bistro-udolni-223-7": {
+      "status": "assigned_shared",
+      "dishKey": "mexiko",
+      "dishSource": "category"
+    },
+    "blue-mango-holandska-8": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "bon-ami-restaurant-komarovska-352-7": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "bonjour-vietnam-vaclavska-39-1": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "borgo-agnese-kopecna-43": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "borsalino-orli-20": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "brana-ke-zdravi-orli-17": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "break-feast-dvorakova-43-12": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "brunche-s-vodova-63": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "bubblify-ceska-26": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "bubblify-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "bubblify-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "buddha-namesti-svobody-92-21": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "buddy-s-street-23-libusina-trida-826-23": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "buffalo-express-nadrazni-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "bucheck-zelny-trh-325-18": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "buchta-c-zelny-trh-10": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "bukovsky-medlanecka-2286": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "bun-dvorakova-16": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "burger-inn-beethovenova-7": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "burger-king-u-dalnice-777": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "burger-king-nadrazni-10": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "burger-king-ceska-142-29": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "burger-king-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "burger-king-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "buro-pizza-trida-kpt-jarose-1967-39a": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "butcher-s-dobrovskeho-96-29": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "bystrcka-oaza-lyskova-1031-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "ca-phe-xin-chao-jezuitska-6-1": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "cafe-bistro-bila-vrana-kristenova-1": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-bistro-napoli-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-wine-art-mendlovo-namesti-12": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-1805-taborskeho-nabrezi-3": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-atelier-palackeho-trida-95": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-falk-gorkeho-12": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "cafe-in-the-ghetto-bratislavska-65": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-laundry-lidicka-46": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-low-beer-drobneho-22": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "cafe-luna-pekarska-54": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-mezzanine-udolni-15": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-minor-sukova-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-placzek-minoritska-4": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-rudolf-namesti-svobody-17": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "name"
+    },
+    "cafe-seoul-trida-kpt-jarose-26": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-steiner-gorkeho-38": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cafe-veranda-vachova-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "caffe-del-saggio-helceletova-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "caffe-dieci-josefska-7": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "caffe-mnau-josefska-1": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "caffe-park-slovanak-slovanske-namesti-3089-20": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "camel-mojmirovo-namesti-303-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "campo-vodova-336-108": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "campus-river-palachovo-namesti-2": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "carmel-cejl-282-86": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "cartel-grohova-19": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "cartel-pizzeria-prazska-156": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "caruso-pizza-bayerova-6": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "castellana-trattoria-novobranska-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "cat-cafe-martinkova-7": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "club-bar-semilasso-palackeho-trida-126": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "coffee-bar-story-lidicka-15": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "coffee-point-trida-generala-piky-2057-3c": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "coffee-trail-bar-stefanikova-93-22": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "coffee-trail-lidicka-lidicka-46": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "name"
+    },
+    "coffee-trail-river-jundrov-175": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "coffee4all-chironova-8": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "coffeeshop-company-nove-sady-25": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "colatransport-pisniky-409": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "cosmopolis-kozi-5": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "cukrarna-bali-minska-52": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cukrarna-kokoo-premyslovo-namesti-26": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cukrarstvi-bukovsky-minska-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cukrove-nebe-orli-20": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "curry-house-jiraskova-248-48": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "cajovna-hostimil-capkova-3": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "carokavarna-josefska-697-7": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "cesky-mekac-u-medveda-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "ctyri-ruze-veveri-32": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "daynight-palavske-namesti-3b": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "deja-vu-uvoz-26": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "detska-kavarna-u-bedrunky-komarovska-3": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "detsky-kabinet-sukova-4": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "di-napoli-stefanikova-20": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "diandi-namesti-svobody-91-20": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "dilna-matilda-palackeho-trida-95": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "diwa-orli-19": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "dno-restaurant-orli-19": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "dobra-cajovna-frantiskanska-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "dobrovsky-jostova-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "doe-boy-pizza-napoletana-brno-stefanikova-39": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "dohoda-beer-house-biskupska-6": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "dolce-e-salato-hornikova-36a": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "dolce-omcia-uvoz-43": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "don-antonio-pizza-burger-taborska-3216-78": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "don-miguel-s-palackeho-trida-35": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "don-pacinko-kounicova-512-60": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "doner-kebab-futurum-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "dragon-iii-krizova-8": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "duhovy-raj-okruzni-433-1": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "dukat-loosova-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "dvorek-pod-petrovem-petrov-1": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "east-village-jaselska-2": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "element-restaurant-bar-behounska-108-7": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "empire-svobodak-namesti-svobody-16": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "everest-veveri-61": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "fabrik-urban-house-rooseveltova-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "faircafe-rybarska-202-19": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "name"
+    },
+    "falafelo-pekarska-19": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "fansipan-stefanikova-7": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "fansipan-asian-cuisine-sushi-kolarikova-1497": {
+      "status": "assigned_shared",
+      "dishKey": "sushi",
+      "dishSource": "name_specific"
+    },
+    "fatfuck-smash-burgers-brno-hybesova-45": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "faust-burger-pub-jiraskova-34": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "fenix-lounge-restaurace-masarykova-32": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "fika-dominikanske-namesti-197-3": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "flek-veveri-453-6": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "formanka-masova-8": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "fresh-bar-bistro-narohu-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "fresh-cafe-medispol-makovskeho-namesti-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "fresh-fitpeople-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "fresh-pasta-pekarska-18": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "fresh-point-sushi-express-hradecka-408-40": {
+      "status": "assigned_shared",
+      "dishKey": "sushi",
+      "dishSource": "name_specific"
+    },
+    "fryends-ceska-31": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "garden-restaurant-pub-benesova-605-18": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "geicha-masarykova-12": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "gelateria-piazza-namesti-svobody-9": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "gill-s-espresso-bar-veveri-9": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "gimmi-lounge-cafe-slovanske-namesti-1": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "globus-bistro-reckovicka-555-3": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "go-brno-behounska-4": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "golden-sun-vesela-5": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "gopal-trida-kpt-jarose-10": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "grandezza-zelny-trh-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "gth-multicatering-jana-babaka-11": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "gusto-plzenka-husova-16": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "guty-skandinavska-128-2": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "gyros-taverna-athena-stefanikova-4": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "happy-teahouse-koblizna-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "hatsu-restaurant-mecova-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "havana-restaurant-masarova-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "hele-zmrzka-technicka-17": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "hladovy-vlk-jiraskova-51": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "hoa-mai-bayerova-10": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "hodne-nekde-pekarenska-12": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "hospudka-u-kola-elplova-2492-1": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "hostinec-u-blahovky-gorkeho-54": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "hostinec-u-ferdinanda-karaskovo-namesti-2457-17": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "hostinec-u-seminaru-smetanova-30": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "hostinec-u-vedru-tilhonova-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "hradek-plny-hratek-volejnikova-1805-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "hrana-stolu-uvoz-8": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "husovicka-sokolovna-dukelska-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "cha-do-zelny-trh-10": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "chajovna-dominikanske-namesti-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "charlie-s-koblizna-12": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "charlie-s-mill-restaurant-palackeho-trida-91": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "charlie-s-park-kolejni-3015": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "chicago-haasova-1599-54": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "chuang-shi-ji-koblizna-13": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "chut-viet-lidicka-37": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "chutne-stesti-lidicka-1874-38": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "iguana-halasovo-namesti-7": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "il-capo-merhautova-977-101": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "il-mondo-jirova-4": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "inaris-stefanikova-27": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "india-thali-trida-kpt-jarose-13": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "industra-coffee-masna-9": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "istanbul-kebab-banskobystricka-1259-1": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "it-s-not-a-phase-mom-kotlarska-668-34": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "jaga-zerotinovo-namesti-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "jazzmin-holandska-12": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jean-paul-s-zelny-trh-10": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jean-paul-s-holandska-10": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jean-paul-s-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "jean-paul-s-purkynova-2950-105": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jean-paul-s-restaurant-behounska-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jeste-jednu-minoritska-2": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "jidelna-100-chuti-kolejni-14": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jidelna-beta-namesti-svobody-92-21": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jidelna-k2-cejl-62": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jidelna-kocourek-hlinky-105": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jidelna-maj-divadelni-3": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "jidelna-u-bileho-konicka-sochorova-3232-36": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "jomsom-belohorska-61": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "kabaret-spacek-kopecna-46": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "kafara-frycajova-78-16": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kafe-kobliha-pekarska-68": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kafe-a-slanina-bohmova-1077-13": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "kafe-friedrich-smetanova-45": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kachna-cafe-cernopolni-33": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kachna-cafe-stankova-379-33": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kakheti-kounicova-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "kancl-bistro-purkynova-127": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kartouza-cafe-bozetechova-1": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kaskada-taborskeho-nabrezi-3": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "kavarna-cukrarna-smile-s-r-o-namesti-28-dubna-10-40": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "kavarna-bemovka-vsetinska-527-20": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kavarna-cyro-anenska-9": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kavarna-dallmayr-hradecka-408-40": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kavarna-nevyprahnu-plovdivska-2560-7": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kavarna-spolek-orli-22": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kavarna-u-kapucinu-kapucinske-namesti-7": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "kavarna-u-zambocha-kollarova-9": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kebab-99-palackeho-trida-92": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "kebab-abu-rami-lidicka-47": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "kebab-kotlarska-kotlarska-5": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "kebab-sach-behounska-109-9": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "kelimek-lidicka-971-25": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kfc-rasinova-2": {
+      "status": "assigned_shared",
+      "dishKey": "fried_chicken",
+      "dishSource": "name_specific"
+    },
+    "kfc-masarykova-39": {
+      "status": "assigned_shared",
+      "dishKey": "fried_chicken",
+      "dishSource": "name_specific"
+    },
+    "kfc-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "fried_chicken",
+      "dishSource": "name_specific"
+    },
+    "kfc-netroufalky-770-16": {
+      "status": "assigned_shared",
+      "dishKey": "fried_chicken",
+      "dishSource": "name_specific"
+    },
+    "khao-niew-thai-bistro-zemedelska-1693-38": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "khaybar-slepa-27": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "kimono-bayerova-572-2": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "klub-cestovatelu-veleslavinova-14": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "knedlikovy-raj-nadrazni-2a": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "kocici-kavarna-pelisek-trida-kpt-jarose-37a": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kockafe-schrodinger-dominikanske-namesti-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "koffein-gorkeho-82-37": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kofi-kofi-holandska-873-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kofi-kofi-technicka-17": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "koinobori-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "kometa-pub-kridlovicka-34": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "kometa-pub-miki-makovskeho-namesti-3166-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "korzar-minska-26": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "kosilka-nerudova-4": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kousek-recka-na-taliri-anenska-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "kratky-kafe-mathonova-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kult-cafe-husitska-1127-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "kurdish-grill-divadelni-603-3": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "category"
+    },
+    "kurdsky-kebab-cejl-93": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "kurdsky-kebab-lidicka-33": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "kytkafe-mecova-8": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "l-eau-vive-petrov-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "l-osteria-prizova-285-3": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "la-canttina-cejl-16": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "la-casa-verde-taborska-256-232": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "la-catedral-uvoz-432-80": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "la-corrida-namesti-28-dubna-2": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "la-cristina-zahradnicka-298-19": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "la-cucina-nera-dukelska-trida-58": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "la-famiglia-udolni-4": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "la-peda-krizova-16": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "la-vanille-milady-horakove-1954-7": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "la-vaza-behounska-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "labyrint-smetanova-51": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "le-brunch-smetanova-284-13": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "le-petit-cafe-minska-14": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "leharo-potocka-53-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "let-s-steaking-dominikanska-3": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "leyaly-koliste-1907-3": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "liberty-cafe-radnicka-7": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "light-of-india-stefanikova-35": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "limonade-cafe-ksirova-107": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "lion-kebab-milady-horakove-1957-15": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "little-saigon-spitalka-124-37": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "local-barber-shop-smetanova-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "local-cafe-restaurant-majdalenky-10": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "name"
+    },
+    "lokahi-jiraskova-15": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "los-capolitos-zelny-trh-1": {
+      "status": "assigned_shared",
+      "dishKey": "mexiko",
+      "dishSource": "category"
+    },
+    "los-capolitos-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "mexiko",
+      "dishSource": "category"
+    },
+    "lotebi-rezacova-5": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "lumos-krizova-20": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "luzanka-buresova-2": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "m-coffee-bar-palackeho-trida-25": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "m13-rock-pub-benesova-612-22": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "ma-hostina-stefanikova-78": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "mada-ice-cream-kapucinske-namesti-11": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "maison-restaurant-taste-of-asia-jakubske-namesti-109-1": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "mamakafe-uvoz-525-21": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "mandarin-pruchodni-1": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "mandlarna-dominikanska-1": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "manya-pruchodni-2": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "marhaba-kebab-cejl-39": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "marmite-cafe-hrncirska-891-17": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "mayada-prikop-843-6": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "maybe-coffee-bistro-videnska-18a": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "mcdonald-s-masarykova-32": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "meet-me-veveri-464-17": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "menza-fch-purkynova-118": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "menza-kolejni-kolejni-2905-2": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "menza-purkynova-purkynova-93": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "menza-vinarska-vinarska-499-5": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "mikulasek-elgartova-263-8": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "minach-postovska-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "minach-cejl-62": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "mistogalerie-sklenena-louka-kounicova-276-23": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "mitrovski-veletrzni-13": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "mix-grill-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "mochi-botanicka-605-19": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "monogram-espresso-bar-kapucinske-namesti-12": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "moravanska-rychta-stredni-55-9": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "moravska-chalupa-krizkovskeho-489-47a": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "moravske-muzeum-pavilon-anthropos-pisarecka-273-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "morgal-husova-18": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "mori-sportovni-559-2a": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "mors-art-rooseveltova-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "mr-turecky-kebap-hlavni-1129-129": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "mr-sushito-janska-10": {
+      "status": "assigned_shared",
+      "dishKey": "sushi",
+      "dishSource": "name_specific"
+    },
+    "mulgogi-veveri-51": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "muni-cafeteria-faculty-of-arts-arne-novaka-1": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "na-halach-stredni-26": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "na-hasicce-jeneweinova-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "na-knofliku-behounska-9": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "na-mlatech-mikulcicka-2b": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "na-ruzku-stefanikova-25": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "na-trati-libusina-trida-880-25": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "na-zmrzlinu-bayerova-589-18": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "na-tahu-basty-2": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "naber-si-rosickeho-namesti-196-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "nadiia-koliste-1908-5": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "namaskar-starobrnenska-287-9": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "nase-vase-bistro-jaselska-8": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "nase-veci-jiraskova-16": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "nefertiti-namesti-svobody-17": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "nekonecno-lidicka-14": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "nel-forno-namesti-svobody-17": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "nem-cimburkova-593-4": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "nepal-tyrsova-2": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "neva-pekarska-14": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "nihao-stefanikova-15": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "no-a-co-merhautova-8": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "no-feet-vankovo-namesti-1a": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "no-gluten-no-problem-zamecnicka-181-3": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "no-limit-starobrnenska-285-15": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "category"
+    },
+    "no-ne-janska-11": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "noem-arch-restaurant-cimburkova-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "nok-nok-restaurant-zamecnicka-1": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "numi-izakaya-trida-kpt-jarose-28": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "oaza-lidicka-7": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "obelix-stefanikova-26": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "okruh-pub-rybnicka-75": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "olymp-durdakova-46": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "omega-pizza-husitska-9": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "omni-cafe-brunch-pekarska-56": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "onyx-kopernikova-17": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "ortica-pizza-palackeho-trida-110": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pablo-esco-bar-minska-88": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "padagali-kotlarska-51a": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "padowetz-masarykova-34": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "pagoda-minska-3": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "palac-food-skandinavska-128-2": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "palavsky-senk-palavske-namesti-4290-2a": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "palazzo-silingrovo-namesti-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "panda-cimburkova-593-4": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "panda-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "panksy-jaselska-19": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "panorama-pristavni-1064-38": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "panska-licha-panska-licha-632-6": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "paolo-caffe-kopecna-24": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "park-lane-luzanecka-4a": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "parkhotel-restaurant-veslarska-347-250": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "parodie-vachova-8": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "pauzza-turanka-115": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "pavillon-jezuitska-6": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "pegas-jiraskova-44": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "pellegrini-namesti-svobody-18": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "pepe-food-gym-skrobarenska-502-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "periferie-kafe-libusina-trida-580": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "pf-cafe-dominikanske-namesti-685": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "pho-43-trida-kpt-jarose-20": {
+      "status": "assigned_shared",
+      "dishKey": "pho",
+      "dishSource": "name_specific"
+    },
+    "pho-ha-noi-jakubske-namesti-1": {
+      "status": "assigned_shared",
+      "dishKey": "pho",
+      "dishSource": "name_specific"
+    },
+    "pho-viet-palackeho-trida-31": {
+      "status": "assigned_shared",
+      "dishKey": "pho",
+      "dishSource": "name_specific"
+    },
+    "pho-viet-nam-divadelni-6": {
+      "status": "assigned_shared",
+      "dishKey": "pho",
+      "dishSource": "name_specific"
+    },
+    "piccadilly3-jungmannova-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "pikola-jakubska-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "pivni-opice-jostova-138-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "pivnice-masny-ruzek-krenova-70": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "name"
+    },
+    "pivnice-na-piskach-bayerova-23": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "name"
+    },
+    "pivnice-na-rohu-divadelni-divadelni-6": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "pivnice-pegas-jakubska-120-4": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "name"
+    },
+    "pivnice-u-capa-obilni-trh-10": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "pivnice-u-tygra-vrchlickeho-sad-3": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "name"
+    },
+    "pivovarska-brno-mendlovo-namesti-158-20": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "pivovarska-restaurace-moravia-kytnerova-6": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "pizza-bombastica-teyschlova-38a": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizza-bombastica-vychodilova-2565-17": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizza-bombastica-hybesova-307-59": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizza-bombastica-palackeho-namesti-820-20a": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizza-hot-masarykova-12": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizza-panzon-lidicka-43": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizza-punk-uvoz-80": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizzeria-al-capone-hrncirska-6": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizzeria-ristorante-sul-campo-fanderlikova-3083-17": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizzerie-mozzarella-kolejni-2905-2": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizzerie-sharingham-videnska-1": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pizzerie-u-montyho-provaznikova-40": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "plac-kounicova-15-73": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "plzensky-dvur-sumavska-29a": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "pod-hodinami-ceska-31": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "pod-lekarnou-slovakova-1": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "podloubi-smetanova-593-41": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "podnik-peroutkova-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "pohadkova-pizzerie-selska-63": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "pohosteni-u-sroubka-taborska-224": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "point-burger-namesti-svobody-8": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "name_specific"
+    },
+    "point-cafe-namesti-svobody-8": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "point-restaurant-vranovska-58": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "pokecz-basty-414": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "name_specific"
+    },
+    "polevkove-okynko-koliste-1907-3": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "pomlka-tresnova-330-2": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "porta-cafe-provaznikova-1655-82": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "portoriko-srbska-2653-51": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "potrefena-husa-jirova-2": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "potrefena-husa-starobrnenska-3": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "potrefena-husa-u-hriste-21b": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "poupe-dominikanska-342-15": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "prima-basta-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "punkt-stefanikova-61": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "punkt-bayerova-577-7": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "putra-taborska-3238-102": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "queen-s-pub-behounska-22": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "quido-stankova-12e": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "radegast-sportbar-namesti-svobody-96-2": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "raj-hlinky-hlinky-118": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "rakovec-rakovecka-13": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "ramyeon-brno-jakubske-namesti-580-4": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "rast-coffee-bistro-jarmily-kurandove-121-8": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "rebelbean-pole-durdakova-5": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "rebio-holandska-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "remet-videnska-127": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "restaurace-betlem-krkoskova-502-27": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "restaurace-ctyrlistek-novolisenska-2474-5": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "restaurace-diva-bara-stefanikova-21": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-domov-tuckova-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-gol-u-olafa-u-zoologicke-zahrady-4": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "restaurace-hotel-lazaretni-lazaretni-6": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-na-dornychu-dornych-120": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-na-chate-cernopolni-54": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "restaurace-na-musilce-musilova-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-our-story-masarova-2407-7": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-racek-jungmannova-700-5": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "restaurace-stary-dvur-mendlovo-namesti-11": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-u-badinu-tomaskova-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-u-latalu-breclavska-49": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-u-prumyslovky-jana-uhra-159-1": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "restaurace-v-zatacce-absolonova-836-10a": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-valoria-bohunicka-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurace-za-kaplickou-burianovo-namesti-5": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurant-m-cejl-68": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "restaurant-namaskar-smetanova-3": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "risto-pizza-pub-tusto-titanium-nove-sady-25": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "roburrito-pekarska-20": {
+      "status": "assigned_shared",
+      "dishKey": "mexiko",
+      "dishSource": "name_specific"
+    },
+    "rock-kebab-kastanova-579-76": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "roj-divadelni-4": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "category"
+    },
+    "roj-kebab-panska-1": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "royal-nepal-svatopluka-cecha-81": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "royal-ricc-starobrnenska-10": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "rud-s-pizza-cimburkova-593-4": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "sabaidy-trida-kpt-jarose-29": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "saffron-persian-food-uvoz-419-37": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "samoobsluzna-restaurace-rybkova-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "santorini-grill-bar-pristavni-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "satyam-cimburkova-593-4": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "satyam-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "scala-moravske-namesti-3": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "scuk-na-ceske-ceska-19": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "sesamo-purkynova-97c": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "severka-tuckova-30": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "shark-pizza-brno-kotlarska-907-41": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "name_specific"
+    },
+    "sherwood-rokytova-1933": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "siesta-lobby-wine-restaurant-husova-16": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "singha-orli-6": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "siwa-orient-grill-veveri-34": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "sk-g-urban-hub-dominikanske-namesti-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "slatinsky-senk-zlinska-12": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "slunecnice-pub-svermova-9": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "sono-veveri-113": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "soul-bistro-jakubska-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "soyshi-masarova-2407-7": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "spaghetti-d-amore-panska-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "spaghetti-parmigiano-cimburkova-593-4": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "spaghetti-parmigiano-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "sport-balkan-jugoslavska-5": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "sport-bar-arena-hybesova-21": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "srdecno-smetanova-631-30": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "stara-tkalcovna-bratislavska-52": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "starbucks-namesti-svobody-5": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "stavba-grohova-2": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "steak-house-k1-zarosicka-24": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "steak-house-k1-bubenickova-11": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "storey-josefska-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "stribrna-ruze-vranovska-1168-110": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "styl-pub-bubenickova-24": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "subway-ve-vankovce-1": {
+      "status": "assigned_shared",
+      "dishKey": "baguette",
+      "dishSource": "name_specific"
+    },
+    "sushi-mix-veveri-2218-131": {
+      "status": "assigned_shared",
+      "dishKey": "sushi",
+      "dishSource": "name_specific"
+    },
+    "svaca-holandska-873-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "svatoboj-cacovicka-12": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "svatovavrinecky-dvur-tukan-palackeho-namesti-2050-9a": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "svijansky-senk-stefanikova-21": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "sweet-fruit-brno-kozi-2": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "sesta-vetev-moravske-namesti-12": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "skolni-jidelna-brno-horni-16": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "snyt-palavanka-palavske-namesti-5": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "spageta-bistro-ceska-14": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "statl-namesti-svobody-3": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "svedska-kavarna-skandinavska-4": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "svedska-restaurace-skandinavska-4": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "table-talk-zamecnicka-87-1": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "taiwan-bento-josefska-25": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "taiyo-solnicni-636-3a": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "tao-viet-nam-home-cooking-sushi-bar-horova-35": {
+      "status": "assigned_shared",
+      "dishKey": "sushi",
+      "dishSource": "name_specific"
+    },
+    "teatr-lidicka-1862-14": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "teeholic-koblizna-14": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "tenis-bar-bubenickova-52": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "tenis-pub-luzanky-luzanecka-1883-3": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "testo-slovakova-6": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "thali-of-india-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "thalie-rooseveltova-14": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "thang-long-bistro-cejl-62": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "the-erin-s-flag-irish-pub-biskupska-3": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "the-grill-bar-boby-sportovni-2a": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "the-miners-behounska-20": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "timido-grohova-20a": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "tivoli-konecneho-namesti-539-6": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "toppu-ramen-behounska-129-13": {
+      "status": "assigned_shared",
+      "dishKey": "ramen",
+      "dishSource": "name_specific"
+    },
+    "trdlo-cafe-koblizna-24": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "trdlokafe-videnska-132-100": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "trinity-trnita-7": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "trinity-ristorante-trnita-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "tripoli-starobrnenska-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "trojka-dominikanska-9": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "tri-kocketyri-nadrazni-22": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "tri-zrnka-jemelkova-722-31": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "tungsram-kapucinske-namesti-7": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "turecky-kebab-hybesova-30": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "turecky-kebab-masarykova-25": {
+      "status": "assigned_shared",
+      "dishKey": "kebab",
+      "dishSource": "name_specific"
+    },
+    "tutti-frutti-jiraskova-1a": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "tutti-frutti-mendlovo-namesti-18": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "u-3-opic-palackeho-trida-77": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-divosky-trtilkova-24": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "u-drevaka-beer-grill-drevarska-22": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-dreveneho-orla-orli-3": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "u-dreveneho-vlka-zelny-trh-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-dvoraku-hlavni-119": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-dvou-kosu-stranskeho-3033-28": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-horkeho-konce-zizkova-257-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-hoveziho-pupku-videnska-55": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-kajmana-krizkovskeho-206-33a": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-karla-bayerova-8": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-kastanu-cernopolni-10": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-kola-skopalikova-20": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-kormidla-kounicova-43": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-kozaka-horova-30": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-lasa-merhautova-110": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-lucerny-slovakova-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-malchru-vancurova-3152-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-mamlasu-namesti-svobody-74-10": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-nemilosrdnych-bratri-kounicova-83": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-primu-minska-20": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-putny-vaclavska-10": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-richarda-risova-12": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-sajmona-pod-hajkem-botanicka-28": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-tesare-grmelova-9": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-tetiany-zvonarka-411": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-tety-kubickova-23": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-tomana-namesti-svobody-93-22": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-trech-certu-starobrnenska-7": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "u-zlate-hrusky-tvrdeho-3": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "u-zlate-konve-udolni-34": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "ugo-cimburkova-4": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "ugo-netroufalky-770-14": {
+      "status": "assigned_shared",
+      "dishKey": "zdrave",
+      "dishSource": "category"
+    },
+    "university-cafeteria-arne-novaka-1": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "utopia-centrum-koblizna-24": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "utopia-cajovna-divadelni-3": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "uvozna-uvoz-39": {
+      "status": "assigned_shared",
+      "dishKey": "burger",
+      "dishSource": "category"
+    },
+    "varadero-molakova-25": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "vecerka-pekarska-382-9": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "veg8cafe-krenova-45": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "vegalite-slovakova-10": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "vegan-af-ramen-maresova-14": {
+      "status": "assigned_shared",
+      "dishKey": "ramen",
+      "dishSource": "name_specific"
+    },
+    "velka-klajdovka-jedovnicka-7": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "vesela-cajovna-koblizna-5": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "videnka-videnska-15": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "viet-ha-kuklenska-1": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "viet-mac-stefanikova-23": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "vietpalace-olomoucka-63": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "vilgain-fast-food-smetanova-19": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "vinarna-u-kralovny-elisky-mendlovo-namesti-1b": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "vista-hudcova-72": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "vittorio-pekarska-4": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "vosime-cz-stefanikova-93-22": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "vyssi-princip-behounska-22": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "wang-noodles-namesti-svobody-92-21": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "wang-noodles-masarykova-37": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "wang-running-sushi-janska-9": {
+      "status": "assigned_shared",
+      "dishKey": "sushi",
+      "dishSource": "name_specific"
+    },
+    "willy-videnska-12": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "wok-99-cejl-544-99": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "name_specific"
+    },
+    "wokin-masarykova-22": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "yakitori-cimburkova-593-4": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "yakitori-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "yakitori-sushi-poke-bar-netroufalky-770": {
+      "status": "assigned_shared",
+      "dishKey": "sushi",
+      "dishSource": "name_specific"
+    },
+    "yumm-veveri-254-71": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "yummy-jostova-3": {
+      "status": "assigned_shared",
+      "dishKey": "fastfood",
+      "dishSource": "category"
+    },
+    "zagreb-palackeho-trida-162": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "zamilec-podhaji-13": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    },
+    "zannam-selska-1057-76": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "zaza-brno-vachova-46-4": {
+      "status": "assigned_shared",
+      "dishKey": "pizza",
+      "dishSource": "category"
+    },
+    "zdravy-zivot-jaselska-11": {
+      "status": "assigned_shared",
+      "dishKey": "zdrave",
+      "dishSource": "name"
+    },
+    "zemanova-kavarna-josefska-493-4": {
+      "status": "assigned_shared",
+      "dishKey": "kava",
+      "dishSource": "category"
+    },
+    "zlata-lod-namesti-svobody-5": {
+      "status": "assigned_shared",
+      "dishKey": "ceske",
+      "dishSource": "category"
+    },
+    "zlata-miska-maresova-14": {
+      "status": "assigned_shared",
+      "dishKey": "cina",
+      "dishSource": "category"
+    },
+    "zlate-hulky-palavske-namesti-4c": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "zmrzka-moravske-namesti-14b": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "zmrzlina-buresova-23": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "zmrzlina-palavske-namesti-2d": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "zmrzlina-fabbri-svratecka-1a": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "zmrzlinova-kavarna-kotlanova-2521-1b": {
+      "status": "assigned_shared",
+      "dishKey": "sladke",
+      "dishSource": "category"
+    },
+    "zo-bayerova-10": {
+      "status": "assigned_shared",
+      "dishKey": "asijske",
+      "dishSource": "category"
+    },
+    "zozumi-kvetinarska-2": {
+      "status": "assigned_shared",
+      "dishKey": "neuvedeno",
+      "dishSource": "fallback"
+    }
+  },
+  "updatedAt": "2026-10-16T20:56:01.922Z"
+}

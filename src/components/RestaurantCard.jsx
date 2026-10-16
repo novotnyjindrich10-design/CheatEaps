@@ -3,10 +3,11 @@ import { getRestaurantTags, getRestaurantCategory } from '../utils/restaurantTag
 import { mapsNavigateUrl } from '../data/restaurants'
 import { formatCardPrice } from '../utils/price'
 import { cardExcerpt } from '../utils/placeCopy'
-import { formatRouteDistance } from '../utils/routeDistance'
+import { presentRouteDistance } from '../utils/routeDistance'
 
 export default function RestaurantCard({ restaurant, index = 0 }) {
   const { id, name, type, distanceKm, distanceState } = restaurant
+  const distance = presentRouteDistance(distanceKm, distanceState)
   const tags = getRestaurantTags(restaurant)
   const category = getRestaurantCategory(restaurant)
   const priceDisplay = formatCardPrice(restaurant)
@@ -41,15 +42,25 @@ export default function RestaurantCard({ restaurant, index = 0 }) {
           <span className={`meta-value meta-value--price meta-value--${priceDisplay.tone || 'missing'}`}>
             {priceDisplay.primary}
           </span>
+          {priceDisplay.status ? (
+            <span className={`meta-price-caption meta-price-caption--${priceDisplay.tone || 'missing'}`}>
+              {priceDisplay.status}
+            </span>
+          ) : null}
         </div>
         <div className="restaurant-card-meta-item">
           <span className="meta-label">Vzdálenost</span>
           <span
             className="meta-value"
-            aria-label={distanceState === 'loading' ? 'Počítám vzdálenost' : undefined}
+            aria-label={
+              distanceState === 'loading' || distanceState === 'locating'
+                ? 'Počítám pěší vzdálenost'
+                : undefined
+            }
           >
-            {formatRouteDistance(distanceKm, distanceState)}
+            {distance.value}
           </span>
+          {distance.caption ? <span className="meta-price-caption">{distance.caption}</span> : null}
         </div>
       </div>
 

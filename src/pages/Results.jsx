@@ -37,7 +37,7 @@ export default function Results() {
     setSearchParams(params, { replace: true })
   }
 
-  const { attachDistances, origin } = useLocationState()
+  const { attachDistances, origin, routeStatus } = useLocationState()
   const located = useMemo(() => attachDistances(restaurants), [attachDistances])
   const filtered = useMemo(
     () =>
@@ -47,6 +47,17 @@ export default function Results() {
       }),
     [located, searchParams, origin],
   )
+  const waitingForDistance =
+    Boolean(origin) && filters.maxDistance !== '' && routeStatus === 'loading' && filtered.length === 0
+  const distanceUnavailable =
+    Boolean(origin) && filters.maxDistance !== '' && routeStatus === 'error' && filtered.length === 0
+
+  let emptyMessage = 'Žádný podnik neodpovídá filtrům. Zkus uvolnit rozpočet nebo vzdálenost.'
+  if (waitingForDistance) {
+    emptyMessage = 'Počítám pěší vzdálenost. Filtr vzdálenosti se použije, až budou čísla známá.'
+  } else if (distanceUnavailable) {
+    emptyMessage = 'Pěší vzdálenost se teď nepodařilo zjistit. Zkus polohu aktualizovat, nebo filtr vzdálenosti vypni.'
+  }
 
   return (
     <main className={`page results-page theme-${theme}`}>
@@ -58,7 +69,9 @@ export default function Results() {
         </Link>
         <h1>{categoryMeta ? categoryMeta.label : 'Na co máš chuť?'}</h1>
         <p className="page-subtitle">
-          Filtruj podle peněz, chuti a vzdálenosti – {formatPlaceCount(filtered.length)}
+          {waitingForDistance
+            ? 'Počítám pěší vzdálenost.'
+            : `Filtruj podle peněz, chuti a vzdálenosti – ${formatPlaceCount(filtered.length)}`}
         </p>
       </div>
 
@@ -78,7 +91,7 @@ export default function Results() {
 
       {filtered.length === 0 ? (
         <div className="empty-state">
-          <p>Žádný podnik neodpovídá filtrům. Zkus uvolnit rozpočet nebo vzdálenost.</p>
+          <p>{emptyMessage}</p>
           <button
             type="button"
             className="btn btn-secondary"

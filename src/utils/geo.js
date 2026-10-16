@@ -43,6 +43,19 @@ export function hasCoordinates(place) {
   )
 }
 
+/** missing = souřadnice v datech nejsou. invalid = jsou, ale nedají se použít. */
+export function coordinateIssue(place) {
+  const latMissing = place?.lat == null || place?.lat === ''
+  const lonMissing = place?.lon == null || place?.lon === ''
+  if (latMissing && lonMissing) return 'missing'
+  if (!hasCoordinates(place) || !isInBrnoBounds(place.lat, place.lon)) return 'invalid'
+  return null
+}
+
+export function hasVerifiedCoordinates(place) {
+  return coordinateIssue(place) == null
+}
+
 export function isInBrnoBounds(lat, lon) {
   return (
     lat >= BRNO_BOUNDS.minLat &&
@@ -67,8 +80,8 @@ export function haversineKm(lat1, lon1, lat2, lon2) {
 }
 
 export function airDistanceKm(origin, place) {
-  if (!origin || !hasCoordinates(place)) return null
-  if (!Number.isFinite(origin.lat) || !Number.isFinite(origin.lon)) return null
+  if (!origin || !hasVerifiedCoordinates(place)) return null
+  if (!hasFiniteLatLon(origin.lat, origin.lon)) return null
   return haversineKm(origin.lat, origin.lon, place.lat, place.lon)
 }
 

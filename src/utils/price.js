@@ -24,16 +24,20 @@ export function hasEstimatePrice(restaurant) {
 }
 
 /**
- * Nejnižší doložená cena pro filtr rozpočtu.
- * U menu je to konkrétní cena, u ověřeného rozmezí dolní mez v `price`.
- * Neověřený odhad vrací null. Z jiných polí se cena neodvozuje.
+ * Cena pro filtr rozpočtu: podnik projde, jen když celá ověřená cena je do limitu.
+ * Menu = konkrétní cena, ověřené rozmezí = horní mez. Odhad a neznámá cena = null.
  */
 export function getBudgetComparePrice(restaurant) {
+  return getVerifiedPriceCeiling(restaurant)
+}
+
+/** Dolní doložená cena. Řazení od nejlevnějšího, ne kontrola limitu rozpočtu. */
+export function getVerifiedPriceFloor(restaurant) {
   if (!hasVerifiedPrice(restaurant)) return null
   return restaurant.price
 }
 
-/** Horní doložená cena. Řazení a štítek „Do 120 Kč“. */
+/** Horní doložená cena. Filtr rozpočtu a štítek „Do 120 Kč“. */
 export function getVerifiedPriceCeiling(restaurant) {
   if (!hasVerifiedPrice(restaurant)) return null
   if (restaurant.priceKind === PRICE_KIND_RANGE) return restaurant.priceMax
@@ -42,7 +46,7 @@ export function getVerifiedPriceCeiling(restaurant) {
 
 function sortKey(restaurant) {
   if (hasVerifiedPrice(restaurant)) {
-    return { tier: 0, value: getVerifiedPriceCeiling(restaurant) }
+    return { tier: 0, value: getVerifiedPriceFloor(restaurant) }
   }
   if (hasEstimatePrice(restaurant)) {
     return { tier: 1, value: restaurant.price }
@@ -71,15 +75,15 @@ function amountText(restaurant) {
   return '—'
 }
 
-/** Krátká cena na kartě. Status až v detailu. Odhad jen vizuálně (~). */
+/** Krátká cena na kartě. Ověření a odhad mají vlastní popisek. */
 export function formatCardPrice(restaurant) {
   if (hasVerifiedPrice(restaurant)) {
-    return { primary: amountText(restaurant), tone: 'verified' }
+    return { primary: amountText(restaurant), tone: 'verified', status: 'Ověřeno' }
   }
   if (hasEstimatePrice(restaurant)) {
-    return { primary: `~${amountText(restaurant)}`, tone: 'estimate' }
+    return { primary: `~${amountText(restaurant)}`, tone: 'estimate', status: 'Odhad' }
   }
-  return { primary: '—', tone: 'missing' }
+  return { primary: '—', tone: 'missing', status: 'Neověřeno' }
 }
 
 /** Plný popis ceny v detailu podniku. */

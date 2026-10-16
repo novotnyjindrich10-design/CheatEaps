@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { restaurants } from '../data/restaurants'
-import { geolocationErrorMessage, hasCoordinates, hasFiniteLatLon } from '../utils/geo'
+import { geolocationErrorMessage, hasFiniteLatLon, hasVerifiedCoordinates } from '../utils/geo'
 import { applyRouteDistances, collectRouteDistances } from '../utils/routeDistance'
 
 const STORAGE_ORIGIN = 'cheapeats.geo.origin'
@@ -102,9 +102,16 @@ export function LocationProvider({ children }) {
     )
   }, [persistOrigin])
 
+  const clearOrigin = useCallback(() => {
+    persistOrigin(null)
+    setStatus('idle')
+    setErrorMessage('')
+    setRouteState({ key: '', distances: new Map(), status: 'idle', message: '' })
+  }, [persistOrigin])
+
   const setManualOrigin = useCallback(
     (place) => {
-      if (!hasCoordinates(place)) return
+      if (!hasVerifiedCoordinates(place)) return
       persistOrigin({
         lat: place.lat,
         lon: place.lon,
@@ -142,7 +149,7 @@ export function LocationProvider({ children }) {
 
     const controller = new AbortController()
     let cancelled = false
-    const targets = restaurants.filter((place) => hasCoordinates(place))
+    const targets = restaurants.filter((place) => hasVerifiedCoordinates(place))
 
     collectRouteDistances(origin, targets, {
       signal: controller.signal,
@@ -160,9 +167,9 @@ export function LocationProvider({ children }) {
           distances: result.distances,
           status: failedAll ? 'error' : 'ready',
           message: failedAll
-            ? 'Vzdálenost po trase se teď nepodařilo zjistit.'
+            ? 'Pěší vzdálenost se teď nepodařilo zjistit.'
             : result.failedChunks > 0
-              ? 'U části podniků se vzdálenost po trase nepodařilo zjistit.'
+              ? 'U části podniků se pěší vzdálenost nepodařilo zjistit.'
               : '',
         }
         if (!failedAll) routeMemory.set(originCacheKey, next)
@@ -174,7 +181,7 @@ export function LocationProvider({ children }) {
           key: originCacheKey,
           distances: new Map(),
           status: 'error',
-          message: 'Vzdálenost po trase se teď nepodařilo zjistit.',
+          message: 'Pěší vzdálenost se teď nepodařilo zjistit.',
         })
       })
 
@@ -187,10 +194,11 @@ export function LocationProvider({ children }) {
   const attachDistances = useCallback(
     (places) =>
       applyRouteDistances(places, routeDistances, {
-        hasOrigin: Boolean(origin),
+        hasOrigin: Boolean(origin) && hasFiniteLatLon(origin.lat, origin.lon),
         pending: routeStatus === 'loading',
+        originStatus: status,
       }),
-    [origin, routeDistances, routeStatus],
+    [origin, routeDistances, routeStatus, status],
   )
 
   const value = useMemo(
@@ -199,12 +207,13 @@ export function LocationProvider({ children }) {
       status,
       errorMessage,
       locate,
+      clearOrigin,
       setManualOrigin,
       attachDistances,
       routeStatus,
       routeMessage,
     }),
-    [origin, status, errorMessage, locate, setManualOrigin, attachDistances, routeStatus, routeMessage],
+    [origin, status, errorMessage, locate, clearOrigin, setManualOrigin, attachDistances, routeStatus, routeMessage],
   )
 
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>

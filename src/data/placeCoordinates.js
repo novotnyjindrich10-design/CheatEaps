@@ -5,6 +5,11 @@ export const placeCoordinates = {
     "lon": 16.60823,
     "coordSource": "osm"
   },
+  "forkys-vankovka": {
+    "lat": 49.187611,
+    "lon": 16.614515,
+    "coordSource": "osm"
+  },
   "rebio-velky-spalicek": {
     "lat": 49.193191,
     "lon": 16.60751,
@@ -30,14 +35,29 @@ export const placeCoordinates = {
     "lon": 16.606515,
     "coordSource": "osm"
   },
+  "statl-brno": {
+    "lat": 49.195528,
+    "lon": 16.607536,
+    "coordSource": "osm"
+  },
   "la-strada-brno": {
     "lat": 49.203389,
     "lon": 16.599651,
     "coordSource": "osm"
   },
+  "prova-bistro-pizza": {
+    "lat": 49.210569,
+    "lon": 16.587334,
+    "coordSource": "osm"
+  },
   "pizzerie-viva": {
     "lat": 49.21104,
     "lon": 16.583156,
+    "coordSource": "osm"
+  },
+  "smash-burgers-moravske": {
+    "lat": 49.197341,
+    "lon": 16.607914,
     "coordSource": "osm"
   },
   "uvozna-burger": {
@@ -88,6 +108,11 @@ export const placeCoordinates = {
   "monogram-espresso-bar": {
     "lat": 49.191717,
     "lon": 16.609925,
+    "coordSource": "osm"
+  },
+  "bageterie-boulevard-vankovka": {
+    "lat": 49.187742,
+    "lon": 16.6148,
     "coordSource": "osm"
   },
   "but-first-coffee-jezuitska-11": {
@@ -668,6 +693,11 @@ export const placeCoordinates = {
   "campo-vodova-336-108": {
     "lat": 49.226854,
     "lon": 16.584097,
+    "coordSource": "osm"
+  },
+  "campus-river-palachovo-namesti-2": {
+    "lat": 49.17574,
+    "lon": 16.566129,
     "coordSource": "osm"
   },
   "carmel-cejl-282-86": {
@@ -1485,6 +1515,11 @@ export const placeCoordinates = {
     "lon": 16.594291,
     "coordSource": "osm"
   },
+  "kavarna-cukrarna-smile-s-r-o-namesti-28-dubna-10-40": {
+    "lat": 49.226845,
+    "lon": 16.530314,
+    "coordSource": "osm"
+  },
   "kavarna-bemovka-vsetinska-527-20": {
     "lat": 49.177328,
     "lon": 16.598136,
@@ -1708,6 +1743,11 @@ export const placeCoordinates = {
   "la-catedral-uvoz-432-80": {
     "lat": 49.202631,
     "lon": 16.596861,
+    "coordSource": "osm"
+  },
+  "la-corrida-namesti-28-dubna-2": {
+    "lat": 49.226068,
+    "lon": 16.530439,
     "coordSource": "osm"
   },
   "la-cristina-zahradnicka-298-19": {

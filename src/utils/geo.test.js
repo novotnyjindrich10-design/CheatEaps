@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { airDistanceKm, geolocationErrorMessage, hasFiniteLatLon } from './geo.js'
+import { airDistanceKm, coordinateIssue, geolocationErrorMessage, hasFiniteLatLon, hasVerifiedCoordinates } from './geo.js'
 
 describe('geolocationErrorMessage', () => {
   it('rozliší odmítnutí, nedostupnost a časový limit', () => {
@@ -24,5 +24,15 @@ describe('souřadnice pro vzdálenost', () => {
   it('vzdušná čára je samostatný výpočet a u nečíselné polohy nevrátí číslo', () => {
     const km = airDistanceKm({ lat: 49.195, lon: 16.608 }, { lat: 49.2, lon: 16.61 })
     assert.ok(km > 0 && km < 2)
+  })
+
+  it('rozliší chybějící a neplatné souřadnice podniku', () => {
+    assert.equal(coordinateIssue({ name: 'Bez bodu' }), 'missing')
+    assert.equal(coordinateIssue({ lat: Number.NaN, lon: 16.6 }), 'invalid')
+    assert.equal(coordinateIssue({ lat: '49.2', lon: 16.6 }), 'invalid')
+    assert.equal(coordinateIssue({ lat: 16.6, lon: 49.2 }), 'invalid')
+    assert.equal(coordinateIssue({ lat: 50.08, lon: 14.42 }), 'invalid')
+    assert.equal(hasVerifiedCoordinates({ lat: 49.195, lon: 16.608 }), true)
+    assert.equal(airDistanceKm({ lat: 49.195, lon: 16.608 }, { lat: 16.6, lon: 49.2 }), null)
   })
 })

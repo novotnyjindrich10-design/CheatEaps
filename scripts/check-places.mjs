@@ -14,7 +14,7 @@ import {
   hasGoogleRating,
   GOOGLE_STATUS_MAPS_SEARCH,
 } from '../src/utils/googleRating.js'
-import { formatAirDistance, haversineKm, isInBrnoBounds } from '../src/utils/geo.js'
+import { formatDistance, haversineKm, isInBrnoBounds } from '../src/utils/geo.js'
 
 const EXPECTED_TOTAL = 775
 
@@ -158,7 +158,7 @@ const sampleKm = haversineKm(49.1951, 16.6068, 49.1951, 16.6068)
 if (sampleKm !== 0) errors.push('Haversine stejného bodu musí být 0')
 const nearbyKm = haversineKm(49.1951, 16.6068, 49.2001, 16.6068)
 if (nearbyKm < 0.5 || nearbyKm > 0.6) errors.push(`Neočekávaná haversine vzdálenost: ${nearbyKm}`)
-if (formatAirDistance(0.35) !== '350 m') errors.push('Formát metrů selhal')
+if (formatDistance(0.35) !== '350 m') errors.push('Formát metrů selhal')
 
 for (const id of Object.keys(officialWebsites)) {
   if (!uniqueIds.has(id)) errors.push(`Oficiální web odkazuje na neexistující id: ${id}`)

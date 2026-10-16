@@ -40,7 +40,7 @@ export default function ResultsFilters({ filters, onChange, hasOrigin = false })
       <div className="filters-grid">
         <FilterSelect
           id="filter-budget"
-          label="Max. cena"
+          label="Max. ověřená cena"
           value={filters.maxBudget}
           onChange={set('maxBudget')}
           options={BUDGET_OPTIONS}
@@ -67,6 +67,11 @@ export default function ResultsFilters({ filters, onChange, hasOrigin = false })
           options={SORT_OPTIONS}
         />
       </div>
+      {filters.maxBudget ? (
+        <p className="location-bar-caption">
+          Do limitu se počítá ověřená cena z menu. U rozpětí musí být do limitu i horní mez.
+        </p>
+      ) : null}
       {!hasOrigin && (filters.sortBy === 'distance' || filters.maxDistance) ? (
         <p className="location-bar-caption">
           Řazení a filtr vzdálenosti potřebují zapnutou polohu nebo zadané místo. Do té doby se seznam neomezuje.

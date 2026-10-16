@@ -2525,7 +2525,7 @@ export const osmPlaces = [
     "description": "Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: ice_cream.",
     "type": "Sladké",
     "category": "sladke",
-    "address": "náměstí 28. dubna 10/40, 63500;635 00 Brno",
+    "address": "náměstí 28. dubna 10/40, 635 00 Brno",
     "website": "https://www.cukrarna-kvetiny.cz/"
   },
   {
