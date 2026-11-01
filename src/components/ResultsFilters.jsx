@@ -7,6 +7,11 @@ import {
   getActiveCategoryKey,
 } from '../constants/filters'
 
+function optionsIncluding(options, value, label) {
+  if (!value || options.some((opt) => opt.value === value)) return options
+  return [...options, { value, label }]
+}
+
 function FilterSelect({ id, label, value, onChange, options }) {
   return (
     <label className="filter-field">
@@ -43,21 +48,21 @@ export default function ResultsFilters({ filters, onChange, hasOrigin = false })
           label="Max. ověřená cena"
           value={filters.maxBudget}
           onChange={set('maxBudget')}
-          options={BUDGET_OPTIONS}
+          options={optionsIncluding(BUDGET_OPTIONS, filters.maxBudget, `Do ${filters.maxBudget} Kč`)}
         />
         <FilterSelect
           id="filter-type"
           label="Typ jídla"
           value={getActiveCategoryKey(filters)}
           onChange={(e) => onChange(applyCategorySelection(filters, e.target.value))}
-          options={CUISINE_OPTIONS}
+          options={optionsIncluding(CUISINE_OPTIONS, getActiveCategoryKey(filters), 'Neznámá kategorie')}
         />
         <FilterSelect
           id="filter-distance"
           label="Max. vzdálenost"
           value={filters.maxDistance}
           onChange={set('maxDistance')}
-          options={DISTANCE_OPTIONS}
+          options={optionsIncluding(DISTANCE_OPTIONS, filters.maxDistance, `Do ${filters.maxDistance} km`)}
         />
         <FilterSelect
           id="filter-sort"
@@ -69,7 +74,12 @@ export default function ResultsFilters({ filters, onChange, hasOrigin = false })
       </div>
       {filters.maxBudget ? (
         <p className="location-bar-caption">
-          Do limitu se počítá ověřená cena z menu. U rozpětí musí být do limitu i horní mez.
+          Do limitu se počítá ověřená cena z menu. U rozpětí musí být do limitu i horní mez. Odhad se do rozpočtu nepočítá.
+        </p>
+      ) : null}
+      {filters.vegetarianOnly || filters.veganOnly ? (
+        <p className="location-bar-caption">
+          Filtr hledá podniky, které takové jídlo nabízejí. Kategorie Bez masa a Vegan jsou ty, které se na tu kuchyni zaměřují.
         </p>
       ) : null}
       {!hasOrigin && (filters.sortBy === 'distance' || filters.maxDistance) ? (
@@ -93,7 +103,7 @@ export default function ResultsFilters({ filters, onChange, hasOrigin = false })
         />
         <FilterToggle
           id="filter-vegan"
-          label="Pouze veganské"
+          label="Pouze s veganskými jídly"
           checked={filters.veganOnly}
           onChange={(e) =>
             onChange({
@@ -110,7 +120,18 @@ export default function ResultsFilters({ filters, onChange, hasOrigin = false })
           checked={filters.verifiedPricesOnly}
           onChange={(e) => onChange({ ...filters, verifiedPricesOnly: e.target.checked })}
         />
+        <FilterToggle
+          id="filter-deals"
+          label="Jen se slevou nebo výhodou"
+          checked={filters.dealsOnly}
+          onChange={(e) => onChange({ ...filters, dealsOnly: e.target.checked })}
+        />
       </div>
+      {filters.dealsOnly ? (
+        <p className="location-bar-caption">
+          Berou se jen nabídky, které zdroj k datu kontroly uváděl. Běžné menu ani odhad ceny sleva nejsou.
+        </p>
+      ) : null}
     </section>
   )
 }

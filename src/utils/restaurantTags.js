@@ -1,14 +1,33 @@
 import { getVerifiedPriceCeiling } from './price.js'
 
+/**
+ * Štítek nabídky. Kategorie veganske / vegetarianske znamená zaměření podniku.
+ * Samotný příznak z OSM diet:*=yes znamená, že v nabídce takové jídlo je.
+ */
+export function dietOfferTag(restaurant) {
+  const category = restaurant?.category ?? restaurant?.cuisineType
+  if (restaurant?.veganFriendly) {
+    return {
+      key: 'vegan',
+      label: category === 'veganske' ? 'Veganské' : 'Veganská jídla',
+      tone: 'mint',
+    }
+  }
+  if (restaurant?.vegetarianFriendly) {
+    return {
+      key: 'veg',
+      label: category === 'vegetarianske' ? 'Bez masa' : 'Vegetariánská jídla',
+      tone: 'green',
+    }
+  }
+  return null
+}
+
 /** Štítky zobrazované na kartách podniků. */
 export function getRestaurantTags(restaurant) {
   const tags = []
-
-  if (restaurant.veganFriendly) {
-    tags.push({ key: 'vegan', label: 'Veganské', tone: 'mint' })
-  } else if (restaurant.vegetarianFriendly) {
-    tags.push({ key: 'veg', label: 'Vegetariánské', tone: 'green' })
-  }
+  const diet = dietOfferTag(restaurant)
+  if (diet) tags.push(diet)
 
   const budgetPrice = getVerifiedPriceCeiling(restaurant)
   if (budgetPrice != null && budgetPrice <= 120) {

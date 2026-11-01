@@ -141,21 +141,66 @@ export const DISH_SPECS = {
   },
   fastfood: {
     key: 'fastfood',
-    query: 'french fries food',
-    fallbacks: ['french fries plate', 'hamburger fries food'],
-    dish: 'fast food / hranolky',
-    keywords: ['fries', 'french', 'fast', 'food'],
-    contentTags: ['fries', 'fastfood'],
-    forbidTags: ['cake', 'pastry', 'baguette', 'bread', 'sushi', 'coffee'],
+    query: 'chicken nuggets fries food',
+    fallbacks: ['onion rings fast food', 'hot dog fries plate', 'french fries ketchup food'],
+    dish: 'fast food',
+    keywords: ['nuggets', 'fries', 'onion', 'hotdog', 'fast'],
+    contentTags: ['fries', 'fastfood', 'nuggets'],
+    forbidTags: ['cake', 'pastry', 'baguette', 'bread', 'sushi', 'coffee', 'pizza'],
+  },
+  pasta: {
+    key: 'pasta',
+    query: 'spaghetti bolognese plate',
+    fallbacks: ['pasta carbonara food', 'tagliatelle pasta food', 'penne arrabbiata food'],
+    dish: 'těstoviny',
+    keywords: ['pasta', 'spaghetti', 'carbonara', 'bolognese', 'tagliatelle', 'penne'],
+    contentTags: ['pasta', 'spaghetti'],
+    forbidTags: ['pizza', 'sushi', 'burger', 'cake', 'coffee'],
+  },
+  poke: {
+    key: 'poke',
+    query: 'poke bowl salmon rice',
+    fallbacks: ['hawaiian poke bowl food', 'tuna poke bowl'],
+    dish: 'poké bowl',
+    keywords: ['poke', 'bowl', 'salmon', 'tuna', 'hawaiian'],
+    contentTags: ['poke', 'bowl'],
+    forbidTags: ['burger', 'pizza', 'goulash', 'coffee'],
+  },
+  bubble_tea: {
+    key: 'bubble_tea',
+    query: 'bubble tea tapioca drink',
+    fallbacks: ['boba tea cup', 'milk tea pearl drink'],
+    dish: 'bubble tea',
+    keywords: ['bubble', 'boba', 'tapioca', 'tea', 'pearl'],
+    contentTags: ['bubble_tea', 'boba', 'tea'],
+    forbidTags: ['burger', 'meat', 'pizza', 'goulash', 'sushi'],
+  },
+  indian: {
+    key: 'indian',
+    query: 'butter chicken curry rice',
+    fallbacks: ['chicken tikka masala food', 'indian curry naan'],
+    dish: 'indické jídlo',
+    keywords: ['curry', 'tikka', 'butter', 'indian', 'masala', 'naan'],
+    contentTags: ['curry', 'indian'],
+    forbidTags: ['sushi', 'pizza', 'burger', 'goulash'],
+  },
+  vietnamese: {
+    key: 'vietnamese',
+    query: 'pho beef noodle soup',
+    fallbacks: ['bun cha vietnamese food', 'banh mi sandwich', 'vietnamese rice noodles'],
+    dish: 'vietnamské jídlo',
+    keywords: ['pho', 'vietnamese', 'bun', 'noodle', 'banh'],
+    contentTags: ['pho', 'vietnamese', 'noodle'],
+    forbidTags: ['sushi', 'burger', 'pizza', 'goulash'],
   },
   ceske: {
     key: 'ceske',
-    query: 'goulash stew food',
-    fallbacks: ['goulash food', 'pork dumpling food'],
+    query: 'svickova cream sauce dumplings',
+    fallbacks: ['wiener schnitzel food', 'pork roast dumpling cabbage', 'beef goulash dumplings', 'roast pork knuckle'],
     dish: 'české jídlo',
-    keywords: ['goulash', 'stew', 'dumpling', 'pork', 'svickova'],
-    contentTags: ['goulash', 'czech', 'stew'],
-    forbidTags: ['sushi', 'pizza', 'cake'],
+    keywords: ['goulash', 'stew', 'dumpling', 'pork', 'svickova', 'schnitzel', 'knuckle'],
+    contentTags: ['goulash', 'czech', 'stew', 'schnitzel'],
+    forbidTags: ['sushi', 'pizza', 'cake', 'bubble'],
   },
   zdrave: {
     key: 'zdrave',
@@ -202,6 +247,37 @@ export const DISH_BY_CATEGORY = DISH_SPECS
  * Silné tipy jen z názvu/id – mají přednost před kategorií.
  * Záměrně nečteme OSM cuisine z popisu (často multi-tag a přebíjí primární kategorii).
  */
+/** Ruční dish key pro konkrétní podniky (má přednost před názvem i kategorií). */
+export const PLACE_DISH_OVERRIDES = {
+  'pokecz-basty-414': { key: 'poke' },
+  'vesela-cajovna-koblizna-5': { key: 'indian' },
+  'fansipan-stefanikova-7': { key: 'vietnamese' },
+  'vietpalace-olomoucka-63': { key: 'vietnamese' },
+  'zo-bayerova-10': { key: 'vietnamese' },
+  'buffalo-express-nadrazni-4': { key: 'vietnamese' },
+  'bun-dvorakova-16': { key: 'vietnamese' },
+  'bep-vietnamese-village-cuisine-koblizna-9': { key: 'vietnamese' },
+  'jomsom-belohorska-61': { key: 'indian' },
+  'nihao-stefanikova-15': { key: 'cina' },
+  'lokofu': { key: 'cina' },
+  'cha-do-zelny-trh-10': { key: 'bubble_tea' },
+  'bubblify-videnska-132-100': { key: 'bubble_tea' },
+  'bubblify-ceska-26': { key: 'bubble_tea' },
+  'bubblify-netroufalky-770': { key: 'bubble_tea' },
+  'spaghetti-parmigiano-videnska-132-100': { key: 'pasta' },
+  'spaghetti-parmigiano-cimburkova-593-4': { key: 'pasta' },
+  'spaghetti-d-amore-panska-2': { key: 'pasta' },
+  'panda-netroufalky-770': { key: 'asijske' },
+  'big-food-point-masarykova-33': { key: 'fastfood' },
+  'big-food-point-koblizna-9': { key: 'fastfood' },
+  'globus-bistro-reckovicka-555-3': { key: 'ceske' },
+  'moravanska-rychta-stredni-55-9': { key: 'pizza' },
+  'pellegrini-namesti-svobody-18': { key: 'pizza' },
+  'antalya-doner-kebap-palavske-namesti-3c': { key: 'kebab' },
+  'kebab-sach-behounska-109-9': { key: 'kebab' },
+  'no-limit-starobrnenska-285-15': { key: 'kebab' },
+}
+
 export const SPECIFIC_NAME_HINTS = [
   { re: /\b(kfc|chicken\s*inn|fried\s*chicken|kuřec[ií]|chicken\s*wings)\b/i, key: 'fried_chicken' },
   { re: /sushi/i, key: 'sushi' }, // i Mr.Sushito / Sushi Bar
@@ -212,8 +288,10 @@ export const SPECIFIC_NAME_HINTS = [
   { re: /\b(pizza|pizzer)/i, key: 'pizza' },
   { re: /kebab|kebap|d[oö]ner|gyros|shawarma/i, key: 'kebab' },
   { re: /taco|burrito|mexick|mexican/i, key: 'mexiko' },
-  { re: /poke|poké/i, key: 'asijske' }, // Pokecz
-  { re: /\bwok\b/i, key: 'cina' },
+  { re: /poke|poké|pokecz/i, key: 'poke' },
+  { re: /bubblify|bubble\s*tea|boba/i, key: 'bubble_tea' },
+  { re: /spaghetti|parmigiano|trattoria|pasta/i, key: 'pasta' },
+  { re: /\bwok\b/i, key: 'asijske' },
 ]
 
 /** Obecnější hinty – jen když kategorie chybí / neuvedeno (název + popis). */
@@ -255,8 +333,9 @@ export function placeText(place) {
 }
 
 export function dishSpecForPlace(place, overrides = {}) {
-  if (overrides[place.id]) {
-    const o = overrides[place.id]
+  const merged = { ...PLACE_DISH_OVERRIDES, ...overrides }
+  if (merged[place.id]) {
+    const o = merged[place.id]
     const base = DISH_SPECS[o.key] || {}
     return { ...base, ...o, source: 'override' }
   }

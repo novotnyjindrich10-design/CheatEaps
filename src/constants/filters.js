@@ -83,6 +83,7 @@ export const DISTANCE_OPTIONS = [
 ]
 
 export const SORT_OPTIONS = [
+  { value: 'quality', label: 'Nejlíp zdokumentované' },
   { value: 'rating', label: 'Nejlépe hodnocené' },
   { value: 'price-asc', label: 'Nejlevnější' },
   { value: 'price-desc', label: 'Nejdražší' },

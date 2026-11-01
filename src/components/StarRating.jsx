@@ -1,6 +1,6 @@
 import { formatRatingNumber, formatReviewCount } from '../utils/googleRating'
 
-export default function StarRating({ rating, reviewCount, size = 'md', compact = false }) {
+export default function StarRating({ rating, reviewCount, size = 'md', compact = false, source = 'Google' }) {
   if (typeof rating !== 'number') {
     return (
       <span className={`star-rating star-rating--${size}`} aria-label="Hodnocení neuvedeno">
@@ -12,8 +12,8 @@ export default function StarRating({ rating, reviewCount, size = 'md', compact =
   const shown = formatRatingNumber(rating)
   const reviews = typeof reviewCount === 'number' ? formatReviewCount(reviewCount) : ''
   const label = reviews
-    ? `Google hodnocení ${shown} z 5, ${reviews}`
-    : `Google hodnocení ${shown} z 5`
+    ? `${source} hodnocení ${shown} z 5, ${reviews}`
+    : `${source} hodnocení ${shown} z 5`
 
   return (
     <span className={`star-rating star-rating--${size}`} aria-label={label}>

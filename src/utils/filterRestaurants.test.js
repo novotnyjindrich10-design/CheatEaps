@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { FOOD_CATEGORIES } from '../constants/filters.js'
-import { filterAndSortRestaurants, foldSearchText, parseResultsSearchParams } from './filterRestaurants.js'
+import {
+  buildResultsSearchParams,
+  filterAndSortRestaurants,
+  foldSearchText,
+  parseResultsSearchParams,
+} from './filterRestaurants.js'
 
 const SOURCE = 'https://example.com/menu'
 const VERIFIED_AT = '2026-10-10'
@@ -176,6 +181,103 @@ describe('filtry dohromady', () => {
     assert.equal(parsed.maxDistance, '')
   })
 
+  it('neznámé řazení v URL spadne na kvalitu záznamu', () => {
+    const parsed = parseResultsSearchParams(new URLSearchParams('sort=nahodne'))
+    assert.equal(parsed.sortBy, 'quality')
+    assert.equal(parseResultsSearchParams(new URLSearchParams('')).sortBy, 'quality')
+    assert.equal(parseResultsSearchParams(new URLSearchParams('sort=rating')).sortBy, 'rating')
+    assert.equal(parseResultsSearchParams(new URLSearchParams('sort=price-asc')).sortBy, 'price-asc')
+  })
+
+  it('výchozí řazení dává nahoru lépe zdokumentovaný podnik', () => {
+    const thin = place('thin', { name: 'Aaa', category: 'pizza' })
+    const rich = place('rich', {
+      name: 'Zzz',
+      category: 'pizza',
+      price: 169,
+      priceKind: 'menu',
+      priceSource: SOURCE,
+      priceVerifiedAt: VERIFIED_AT,
+      officialWebsite: 'https://example.com/',
+    })
+    const veganThin = place('vegan-thin', { name: 'Aaa', category: 'veganske', veganFriendly: true })
+    const veganRich = place('vegan-rich', {
+      name: 'Zzz',
+      category: 'veganske',
+      veganFriendly: true,
+      vegetarianFriendly: true,
+      officialWebsite: 'https://example.com/',
+      description: 'Veganské bistro s burgery, wrapy a seitanovým kebabem v centru Brna.',
+    })
+    assert.deepEqual(
+      filterAndSortRestaurants([thin, rich], { cuisineType: 'pizza' }).map((item) => item.id),
+      ['rich', 'thin'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants([veganThin, veganRich], { veganOnly: true }).map((item) => item.id),
+      ['vegan-rich', 'vegan-thin'],
+    )
+    const stars = place('stars', {
+      name: 'Stars',
+      category: 'pizza',
+      googleRating: 4.9,
+      googleRatingStatus: 'verified',
+      googleReviewCount: 200,
+    })
+    assert.deepEqual(
+      filterAndSortRestaurants([rich, stars], { sortBy: 'rating' }).map((item) => item.id),
+      ['stars', 'rich'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants([stars, rich], { cuisineType: 'pizza' }).map((item) => item.id),
+      ['rich', 'stars'],
+    )
+  })
+
+  it('veganský filtr je přísnější než vegetariánská nabídka', () => {
+    const places = [
+      place('veg-options', { vegetarianFriendly: true, veganFriendly: false, category: 'burger' }),
+      place('vegan-place', { vegetarianFriendly: true, veganFriendly: true, category: 'zdrave' }),
+      place('meat', { category: 'pizza' }),
+    ]
+    assert.deepEqual(
+      filterAndSortRestaurants(places, { veganOnly: true }).map((item) => item.id),
+      ['vegan-place'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants(places, { vegetarianOnly: true }).map((item) => item.id),
+      ['veg-options', 'vegan-place'],
+    )
+  })
+
+  it('reset vrátí prázdnou adresu a kombinace filtrů se z adresy složí zpět', () => {
+    const defaults = parseResultsSearchParams(new URLSearchParams(''))
+    assert.equal(buildResultsSearchParams(defaults).toString(), '')
+    const active = {
+      search: 'pho',
+      maxBudget: '120',
+      cuisineType: 'asijske',
+      maxDistance: '2',
+      sortBy: 'price-asc',
+      veganOnly: true,
+      vegetarianOnly: true,
+      verifiedPricesOnly: true,
+    }
+    const parsed = parseResultsSearchParams(buildResultsSearchParams(active))
+    assert.equal(parsed.search, 'pho')
+    assert.equal(parsed.maxBudget, '120')
+    assert.equal(parsed.cuisineType, 'asijske')
+    assert.equal(parsed.maxDistance, '2')
+    assert.equal(parsed.sortBy, 'price-asc')
+    assert.equal(parsed.veganOnly, true)
+    assert.equal(parsed.vegetarianOnly, false)
+    assert.equal(parsed.verifiedPricesOnly, true)
+    assert.equal(parsed.dealsOnly, false)
+    const withDeals = parseResultsSearchParams(buildResultsSearchParams({ ...active, dealsOnly: true }))
+    assert.equal(withDeals.dealsOnly, true)
+    assert.equal(buildResultsSearchParams({ ...defaults, dealsOnly: false }).toString(), '')
+  })
+
   it('během výpočtu trasy chybějící vzdálenost limit nesplní', () => {
     const matched = filterAndSortRestaurants(
       [place('wait', { distanceKm: null, distanceState: 'loading' })],
@@ -214,6 +316,44 @@ describe('filtr a řazení vzdálenosti', () => {
       (item) => item.id,
     )
     assert.deepEqual(matched, ['near', 'edge', 'far', 'unknown'])
+  })
+})
+
+describe('filtr slev', () => {
+  it('nechá jen podnik s veřejnou nabídkou a hledání bere text nabídky', () => {
+    const places = [
+      place('kfc-masarykova-39', { name: 'KFC Masarykova', address: 'Masarykova 39, Brno', category: 'fastfood' }),
+      place('pizza-place', { name: 'Pizzerie', address: 'Česká 1, Brno', category: 'pizza' }),
+    ]
+    assert.deepEqual(
+      filterAndSortRestaurants(places, { dealsOnly: true }).map((item) => item.id),
+      ['kfc-masarykova-39'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants(places, { search: 'twister' }).map((item) => item.id),
+      ['kfc-masarykova-39'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants(places, { dealsOnly: true, cuisineType: 'pizza' }).map((item) => item.id),
+      [],
+    )
+  })
+
+  it('sleva nemění výchozí řazení podle kvality záznamu', () => {
+    const thin = place('kfc-rasinova-2', { name: 'Aaa KFC', category: 'fastfood' })
+    const rich = place('kfc-masarykova-39', {
+      name: 'Zzz KFC',
+      category: 'fastfood',
+      officialWebsite: 'https://kfc.cz/',
+      description: 'Kuřecí restaurace s oficiálním webem a ověřenou pobočkou v centru Brna.',
+      address: 'Masarykova 39, 60200 Brno',
+      lat: 49.195,
+      lon: 16.608,
+    })
+    assert.deepEqual(
+      filterAndSortRestaurants([thin, rich], { dealsOnly: true }).map((item) => item.id),
+      ['kfc-masarykova-39', 'kfc-rasinova-2'],
+    )
   })
 })
 

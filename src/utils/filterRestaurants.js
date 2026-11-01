@@ -1,6 +1,10 @@
 import { normalizeCategoryParam } from '../constants/filters.js'
+import { publicDealSearchText, restaurantHasPublicDeal } from '../data/restaurantDeals.js'
+
+const SORTS = new Set(['quality', 'rating', 'price-asc', 'price-desc', 'distance'])
 import { getRestaurantCategory } from './restaurantTags.js'
 import { compareByPrice, getBudgetComparePrice, hasVerifiedPrice } from './price.js'
+import { compareByRecordQuality } from './recordQuality.js'
 
 /** Hledání bez háčků a čárek, se sloučenými mezerami. */
 export function foldSearchText(value) {
@@ -41,10 +45,11 @@ export function filterAndSortRestaurants(restaurants, options) {
     maxBudget = '',
     cuisineType = '',
     maxDistance = '',
-    sortBy = 'rating',
+    sortBy = 'quality',
     vegetarianOnly = false,
     veganOnly = false,
     verifiedPricesOnly = false,
+    dealsOnly = false,
     hasOrigin = false,
   } = options
 
@@ -53,6 +58,7 @@ export function filterAndSortRestaurants(restaurants, options) {
 
   let list = restaurants.filter((r) => {
     if (verifiedPricesOnly && !hasVerifiedPrice(r)) return false
+    if (dealsOnly && !restaurantHasPublicDeal(r.id)) return false
 
     if (maxBudget !== '') {
       const comparePrice = getBudgetComparePrice(r)
@@ -76,7 +82,7 @@ export function filterAndSortRestaurants(restaurants, options) {
     }
 
     if (query) {
-      const haystack = foldSearchText(`${r.name} ${r.address ?? ''}`)
+      const haystack = foldSearchText(`${r.name} ${r.address ?? ''} ${publicDealSearchText(r.id)}`)
       if (!haystack.includes(query)) return false
     }
 
@@ -92,13 +98,15 @@ export function filterAndSortRestaurants(restaurants, options) {
       case 'distance':
         return missingLast(a, b, (r) => r.distanceKm, 'asc')
       case 'rating':
-      default:
         return missingLast(
           a,
           b,
           (r) => (r.googleRatingStatus === 'verified' ? r.googleRating : null),
           'desc',
         )
+      case 'quality':
+      default:
+        return compareByRecordQuality(a, b)
     }
   })
 
@@ -114,10 +122,11 @@ export function parseResultsSearchParams(searchParams) {
     maxBudget: finiteParam(searchParams.get('budget')),
     cuisineType: normalizeCategoryParam(searchParams.get('type') ?? ''),
     maxDistance: finiteParam(searchParams.get('distance')),
-    sortBy: searchParams.get('sort') ?? 'rating',
+    sortBy: SORTS.has(searchParams.get('sort')) ? searchParams.get('sort') : 'quality',
     veganOnly,
     vegetarianOnly: veganOnly ? false : vegetarianOnly,
     verifiedPricesOnly: searchParams.get('verified') === '1',
+    dealsOnly: searchParams.get('deals') === '1',
   }
 }
 
@@ -127,12 +136,13 @@ export function buildResultsSearchParams(filters) {
   if (filters.maxBudget) params.set('budget', filters.maxBudget)
   if (filters.cuisineType) params.set('type', filters.cuisineType)
   if (filters.maxDistance) params.set('distance', filters.maxDistance)
-  if (filters.sortBy && filters.sortBy !== 'rating') params.set('sort', filters.sortBy)
+  if (filters.sortBy && filters.sortBy !== 'quality') params.set('sort', filters.sortBy)
   if (filters.veganOnly) {
     params.set('vegan', '1')
   } else if (filters.vegetarianOnly) {
     params.set('veg', '1')
   }
   if (filters.verifiedPricesOnly) params.set('verified', '1')
+  if (filters.dealsOnly) params.set('deals', '1')
   return params
 }

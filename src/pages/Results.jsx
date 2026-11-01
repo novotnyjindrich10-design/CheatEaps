@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { restaurants } from '../data/restaurants'
 import RestaurantCard from '../components/RestaurantCard'
 import SearchBar from '../components/SearchBar'
 import ResultsFilters from '../components/ResultsFilters'
@@ -16,6 +15,7 @@ import {
   parseResultsSearchParams,
   buildResultsSearchParams,
 } from '../utils/filterRestaurants'
+import { useCatalog } from '../context/CatalogContext'
 import { useLocationState } from '../context/LocationContext'
 import LocationBar from '../components/LocationBar'
 
@@ -27,6 +27,7 @@ function formatPlaceCount(n) {
 
 export default function Results() {
   const [searchParams, setSearchParams] = useSearchParams()
+  const { restaurants } = useCatalog()
   const filters = parseResultsSearchParams(searchParams)
   const activeType = getActiveCategoryKey(filters)
   const categoryMeta = getCategoryMeta(activeType)
@@ -38,7 +39,7 @@ export default function Results() {
   }
 
   const { attachDistances, origin, routeStatus } = useLocationState()
-  const located = useMemo(() => attachDistances(restaurants), [attachDistances])
+  const located = useMemo(() => attachDistances(restaurants), [attachDistances, restaurants])
   const filtered = useMemo(
     () =>
       filterAndSortRestaurants(located, {

@@ -7,6 +7,7 @@ import {
   officialHero,
 } from '../utils/placePhoto'
 import { getRestaurantCategory } from '../utils/restaurantTags'
+import { httpUrl } from '../utils/website'
 
 function IllustrationCredit({ photo }) {
   if (!photo || photo.kind !== 'illustration') return null
@@ -15,14 +16,17 @@ function IllustrationCredit({ photo }) {
 
   const licenseText = licenseLabel(photo.license)
   const creator = photo.creator || 'autor neuveden'
+  const creatorHref = httpUrl(photo.creatorUrl)
+  const licenseHref = httpUrl(photo.licenseUrl)
+  const sourceHref = httpUrl(photo.sourceUrl)
 
   return (
     <p className="detail-hero-credit">
       {needsAttribution(photo.license) ? (
         <>
           Foto:{' '}
-          {photo.creatorUrl ? (
-            <a href={photo.creatorUrl} target="_blank" rel="noreferrer">
+          {creatorHref ? (
+            <a href={creatorHref} target="_blank" rel="noreferrer">
               {creator}
             </a>
           ) : (
@@ -31,8 +35,8 @@ function IllustrationCredit({ photo }) {
           {licenseText ? (
             <>
               {' · '}
-              {photo.licenseUrl ? (
-                <a href={photo.licenseUrl} target="_blank" rel="noreferrer">
+              {licenseHref ? (
+                <a href={licenseHref} target="_blank" rel="noreferrer">
                   {licenseText}
                 </a>
               ) : (
@@ -40,10 +44,10 @@ function IllustrationCredit({ photo }) {
               )}
             </>
           ) : null}
-          {photo.sourceUrl ? (
+          {sourceHref ? (
             <>
               {' · '}
-              <a href={photo.sourceUrl} target="_blank" rel="noreferrer">
+              <a href={sourceHref} target="_blank" rel="noreferrer">
                 zdroj
               </a>
             </>
@@ -52,10 +56,10 @@ function IllustrationCredit({ photo }) {
       ) : (
         <>
           {licenseText ? `${licenseText}` : 'Ilustrace'}
-          {photo.sourceUrl ? (
+          {sourceHref ? (
             <>
               {' · '}
-              <a href={photo.sourceUrl} target="_blank" rel="noreferrer">
+              <a href={sourceHref} target="_blank" rel="noreferrer">
                 zdroj
               </a>
             </>

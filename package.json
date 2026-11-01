@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "test": "node --test src/utils/price.test.js src/utils/filterRestaurants.test.js src/utils/geo.test.js src/utils/routeDistance.test.js src/utils/matchOsmCoordinates.test.js src/utils/googleRating.test.js src/utils/website.test.js src/utils/placePhoto.test.js src/utils/openverseFoodAssign.test.js src/constants/businessPlans.test.js src/constants/promotionPrice.test.js src/server/quotePromotionEndpoint.test.js src/server/promotionRequest.test.js",
+    "test": "node --test src/utils/price.test.js src/utils/filterRestaurants.test.js src/utils/geo.test.js src/utils/routeDistance.test.js src/utils/matchOsmCoordinates.test.js src/utils/googleRating.test.js src/utils/website.test.js src/utils/internalPath.test.js src/utils/restaurantTags.test.js src/utils/recordQuality.test.js src/utils/deals.test.js src/utils/recoveryLink.test.js src/utils/placePhoto.test.js src/utils/openverseFoodAssign.test.js src/utils/businessApplication.test.js src/utils/descriptionReview.test.js src/constants/businessPlans.test.js src/constants/promotionPrice.test.js src/constants/supportPayment.test.js src/server/quotePromotionEndpoint.test.js src/server/promotionRequest.test.js src/server/memberHttp.test.js src/server/community.test.js src/server/businessApplications.test.js src/server/placeExistence.test.js",
     "data:openverse-food-pilot": "node scripts/pilot-openverse-food.mjs",
     "data:openverse-food-bulk": "node scripts/assign-openverse-food-bulk.mjs",
     "data:food-illustration-quality": "node scripts/fix-food-illustration-quality.mjs",
@@ -15,6 +15,7 @@
     "preview": "vite preview",
     "data:osm": "node scripts/fetch-osm.mjs && node scripts/generate-osm-places.mjs",
     "check:places": "node scripts/check-places.mjs",
+    "check:supabase": "node scripts/check-supabase-schema.mjs",
     "data:price-estimates": "node scripts/generate-price-estimates.mjs",
     "data:google-ratings": "node scripts/fetch-google-ratings.mjs",
     "data:google-maps-links": "node scripts/generate-google-maps-links.mjs",
@@ -25,6 +26,7 @@
     "data:food-photo-pilot": "node scripts/pilot-food-photos.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"

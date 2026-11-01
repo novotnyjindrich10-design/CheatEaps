@@ -1,4 +1,5 @@
 import { getCategoryMeta } from '../constants/filters'
+import { dietOfferTag } from './restaurantTags'
 
 const CUISINE_CS = {
   pizza: 'pizzu',
@@ -124,8 +125,8 @@ export function studentFacts(restaurant) {
     seen.add(n)
     facts.push({ key, label })
   }
-  if (restaurant.veganFriendly) add('vegan', 'Veganské')
-  else if (restaurant.vegetarianFriendly) add('veg', 'Vegetariánské')
+  const diet = dietOfferTag(restaurant)
+  if (diet) add(diet.key, diet.label)
   const kind = venueKind(restaurant)
   if (!/vegan|vegetari/i.test(kind)) {
     add('kind', kind.charAt(0).toUpperCase() + kind.slice(1))

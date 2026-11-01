@@ -1,0 +1,1746 @@
+{
+  "generatedAt": "2026-10-17T12:28:43.183Z",
+  "originalNeuvedeno": 209,
+  "afterNeuvedeno": 140,
+  "fixedFromOriginal": 69,
+  "overrideCount": 92,
+  "unresolved": [
+    {
+      "id": "adria-masarykova-31",
+      "name": "Adria",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "aloha-grill-kozi-8",
+      "name": "Aloha Grill",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://alohagrill.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "amsterdam-grill-namesti-svobody-16",
+      "name": "Amsterdam Grill",
+      "reason": "OSM cuisine „lebanese;arabic;egyptian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "lebanese;arabic;egyptian"
+    },
+    {
+      "id": "astorka-novobranska-3",
+      "name": "Astorka",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "avanti-stredni-61",
+      "name": "Avanti",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "barrio-gotico-kozi-12",
+      "name": "Barrio Gotico",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "bibus-videnska-125",
+      "name": "Bibus",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "bistro-77-francouzska-77",
+      "name": "Bistro 77",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.facebook.com/1000089662892491",
+      "osmCuisine": ""
+    },
+    {
+      "id": "bistro-la-terra-lesnicka-40",
+      "name": "Bistro La Terra",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "borgo-agnese-kopecna-43",
+      "name": "Borgo Agnese",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.borgoagnese.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "borsalino-orli-20",
+      "name": "Borsalino",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "break-feast-dvorakova-43-12",
+      "name": "Break Feast",
+      "reason": "OSM cuisine „brunch“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://www.eggofoodtruck.cz/",
+      "osmCuisine": "brunch"
+    },
+    {
+      "id": "camel-mojmirovo-namesti-303-4",
+      "name": "Camel",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "campo-vodova-336-108",
+      "name": "Campo",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "castellana-trattoria-novobranska-4",
+      "name": "Castellana trattoria",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://www.castellana.cz/",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "club-bar-semilasso-palackeho-trida-126",
+      "name": "Club bar Semilasso",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "cosmopolis-kozi-5",
+      "name": "Cosmopolis",
+      "reason": "OSM cuisine „greek“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "greek"
+    },
+    {
+      "id": "deja-vu-uvoz-26",
+      "name": "Deja Vu",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "dno-restaurant-orli-19",
+      "name": "Dno restaurant",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.dnobrno.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "doe-boy-pizza-napoletana-brno-stefanikova-39",
+      "name": "Doe boy, Pizza Napoletana Brno",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "empire-svobodak-namesti-svobody-16",
+      "name": "Empire Svoboďák",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.facebook.com/Fempiresvobodak",
+      "osmCuisine": ""
+    },
+    {
+      "id": "fabrik-urban-house-rooseveltova-9",
+      "name": "Fabrik Urban House",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "flank-botanicka-598-72",
+      "name": "Flank",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.flank.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "flek-veveri-453-6",
+      "name": "Flek",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "formanka-masova-8",
+      "name": "Formanka",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "fryends-ceska-31",
+      "name": "Fryends",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.fryends.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "garden-restaurant-pub-benesova-605-18",
+      "name": "Garden Restaurant & Pub",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.gardenpub.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "grandezza-zelny-trh-2",
+      "name": "Grandezza",
+      "reason": "OSM cuisine „international“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "international"
+    },
+    {
+      "id": "gth-multicatering-jana-babaka-11",
+      "name": "GTH multicatering",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://gth.cz/provoz/jb-brno",
+      "osmCuisine": ""
+    },
+    {
+      "id": "hatsu-restaurant-mecova-4",
+      "name": "Hatsu restaurant",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "havana-restaurant-masarova-9",
+      "name": "Havana Restaurant",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.havana-restaurant.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "hostinec-u-blahovky-gorkeho-54",
+      "name": "Hostinec U Bláhovky",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "hostinec-u-vedru-tilhonova-2",
+      "name": "Hostinec u Vedrů",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "hrana-stolu-uvoz-8",
+      "name": "Hrana Stolu",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "husovicka-sokolovna-dukelska-9",
+      "name": "Husovická Sokolovna",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "cha-cha-husitska-8a",
+      "name": "Cha-Cha",
+      "reason": "OSM cuisine „georgian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://cha-cha.cz/",
+      "osmCuisine": "georgian"
+    },
+    {
+      "id": "charlie-s-koblizna-12",
+      "name": "Charlie's",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "iguana-halasovo-namesti-7",
+      "name": "Iguana",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "jakoby-jakubske-namesti-128-6",
+      "name": "Jakoby",
+      "reason": "OSM cuisine „international“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://www.restauracejakoby.cz/",
+      "osmCuisine": "international"
+    },
+    {
+      "id": "jazzmin-holandska-12",
+      "name": "Jazzmin",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "jean-paul-s-zelny-trh-10",
+      "name": "Jean Paul's",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://www.jpbistro.cz/zelny-trh/",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "jean-paul-s-holandska-10",
+      "name": "Jean Paul's",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://www.jpbistro.cz/spielberk/",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "jean-paul-s-purkynova-2950-105",
+      "name": "Jean Paul's",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.jpbistro.cz/muzeum.html",
+      "osmCuisine": ""
+    },
+    {
+      "id": "jean-paul-s-restaurant-behounska-4",
+      "name": "Jean Paul's restaurant",
+      "reason": "OSM cuisine „international“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "international"
+    },
+    {
+      "id": "jidelna-beta-namesti-svobody-92-21",
+      "name": "Jídelna Beta",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "jidelna-k2-cejl-62",
+      "name": "Jídelna K2",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "jidelna-u-bileho-konicka-sochorova-3232-36",
+      "name": "Jídelna U Bílého koníčka",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "kabaret-spacek-kopecna-46",
+      "name": "Kabaret Špaček",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "kakheti-kounicova-2",
+      "name": "Kakheti",
+      "reason": "OSM cuisine „georgian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "georgian"
+    },
+    {
+      "id": "kaskada-taborskeho-nabrezi-3",
+      "name": "Kaskáda",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "knedlikovy-raj-nadrazni-2a",
+      "name": "Knedlíkový ráj",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "korzar-minska-26",
+      "name": "Korzár",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.korzar.com/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "kousek-recka-na-taliri-anenska-4",
+      "name": "Kousek Řecka Na Talíři",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://kousekreckanataliri.cz",
+      "osmCuisine": ""
+    },
+    {
+      "id": "l-eau-vive-petrov-2",
+      "name": "L'Eau Vive",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "l-osteria-prizova-285-3",
+      "name": "L'Osteria",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://losteria.net/cz/restaurace/restaurant/brno/",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "leharo-potocka-53-2",
+      "name": "Leháro",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.bistroleharo.cz",
+      "osmCuisine": ""
+    },
+    {
+      "id": "leonardo-stefanikova-12",
+      "name": "Leonardo",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.sanatoriumhelios.cz/restaurace-leonardo/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "local-cafe-restaurant-majdalenky-10",
+      "name": "LOCAL Cafe&Restaurant",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "http://www.rendez-vous-cafe.cz/",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "lotebi-rezacova-5",
+      "name": "Lotebi",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://lotebi.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "lucullus-husova-200-16",
+      "name": "Lucullus",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.hotelinternational.cz/rs/restaurace-lucullus",
+      "osmCuisine": ""
+    },
+    {
+      "id": "ma-hostina-stefanikova-78",
+      "name": "Má hostina",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "maximus-resort-restaurace-portum-hrazni-327-4a",
+      "name": "Maximus Resort - Restaurace Portum",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.maximus-resort.cz/restaurace-portum-brnenska-prehrada/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "mayada-prikop-843-6",
+      "name": "Mayada",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "menza-fch-purkynova-118",
+      "name": "Menza FCH",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.kam.vutbr.cz/21default.aspx?p=menu&provoz=16",
+      "osmCuisine": ""
+    },
+    {
+      "id": "menza-purkynova-purkynova-93",
+      "name": "Menza Purkyňova",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.kam.vutbr.cz/?p=nabs#castclanku68",
+      "osmCuisine": ""
+    },
+    {
+      "id": "mikulasek-elgartova-263-8",
+      "name": "Mikulášek",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.restauracemikulasek.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "moravska-chalupa-krizkovskeho-489-47a",
+      "name": "Moravská chalupa",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "na-hasicce-jeneweinova-4",
+      "name": "Na Hasičce",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://nahasicce.sweb.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "na-mlatech-mikulcicka-2b",
+      "name": "Na Mlatech",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "nadiia-koliste-1908-5",
+      "name": "Nadiia",
+      "reason": "OSM cuisine „ukrainian;russian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "ukrainian;russian"
+    },
+    {
+      "id": "nel-forno-namesti-svobody-17",
+      "name": "Nel Forno",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "no-a-co-merhautova-8",
+      "name": "No a Co",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "noem-arch-restaurant-cimburkova-9",
+      "name": "Noem Arch Restaurant",
+      "reason": "OSM cuisine „seafood“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "seafood"
+    },
+    {
+      "id": "oaza-lidicka-7",
+      "name": "Oáza",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "okruh-pub-rybnicka-75",
+      "name": "Okruh Pub",
+      "reason": "OSM cuisine „international“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://www.okruhpub.cz/",
+      "osmCuisine": "international"
+    },
+    {
+      "id": "olymp-durdakova-46",
+      "name": "Olymp",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "onyx-kopernikova-17",
+      "name": "Onyx",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "pablo-esco-bar-minska-88",
+      "name": "Pablo Esco Bar",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.pabloescobar.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "palazzo-silingrovo-namesti-2",
+      "name": "Palazzo",
+      "reason": "OSM cuisine „international“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "http://https%3A%2F%2Fwww.facebook.com%2Fpalazzorestaurant%2F&usg=AOvVaw3yBQYudER_eHv7rZYdfAsZ&opi=89978449",
+      "osmCuisine": "international"
+    },
+    {
+      "id": "panorama-pristavni-1064-38",
+      "name": "Panorama",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "parkhotel-restaurant-veslarska-347-250",
+      "name": "Parkhotel Restaurant",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "parodie-vachova-8",
+      "name": "Parodie",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "pavillon-jezuitska-6",
+      "name": "Pavillon",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.restaurant-pavillon.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "pepe-food-gym-skrobarenska-502-1",
+      "name": "PEPE FOOD & GYM",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "pivnice-na-piskach-bayerova-23",
+      "name": "Pivnice Na pískách",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "pohosteni-u-sroubka-taborska-224",
+      "name": "Pohoštění U Šroubka",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.shopusroubka.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "point-restaurant-vranovska-58",
+      "name": "Point Restaurant",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "polevkove-okynko-koliste-1907-3",
+      "name": "Polévkové okýnko",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.polevkoveokynko.cz",
+      "osmCuisine": ""
+    },
+    {
+      "id": "queen-s-pub-behounska-22",
+      "name": "Queen's Pub",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "raj-hlinky-hlinky-118",
+      "name": "Ráj Hlinky",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.rajhlinky.wz.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "rakovec-rakovecka-13",
+      "name": "Rakovec",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "re-set-lazaretni-925-9",
+      "name": "re.SET",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://resetfood.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurace-diva-bara-stefanikova-21",
+      "name": "Restaurace Divá Bára",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurace-domov-tuckova-9",
+      "name": "Restaurace Domov",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurace-hotel-lazaretni-lazaretni-6",
+      "name": "Restaurace Hotel Lazaretní",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://hotel-lazaretni.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurace-na-dornychu-dornych-120",
+      "name": "Restaurace Na Dornychu",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurace-na-musilce-musilova-2",
+      "name": "Restaurace Na Musilce",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurace-stary-dvur-mendlovo-namesti-11",
+      "name": "Restaurace Starý dvůr",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurace-u-latalu-breclavska-49",
+      "name": "Restaurace U Látalů",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://restauraceulatalu.webnode.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurace-za-kaplickou-burianovo-namesti-5",
+      "name": "Restaurace Za Kapličkou",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "restaurant-m-cejl-68",
+      "name": "Restaurant M",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "royal-ricc-starobrnenska-10",
+      "name": "Royal Ricc",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "samoobsluzna-restaurace-rybkova-1",
+      "name": "Samoobslužná restaurace",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "santorini-grill-bar-pristavni-1",
+      "name": "Santorini Grill & Bar",
+      "reason": "OSM cuisine „greek“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://www.foodora.cz/restaurant/kjrs/santorini-grill-and-bar",
+      "osmCuisine": "greek"
+    },
+    {
+      "id": "severka-tuckova-30",
+      "name": "Severka",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "sherwood-rokytova-1933",
+      "name": "Sherwood",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.restauracesherwood.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "siesta-lobby-wine-restaurant-husova-16",
+      "name": "Siesta Lobby & Wine Restaurant",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "siwa-orient-grill-veveri-34",
+      "name": "SIWA Orient Grill",
+      "reason": "OSM cuisine „oriental“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "http://www.siwaorient.cz/",
+      "osmCuisine": "oriental"
+    },
+    {
+      "id": "sklizeno-netroufalky-770",
+      "name": "Sklizeno",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.sklizeno.cz/o-nas/sklizeno-campus-2/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "soul-bistro-jakubska-9",
+      "name": "Soul bistro",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "spaghetti-d-amore-panska-2",
+      "name": "Spaghetti d'Amore",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "spaghetti-parmigiano-cimburkova-593-4",
+      "name": "Spaghetti Parmigiano",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://spaghettiparmigiano.cz/",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "spaghetti-parmigiano-videnska-132-100",
+      "name": "Spaghetti Parmigiano",
+      "reason": "OSM cuisine „italian;pasta“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://spaghettiparmigiano.cz/",
+      "osmCuisine": "italian;pasta"
+    },
+    {
+      "id": "storey-josefska-9",
+      "name": "Storey",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "http://www.storey.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "styl-pub-bubenickova-24",
+      "name": "Styl Pub",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "svatoboj-cacovicka-12",
+      "name": "Svatoboj",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "svijansky-senk-stefanikova-21",
+      "name": "Svijanský šenk",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "spageta-bistro-ceska-14",
+      "name": "Špageta bistro",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://spageta-bistro.business.site/",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "teatr-lidicka-1862-14",
+      "name": "Teátr",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.restaurant-teatr.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "tenis-bar-bubenickova-52",
+      "name": "Tenis bar",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "tenis-pub-luzanky-luzanecka-1883-3",
+      "name": "Tenis Pub Lužánky",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.tenispub.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "the-erin-s-flag-irish-pub-biskupska-3",
+      "name": "The Erin's Flag Irish Pub",
+      "reason": "OSM cuisine „irish“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "https://www.facebook.com/erinsflag/",
+      "osmCuisine": "irish"
+    },
+    {
+      "id": "trinity-ristorante-trnita-9",
+      "name": "Trinity ristorante",
+      "reason": "OSM cuisine „mediterranean;italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "http://restaurace-triniti.cz/",
+      "osmCuisine": "mediterranean;italian"
+    },
+    {
+      "id": "tripoli-starobrnenska-1",
+      "name": "Tripoli",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.tripoli.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-drevaka-beer-grill-drevarska-22",
+      "name": "U Dřeváka Beer & Grill",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.udrevaka.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-horkeho-konce-zizkova-257-2",
+      "name": "U Hořkého konce",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.facebook.com/uhorkehokonce/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-hoveziho-pupku-videnska-55",
+      "name": "U Hovězího pupku",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-kola-skopalikova-20",
+      "name": "U Kola",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-krizu-zelny-trh-12",
+      "name": "U Křížů",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.restaurantukrizu.cz/",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-malchru-vancurova-3152-1",
+      "name": "U Malchrů",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "https://www.restaurace-menu.cz/u-malchru",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-tetiany-zvonarka-411",
+      "name": "U Tetiany",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-tety-kubickova-23",
+      "name": "U Tety",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "u-zlate-hrusky-tvrdeho-3",
+      "name": "U Zlaté hrušky",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "varadero-molakova-25",
+      "name": "Varadero",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "velka-klajdovka-jedovnicka-7",
+      "name": "Velká Klajdovka",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "viet-ha-kuklenska-1",
+      "name": "Viet Ha",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "vista-hudcova-72",
+      "name": "Vista",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    },
+    {
+      "id": "vittorio-pekarska-4",
+      "name": "Vittorio",
+      "reason": "OSM cuisine „italian“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "",
+      "osmCuisine": "italian"
+    },
+    {
+      "id": "zamilec-podhaji-13",
+      "name": "Zamilec",
+      "reason": "OSM cuisine „grill;sausage“ nelze spolehlivě mapovat na kategorii aplikace",
+      "website": "http://www.zamilec.cz/",
+      "osmCuisine": "grill;sausage"
+    },
+    {
+      "id": "zozumi-kvetinarska-2",
+      "name": "Zozumi",
+      "reason": "Chybí ověřené menu/web; kategorie zůstává Neuvedeno",
+      "website": "",
+      "osmCuisine": ""
+    }
+  ],
+  "illustrationRemovals": [
+    "skolni-jidelna-brno-horni-16"
+  ],
+  "categoryCountsAfter": {
+    "vegetarianske": 2,
+    "veganske": 2,
+    "zdrave": 10,
+    "ceske": 123,
+    "pizza": 71,
+    "burger": 25,
+    "kebab": 21,
+    "cina": 12,
+    "asijske": 93,
+    "mexiko": 11,
+    "kava": 196,
+    "sladke": 32,
+    "fastfood": 37,
+    "neuvedeno": 140
+  },
+  "changes": [
+    {
+      "id": "aida-cafe-restaurant-josefska-21",
+      "name": "AIDA Cafe & Restaurant",
+      "to": "sladke",
+      "confidence": "high",
+      "evidence": "Cukrárna: zákusky, dorty, zmrzlina.",
+      "sourceUrl": "https://www.ladolcevita-aida.cz/"
+    },
+    {
+      "id": "alvin-hudcova-2",
+      "name": "Alvin",
+      "to": "pizza",
+      "confidence": "medium",
+      "evidence": "Jídelní lístek má rozsáhlou sekci pizza 33 cm.",
+      "sourceUrl": "https://www.alvinrestaurace.cz/cenik/"
+    },
+    {
+      "id": "an-wok-grill-krizova-55-5",
+      "name": "AN wok & grill",
+      "to": "asijske",
+      "confidence": "high",
+      "evidence": "Vietnamský wok a grill.",
+      "sourceUrl": "https://wolt.com/cs/cze/brno/restaurant/an-wok-grill"
+    },
+    {
+      "id": "aroha-cafe-krenova-183-57",
+      "name": "Aroha café",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "Aroha café – kavárna (oprava z ceske).",
+      "sourceUrl": "https://www.facebook.com/Arohabistrocafe/"
+    },
+    {
+      "id": "bar-gril-u-nas-masarova-11a",
+      "name": "Bar & Gril U NÁS",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Specializace na českou klasiku.",
+      "sourceUrl": "https://www.baragrilunas.cz/kontakt/"
+    },
+    {
+      "id": "baroko-orli-17",
+      "name": "Baroko",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Svíčková, řízek, španělský ptáček, kachna.",
+      "sourceUrl": "https://baroko.org/jidelni-listek/"
+    },
+    {
+      "id": "bep-vietnamese-village-cuisine-koblizna-9",
+      "name": "BẾP Vietnamese Village Cuisine",
+      "to": "asijske",
+      "confidence": "high",
+      "evidence": "Vietnamese Village Cuisine – vietnamská kuchyně.",
+      "sourceUrl": "https://bepbrno.cz/"
+    },
+    {
+      "id": "bistro-franz-veveri-461-14",
+      "name": "Bistro Franz",
+      "to": "kava",
+      "confidence": "medium",
+      "evidence": "Bistro s výběrovou kávou a zákusky.",
+      "sourceUrl": "https://www.bistrofranz.cz/"
+    },
+    {
+      "id": "bon-ami-restaurant-komarovska-352-7",
+      "name": "Bon Ami restaurant",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Poctivá domácí kuchyně, rodinná restaurace.",
+      "sourceUrl": "https://www.bonamirestaurant.cz/"
+    },
+    {
+      "id": "borgeska-palackeho-trida-47",
+      "name": "Borgeska",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Česká pivní kuchyně: guláš, řízek, kachna, tatarák.",
+      "sourceUrl": "https://borgeska.proweb.cz/jidelni-listek"
+    },
+    {
+      "id": "bubblify-ceska-26",
+      "name": "Bubblify",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "Bubble tea řetězec – nápoje, ne fast food.",
+      "sourceUrl": "https://www.slevomat.cz/podnik/185592-bubblify"
+    },
+    {
+      "id": "buffalo-express-nadrazni-4",
+      "name": "Buffalo Express",
+      "to": "asijske",
+      "confidence": "medium",
+      "evidence": "Menu: pho xao, pad thai, panang kari (vietnamská/thajská nabídka).",
+      "sourceUrl": "https://menunet.cz/place/WU8K5O3TN7OoUzvziPKens/menu/"
+    },
+    {
+      "id": "bun-dvorakova-16",
+      "name": "Bún",
+      "to": "asijske",
+      "confidence": "high",
+      "evidence": "Vietnamská kuchyně (bún, pho).",
+      "sourceUrl": "https://wolt.com/en/cze/brno/restaurant/bun"
+    },
+    {
+      "id": "bystrcka-oaza-lyskova-1031-2",
+      "name": "Bystrcká Oáza",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Oficiální web: restaurace s poctivou českou kuchyní.",
+      "sourceUrl": "https://bystrckaoaza.cz/"
+    },
+    {
+      "id": "cafe-rudolf-namesti-svobody-17",
+      "name": "Café Rudolf",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "Kávový nápojový lístek Café Rudolf.",
+      "sourceUrl": "https://rudolfcafe.cz/"
+    },
+    {
+      "id": "coffee-trail-lidicka-lidicka-46",
+      "name": "Coffee Trail Lidická",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "Kavárna s výběrovou kávou.",
+      "sourceUrl": "https://www.coffeetrail.cz/"
+    },
+    {
+      "id": "coffee4all-chironova-8",
+      "name": "Coffee4all",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "Kavárna Coffee4all.",
+      "sourceUrl": "https://coffee4all.cz"
+    },
+    {
+      "id": "ctyri-ruze-veveri-32",
+      "name": "Čtyři růže",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Pivní šenk Čtyři růže: poctivá česká kuchyně, žebra, koleno.",
+      "sourceUrl": "https://ctyriruze.restaurace-laguna.cz/"
+    },
+    {
+      "id": "don-miguel-s-palackeho-trida-35",
+      "name": "Don Miguel's",
+      "to": "mexiko",
+      "confidence": "high",
+      "evidence": "Mexická restaurace (Chuť Mexika).",
+      "sourceUrl": "https://www.donmiguels.cz/"
+    },
+    {
+      "id": "dukat-loosova-1",
+      "name": "Dukát",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Teplá kuchyně, řízkový talíř, žebra.",
+      "sourceUrl": "https://www.restauracedukat.cz/"
+    },
+    {
+      "id": "eatology-holandska-6",
+      "name": "Eatology",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Polední menu: tradiční česká kuchyně.",
+      "sourceUrl": "http://www.iqrestaurant.cz/brno/home.html"
+    },
+    {
+      "id": "faircafe-rybarska-202-19",
+      "name": "Faircafe",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Restaurace: svíčková, řízek, výpečky.",
+      "sourceUrl": "https://www.fairhotel.cz/restaurace"
+    },
+    {
+      "id": "fako-club-hasicska-16-18",
+      "name": "FAKO CLUB",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Denní menu: sekaná, řízek, svíčková.",
+      "sourceUrl": "https://fako-club.cz/"
+    },
+    {
+      "id": "globus-bistro-reckovicka-555-3",
+      "name": "Globus Bistro",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Globus bistro / teplý pult s českými hotovými jídly.",
+      "sourceUrl": "https://www.firmy.cz/detail/13819097-globus-bistro-brno-ivanovice.html"
+    },
+    {
+      "id": "gusto-plzenka-husova-16",
+      "name": "GUSTO Plzeňka",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Česká a moravská kuchyně.",
+      "sourceUrl": "https://gustoplzenka.cz/"
+    },
+    {
+      "id": "haribol-luzanecka-4",
+      "name": "Haribol",
+      "to": "veganske",
+      "confidence": "high",
+      "evidence": "Veganská jídelna – pouze veganské pokrmy.",
+      "sourceUrl": "https://www.haribol.cz/"
+    },
+    {
+      "id": "hostinec-u-ferdinanda-karaskovo-namesti-2457-17",
+      "name": "Hostinec U Ferdinanda",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Tradiční hostinec s českou/staročeskou kuchyní (řízek, tatarák, hermelín).",
+      "sourceUrl": "https://uferdinanda.cz/poledni-menu/"
+    },
+    {
+      "id": "cha-do-zelny-trh-10",
+      "name": "Cha Dō",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "Čajovna / matcha – nápojový podnik, ne čínská restaurace.",
+      "sourceUrl": "https://www.chadobrno.com/"
+    },
+    {
+      "id": "charlie-s-park-kolejni-3015",
+      "name": "Charlie's Park",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Denní menu s českými jídly.",
+      "sourceUrl": "https://charliespark.cz/"
+    },
+    {
+      "id": "jidelna-100-chuti-kolejni-14",
+      "name": "Jídelna 100 chutí",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Denní menu: guláš, kotleta, řízečky.",
+      "sourceUrl": "https://jidelna100chuti.cz/"
+    },
+    {
+      "id": "jidelna-kocourek-hlinky-105",
+      "name": "Jídelna Kocourek",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Tradiční české jídlo (svíčková, řízek, guláše).",
+      "sourceUrl": "http://www.jidelnakocourek.cz/"
+    },
+    {
+      "id": "jidelna-sindelar-a-syn-cejl-60",
+      "name": "Jídelna Šindelář a Syn",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Obědové menu s českými hotovkami.",
+      "sourceUrl": "https://www.sindelar.cz/"
+    },
+    {
+      "id": "kometa-pub-kridlovicka-34",
+      "name": "Kometa Pub",
+      "to": "fastfood",
+      "confidence": "medium",
+      "evidence": "Zápasové menu: burgery, cibulové kroužky, řízečky, žebra (stadionový fast service).",
+      "sourceUrl": "http://arena.kometapub.cz/"
+    },
+    {
+      "id": "kometa-pub-miki-makovskeho-namesti-3166-2",
+      "name": "Kometa Pub MIKI",
+      "to": "fastfood",
+      "confidence": "medium",
+      "evidence": "Stadionové menu (guláš, řízek, burger).",
+      "sourceUrl": "https://www.kometapub.cz/miki"
+    },
+    {
+      "id": "kominska-rychta-kristenova-14",
+      "name": "Komínská rychta",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Hospoda: dršťková, řízečky, kotleta, tatarák.",
+      "sourceUrl": "https://www.kominskarychta.cz/"
+    },
+    {
+      "id": "kurdsky-kebab-cejl-93",
+      "name": "Kurdský kebab",
+      "to": "kebab",
+      "confidence": "high",
+      "evidence": "Kebab v názvu a nabídce (oprava z fastfood).",
+      "sourceUrl": ""
+    },
+    {
+      "id": "kurdsky-kebab-lidicka-33",
+      "name": "Kurdský kebab",
+      "to": "kebab",
+      "confidence": "high",
+      "evidence": "Kebab v názvu a nabídce (oprava z fastfood).",
+      "sourceUrl": ""
+    },
+    {
+      "id": "laguna-smetanova-2",
+      "name": "Laguna",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Tradiční brněnská restaurace s denním menu.",
+      "sourceUrl": "https://restaurace-laguna.cz/"
+    },
+    {
+      "id": "lion-kebab-milady-horakove-1957-15",
+      "name": "Lion Kebab",
+      "to": "kebab",
+      "confidence": "high",
+      "evidence": "Kebab v názvu a nabídce (oprava z fastfood).",
+      "sourceUrl": ""
+    },
+    {
+      "id": "marhaba-kebab-cejl-39",
+      "name": "Marhaba Kebab",
+      "to": "kebab",
+      "confidence": "high",
+      "evidence": "Kebab v názvu a nabídce (oprava z fastfood).",
+      "sourceUrl": ""
+    },
+    {
+      "id": "moravanska-rychta-stredni-55-9",
+      "name": "Moravanská rychta",
+      "to": "pizza",
+      "confidence": "high",
+      "evidence": "Pizza & Pub Bombastica – vyhlášená pizza z trouby.",
+      "sourceUrl": "https://www.moravanyubrna.cz/volny-cas/restaurace-a-obcerstveni/moravanska-rychta-pizza-pub-bombastica"
+    },
+    {
+      "id": "na-halach-stredni-26",
+      "name": "Na Halách",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Týdenní obědy Sportcentrum Lužánky: guláš, kotleta, játra.",
+      "sourceUrl": "https://www.sportcentrumluzanky.cz/restaurace/"
+    },
+    {
+      "id": "na-ruzku-stefanikova-25",
+      "name": "Na Růžku",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Restaurace a pivnice s poledním menu.",
+      "sourceUrl": "https://www.naruzkubrno.cz/"
+    },
+    {
+      "id": "naber-si-rosickeho-namesti-196-9",
+      "name": "Naber si",
+      "to": "zdrave",
+      "confidence": "medium",
+      "evidence": "Bistro se zdravější / čerstvou nabídkou.",
+      "sourceUrl": "https://nabersi.cz/"
+    },
+    {
+      "id": "nase-vase-bistro-jaselska-8",
+      "name": "Naše Vaše Bistro",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Denní menu: knedlíky, kyselica, smažený sýr a další česká jídla.",
+      "sourceUrl": "https://nasevasebistro.cz/denni-menu-2/"
+    },
+    {
+      "id": "nihao-stefanikova-15",
+      "name": "Nihao",
+      "to": "cina",
+      "confidence": "high",
+      "evidence": "Čínská restaurace (sekce čínských jídel); dříve asijske.",
+      "sourceUrl": "https://wolt.com/cs/cze/brno/restaurant/n-hao"
+    },
+    {
+      "id": "no-gluten-no-problem-zamecnicka-181-3",
+      "name": "No Gluten No Problem!",
+      "to": "zdrave",
+      "confidence": "high",
+      "evidence": "Bezlepková / zdravá kuchyně.",
+      "sourceUrl": "https://nogluten-noproblem.cz/"
+    },
+    {
+      "id": "padowetz-masarykova-34",
+      "name": "Padowetz",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Hospodská kuchyně: guláše.",
+      "sourceUrl": "https://www.restaurant-padowetz.cz/"
+    },
+    {
+      "id": "panda-netroufalky-770",
+      "name": "Panda",
+      "to": "asijske",
+      "confidence": "medium",
+      "evidence": "Asijský food-court pult (nudle, wok); ne čistá čínská restaurace.",
+      "sourceUrl": "http://www.campusbrno.cz/en/panda-1"
+    },
+    {
+      "id": "pegas-jiraskova-44",
+      "name": "Pegas",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Koncept Pegas – česká/moravská kuchyně.",
+      "sourceUrl": "https://brnorestauracepivnice.hotelpegas.com/"
+    },
+    {
+      "id": "pellegrini-namesti-svobody-18",
+      "name": "Pellegrini",
+      "to": "pizza",
+      "confidence": "medium",
+      "evidence": "Italská restaurace s výraznou sekcí pizzy (32 cm) na jídelním lístku.",
+      "sourceUrl": "https://www.pellegrini.cz/jidelni-listek"
+    },
+    {
+      "id": "pivni-opice-jostova-138-4",
+      "name": "Pivní opice",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Restaurace & pub s poledním menu.",
+      "sourceUrl": "https://www.pivniopice.cz/"
+    },
+    {
+      "id": "pivnice-masny-ruzek-krenova-70",
+      "name": "Pivnice Masný růžek",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Pivnice se zaměřením na maso a plzeňské pivo.",
+      "sourceUrl": "https://www.pivnicemasnyruzek.cz/o-nas"
+    },
+    {
+      "id": "pivnice-pegas-jakubska-120-4",
+      "name": "Pivnice Pegas",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Moravská a česká kuchyně v pivnici Pegas.",
+      "sourceUrl": "https://brnorestauracepivnice.hotelpegas.com/"
+    },
+    {
+      "id": "pivnice-u-tygra-vrchlickeho-sad-3",
+      "name": "Pivnice U Tygra",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Pivnice: české pochutiny k pivu.",
+      "sourceUrl": "https://www.pivniceutygra.cz/"
+    },
+    {
+      "id": "pizzeria-la-gamba-okruzni-9b",
+      "name": "Pizzeria La Gamba",
+      "to": "pizza",
+      "confidence": "medium",
+      "evidence": "Pizzerie – pizza dle milánské receptury.",
+      "sourceUrl": "https://www.pizzeria-lagamba.com/"
+    },
+    {
+      "id": "pokecz-basty-414",
+      "name": "Pokecz",
+      "to": "asijske",
+      "confidence": "high",
+      "evidence": "Poké bowls – asijská nabídka, ne obecný fast food.",
+      "sourceUrl": "https://www.pokecz.cz/menu"
+    },
+    {
+      "id": "portoriko-srbska-2653-51",
+      "name": "Portoriko",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Klasika: řízky, svíčková, kachna.",
+      "sourceUrl": "https://restauraceportoriko.cz/jidelni-listek"
+    },
+    {
+      "id": "poupe-dominikanska-342-15",
+      "name": "Poupě",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Pivovarský dům: svíčková, řízek, guláš.",
+      "sourceUrl": "https://www.pivovar-poupe.cz/"
+    },
+    {
+      "id": "pub-pred-zrcadlem-jaselska-17",
+      "name": "Pub Před Zrcadlem",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "Čajovna Za Zrcadlem – čaje a káva.",
+      "sourceUrl": "https://cajovnazazrcadlem.cz/"
+    },
+    {
+      "id": "rebelbean-prizova-5",
+      "name": "Rebelbean",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "Pražírna a kavárna Rebelbean (oprava z fastfood).",
+      "sourceUrl": "https://www.rebelbean.cz/"
+    },
+    {
+      "id": "rebio-holandska-1",
+      "name": "Rebio",
+      "to": "zdrave",
+      "confidence": "high",
+      "evidence": "Restaurace zdravého životního stylu.",
+      "sourceUrl": "https://www.rebio.cz/"
+    },
+    {
+      "id": "restaurace-our-story-masarova-2407-7",
+      "name": "Restaurace Our Story",
+      "to": "pizza",
+      "confidence": "medium",
+      "evidence": "Denní menu s pizzou; sekce Pizza.",
+      "sourceUrl": "https://our-story.cz/"
+    },
+    {
+      "id": "restaurace-rubin-makovskeho-namesti-2574-1",
+      "name": "Restaurace Rubín",
+      "to": "mexiko",
+      "confidence": "high",
+      "evidence": "Fajitas, enchiladas, burrito, nachos.",
+      "sourceUrl": "https://www.restauracerubin.cz/"
+    },
+    {
+      "id": "restaurace-u-badinu-tomaskova-2",
+      "name": "Restaurace U Badinů",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Pivnice U Badinů: svíčková, koleno, žebra a česká pivní kuchyně.",
+      "sourceUrl": "https://www.ubadinu.cz/"
+    },
+    {
+      "id": "restaurace-v-zatacce-absolonova-836-10a",
+      "name": "Restaurace v zatáčce",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Oficiální text: české kulinářské dobrodružství / tradiční kuchyně.",
+      "sourceUrl": "https://restaurace-v-zatacce.eatbu.com/"
+    },
+    {
+      "id": "restaurace-valoria-bohunicka-2",
+      "name": "Restaurace Valoria",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Česká kuchyně (s francouzskými prvky).",
+      "sourceUrl": "https://www.valoria.cz/"
+    },
+    {
+      "id": "rock-kebab-kastanova-579-76",
+      "name": "Rock kebab",
+      "to": "kebab",
+      "confidence": "high",
+      "evidence": "Kebab v názvu a nabídce (oprava z fastfood).",
+      "sourceUrl": ""
+    },
+    {
+      "id": "roj-kebab-panska-1",
+      "name": "Roj Kebab",
+      "to": "kebab",
+      "confidence": "high",
+      "evidence": "Kebab v názvu a nabídce (oprava z fastfood).",
+      "sourceUrl": ""
+    },
+    {
+      "id": "sesamo-purkynova-97c",
+      "name": "Sesamo",
+      "to": "pizza",
+      "confidence": "high",
+      "evidence": "SESAMO BAKERY PIZZA.",
+      "sourceUrl": "https://sesamobrno.cz/"
+    },
+    {
+      "id": "slatina-bistro-turanka-1519-115a",
+      "name": "Slatina Bistro",
+      "to": "pizza",
+      "confidence": "medium",
+      "evidence": "Stálá nabídka včetně sekce Pizza.",
+      "sourceUrl": "https://www.slatinabistro.cz"
+    },
+    {
+      "id": "slatinsky-senk-zlinska-12",
+      "name": "Slatinský šenk",
+      "to": "pizza",
+      "confidence": "high",
+      "evidence": "Stálý lístek dominuje sekcemi pizza Pomodoro/Bianco.",
+      "sourceUrl": "https://www.slatinskysenk.cz/soubor/jidelni-a-napojovy-listek/"
+    },
+    {
+      "id": "spaghetti-d-amore-panska-2",
+      "name": "Spaghetti d'Amore",
+      "to": "neuvedeno",
+      "confidence": "medium",
+      "evidence": "Italské těstoviny (OSM italian); není pizza-only – bez kategorie pasta zůstává neuvedeno.",
+      "sourceUrl": "https://menunet.cz/restaurace/ChIJ4Z2dQsiVEkcR7mTyL5b7sKE/delivery-menu-id/"
+    },
+    {
+      "id": "spaghetti-parmigiano-videnska-132-100",
+      "name": "Spaghetti Parmigiano",
+      "to": "neuvedeno",
+      "confidence": "medium",
+      "evidence": "Italské těstoviny/rizoto – v aplikaci není kategorie pasta; fast food byl chybný.",
+      "sourceUrl": "https://menunet.cz/restaurace/ChIJzU5Dw8CVEkcRTlKQYO0Aj_I/delivery-menu-id/"
+    },
+    {
+      "id": "spaghetti-parmigiano-cimburkova-593-4",
+      "name": "Spaghetti Parmigiano",
+      "to": "neuvedeno",
+      "confidence": "medium",
+      "evidence": "Stejný koncept těstovin jako Vídeňská; fast food byl chybný.",
+      "sourceUrl": "https://menunet.cz/restaurace/ChIJzU5Dw8CVEkcRTlKQYO0Aj_I/delivery-menu-id/"
+    },
+    {
+      "id": "svatovavrinecky-dvur-tukan-palackeho-namesti-2050-9a",
+      "name": "Svatovavřinecký dvůr (Tukan)",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Poctivá domácí / česká klasika.",
+      "sourceUrl": "https://www.svatovavrineckydvur.cz/"
+    },
+    {
+      "id": "skolni-jidelna-brno-horni-16",
+      "name": "Školní jídelna Brno",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Veřejné jídelníčky školní jídelny Horní: řízek, halušky, vepřové pokrmy.",
+      "sourceUrl": "https://strav.nasejidelna.cz/0376/index.jsp"
+    },
+    {
+      "id": "tackarna-turanka-turanka-1387-100",
+      "name": "Táckárna Tuřanka",
+      "to": "pizza",
+      "confidence": "high",
+      "evidence": "Neapolská pizza z kamenné pece.",
+      "sourceUrl": "https://turanka.tackarna.cz/"
+    },
+    {
+      "id": "terasa-hnevkovskeho-26",
+      "name": "Terasa",
+      "to": "pizza",
+      "confidence": "high",
+      "evidence": "Pizza lístek a burgery na oficiálním webu.",
+      "sourceUrl": "https://www.terasabrno.cz/"
+    },
+    {
+      "id": "thalie-rooseveltova-14",
+      "name": "Thalie",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Klasická staročeská jídla.",
+      "sourceUrl": "https://www.thalie.cz/"
+    },
+    {
+      "id": "tivoli-konecneho-namesti-539-6",
+      "name": "Tivoli",
+      "to": "kava",
+      "confidence": "high",
+      "evidence": "TIVOLI Caffé – kavárna.",
+      "sourceUrl": "http://tivolicafe.cz/"
+    },
+    {
+      "id": "turanska-beseda-podlipna-140-25",
+      "name": "Tuřanská Beseda",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Svíčková, řízek, gulášová – česká kuchyně.",
+      "sourceUrl": "https://turanskabeseda.cz/"
+    },
+    {
+      "id": "u-dreveneho-vlka-zelny-trh-1",
+      "name": "U Dřevěného vlka",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Pivní bar s denním menu.",
+      "sourceUrl": "https://www.drevenyvlk.cz/"
+    },
+    {
+      "id": "u-dvoraku-hlavni-119",
+      "name": "U Dvořáků",
+      "to": "ceske",
+      "confidence": "high",
+      "evidence": "Tradiční hospoda: škopek a maso.",
+      "sourceUrl": "https://www.udvoraku-brno.cz/"
+    },
+    {
+      "id": "u-kormidla-kounicova-43",
+      "name": "U Kormidla",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Restaurace s denním obědovým menu.",
+      "sourceUrl": "https://www.ukormidla.cz/"
+    },
+    {
+      "id": "u-lucerny-slovakova-2",
+      "name": "U Lucerny",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Oficiální jídelní lístek: řízek, žebírka a česká denní nabídka.",
+      "sourceUrl": "https://www.u-lucerny.cz/jidelni-listek"
+    },
+    {
+      "id": "u-richarda-risova-12",
+      "name": "U Richarda",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Pivovarská restaurace s českým menu.",
+      "sourceUrl": "http://www.uricharda.eu/"
+    },
+    {
+      "id": "u-tesare-grmelova-9",
+      "name": "U Tesaře",
+      "to": "ceske",
+      "confidence": "medium",
+      "evidence": "Hostinec s denní nabídkou.",
+      "sourceUrl": "http://www.utesare.cz"
+    },
+    {
+      "id": "vegalite-slovakova-10",
+      "name": "Vegalité",
+      "to": "vegetarianske",
+      "confidence": "medium",
+      "evidence": "Veganská a vegetariánská kuchyně.",
+      "sourceUrl": "https://vegalite.cz/"
+    },
+    {
+      "id": "vesela-cajovna-koblizna-5",
+      "name": "Veselá čajovna",
+      "to": "asijske",
+      "confidence": "high",
+      "evidence": "Indická kuchyně (butter chicken, tikka, tandoor) – už asijske, potvrzeno.",
+      "sourceUrl": "https://www.veselacajovna.cz/menu/"
+    },
+    {
+      "id": "wok-99-cejl-544-99",
+      "name": "Wok 99",
+      "to": "asijske",
+      "confidence": "medium",
+      "evidence": "Wok bistro – asijská rychlá kuchyně.",
+      "sourceUrl": ""
+    },
+    {
+      "id": "zdravy-zivot-jaselska-11",
+      "name": "Zdravý Život",
+      "to": "zdrave",
+      "confidence": "high",
+      "evidence": "Restaurace Zdravý život.",
+      "sourceUrl": "https://www.zzbrno.cz/"
+    }
+  ]
+}

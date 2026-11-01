@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { getRestaurantById, mapsNavigateUrl } from '../data/restaurants'
 import { PRICE_CATEGORY_LABELS, getCategoryMeta } from '../constants/filters'
 import { getRestaurantCategory } from '../utils/restaurantTags'
@@ -8,15 +8,22 @@ import {
   hasGoogleRating,
   mapsLinkFor,
 } from '../utils/googleRating'
-import { officialWebsiteOf } from '../utils/website'
+import { httpUrl, officialWebsiteOf } from '../utils/website'
+import { safeInternalPath } from '../utils/internalPath'
 import { buildDetailParagraphs, cardExcerpt, studentFacts } from '../utils/placeCopy'
 import StarRating from '../components/StarRating'
 import FoodHero from '../components/FoodHero'
 import { presentRouteDistance } from '../utils/routeDistance'
 import { useLocationState } from '../context/LocationContext'
+import { dealValidityNote, publicDealsForRestaurant } from '../data/restaurantDeals'
+import FavoriteButton from '../components/FavoriteButton'
+import RestaurantReviews from '../components/RestaurantReviews'
 
 export default function RestaurantDetail() {
   const { id } = useParams()
+  const location = useLocation()
+  const backTo = safeInternalPath(location.state?.from, '/results')
+  const backLabel = backTo === '/' || backTo.startsWith('/?') ? '← Domů' : '← Zpět'
   const { attachDistances } = useLocationState()
   const restaurant = getRestaurantById(id)
 
@@ -24,8 +31,8 @@ export default function RestaurantDetail() {
     return (
       <main className="page detail-page">
         <p>Restaurace nenalezena.</p>
-        <Link to="/results" className="btn btn-secondary">
-          Zpět na výsledky
+        <Link to={backTo} className="btn btn-secondary">
+          {backLabel}
         </Link>
       </main>
     )
@@ -50,6 +57,8 @@ export default function RestaurantDetail() {
   } = restaurant
 
   const officialWeb = officialWebsiteOf(restaurant)
+  const menuSource = httpUrl(priceSource)
+  const profileUrl = httpUrl(googleMapsUrl)
   const priceDisplay = formatPlacePrice(restaurant)
   const categoryLabel =
     hasVerifiedPrice(restaurant) && priceCategory && PRICE_CATEGORY_LABELS[priceCategory]
@@ -71,15 +80,18 @@ export default function RestaurantDetail() {
 
   return (
     <main className={`page detail-page theme-${foodCategory || 'default'}`}>
-      <Link to="/results" className="back-link">
-        ← Výsledky
+      <Link to={backTo} className="back-link">
+        {backLabel}
       </Link>
 
       <article className="detail-shell">
         <header className="detail-hero">
           <div className="detail-hero-copy">
             <p className="detail-kicker">{foodMeta ? foodMeta.label : type}</p>
-            <h1 className="detail-title">{name}</h1>
+            <div className="detail-title-row">
+              <h1 className="detail-title">{name}</h1>
+              <FavoriteButton restaurantId={restaurant.id} />
+            </div>
             <p className="detail-lede">{lede}</p>
           </div>
           <FoodHero restaurant={restaurant} />
@@ -170,11 +182,11 @@ export default function RestaurantDetail() {
               <p className="detail-address">
                 Ověřeno {priceVerifiedAt}
                 {priceChannel === 'delivery' ? ' (rozvoz)' : ' (provozovna)'}
-                {priceSource ? (
+                {menuSource ? (
                   <>
                     {' '}
                     v{' '}
-                    <a href={priceSource} target="_blank" rel="noopener noreferrer">
+                    <a href={menuSource} target="_blank" rel="noopener noreferrer">
                       zdroji menu
                     </a>
                     .
@@ -196,7 +208,7 @@ export default function RestaurantDetail() {
           )}
         </section>
 
-        {priceSource || lunchMenu ? (
+        {menuSource || lunchMenu ? (
           <section className="detail-section">
             <h2 className="detail-section-title">Menu</h2>
             {lunchMenu ? (
@@ -204,10 +216,10 @@ export default function RestaurantDetail() {
                 V OpenStreetMap je u podniku vyznačené polední menu.
               </p>
             ) : null}
-            {priceSource ? (
+            {menuSource ? (
               <p className="detail-description">
                 Aktuální nabídku ověř v{' '}
-                <a href={priceSource} target="_blank" rel="noopener noreferrer">
+                <a href={menuSource} target="_blank" rel="noopener noreferrer">
                   zdroji cen
                 </a>
                 {officialWeb ? (
@@ -233,6 +245,24 @@ export default function RestaurantDetail() {
           </section>
         ) : null}
 
+        {publicDealsForRestaurant(restaurant.id).length > 0 ? (
+          <section className="detail-section" id="nabidky">
+            <h2 className="detail-section-title">Slevy a výhody</h2>
+            <ul className="deal-list">
+              {publicDealsForRestaurant(restaurant.id).map((deal) => (
+                <li key={deal.id}>
+                  <Link to={`/nabidka/${encodeURIComponent(deal.id)}`} state={{ from: backTo }}>
+                    {deal.headline}
+                  </Link>
+                  <p className="detail-metric-note">{dealValidityNote(deal)}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        <RestaurantReviews restaurantId={restaurant.id} />
+
         {googleOk ? (
           <section className="detail-section">
             <h2 className="detail-section-title">Hodnocení na Google</h2>
@@ -243,9 +273,9 @@ export default function RestaurantDetail() {
             {googleRatingCheckedAt ? (
               <p className="detail-address">Ověřeno {googleRatingCheckedAt}</p>
             ) : null}
-            {googleMapsUrl ? (
+            {profileUrl ? (
               <p className="detail-address">
-                <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
+                <a href={profileUrl} target="_blank" rel="noopener noreferrer">
                   Profil pobočky na Google Maps
                 </a>
               </p>

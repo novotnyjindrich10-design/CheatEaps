@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-10-16T21:30:09.191Z",
+  "generatedAt": "2026-10-17T12:27:19.443Z",
   "totalPlaces": 775,
-  "withDetailPhoto": 775,
+  "withDetailPhoto": 774,
   "officialVerified": 93,
-  "illustrationOpenverse": 682,
-  "missingDetailPhoto": 0,
-  "uniqueIllustrationAssets": 236,
+  "illustrationOpenverse": 681,
+  "missingDetailPhoto": 1,
+  "uniqueIllustrationAssets": 238,
   "maxIllustrationReuse": 3,
   "imagesOverReuseCap": 0,
-  "coveragePct": 100,
+  "coveragePct": 99.9,
   "notes": {
     "official": "Oficiální fotky z placePhotos – nepřepisují se.",
     "illustration": "Openverse CC0/PDM/BY/BY-SA; max 3× stejný obrázek.",
-    "quality": "Viz restaurant-images-diversity-audit.md a restaurant-images-quality-audit.md."
+    "school": "Školní jídelna Brno nemá ilustraci (záměrně)."
   }
 }

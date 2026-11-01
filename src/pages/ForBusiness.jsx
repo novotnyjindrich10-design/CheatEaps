@@ -1,202 +1,194 @@
-import { useSearchParams } from 'react-router-dom'
-import BusinessInquiry from '../components/BusinessInquiry'
+import { useRef, useState } from 'react'
 import {
-  BUSINESS_PLANS,
-  SETUP_TIME,
-  findBusinessPlan,
-  formatKc,
-  quotePlan,
-  resolvePeriod,
-} from '../constants/businessPlans'
+  SUPPORT_PRESET_KC,
+  buildSupportPaymentUrl,
+  canStartSupportPayment,
+  formatSupportKc,
+  parseSupportAmount,
+} from '../constants/supportPayment'
 
-const STEPS = [
-  {
-    title: 'Vybereš si způsob propagace',
-    text: 'Porovnáš měsíční a roční cenu tří balíčků a vybereš tu, která dává smysl pro tvůj podnik.',
-  },
-  {
-    title: 'Pošleš nám informace o svém podniku',
-    text: 'Ve formuláři doplníš kontakt a podklady. Odejde nezávazná žádost o první měsíc zdarma. Platba se nestrhává.',
-  },
-  {
-    title: 'Domluvíme podrobnosti a připravíme propagaci',
-    text: 'Než se na webu něco změní, sladíme text, fotku a rozsah. Nic se nespustí automaticky.',
-  },
-]
+const PAYMENT_READY = canStartSupportPayment()
 
-const REASONS = [
-  {
-    title: 'Lidé tu hledají, kam zajít',
-    text: 'CheapEats je seznam podniků v Brně. Návštěvník filtruje podle kuchyně, ceny a vzdálenosti.',
-  },
-  {
-    title: SETUP_TIME.title,
-    text: SETUP_TIME.text,
-    note: SETUP_TIME.note,
-    emphasis: true,
-  },
-  {
-    title: 'Propagace je domluva',
-    text: 'Balíček není samoobslužná kampaň. Nejdřív si řekneme, co jde na webu opravdu ukázat.',
-  },
-]
+export default function Support() {
+  const [mode, setMode] = useState('')
+  const [raw, setRaw] = useState('')
+  const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
+  const amountRef = useRef(null)
 
-function scrollToId(id) {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  document.getElementById(id)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
-}
+  const selectedHalere = parseSupportAmount(raw)
+  const selectedLabel = selectedHalere == null ? '' : formatSupportKc(selectedHalere)
 
-export default function ForBusiness() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const selected = findBusinessPlan(searchParams.get('balicek'))?.id ?? 'plus'
-  const period = resolvePeriod(searchParams.get('obdobi'))
+  const editRaw = (value) => {
+    setRaw(value)
+    const trimmed = value.trim()
+    if (trimmed === '') setMode('custom')
+    else {
+      const preset = SUPPORT_PRESET_KC.find((kc) => String(kc) === trimmed)
+      setMode(preset ? String(preset) : 'custom')
+    }
+    setError('')
+    setNotice('')
+  }
 
-  const setSelection = ({ plan = selected, period: nextPeriod = period, scroll = false }) => {
-    const next = new URLSearchParams(searchParams)
-    next.set('balicek', plan)
-    next.set('obdobi', nextPeriod)
-    setSearchParams(next, { replace: true })
-    if (scroll) window.setTimeout(() => scrollToId('poptavka'), 0)
+  const selectPreset = (kc) => {
+    setMode(String(kc))
+    setRaw(String(kc))
+    setError('')
+    setNotice('')
+  }
+
+  const selectCustom = () => {
+    setMode('custom')
+    setRaw((current) => (SUPPORT_PRESET_KC.some((kc) => String(kc) === current.trim()) ? '' : current))
+    setError('')
+    setNotice('')
+    window.requestAnimationFrame(() => amountRef.current?.focus())
+  }
+
+  const onSubmit = (event) => {
+    event.preventDefault()
+    const halere = parseSupportAmount(raw)
+    if (halere == null) {
+      setNotice('')
+      setError(
+        raw.trim() === '' && mode !== 'custom'
+          ? 'Vyber 30, 50 nebo 100 Kč, nebo zadej vlastní částku.'
+          : 'Zadej kladnou částku v korunách. Nula, záporné číslo ani nečíselný text nejdou použít.',
+      )
+      amountRef.current?.focus()
+      return
+    }
+
+    setError('')
+    const href = buildSupportPaymentUrl(halere)
+    if (!href || !PAYMENT_READY) {
+      setNotice('Platba se nespustila. Možnost podpory se ještě připravuje.')
+      return
+    }
+
+    window.location.assign(href)
   }
 
   return (
-    <main className="page biz-page">
-      <section className="biz-hero">
-        <p className="biz-kicker">CheapEats Brno pro podniky</p>
-        <h1>Dostaň svůj podnik na oči lidem, kteří hledají, kam zajít na jídlo.</h1>
-        <p className="biz-lead">
-          Zviditelni svou restauraci na CheapEats Brno. Oslov lidi, kteří hledají nové podniky,
-          vybírají podle ceny a chtějí objevit něco dobrého.
+    <main className="page support-page">
+      <article className="support-story">
+        <p className="support-kicker">CheapEats Brno</p>
+        <h1>Podpoř mě</h1>
+        <p className="support-hello">
+          <strong>Ahoj! 👋 Jsem tvůrce CheapEats Brno.</strong>
         </p>
-        <button type="button" className="btn btn-primary btn-lg" onClick={() => scrollToId('cenik')}>
-          Vybrat propagaci
-        </button>
-      </section>
-
-      <section id="cenik" className="biz-section" aria-labelledby="cenik-title">
-        <div className="biz-section-head">
-          <h2 id="cenik-title">Návrh ceníku</h2>
-          <p>
-            První měsíc propagace lze požádat zdarma. Potom platí měsíční cena balíčku: Start 99 Kč,
-            Plus 199 Kč a Premium 399 Kč. Roční částka na kartě je deset měsíčních cen a slouží jen
-            pro porovnání. Z této stránky se nic nestrhává a předplatné se samo nespustí.
-          </p>
-        </div>
-        <fieldset className="biz-period biz-period-cards">
-          <legend>Zvolené období ceníku</legend>
-          <label>
-            <input
-              type="radio"
-              name="cenik-obdobi"
-              value="mesicne"
-              checked={period === 'mesicne'}
-              onChange={() => setSelection({ period: 'mesicne' })}
-            />
-            Měsíčně
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="cenik-obdobi"
-              value="rocne"
-              checked={period === 'rocne'}
-              onChange={() => setSelection({ period: 'rocne' })}
-            />
-            Ročně
-          </label>
-        </fieldset>
-        <div className="biz-plans">
-          {BUSINESS_PLANS.map((plan) => {
-            const quote = quotePlan(plan, period)
-            return (
-            <article
-              key={plan.id}
-              className={`biz-plan${plan.recommended ? ' is-recommended' : ''}${
-                selected === plan.id ? ' is-selected' : ''
-              }`}
-            >
-              {plan.recommended ? <p className="biz-badge">Doporučujeme</p> : null}
-              <h3>{plan.name}</h3>
-              <p className="biz-price">
-                <strong>{formatKc(quote.amount)}</strong>
-                <span> {quote.amountLabel}</span>
-              </p>
-              {quote.savings ? (
-                <p className="biz-save">Ušetříš {formatKc(quote.savings)} oproti 12 měsíčním platbám.</p>
-              ) : (
-                <p className="biz-save">Ročně {formatKc(quote.yearly)}, tedy deset měsíčních plateb.</p>
-              )}
-              <p className="biz-summary">{plan.summary}</p>
-              <ul className="biz-perks">
-                {plan.perks.map((perk) => (
-                  <li key={perk.title} className="biz-perk">
-                    <span className="biz-perk-title">{perk.title}</span>
-                    <span className="biz-perk-detail">{perk.detail}</span>
-                  </li>
-                ))}
-              </ul>
-              <button type="button" className="btn btn-primary biz-plan-btn" onClick={() => setSelection({ plan: plan.id, scroll: true })}>
-                Vybrat {plan.name}
-              </button>
-            </article>
-            )
-          })}
-        </div>
-        <p className="biz-disclaimer">
-          Najetím na kartu se ukáže, co která položka znamená. Na mobilu je stejný text rovnou v
-          kartě. Reklamní označení, vlastní fotografie v propagaci ani přednostní umístění se po
-          kliknutí samy nezapnou.
+        <p>
+          Je mi 16 let a CheapEats tvořím jako vlastní studentský projekt. Baví mě programování,
+          technologie a vymýšlení věcí, které lidem reálně usnadňují život.
         </p>
-      </section>
+        <p>
+          Chtěl jsem vytvořit místo, kde v Brně snadno najdeš restauraci podle ceny, chuti a svých
+          preferencí. Na projektu pořád pracuju, vylepšuju jeho funkce a snažím se, aby byly
+          informace o restauracích co nejužitečnější a nejspolehlivější.
+        </p>
+        <p>
+          Vývoj a provoz mě zatím stojí vlastní peníze a aktuálně jsem kvůli projektu v mínusu.
+          Pokud se ti CheapEats líbí nebo ti pomáhá najít něco dobrého k jídlu, můžeš jeho další
+          vývoj dobrovolně podpořit libovolnou částkou.
+        </p>
+        <p>
+          Podpora je zcela dobrovolná. Nemusíš platit nic a za příspěvek nezískáváš lepší umístění
+          restaurace ani žádnou jinou výhodu.
+        </p>
+        <p>
+          <strong>Díky, že CheapEats používáš a pomáháš mu růst! ❤️</strong>
+        </p>
+      </article>
 
-      <section className="biz-section" aria-labelledby="steps-title">
-        <div className="biz-section-head">
-          <h2 id="steps-title">Jak to funguje?</h2>
-        </div>
-        <ol className="biz-steps">
-          {STEPS.map((step, index) => (
-            <li key={step.title}>
-              <span className="biz-step-index">{index + 1}</span>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
+      <section className="support-panel" aria-labelledby="support-form-title">
+        <h2 id="support-form-title">Dobrovolná podpora</h2>
+        <p id="support-voluntary" className="support-note">
+          Podpora je zcela dobrovolná. Nemusíš platit nic a za příspěvek nezískáváš lepší umístění
+          restaurace ani žádnou jinou výhodu.
+        </p>
+        <form className="support-form" onSubmit={onSubmit} noValidate>
+          <fieldset className="support-choices">
+            <legend>Rychlá částka</legend>
+            <div className="support-choice-grid">
+              {SUPPORT_PRESET_KC.map((kc) => (
+                <label key={kc} className={`support-choice${mode === String(kc) ? ' is-selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="rychla-castka"
+                    value={kc}
+                    checked={mode === String(kc)}
+                    onChange={() => selectPreset(kc)}
+                  />
+                  {kc} Kč
+                </label>
+              ))}
+              <label className={`support-choice${mode === 'custom' ? ' is-selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="rychla-castka"
+                  value="custom"
+                  checked={mode === 'custom'}
+                  onChange={selectCustom}
+                />
+                Vlastní částka
+              </label>
+            </div>
+          </fieldset>
 
-      <section className="biz-section" aria-labelledby="reasons-title">
-        <div className="biz-section-head">
-          <h2 id="reasons-title">Co CheapEats podniku dává</h2>
-        </div>
-        <ul className="biz-reasons">
-          {REASONS.map((reason) => (
-            <li key={reason.title} className={reason.emphasis ? 'is-emphasis' : undefined}>
-              <h3>{reason.title}</h3>
-              <p>{reason.text}</p>
-              {reason.note ? <p>{reason.note}</p> : null}
-            </li>
-          ))}
-        </ul>
-        <button type="button" className="btn btn-primary btn-lg" onClick={() => scrollToId('poptavka')}>
-          Chci zviditelnit svůj podnik
-        </button>
-      </section>
+          <div className="support-amount">
+            <label htmlFor="support-amount">Částka v Kč</label>
+            <div className="support-amount-row">
+              <input
+                ref={amountRef}
+                id="support-amount"
+                name="castka"
+                inputMode="decimal"
+                autoComplete="off"
+                autoCapitalize="off"
+                autoCorrect="off"
+                spellCheck={false}
+                enterKeyHint="done"
+                maxLength={20}
+                value={raw}
+                aria-invalid={error ? 'true' : 'false'}
+                aria-describedby={error ? 'support-amount-hint support-amount-error' : 'support-amount-hint'}
+                onChange={(event) => editRaw(event.target.value)}
+              />
+              <span className="support-currency" aria-hidden="true">
+                Kč
+              </span>
+            </div>
+            <p id="support-amount-hint" className="support-hint">
+              Kladná částka v korunách, třeba 50. Nula, záporné číslo ani prázdné pole nejdou
+              odeslat.
+            </p>
+          </div>
 
-      <section id="poptavka" className="biz-section biz-contact" aria-labelledby="contact-title">
-        <div className="biz-section-head">
-          <h2 id="contact-title">Poptávka propagace</h2>
-          <p>
-            Vybraný balíček: {findBusinessPlan(selected)?.name}. Žádost je o první měsíc zdarma,
-            potom {formatKc(quotePlan(findBusinessPlan(selected), 'mesicne').monthly)} měsíčně.
-            Balíček zůstane v adrese stránky. Roční nebo měsíční porovnání na ceníku nic neobjednává.
+          {selectedLabel ? <p className="support-selected">Vybraná částka: {selectedLabel}</p> : null}
+          {error ? (
+            <p id="support-amount-error" className="support-error" role="alert">
+              {error}
+            </p>
+          ) : null}
+
+          <p id="support-pending" className="support-pending">
+            {PAYMENT_READY
+              ? 'Pokračuješ na platební stránku. CheapEats údaje o kartě neukládá. Podpora zůstává dobrovolná a bez protislužby.'
+              : 'Možnost podpory se připravuje. Tlačítko teď nespouští skutečnou platbu.'}
           </p>
-        </div>
-        <BusinessInquiry
-          planId={selected}
-          periodId={period}
-          onPlanChange={(id) => setSelection({ plan: id })}
-          onPeriodChange={(id) => setSelection({ period: id })}
-        />
+
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg support-submit"
+            aria-describedby="support-voluntary support-pending"
+          >
+            Podpořit CheapEats
+          </button>
+          <p className="support-status" role="status" aria-live="polite">
+            {notice}
+          </p>
+        </form>
       </section>
     </main>
   )

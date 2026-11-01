@@ -1,14 +1,16 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { QUICK_BUDGETS } from '../constants/filters'
-import { restaurants } from '../data/restaurants'
 import CategoryStrip from '../components/CategoryStrip'
 import LocationBar from '../components/LocationBar'
 import RestaurantCard from '../components/RestaurantCard'
+import { useCatalog } from '../context/CatalogContext'
 import { useLocationState } from '../context/LocationContext'
+import { compareByRecordQuality } from '../utils/recordQuality'
 
 const RECOMMENDED_COUNT = 20
 
-/** Dočasný výběr: různé kategorie, bez duplicit, přednost curated. */
+/** Různé kategorie. V každé je první nejlíp zdokumentovaný podnik. */
 function pickRecommended(places, limit = RECOMMENDED_COUNT) {
   const byCategory = new Map()
   for (const place of places) {
@@ -17,7 +19,7 @@ function pickRecommended(places, limit = RECOMMENDED_COUNT) {
     byCategory.get(key).push(place)
   }
   for (const list of byCategory.values()) {
-    list.sort((a, b) => Number(Boolean(b.curated)) - Number(Boolean(a.curated)))
+    list.sort(compareByRecordQuality)
   }
 
   const categories = [...byCategory.keys()]
@@ -42,13 +44,13 @@ function pickRecommended(places, limit = RECOMMENDED_COUNT) {
     }
   }
 
-  return picked
+  return picked.sort(compareByRecordQuality)
 }
 
-const recommended = pickRecommended(restaurants)
-
 export default function Home() {
+  const { restaurants } = useCatalog()
   const { attachDistances } = useLocationState()
+  const recommended = useMemo(() => pickRecommended(restaurants), [restaurants])
   const featured = attachDistances(recommended)
 
   return (
@@ -70,7 +72,7 @@ export default function Home() {
             Doporučené podniky
           </h2>
           <p className="section-desc">
-            Výběr z katalogu Brna, než si vybereš kategorii.{' '}
+            Nejlíp zdokumentované podniky z různých kuchyní.{' '}
             <Link to="/results">Zobrazit celý seznam</Link>
           </p>
         </div>

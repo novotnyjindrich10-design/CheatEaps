@@ -1,239 +1,39 @@
 {
-  "generatedAt": "2026-10-16T20:56:02.022Z",
-  "checkedPlaces": 775,
-  "problemsFoundBefore": 5,
-  "assignmentsFixed": 5,
-  "problemsRemainingAfter": 0,
-  "manualReviewCount": 0,
-  "chickenInn": {
-    "id": "chicken-inn-svobody",
-    "name": "Chicken Inn nám. Svobody",
-    "category": "fastfood",
-    "dishKey": "fried_chicken",
-    "dishSource": "name_specific",
-    "dish": "smažené kuře / stripsy",
-    "url": "/food-illustrations/shared/fried_chicken-73034d3c.jpg",
-    "title": "Chicken strips and sweet potato fries",
-    "license": "cc0"
-  },
-  "sampleFixed": [
-    {
-      "id": "faircafe-rybarska-202-19",
-      "name": "Faircafe",
-      "from": "neuvedeno",
-      "to": "kava",
-      "source": "name"
-    },
-    {
-      "id": "pivnice-masny-ruzek-krenova-70",
-      "name": "Pivnice Masný růžek",
-      "from": "neuvedeno",
-      "to": "ceske",
-      "source": "name"
-    },
-    {
-      "id": "pivnice-na-piskach-bayerova-23",
-      "name": "Pivnice Na pískách",
-      "from": "neuvedeno",
-      "to": "ceske",
-      "source": "name"
-    },
-    {
-      "id": "pivnice-pegas-jakubska-120-4",
-      "name": "Pivnice Pegas",
-      "from": "neuvedeno",
-      "to": "ceske",
-      "source": "name"
-    },
-    {
-      "id": "pivnice-u-tygra-vrchlickeho-sad-3",
-      "name": "Pivnice U Tygra",
-      "from": "neuvedeno",
-      "to": "ceske",
-      "source": "name"
-    }
+  "generatedAt": "2026-10-17T12:27:19.443Z",
+  "uniqueAssets": 259,
+  "assignedPlaces": 681,
+  "dishKeys": [
+    "asijske",
+    "baguette",
+    "bubble_tea",
+    "burger",
+    "ceske",
+    "cina",
+    "fastfood",
+    "fried_chicken",
+    "indian",
+    "kava",
+    "kebab",
+    "mexiko",
+    "neuvedeno",
+    "pasta",
+    "pho",
+    "pizza",
+    "poke",
+    "ramen",
+    "sladke",
+    "sushi",
+    "veganske",
+    "vegetarianske",
+    "vietnamese",
+    "zdrave"
   ],
-  "problemsBeforeSample": [
-    {
-      "id": "faircafe-rybarska-202-19",
-      "name": "Faircafe",
-      "key": "neuvedeno",
-      "expected": "kava",
-      "reasons": [
-        "dish key neuvedeno → očekáváno kava (name)"
-      ],
-      "phase": "before"
-    },
-    {
-      "id": "pivnice-masny-ruzek-krenova-70",
-      "name": "Pivnice Masný růžek",
-      "key": "neuvedeno",
-      "expected": "ceske",
-      "reasons": [
-        "dish key neuvedeno → očekáváno ceske (name)"
-      ],
-      "phase": "before"
-    },
-    {
-      "id": "pivnice-na-piskach-bayerova-23",
-      "name": "Pivnice Na pískách",
-      "key": "neuvedeno",
-      "expected": "ceske",
-      "reasons": [
-        "dish key neuvedeno → očekáváno ceske (name)"
-      ],
-      "phase": "before"
-    },
-    {
-      "id": "pivnice-pegas-jakubska-120-4",
-      "name": "Pivnice Pegas",
-      "key": "neuvedeno",
-      "expected": "ceske",
-      "reasons": [
-        "dish key neuvedeno → očekáváno ceske (name)"
-      ],
-      "phase": "before"
-    },
-    {
-      "id": "pivnice-u-tygra-vrchlickeho-sad-3",
-      "name": "Pivnice U Tygra",
-      "key": "neuvedeno",
-      "expected": "ceske",
-      "reasons": [
-        "dish key neuvedeno → očekáváno ceske (name)"
-      ],
-      "phase": "before"
-    }
+  "placeDishOverrides": 27,
+  "illustrationRemovals": [
+    "skolni-jidelna-brno-horni-16"
   ],
-  "problemsAfterSample": [],
-  "manualReviewSample": [],
-  "dishAssetSummary": {
-    "vegetarianske": {
-      "dish": "indické vegetariánské jídlo",
-      "license": "by-sa",
-      "url": "/food-illustrations/shared/vegetarianske-bc54e815.jpg",
-      "note": null
-    },
-    "veganske": {
-      "dish": "veganský burger",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/veganske-16cac81b.jpg",
-      "note": null
-    },
-    "zdrave": {
-      "dish": "salát / zdravá porce",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/zdrave-c95a7712.jpg",
-      "note": null
-    },
-    "kebab": {
-      "dish": "kebab",
-      "license": "by",
-      "url": "/food-illustrations/shared/kebab-5cc7a1d6.jpg",
-      "note": null
-    },
-    "cina": {
-      "dish": "kung-pao / čínské jídlo",
-      "license": "by",
-      "url": "/food-illustrations/shared/cina-322060b2.jpg",
-      "note": null
-    },
-    "asijske": {
-      "dish": "pho",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/asijske-1cea8c77.jpg",
-      "note": null
-    },
-    "mexiko": {
-      "dish": "tacos",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/mexiko-a170c6ca.jpg",
-      "note": null
-    },
-    "kava": {
-      "dish": "káva",
-      "license": "by",
-      "url": "/food-illustrations/shared/kava-4e63f343.jpg",
-      "note": null
-    },
-    "sladke": {
-      "dish": "dort",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/sladke-995cd451.jpg",
-      "note": null
-    },
-    "neuvedeno": {
-      "dish": "těsto / hlavní jídlo",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/neuvedeno-8aaa845a.jpg",
-      "note": null
-    },
-    "pizza": {
-      "dish": "pizza",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/pizza-f174d73a.jpg",
-      "note": null
-    },
-    "burger": {
-      "dish": "burger",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/burger-0ef49110.jpg",
-      "note": null
-    },
-    "ceske": {
-      "dish": "české jídlo",
-      "title": null,
-      "license": "cc0",
-      "url": "/food-illustrations/shared/ceske-6631ca2f.jpg",
-      "note": null
-    },
-    "baguette": {
-      "dish": "bageta / sendvič",
-      "title": "Bread Baguette",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/baguette-3bf431be.jpg",
-      "note": null
-    },
-    "fried_chicken": {
-      "dish": "smažené kuře / stripsy",
-      "title": "Chicken strips and sweet potato fries",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/fried_chicken-73034d3c.jpg",
-      "note": null
-    },
-    "sushi": {
-      "dish": "sushi",
-      "title": "Sushi Sake",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/sushi-26b6141c.jpg",
-      "note": null
-    },
-    "fries": {
-      "dish": "hranolky",
-      "title": "French fries",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/fries-4674fe1f.jpg",
-      "note": null
-    },
-    "fastfood": {
-      "dish": "fast food / hranolky",
-      "title": "French fries",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/fries-4674fe1f.jpg",
-      "note": null
-    },
-    "pho": {
-      "dish": "pho",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/asijske-1cea8c77.jpg",
-      "note": null
-    },
-    "ramen": {
-      "dish": "ramen",
-      "title": "Ramen Noodles",
-      "license": "cc0",
-      "url": "/food-illustrations/shared/ramen-a01ecc5c.jpg",
-      "note": null
-    }
-  }
+  "notes": [
+    "Upgrade doplnil dish keys pasta/poke/bubble_tea/indian/vietnamese a preferuje širší fotky.",
+    "Kontrola vizuálu: reports/illustration-contact-sheet.html"
+  ]
 }

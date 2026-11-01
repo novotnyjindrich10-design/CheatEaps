@@ -25,10 +25,6 @@ export default function LocationBar({ places = [], variant = 'default' }) {
   const locating = status === 'locating'
   const [manualOpen, setManualOpen] = useState(false)
   const [query, setQuery] = useState('')
-  const missingCoords = useMemo(
-    () => places.filter((place) => !hasVerifiedCoordinates(place)).length,
-    [places],
-  )
   const suggestions = useMemo(() => {
     const needle = foldSearchText(query)
     if (needle.length < 2) return []
@@ -108,12 +104,6 @@ export default function LocationBar({ places = [], variant = 'default' }) {
           {routeMessage}
         </p>
       ) : null}
-      <p className="location-bar-caption">
-        Přesná poloha se na náš server neposílá. Vzdálenost je pěší trasa z OpenStreetMap.
-        {missingCoords > 0
-          ? ` Bez ověřené polohy u ${missingCoords} ${missingCoords === 1 ? 'podniku' : 'podniků'}.`
-          : ''}
-      </p>
     </section>
   )
 }

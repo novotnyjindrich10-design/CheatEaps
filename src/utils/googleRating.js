@@ -1,3 +1,5 @@
+import { httpUrl } from './website.js'
+
 export const GOOGLE_STATUS_VERIFIED = 'verified'
 export const GOOGLE_STATUS_NOT_FOUND = 'not_found'
 export const GOOGLE_STATUS_NEEDS_REVIEW = 'needs_review'
@@ -18,10 +20,10 @@ export function buildMapsSearchUrl(name, address) {
 }
 
 export function mapsLinkFor(restaurant) {
-  if (hasGoogleRating(restaurant) && restaurant.googleMapsUrl) {
-    return restaurant.googleMapsUrl
-  }
-  if (restaurant.googleMapsSearchUrl) return restaurant.googleMapsSearchUrl
+  const profile = httpUrl(restaurant?.googleMapsUrl)
+  if (hasGoogleRating(restaurant) && profile) return profile
+  const search = httpUrl(restaurant?.googleMapsSearchUrl)
+  if (search) return search
   return buildMapsSearchUrl(restaurant?.name, restaurant?.address)
 }
 

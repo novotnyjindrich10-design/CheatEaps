@@ -2,7 +2,7 @@ import { derivePriceCategory, PRICE_KIND_MENU, PRICE_KIND_RANGE } from '../utils
 
 const VERIFIED_AT = '2026-10-10'
 
-function menu({ price, item, source, channel = 'venue', sourceType = 'official' }) {
+function menu({ price, item, source, channel = 'venue', sourceType = 'official', verifiedAt = VERIFIED_AT }) {
   return {
     price,
     priceKind: PRICE_KIND_MENU,
@@ -10,12 +10,12 @@ function menu({ price, item, source, channel = 'venue', sourceType = 'official' 
     priceSource: source,
     priceSourceType: sourceType,
     priceChannel: channel,
-    priceVerifiedAt: VERIFIED_AT,
+    priceVerifiedAt: verifiedAt,
     priceCategory: derivePriceCategory(price),
   }
 }
 
-function range({ min, max, item, source, channel = 'venue', sourceType = 'official' }) {
+function range({ min, max, item, source, channel = 'venue', sourceType = 'official', verifiedAt = VERIFIED_AT }) {
   return {
     price: min,
     priceMax: max,
@@ -24,7 +24,7 @@ function range({ min, max, item, source, channel = 'venue', sourceType = 'offici
     priceSource: source,
     priceSourceType: sourceType,
     priceChannel: channel,
-    priceVerifiedAt: VERIFIED_AT,
+    priceVerifiedAt: verifiedAt,
     priceCategory: derivePriceCategory(max),
   }
 }
@@ -38,6 +38,7 @@ export const verifiedPrices = {
     price: 169,
     item: 'Forky’s burger',
     source: 'https://www.forkys.cz/pobocka/oc-vankovka/',
+    verifiedAt: '2026-10-29',
   }),
   'forky-s-cimburkova-593-4': menu({
     price: 149,
@@ -65,9 +66,10 @@ export const verifiedPrices = {
     source: 'https://stopkova.kolkovna.cz/',
   }),
   'mcdonald-s-masarykova-32': menu({
-    price: 115,
+    price: 125,
     item: 'Big Mac',
     source: 'https://ceniky.mcdonalds.cz/cenik/cenik.jsp?podtyp=11&restaurace=066',
+    verifiedAt: '2026-10-29',
   }),
   'roburrito-pekarska': menu({
     price: 205,
@@ -335,10 +337,11 @@ export const verifiedPrices = {
     source: 'http://www.uricharda.eu/',
   }),
   'vegan-af-ramen-maresova-14': range({
-    min: 139,
+    min: 249,
     max: 259,
-    item: 'ramen / bowl',
+    item: 'Vegan AF Ramen',
     source: 'https://www.veganaframen.cz/menu',
+    verifiedAt: '2026-10-29',
   }),
   'cartel-grohova-19': range({
     min: 180,
