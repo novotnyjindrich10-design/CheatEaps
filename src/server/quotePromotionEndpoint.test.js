@@ -4,7 +4,7 @@
  */
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import handler, { quotePromotionHttp } from '../../api/quote-promotion.js'
+import handler, { quotePromotionHttp } from './quotePromotion.js'
 
 const CASES = [
   ['start', 'mesicne', 99, 990, 99, 0],

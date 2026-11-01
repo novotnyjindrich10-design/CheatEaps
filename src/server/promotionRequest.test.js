@@ -5,13 +5,19 @@
  */
 import assert from 'node:assert/strict'
 import { beforeEach, describe, it } from 'node:test'
-import handler from '../../api/promotion-request.js'
 import {
   assessPromotionRequest,
   deliverPromotionRequest,
   promotionRequestHttp,
   resetPromotionRequestLimits,
 } from './promotionRequest.js'
+
+const handler = {
+  async fetch(request) {
+    const result = await promotionRequestHttp(request)
+    return Response.json(result.body, { status: result.status, headers: result.headers })
+  },
+}
 
 const now = 1_700_000_000_000
 const env = {

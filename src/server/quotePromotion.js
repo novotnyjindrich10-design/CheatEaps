@@ -1,9 +1,8 @@
 /**
- * Vercel Function: POST /api/quote-promotion
- * Vite vývojový server tenhle soubor neobsluhuje. Nasadí ho až Vercel ze složky api/.
+ * HTTP obsluha POST /api/quote-promotion.
  * Cenu počítá quoteTrustedPrice. Částku z požadavku nečte.
  */
-import { quoteTrustedPrice } from '../src/constants/promotionPrice.js'
+import { quoteTrustedPrice } from '../constants/promotionPrice.js'
 
 function json(body, status, headers) {
   return Response.json(body, { status, headers })
@@ -17,7 +16,6 @@ function missing(payload, key) {
 
 /**
  * HTTP obsluha dotazu na cenu. Druhý argument je jen pro test selhání výpočtu.
- * Produkční vstup volá quoteTrustedPrice a další pole požadavku ignoruje.
  */
 export async function quotePromotionHttp(request, quote = quoteTrustedPrice) {
   if (request.method !== 'POST') {
