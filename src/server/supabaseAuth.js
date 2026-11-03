@@ -421,7 +421,7 @@ export function mapRecoveryError(body) {
   if (blob.includes('redirect') || blob.includes('not allowed')) {
     return {
       error: 'redirect-not-allowed',
-      message: 'Návratová adresa není v Supabase povolená. Doplň ji v Redirect URLs.',
+      message: 'Odkaz pro nové heslo se teď nepodařilo dokončit. Pošli si ho znovu ze stejného webu.',
     }
   }
   if (blob.includes('rate') || blob.includes('too many')) {

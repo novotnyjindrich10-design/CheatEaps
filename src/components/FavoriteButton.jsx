@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/authSession'
 import { loginPath } from '../utils/authReturn'
+import { fetchWithTimeout } from '../utils/fetchTimeout'
 
 function Heart({ filled }) {
   return (
@@ -27,7 +28,7 @@ export default function FavoriteButton({ restaurantId }) {
   useEffect(() => {
     if (!session.ready || !session.authenticated) return undefined
     let cancelled = false
-    fetch('/api/favorites', { credentials: 'same-origin' })
+    fetchWithTimeout('/api/favorites', { credentials: 'same-origin' })
       .then((response) => response.json().catch(() => ({})))
       .then((body) => {
         if (cancelled) return
@@ -54,7 +55,7 @@ export default function FavoriteButton({ restaurantId }) {
     setError('')
     setPending(true)
     try {
-      const response = await fetch(
+      const response = await fetchWithTimeout(
         favorite ? `/api/favorites?restaurantId=${encodeURIComponent(restaurantId)}` : '/api/favorites',
         {
           method: favorite ? 'DELETE' : 'POST',
@@ -113,6 +114,11 @@ export default function FavoriteButton({ restaurantId }) {
       {error ? (
         <p className="deal-warning" role="alert">
           {error}
+        </p>
+      ) : null}
+      {session.authenticated && session.ready ? (
+        <p className="favorite-note">
+          <Link to="/oblibene">Seznam oblíbených</Link>
         </p>
       ) : null}
       {!session.authenticated && session.ready ? (

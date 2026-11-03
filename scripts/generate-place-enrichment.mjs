@@ -1,7 +1,7 @@
 /**
- * Oficiální weby a OSM fakta (kuchyně, amenity, bezlepkové, oběd) podle existujících
- * záznamů a osm-brno-food.json. Nevymýšlí URL. Regeneruj:
- *   node scripts/generate-place-enrichment.mjs
+ * Oficiální weby a OSM fakta (kuchyně, amenity, bezlepkové, oběd, otevírací doba, telefon)
+ * podle existujících záznamů a osm-brno-food.json. Nevymýšlí URL ani provozní údaje.
+ * Regeneruj: node scripts/generate-place-enrichment.mjs
  */
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { curatedPlaces } from '../src/data/curatedPlaces.js'
@@ -9,6 +9,7 @@ import { osmPlaces } from '../src/data/osmPlaces.js'
 import { isOfficialWebsite } from '../src/utils/website.js'
 import { googleRatings } from '../src/data/googleRatings.js'
 import { hasGoogleRating } from '../src/utils/googleRating.js'
+import { extractOsmContact } from '../src/utils/osmContact.js'
 
 function fold(value) {
   return String(value || '')
@@ -75,6 +76,18 @@ for (const place of places) {
   if (tags.amenity) facts.osmAmenity = String(tags.amenity)
   if (tags['diet:gluten_free'] === 'yes') facts.glutenFree = true
   if (tags.lunch === 'yes' || /^yes/i.test(String(tags.lunch || ''))) facts.lunchMenu = true
+
+  // Otevírací doba a telefon jen z OSM; nepřepisujeme jiné ověřené zdroje (ty v katalogu nejsou).
+  const contact = extractOsmContact(tags)
+  if (contact.osmOpeningHours) {
+    facts.osmOpeningHours = contact.osmOpeningHours
+    facts.osmOpeningHoursDisplay = contact.osmOpeningHoursDisplay
+  }
+  if (contact.osmPhone) {
+    facts.osmPhone = contact.osmPhone
+    facts.osmPhoneTel = contact.osmPhoneTel
+  }
+
   if (Object.keys(facts).length) osmFacts[place.id] = facts
 }
 
@@ -101,14 +114,24 @@ export const osmFacts = `,
 )
 
 const googleValues = places.map((p) => googleRatings[p.id] || {})
+const osmFactValues = Object.values(osmFacts)
+const dumpHoursRaw = [...osmByKey.values()].filter((t) => String(t.opening_hours || '').trim()).length
+const dumpPhoneRaw = [...osmByKey.values()].filter(
+  (t) => String(t.phone || t['contact:phone'] || '').trim(),
+).length
 const report = {
   totalPlaces: places.length,
   officialWebsites: Object.keys(officialWebsites).length,
   withoutOfficialWebsite: places.length - Object.keys(officialWebsites).length,
   skippedSocialOrCatalog: skippedSites.socialOrCatalog,
   osmFacts: Object.keys(osmFacts).length,
-  glutenFreeOsm: Object.values(osmFacts).filter((f) => f.glutenFree).length,
-  lunchMenuOsm: Object.values(osmFacts).filter((f) => f.lunchMenu).length,
+  glutenFreeOsm: osmFactValues.filter((f) => f.glutenFree).length,
+  lunchMenuOsm: osmFactValues.filter((f) => f.lunchMenu).length,
+  osmDumpMatchedElements: osmByKey.size,
+  osmDumpMatchedWithOpeningHoursTag: dumpHoursRaw,
+  osmDumpMatchedWithPhoneTag: dumpPhoneRaw,
+  placesWithOsmOpeningHours: osmFactValues.filter((f) => f.osmOpeningHours).length,
+  placesWithOsmPhone: osmFactValues.filter((f) => f.osmPhone).length,
   googleVerified: googleValues.filter((g) => hasGoogleRating(g)).length,
   googleNotFound: googleValues.filter((g) => g.googleRatingStatus === 'not_found').length,
   googleNeedsReview: googleValues.filter((g) => g.googleRatingStatus === 'needs_review').length,

@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-11-03T14:19:29.532Z",
+  "totals": {
+    "places": 775,
+    "verifiedPrices": 68,
+    "estimates": 707,
+    "missingCoords": 4,
+    "unknownCategory": 138,
+    "withOsmHours": 655,
+    "withOsmPhone": 379,
+    "knownDuplicatePairs": 11
+  },
+  "missingCoords": [
+    "mamas-burger",
+    "cukrarna-vetrnik-lidicka",
+    "cukrarstvi-martinak",
+    "chicken-inn-svobody"
+  ],
+  "searchProbe": {
+    "qPizza": 72,
+    "typePizza": 72,
+    "typePizzaBudget150": 0,
+    "qLevnaPizza": 72
+  }
+}

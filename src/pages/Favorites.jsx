@@ -5,6 +5,8 @@ import { useAuth } from '../context/authSession'
 import { useLocationState } from '../context/LocationContext'
 import { getRestaurantById } from '../data/restaurants'
 import { loginPath } from '../utils/authReturn'
+import { varyPixabayOnPage } from '../utils/pageIllustrations'
+import { fetchWithTimeout } from '../utils/fetchTimeout'
 
 export default function Favorites() {
   const { session } = useAuth()
@@ -17,7 +19,7 @@ export default function Favorites() {
   useEffect(() => {
     if (!session.ready || !session.authenticated) return undefined
     let cancelled = false
-    fetch('/api/favorites', { credentials: 'same-origin' })
+    fetchWithTimeout('/api/favorites', { credentials: 'same-origin' })
       .then((response) => response.json().catch(() => ({})))
       .then((body) => {
         if (cancelled) return
@@ -43,7 +45,7 @@ export default function Favorites() {
   }, [session.authenticated, session.ready])
 
   const restaurants = useMemo(
-    () => attachDistances(ids.map((id) => getRestaurantById(id)).filter(Boolean)),
+    () => varyPixabayOnPage(attachDistances(ids.map((id) => getRestaurantById(id)).filter(Boolean))),
     [attachDistances, ids],
   )
 

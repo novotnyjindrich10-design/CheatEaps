@@ -3,15 +3,6 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/authSession'
 import { rememberResetNext, postLoginTarget } from '../utils/authReturn'
 
-const SETUP_STEPS = [
-  'V Supabase založ projekt a v Authentication → Providers nech zapnutý e-mail.',
-  'Authentication → URL Configuration: Site URL nastav na adresu CheapEats (lokálně např. http://127.0.0.1:5173, na Vercelu produkční https://…).',
-  'Do Redirect URLs přidej /nove-heslo pro lokál i produkci (nebo /** na stejné doméně).',
-  'Do .env / Vercel Environment Variables doplň SUPABASE_URL a SUPABASE_ANON_KEY. Bez předpony VITE_, ať se klíč nedostane do prohlížeče.',
-  'V SQL editoru spusť supabase/bootstrap-all.sql (a případně business-applications-form-v2.sql).',
-  'Restartuj vývojový server, nebo znovu nasaď Vercel, který obsluhuje /api.',
-]
-
 export default function AuthPage({ mode = 'login' }) {
   const navigate = useNavigate()
   const [params] = useSearchParams()
@@ -41,10 +32,7 @@ export default function AuthPage({ mode = 'login' }) {
       if (!response.ok || body.ok !== true || body.sent !== true) {
         setNotice('')
         if (body.error === 'redirect-not-allowed') {
-          setError(
-            body.message ||
-              'Návratová adresa není připravená. V Supabase doplň Redirect URLs pro /nove-heslo a obnov stránku.',
-          )
+          setError(body.message || 'Odkaz pro nové heslo se teď nepodařilo připravit. Obnov stránku a zkus to znovu.')
         } else {
           setError(body.message || 'E-mail s odkazem se neposlal.')
         }
@@ -96,21 +84,16 @@ export default function AuthPage({ mode = 'login' }) {
 
       {session.unreachable ? (
         <p className="deal-warning" role="status">
-          Server přihlášení neodpovídá. Ve vývoji ho umí Vite, samotný statický build ne.
+          Přihlášení teď neodpovídá. Zkus to za chvíli.
         </p>
       ) : null}
 
       {!session.ready ? <p className="page-subtitle">Načítám stav účtu…</p> : null}
 
       {session.ready && !session.configured ? (
-        <section className="deal-panel">
-          <h2>Přihlášení ještě není zapnuté</h2>
-          <ol className="deal-steps">
-            {SETUP_STEPS.map((step) => (
-              <li key={step}>{step}</li>
-            ))}
-          </ol>
-        </section>
+        <p className="deal-warning" role="status">
+          Přihlášení teď není k dispozici. Zkus to později.
+        </p>
       ) : null}
 
       {session.configured && recover ? (
@@ -191,6 +174,11 @@ export default function AuthPage({ mode = 'login' }) {
         ) : (
           <Link to={`/registrace?next=${encodeURIComponent(next)}`}>Nemám účet</Link>
         )}
+      </p>
+      <p className="page-subtitle">
+        <Link to="/ochrana-osobnich-udaju">Ochrana osobních údajů</Link>
+        {' · '}
+        <Link to="/obchodni-podminky">Obchodní podmínky</Link>
       </p>
     </main>
   )

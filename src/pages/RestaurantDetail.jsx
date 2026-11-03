@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { getRestaurantById, mapsNavigateUrl } from '../data/restaurants'
 import { PRICE_CATEGORY_LABELS, getCategoryMeta } from '../constants/filters'
@@ -18,6 +19,13 @@ import { useLocationState } from '../context/LocationContext'
 import { dealValidityNote, publicDealsForRestaurant } from '../data/restaurantDeals'
 import FavoriteButton from '../components/FavoriteButton'
 import RestaurantReviews from '../components/RestaurantReviews'
+import { presentOsmContact } from '../utils/osmContact'
+import { applyPixabayChoice } from '../utils/pageIllustrations'
+import { applyPageMeta } from '../utils/pageMeta'
+import { useCatalog } from '../context/CatalogContext'
+import { similarRestaurants } from '../utils/similarPlaces'
+import { sharePlaceLink } from '../utils/sharePlace'
+import RestaurantCard from '../components/RestaurantCard'
 
 export default function RestaurantDetail() {
   const { id } = useParams()
@@ -25,12 +33,49 @@ export default function RestaurantDetail() {
   const backTo = safeInternalPath(location.state?.from, '/results')
   const backLabel = backTo === '/' || backTo.startsWith('/?') ? '← Domů' : '← Zpět'
   const { attachDistances } = useLocationState()
+  const { restaurants } = useCatalog()
   const restaurant = getRestaurantById(id)
+  const [shareNote, setShareNote] = useState('')
+  const similar = useMemo(
+    () => (restaurant ? similarRestaurants(restaurants, restaurant, 6) : []),
+    [restaurant, restaurants],
+  )
+
+  async function shareCurrent() {
+    const result = await sharePlaceLink({
+      title: restaurant?.name,
+      url: window.location.href,
+      share: typeof navigator.share === 'function' ? navigator.share.bind(navigator) : undefined,
+      clipboard: navigator.clipboard,
+    })
+    if (result.reason === 'abort') return
+    if (result.method === 'copy') setShareNote('Odkaz je zkopírovaný.')
+    else if (result.ok) setShareNote('Sdílení je připravené.')
+    else setShareNote('Odkaz se nepodařilo zkopírovat.')
+  }
+
+  useEffect(() => {
+    if (!restaurant) {
+      applyPageMeta({
+        title: 'Podnik nenalezen | CheapEats Brno',
+        description: 'Tenhle podnik v katalogu CheapEats Brno není.',
+        path: `/restaurant/${encodeURIComponent(id || '')}`,
+        robots: 'noindex',
+      })
+      return
+    }
+    const where = restaurant.address ? `, ${restaurant.address}` : ''
+    applyPageMeta({
+      title: `${restaurant.name} | CheapEats Brno`,
+      description: `${restaurant.name}${where}. Detail v katalogu CheapEats Brno.`.slice(0, 180),
+      path: `/restaurant/${encodeURIComponent(restaurant.id)}`,
+    })
+  }, [id, restaurant])
 
   if (!restaurant) {
     return (
       <main className="page detail-page">
-        <p>Restaurace nenalezena.</p>
+        <h1 className="section-title">Restaurace nenalezena</h1>
         <Link to={backTo} className="btn btn-secondary">
           {backLabel}
         </Link>
@@ -77,6 +122,9 @@ export default function RestaurantDetail() {
   const lede = cardExcerpt(restaurant, 220)
   const verified = hasVerifiedPrice(restaurant)
   const estimated = hasEstimatePrice(restaurant)
+  const deals = publicDealsForRestaurant(restaurant.id)
+  const contact = presentOsmContact(restaurant)
+  const heroRestaurant = applyPixabayChoice(restaurant, location.state?.pixabayId)
 
   return (
     <main className={`page detail-page theme-${foodCategory || 'default'}`}>
@@ -93,8 +141,9 @@ export default function RestaurantDetail() {
               <FavoriteButton restaurantId={restaurant.id} />
             </div>
             <p className="detail-lede">{lede}</p>
+            {address ? <p className="detail-hero-address">{address}</p> : null}
           </div>
-          <FoodHero restaurant={restaurant} />
+          <FoodHero restaurant={heroRestaurant} />
         </header>
 
         <dl className="detail-metrics">
@@ -127,7 +176,7 @@ export default function RestaurantDetail() {
           </div>
           <div className="detail-metric">
             <dt>Adresa</dt>
-            <dd className="detail-metric-address">{address}</dd>
+            <dd className="detail-metric-address">{address || 'Adresa není k dispozici'}</dd>
           </div>
         </dl>
 
@@ -148,6 +197,11 @@ export default function RestaurantDetail() {
               Oficiální web
             </a>
           ) : null}
+          {contact.hasPhone ? (
+            <a href={`tel:${contact.phoneTel}`} className="btn btn-secondary">
+              Zavolat
+            </a>
+          ) : null}
           <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
             Google Maps
           </a>
@@ -159,15 +213,87 @@ export default function RestaurantDetail() {
           >
             Navigovat
           </a>
+          <button type="button" className="btn btn-secondary" onClick={shareCurrent}>
+            Sdílet odkaz
+          </button>
+        </div>
+        {shareNote ? (
+          <p className="detail-source-note" role="status">
+            {shareNote}
+          </p>
+        ) : null}
+
+        <div className="detail-grid">
+          <section className="detail-section">
+            <h2 className="detail-section-title">O podniku</h2>
+            {paragraphs.map((p, i) => (
+              <p key={i} className="detail-description">
+                {p}
+              </p>
+            ))}
+          </section>
+
+          <section className="detail-section detail-contact" aria-labelledby="contact-title">
+            <h2 id="contact-title" className="detail-section-title">
+              Kontakt a provoz
+            </h2>
+            <dl className="detail-contact-list">
+              <div>
+                <dt>Adresa</dt>
+                <dd>{address || 'Zatím nemáme ověřenou adresu.'}</dd>
+              </div>
+              <div>
+                <dt>Telefon</dt>
+                <dd>
+                  {contact.hasPhone ? (
+                    <>
+                      <a href={`tel:${contact.phoneTel}`}>{contact.phoneDisplay}</a>
+                      <p className="detail-source-note">{contact.unverifiedNote}</p>
+                    </>
+                  ) : (
+                    <span className="detail-pending-note">
+                      Telefon v OpenStreetMap chybí, nebo zápis nejde spolehlivě přečíst.
+                    </span>
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt>Web</dt>
+                <dd>
+                  {officialWeb ? (
+                    <a href={officialWeb} target="_blank" rel="noopener noreferrer">
+                      {officialWeb.replace(/^https?:\/\//, '')}
+                    </a>
+                  ) : (
+                    'Oficiální web nemáme ověřený.'
+                  )}
+                </dd>
+              </div>
+            </dl>
+          </section>
         </div>
 
-        <section className="detail-section">
-          <h2 className="detail-section-title">O podniku</h2>
-          {paragraphs.map((p, i) => (
-            <p key={i} className="detail-description">
-              {p}
+        <section className="detail-section detail-hours" aria-labelledby="hours-title">
+          <h2 id="hours-title" className="detail-section-title">
+            Otevírací doba
+          </h2>
+          {contact.hasHours ? (
+            <>
+              <ul className="detail-hours-list">
+                {contact.hoursDisplay.split('\n').map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+              <p className="detail-source-note">
+                {contact.unverifiedNote} Stav Otevřeno / Zavřeno z těchto údajů neodvozujeme.
+              </p>
+            </>
+          ) : (
+            <p className="detail-pending-note">
+              Otevírací dobu v OpenStreetMap nemáme, nebo zápis není čitelný. Stav Otevřeno / Zavřeno
+              proto nezobrazujeme.
             </p>
-          ))}
+          )}
         </section>
 
         <section className="detail-section">
@@ -245,11 +371,11 @@ export default function RestaurantDetail() {
           </section>
         ) : null}
 
-        {publicDealsForRestaurant(restaurant.id).length > 0 ? (
+        {deals.length > 0 ? (
           <section className="detail-section" id="nabidky">
             <h2 className="detail-section-title">Slevy a výhody</h2>
             <ul className="deal-list">
-              {publicDealsForRestaurant(restaurant.id).map((deal) => (
+              {deals.map((deal) => (
                 <li key={deal.id}>
                   <Link to={`/nabidka/${encodeURIComponent(deal.id)}`} state={{ from: backTo }}>
                     {deal.headline}
@@ -262,6 +388,24 @@ export default function RestaurantDetail() {
         ) : null}
 
         <RestaurantReviews restaurantId={restaurant.id} />
+
+        {similar.length > 0 ? (
+          <section className="detail-section" aria-labelledby="similar-title">
+            <h2 id="similar-title" className="detail-section-title">
+              Podobné podniky
+            </h2>
+            <p className="detail-source-note">
+              Stejný typ kuchyně. Pořadí bere i blízkou ověřenou cenu a vzdálenost, pokud souřadnice máme.
+            </p>
+            <ul className="restaurant-list similar-list">
+              {similar.map((place, index) => (
+                <li key={place.id}>
+                  <RestaurantCard restaurant={place} index={index} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         {googleOk ? (
           <section className="detail-section">

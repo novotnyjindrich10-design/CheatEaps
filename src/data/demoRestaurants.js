@@ -1,4 +1,3 @@
-import { demoFoodImage } from './demoImages'
 import { curatedPlaces } from './curatedPlaces'
 import { osmPlaces } from './osmPlaces'
 import { verifiedPrices } from './verifiedPrices'
@@ -9,16 +8,20 @@ import { osmFacts } from './osmFacts'
 import { placeCoordinates } from './placeCoordinates'
 import { placePhotos } from './placePhotos'
 import { getPlaceFoodIllustration } from './placeFoodIllustrations'
+import { getPlacePixabayIllustration, pixabayLibraryReady } from './pixabayLibrary'
 import { getCategoryOverride } from './categoryOverrides'
 import { hasVerifiedCoordinates } from '../utils/geo'
 
 /** Poznámky o zdrojích. Odpovídají tomu, co aplikace skutečně ukazuje. */
 export const DATA_SOURCE_NOTES = [
   'Názvy a adresy pocházejí z oficiálních webů podniků a z OpenStreetMap (licence ODbL).',
-  'Na detailu podniku je fotografie z oficiálního webu, pokud ji máme. Jinak může být ilustrační fotografie typického jídla (Openverse, CC0/PDM/CC BY/CC BY-SA) nebo SVG ilustrace typu kuchyně — ani jedno není snímek konkrétního podniku.',
+  pixabayLibraryReady
+    ? 'Ilustrační fotografie pocházejí z Pixabay, jsou uložené u nás a nejsou snímkem konkrétního podniku. U každé je autor a odkaz na Pixabay. Fotografii z webu podniku ukazujeme jen tam, kde je její použití doložené.'
+    : 'Na detailu podniku je fotografie z webu podniku, pokud ji máme. Samotná adresa na webu není doložená licence k dalšímu užití. Jinak může být ilustrační fotografie typického jídla (Openverse, CC0/PDM/CC BY/CC BY-SA) nebo kresba typu kuchyně — ani jedno není snímek konkrétního podniku.',
   'Ověřenou cenu uvádíme jen s odkazem na menu. Cenový filtr bere ověřenou cenu; u rozpětí musí do limitu vejít i horní mez.',
   'Přesná poloha se na náš server neposílá. Vzdálenost je délka pěší trasy z OpenStreetMap. Podnik bez ověřené polohy ji nemá a bez polohy uživatele se číslo nezobrazí.',
   'Oficiální weby pocházejí z OpenStreetMap nebo z ručně ověřených záznamů, ne z katalogů.',
+  'Otevírací dobu a telefon bereme z OpenStreetMap, pokud je zápis čitelný. Neověřujeme je nezávisle a stav Otevřeno/Zavřeno z nich neodvozujeme.',
   'Google hodnocení zobrazujeme jako ověřené pouze po ověření přes Places API. Bez tohoto ověření je u podniku jen odkaz na vyhledání v Mapách.',
   'Sleva na kartě je jen nabídka, kterou jsme našli na oficiální stránce ISIC nebo řetězce. Kód a postup jsou až po přihlášení. Nabídka bez data konce není garantovaná.',
 ]
@@ -35,9 +38,10 @@ function place(entry) {
   const site = officialWebsites[entry.id] || {}
   const coords = placeCoordinates[entry.id] || {}
   const photo = placePhotos[entry.id] || {}
-  const foodIllustration = override?.removeIllustration
-    ? {}
-    : getPlaceFoodIllustration(entry.id) || {}
+  const openverseIllustration = override?.removeIllustration
+    ? null
+    : getPlaceFoodIllustration(entry.id)
+  const foodIllustration = getPlacePixabayIllustration(entry.id) || openverseIllustration || {}
   const restaurant = {
     isDemo: false,
     vegetarianFriendly: false,
@@ -54,8 +58,6 @@ function place(entry) {
     category,
     type: override?.type || entry.type,
     cuisineType: category,
-    imageUrl: demoFoodImage(category || 'ceske', entry.id),
-    imageAlt: `Ilustrační fotografie – ${entry.name}`,
   }
   restaurant.locationVerified = hasVerifiedCoordinates(restaurant)
   return restaurant

@@ -126,7 +126,18 @@ export default function ResultsFilters({ filters, onChange, hasOrigin = false })
           checked={filters.dealsOnly}
           onChange={(e) => onChange({ ...filters, dealsOnly: e.target.checked })}
         />
+        <FilterToggle
+          id="filter-hours"
+          label="Jen s uvedenou otevírací dobou"
+          checked={Boolean(filters.hoursOnly)}
+          onChange={(e) => onChange({ ...filters, hoursOnly: e.target.checked })}
+        />
       </div>
+      {filters.hoursOnly ? (
+        <p className="location-bar-caption">
+          Bereme jen čitelnou otevírací dobu z OpenStreetMap. Stav Otevřeno nebo Zavřeno z ní neodvozujeme.
+        </p>
+      ) : null}
       {filters.dealsOnly ? (
         <p className="location-bar-caption">
           Berou se jen nabídky, které zdroj k datu kontroly uváděl. Běžné menu ani odhad ceny sleva nejsou.

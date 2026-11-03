@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
+  adminMeHttp,
   adminReviewApplicationHttp,
   createMemoryBusinessStore,
   listPublishedPlacesHttp,
@@ -171,5 +172,153 @@ describe('API žádostí o podnik', () => {
       { store, skipRateLimit: true },
     )
     assert.equal(response.status, 400)
+  })
+})
+
+const sessionEnv = {
+  SUPABASE_URL: 'https://example.supabase.co',
+  SUPABASE_ANON_KEY: 'anon-test-key',
+}
+
+function sessionFetch() {
+  const calls = []
+  const fetchImpl = async (url, init) => {
+    const href = String(url)
+    const headers = init?.headers
+    const authorization =
+      headers && typeof headers.get === 'function'
+        ? headers.get('authorization') || ''
+        : headers?.authorization || headers?.Authorization || ''
+    calls.push({ href, authorization: String(authorization) })
+    if (!href.startsWith('https://example.supabase.co/')) {
+      return new Response(JSON.stringify({ message: 'cizí host' }), { status: 500 })
+    }
+    if (href.includes('/auth/v1/user')) {
+      if (authorization.includes('admin-access')) {
+        return new Response(
+          JSON.stringify({ id: '11111111-1111-4111-8111-111111111111', email: 'admin@example.cz' }),
+          { status: 200 },
+        )
+      }
+      if (authorization.includes('user-access')) {
+        return new Response(
+          JSON.stringify({ id: '22222222-2222-4222-8222-222222222222', email: 'user@example.cz' }),
+          { status: 200 },
+        )
+      }
+      return new Response(JSON.stringify({ message: 'bad token' }), { status: 401 })
+    }
+    if (href.includes('/rest/v1/profiles')) {
+      const admin = href.includes('11111111-1111-4111-8111-111111111111')
+      return new Response(JSON.stringify([{ is_admin: admin }]), { status: 200 })
+    }
+    if (href.includes('/rest/v1/published_places')) {
+      return new Response(JSON.stringify([]), { status: 200 })
+    }
+    return new Response(JSON.stringify({ message: 'neočekávaná adresa' }), { status: 500 })
+  }
+  return { fetchImpl, calls }
+}
+
+describe('session u zveřejněných podniků a administrace', () => {
+  it('bez přihlášení vrátí katalog a neoznačí nikoho za administrátora', async () => {
+    const { fetchImpl, calls } = sessionFetch()
+    const published = await listPublishedPlacesHttp(req('http://127.0.0.1/api/published-places'), {
+      env: sessionEnv,
+      fetchImpl,
+    })
+    const publishedBody = await published.json()
+    assert.equal(published.status, 200)
+    assert.equal(publishedBody.ok, true)
+    assert.deepEqual(publishedBody.places, [])
+    assert.equal(calls.length, 1)
+    assert.match(calls[0].href, /^https:\/\/example\.supabase\.co\/rest\/v1\/published_places/)
+    assert.match(calls[0].authorization, /anon-test-key/)
+
+    const me = await adminMeHttp(req('http://127.0.0.1/api/admin/me'), { env: sessionEnv, fetchImpl })
+    const meBody = await me.json()
+    assert.equal(me.status, 200)
+    assert.equal(meBody.authenticated, false)
+    assert.equal(meBody.admin, false)
+    assert.equal(calls.length, 1)
+  })
+
+  it('přihlášený uživatel načte katalog a není administrátor', async () => {
+    const { fetchImpl, calls } = sessionFetch()
+    const headers = { cookie: 'ce_access=user-access' }
+    const published = await listPublishedPlacesHttp(req('http://127.0.0.1/api/published-places', { headers }), {
+      env: sessionEnv,
+      fetchImpl,
+    })
+    const publishedBody = await published.json()
+    assert.equal(published.status, 200)
+    assert.equal(publishedBody.ok, true)
+    assert.equal(calls[0].href, 'https://example.supabase.co/auth/v1/user')
+    assert.match(calls[0].authorization, /user-access/)
+
+    const me = await adminMeHttp(req('http://127.0.0.1/api/admin/me', { headers }), {
+      env: sessionEnv,
+      fetchImpl,
+    })
+    const meBody = await me.json()
+    assert.equal(me.status, 200)
+    assert.equal(meBody.authenticated, true)
+    assert.equal(meBody.admin, false)
+    assert.equal(meBody.email, 'user@example.cz')
+    assert.ok(calls.some((call) => call.href.includes('/rest/v1/profiles') && call.href.includes('22222222-2222-4222-8222-222222222222')))
+    assert.equal(calls.some((call) => call.authorization.includes('admin-access')), false)
+  })
+
+  it('přihlášený administrátor dostane příznak z profilu, ne z těla požadavku', async () => {
+    const { fetchImpl, calls } = sessionFetch()
+    const headers = { cookie: 'ce_access=admin-access' }
+    const me = await adminMeHttp(req('http://127.0.0.1/api/admin/me', { headers }), {
+      env: sessionEnv,
+      fetchImpl,
+    })
+    const meBody = await me.json()
+    assert.equal(me.status, 200)
+    assert.equal(meBody.authenticated, true)
+    assert.equal(meBody.admin, true)
+    assert.ok(calls.some((call) => call.href.includes('11111111-1111-4111-8111-111111111111')))
+    assert.equal(
+      calls.every((call) => call.href.startsWith('https://example.supabase.co/')),
+      true,
+    )
+  })
+
+  it('neplatná session neshodí katalog a administrátora z ní neudělá', async () => {
+    const { fetchImpl } = sessionFetch()
+    const headers = { cookie: 'ce_access=stolen' }
+    const published = await listPublishedPlacesHttp(req('http://127.0.0.1/api/published-places', { headers }), {
+      env: sessionEnv,
+      fetchImpl,
+    })
+    assert.equal(published.status, 200)
+    const me = await adminMeHttp(req('http://127.0.0.1/api/admin/me', { headers }), {
+      env: sessionEnv,
+      fetchImpl,
+    })
+    const meBody = await me.json()
+    assert.equal(meBody.authenticated, false)
+    assert.equal(meBody.admin, false)
+  })
+
+  it('bez nastavení serveru nikoho nevolá a úspěch nepředstírá', async () => {
+    let called = false
+    const fetchImpl = async () => {
+      called = true
+      throw new Error('síť se nesmí volat')
+    }
+    const env = { SUPABASE_URL: '', SUPABASE_ANON_KEY: '' }
+    const published = await listPublishedPlacesHttp(req('http://127.0.0.1/api/published-places'), {
+      env,
+      fetchImpl,
+    })
+    const me = await adminMeHttp(req('http://127.0.0.1/api/admin/me'), { env, fetchImpl })
+    assert.equal(published.status, 503)
+    assert.equal(me.status, 503)
+    assert.equal(called, false)
+    assert.equal((await published.json()).error, 'auth-not-configured')
   })
 })

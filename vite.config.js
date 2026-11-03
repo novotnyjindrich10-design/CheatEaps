@@ -1,7 +1,9 @@
 import react from '@vitejs/plugin-react'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
+import { publicSiteOrigin, sitemapUrls, sitemapXml } from './src/utils/sitemap.js'
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -80,11 +82,49 @@ async function handleDevApi(req, res) {
   res.end(Buffer.from(await response.arrayBuffer()))
 }
 
+function catalogIds() {
+  const osm = readFileSync(path.resolve('src/data/osmPlaces.js'), 'utf8')
+  const curated = readFileSync(path.resolve('src/data/curatedPlaces.js'), 'utf8')
+  const ids = []
+  const seen = new Set()
+  for (const match of curated.matchAll(/\bid:\s*'([^']+)'/g)) {
+    if (!seen.has(match[1])) {
+      seen.add(match[1])
+      ids.push(match[1])
+    }
+  }
+  for (const match of osm.matchAll(/"id":\s*"([^"]+)"/g)) {
+    if (!seen.has(match[1])) {
+      seen.add(match[1])
+      ids.push(match[1])
+    }
+  }
+  return ids
+}
+
+function sitemapPlugin(env) {
+  return {
+    name: 'cheapeats-sitemap',
+    apply: 'build',
+    closeBundle() {
+      const origin = publicSiteOrigin(env.PUBLIC_SITE_URL)
+      if (!origin) return
+      const xml = sitemapXml(sitemapUrls(origin, catalogIds()))
+      const outDir = path.resolve('dist')
+      mkdirSync(outDir, { recursive: true })
+      writeFileSync(path.join(outDir, 'sitemap.xml'), xml)
+      const robotsPath = path.join(outDir, 'robots.txt')
+      const robots = readFileSync(robotsPath, 'utf8').replace(/\s+$/, '')
+      writeFileSync(robotsPath, `${robots}\nSitemap: ${origin}/sitemap.xml\n`)
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   return {
-    plugins: [react(), apiDevMiddleware(env)],
+    plugins: [react(), apiDevMiddleware(env), sitemapPlugin(env)],
     server: {
       watch: {
         ignored: ['**/reports/**', '**/osm-brno-*.json'],

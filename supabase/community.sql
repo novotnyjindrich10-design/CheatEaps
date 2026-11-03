@@ -215,11 +215,13 @@ begin
 end;
 $$;
 
+-- Poznámka: po nasazení věrnosti supabase/loyalty.sql tuhle funkci nahradí verzí,
+-- která zamkne moderation_status / moderated_at / moderated_by pro roli authenticated.
 create or replace function public.protect_review()
 returns trigger
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, pg_temp
 as $$
 begin
   if auth.uid() is null then

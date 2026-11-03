@@ -5,6 +5,7 @@
  */
 import { businessHttp } from './businessApplications.js'
 import { communityHttp } from './community.js'
+import { loyaltyHttp } from './loyalty.js'
 import { authActionHttp, dealDetailHttp } from './memberHttp.js'
 import { promotionRequestHttp } from './promotionRequest.js'
 import { quotePromotionHttp } from './quotePromotion.js'
@@ -20,6 +21,18 @@ const AUTH_ACTIONS = {
 }
 
 const COMMUNITY_PATHS = new Set(['/api/favorites', '/api/reviews', '/api/review-reports'])
+
+const LOYALTY_PATHS = new Set([
+  '/api/loyalty/me',
+  '/api/loyalty/history',
+  '/api/loyalty/rewards',
+  '/api/loyalty/redemptions',
+  '/api/loyalty/redeem',
+  '/api/admin/reviews/pending',
+  '/api/admin/reviews/moderate',
+  '/api/admin/loyalty/rewards',
+  '/api/admin/loyalty/rewards/codes',
+])
 
 const BUSINESS_PATHS = new Set([
   '/api/published-places',
@@ -61,6 +74,8 @@ export async function apiRouter(incoming) {
     if (pathname === '/api/deal-detail') return await dealDetailHttp(request)
 
     if (COMMUNITY_PATHS.has(pathname)) return await communityHttp(request)
+
+    if (LOYALTY_PATHS.has(pathname)) return await loyaltyHttp(request)
 
     if (BUSINESS_PATHS.has(pathname)) return await businessHttp(request)
 

@@ -174,11 +174,15 @@ describe('recenze', () => {
     const first = await saved.json()
     assert.equal(saved.status, 200)
     assert.equal(first.saved, true)
+    assert.equal(first.moderationStatus, 'pending')
     assert.equal(first.reviews[0].body, 'Dobré jídlo')
     assert.equal(first.reviews[0].authorLabel, 'Alex')
     assert.equal(first.reviews[0].authorId, USER_A)
+    assert.equal(first.reviews[0].moderationStatus, 'pending')
+    assert.equal(first.summary.count, 0)
     assert.equal(JSON.stringify(first).includes('a@student.cz'), false)
     assert.equal(JSON.stringify(first).includes('<'), false)
+    await store.forceApprove(first.reviews[0].id)
     stamp += 60_000
     const duplicate = await call('/api/reviews', {
       method: 'POST',
@@ -221,7 +225,12 @@ describe('recenze', () => {
       now,
       body: { restaurantId: PLACE, rating: 4, body: 'Také dobré' },
     })
-    const both = await other.json()
+    const pendingBoth = await other.json()
+    assert.equal(pendingBoth.moderationStatus, 'pending')
+    assert.equal(pendingBoth.summary.count, 1)
+    const bReview = pendingBoth.reviews.find((row) => row.authorId === USER_B)
+    await store.forceApprove(bReview.id)
+    const both = await call(`/api/reviews?restaurantId=${PLACE}`, { user: accountB, store }).then((r) => r.json())
     assert.equal(both.summary.count, 2)
     assert.equal(both.summary.average, 3)
     assert.equal(both.reviews[0].body, 'Také dobré')

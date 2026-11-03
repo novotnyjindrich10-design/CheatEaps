@@ -24,6 +24,9 @@ const ROUTES = [
   { path: '/api/admin/business-applications/resend-email', method: 'POST' },
   { path: '/api/promotion-request', method: 'GET', expectStatus: 405 },
   { path: '/api/quote-promotion', method: 'GET', expectStatus: 405 },
+  { path: '/api/loyalty/rewards', method: 'GET' },
+  { path: '/api/loyalty/me', method: 'GET' },
+  { path: '/api/loyalty/redeem', method: 'POST' },
 ]
 
 function req(path, init = {}) {

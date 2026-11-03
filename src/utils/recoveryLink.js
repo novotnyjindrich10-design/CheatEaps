@@ -15,6 +15,17 @@ function paramsFrom(href) {
   return { url, read, query, hash }
 }
 
+function hasAuthMarker(read) {
+  return Boolean(
+    read('access_token') ||
+      read('refresh_token') ||
+      read('code') ||
+      read('token_hash') ||
+      read('error') ||
+      read('error_code'),
+  )
+}
+
 export function parseRecoveryLink(href) {
   const parsed = paramsFrom(href)
   if (!parsed) return { status: 'missing' }
@@ -30,11 +41,12 @@ export function parseRecoveryLink(href) {
   const tokenHash = read('token_hash')
   const flowId = read('sb_flow_id')
 
-  if (type && type !== 'recovery' && !accessToken && !refreshToken && !code && !tokenHash) {
-    return { status: 'invalid', error: type }
-  }
+  // Samotný ?type=pizza (kategorie) není recovery callback — jen type s auth markery.
   if (type && type !== 'recovery' && (accessToken || refreshToken || tokenHash)) {
     return { status: 'invalid', error: type }
+  }
+  if (type && type !== 'recovery' && !accessToken && !refreshToken && !code && !tokenHash) {
+    return { status: 'missing' }
   }
 
   if (accessToken && refreshToken) {
@@ -50,6 +62,10 @@ export function parseRecoveryLink(href) {
 }
 
 export function hasRecoveryCallback(href) {
+  const parsed = paramsFrom(href)
+  if (!parsed) return false
+  // Kategorie a běžné query nesmí spouštět přesměrování na /nove-heslo.
+  if (!hasAuthMarker(parsed.read) && parsed.read('type') !== 'recovery') return false
   const recovery = parseRecoveryLink(href)
   return recovery.status === 'ready' || recovery.status === 'invalid'
 }

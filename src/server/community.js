@@ -60,7 +60,7 @@ function notConfigured() {
       configured: false,
       authenticated: false,
       error: 'auth-not-configured',
-      message: 'Přihlášení ještě není zapnuté. Chybí SUPABASE_URL nebo SUPABASE_ANON_KEY na serveru.',
+      message: 'Přihlášení teď není k dispozici. Zkus to později.',
     },
     503,
   )
@@ -106,7 +106,12 @@ function knownRestaurant(id, exists) {
   return parsed
 }
 
+function reviewStatus(review) {
+  return review.moderationStatus || review.moderation_status || 'pending'
+}
+
 function publicReview(review, viewerId) {
+  const status = reviewStatus(review)
   return {
     id: review.id,
     authorId: review.userId,
@@ -114,18 +119,26 @@ function publicReview(review, viewerId) {
     rating: review.rating,
     body: review.body,
     createdAt: review.createdAt,
+    moderationStatus: status,
     mine: Boolean(viewerId) && review.userId === viewerId,
   }
 }
 
 function reviewPayload(reviews, restaurantId, viewerId) {
-  const sorted = sortReviews(reviews)
+  const visible = reviews.filter((review) => {
+    const status = reviewStatus(review)
+    if (status === 'approved') return true
+    return Boolean(viewerId) && review.userId === viewerId
+  })
+  const approved = visible.filter((review) => reviewStatus(review) === 'approved')
+  const sorted = sortReviews(visible)
   return {
     ok: true,
     configured: true,
     restaurantId,
-    summary: cheapEatsSummary(sorted),
+    summary: cheapEatsSummary(approved),
     reviews: sorted.map((review) => publicReview(review, viewerId)),
+    reviewRewardPoints: 5,
   }
 }
 
@@ -181,7 +194,11 @@ export function createMemoryCommunity() {
       if (reviews.some((row) => row.userId === review.userId && row.restaurantId === review.restaurantId)) {
         return { ok: false, status: 409, error: 'review-exists' }
       }
-      const stored = { ...review, id: nextId() }
+      const stored = {
+        ...review,
+        id: nextId(),
+        moderationStatus: review.moderationStatus || 'pending',
+      }
       reviews.push(stored)
       return { ok: true, review: stored }
     },
@@ -216,6 +233,13 @@ export function createMemoryCommunity() {
       }
       reports.push({ reviewId, reporterId, reason })
       return { ok: true }
+    },
+    /** Testovací / admin helper: schválí recenzi bez bodů (body řeší loyalty). */
+    async forceApprove(reviewId) {
+      const review = reviews.find((row) => row.id === reviewId)
+      if (!review) return { ok: false, status: 404, error: 'review-missing' }
+      review.moderationStatus = 'approved'
+      return { ok: true, review }
     },
   }
 }
@@ -259,6 +283,7 @@ function mapRow(row) {
     body: row.body,
     authorLabel: row.author_label,
     createdAt: row.created_at,
+    moderationStatus: row.moderation_status || 'pending',
   }
 }
 
@@ -305,7 +330,7 @@ export function createSupabaseCommunity({ config, accessToken, fetchImpl }) {
         config,
         accessToken,
         fetchImpl,
-        `reviews?restaurant_id=eq.${encodeURIComponent(restaurantId)}&select=id,user_id,restaurant_id,rating,body,author_label,created_at&order=created_at.desc`,
+        `reviews?restaurant_id=eq.${encodeURIComponent(restaurantId)}&select=id,user_id,restaurant_id,rating,body,author_label,created_at,moderation_status&order=created_at.desc`,
       )
       if (!result.ok) return result
       return { ok: true, reviews: (result.body || []).map(mapRow) }
@@ -344,6 +369,7 @@ export function createSupabaseCommunity({ config, accessToken, fetchImpl }) {
           rating: review.rating,
           body: review.body,
           author_label: review.authorLabel,
+          moderation_status: 'pending',
         },
       })
       if (!result.ok && result.error === 'duplicate') return { ok: false, status: 409, error: 'review-exists' }
@@ -579,11 +605,16 @@ async function reviewsHttp(request, url, deps) {
   if (!saved.ok) return storeFailure(saved, context.cookies)
   const listed = await context.store.listReviews(restaurant.id)
   if (!listed.ok) return storeFailure(listed, context.cookies)
+  const status = saved.review?.moderationStatus || 'pending'
   return json(
     {
       ...reviewPayload(listed.reviews, restaurant.id, user.id),
       saved: true,
-      message: 'Recenze je uložená.',
+      moderationStatus: status,
+      message:
+        status === 'pending'
+          ? 'Recenze čeká na schválení. Po schválení dostaneš 5 bodů.'
+          : 'Recenze je uložená.',
     },
     200,
     context.cookies,

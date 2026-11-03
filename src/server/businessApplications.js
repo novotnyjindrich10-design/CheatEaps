@@ -104,7 +104,7 @@ function notConfigured(cookies = []) {
       ok: false,
       configured: false,
       error: 'auth-not-configured',
-      message: 'Supabase na serveru ještě není nastavené (SUPABASE_URL / SUPABASE_ANON_KEY).',
+      message: 'Tahle část webu teď není k dispozici. Zkus to později.',
     },
     503,
     cookies,
@@ -430,24 +430,26 @@ async function readBody(request, max = 450_000) {
 }
 
 async function resolveStore(request, options) {
-  if (options.store) {
-    const resolved = options.user
-      ? { user: options.user, accessToken: options.accessToken || '', cookies: [] }
-      : await resolveUser(request, options.env ?? process.env, options).catch(() => ({
-          user: null,
-          accessToken: '',
-          cookies: [],
-        }))
-    return { store: options.store, resolved, config: options.config || null }
-  }
   const env = options.env ?? process.env
   const config = authConfig(env)
-  if (!config) return { error: notConfigured() }
-  const resolved = await resolveUser(request, env, options)
+  const fetchImpl = typeof options.fetchImpl === 'function' ? options.fetchImpl : fetch
+  let resolved
+  if (options.user) {
+    resolved = { user: options.user, accessToken: options.accessToken || '', cookies: [] }
+  } else if (!config.configured) {
+    resolved = { user: null, accessToken: '', cookies: [] }
+  } else {
+    resolved = await resolveUser(request, config, fetchImpl)
+  }
+
+  if (options.store) {
+    return { store: options.store, resolved, config: config.configured ? config : null }
+  }
+  if (!config.configured) return { error: notConfigured() }
   const store = createSupabaseBusinessStore({
     config,
     accessToken: resolved.accessToken || '',
-    fetchImpl: options.fetchImpl ?? fetch,
+    fetchImpl,
   })
   return { store, resolved, config }
 }

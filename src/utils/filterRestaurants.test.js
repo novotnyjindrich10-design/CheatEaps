@@ -113,7 +113,7 @@ describe('filtr maximální ceny', () => {
 })
 
 describe('hledání restaurace', () => {
-  it('hledá název a adresu, ne samotný typ jídla', () => {
+  it('hledá název, adresu i kategorii kuchyně', () => {
     const places = [
       place('type-only', {
         name: 'La Strada',
@@ -126,8 +126,8 @@ describe('hledání restaurace', () => {
       place('street', { name: 'U Lípy', type: 'Česká', category: 'ceske', address: 'Pekařská 12' }),
     ]
     assert.deepEqual(
-      filterAndSortRestaurants(places, { search: 'pizza' }).map((item) => item.id),
-      ['named'],
+      filterAndSortRestaurants(places, { search: 'pizza' }).map((item) => item.id).sort(),
+      ['named', 'type-only'],
     )
     assert.deepEqual(
       filterAndSortRestaurants(places, { search: 'pekařská' }).map((item) => item.id),
@@ -138,6 +138,26 @@ describe('hledání restaurace', () => {
       ['street'],
     )
     assert.equal(foldSearchText('  Šťatl   Brno '), 'statl brno')
+  })
+
+  it('u víceslovného dotazu vyžaduje všechna významná slova a ignoruje stopslova', () => {
+    const places = [
+      place('match', {
+        name: 'La Strada',
+        category: 'pizza',
+        address: 'Veveří 10, Brno',
+        price: 110,
+        priceKind: 'menu',
+        priceSource: SOURCE,
+        priceVerifiedAt: VERIFIED_AT,
+      }),
+      place('wrong-street', { name: 'Pizza Roma', category: 'pizza', address: 'Česká 1, Brno' }),
+      place('burger', { name: 'Burger Veveří', category: 'burger', address: 'Veveří 2, Brno' }),
+    ]
+    assert.deepEqual(
+      filterAndSortRestaurants(places, { search: 'levná pizza veveří' }).map((item) => item.id),
+      ['match'],
+    )
   })
 })
 

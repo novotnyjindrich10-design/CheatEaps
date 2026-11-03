@@ -1,7 +1,7 @@
 import { hasVerifiedCoordinates } from './geo.js'
 import { hasGoogleRating } from './googleRating.js'
 import { hasVerifiedPrice } from './price.js'
-import { foodIllustration, officialHero } from './placePhoto.js'
+import { resolveDetailHero } from './placePhoto.js'
 import { httpUrl, officialWebsiteOf } from './website.js'
 
 /**
@@ -18,6 +18,7 @@ const WEIGHTS = {
   officialPhoto: 22,
   foodPhoto: 6,
   knownCategory: 5,
+  curated: 8,
   dietNote: 2,
   ratingStar: 2,
   ratingReviewsFew: 2,
@@ -43,12 +44,12 @@ function knownCategory(restaurant) {
 }
 
 function photoPoints(restaurant) {
-  const official = officialHero(restaurant)
-  if (official && httpUrl(official.url)) return WEIGHTS.officialPhoto
-  const food = foodIllustration(restaurant)
-  const url = food?.url || ''
+  const shown = resolveDetailHero(restaurant)
+  if (!shown) return 0
+  const url = shown.url || ''
+  if (shown.kind === 'official' && httpUrl(url)) return WEIGHTS.officialPhoto
   const localFood = typeof url === 'string' && url.startsWith('/food-illustrations/')
-  if (food && (localFood || httpUrl(url))) return WEIGHTS.foodPhoto
+  if (shown.kind === 'illustration' && (localFood || httpUrl(url))) return WEIGHTS.foodPhoto
   return 0
 }
 
@@ -76,6 +77,7 @@ export function recordQualityParts(restaurant) {
   const rating = ratingPoints(restaurant)
   const other =
     (knownCategory(restaurant) ? WEIGHTS.knownCategory : 0) +
+    (restaurant?.curated ? WEIGHTS.curated : 0) +
     (String(restaurant?.vegetarianInfo || '').trim() ? WEIGHTS.dietNote : 0)
   return {
     information,

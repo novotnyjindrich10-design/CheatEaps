@@ -98,8 +98,10 @@ export default function LocationBar({ places = [], variant = 'default' }) {
           ) : null}
         </div>
       ) : null}
-      {active && routeStatus === 'loading' ? <p className="location-bar-caption">Počítám pěší vzdálenost…</p> : null}
-      {active && routeMessage ? (
+      {variant !== 'hero' && active && routeStatus === 'loading' ? (
+        <p className="location-bar-caption">Počítám pěší vzdálenost…</p>
+      ) : null}
+      {variant !== 'hero' && active && routeMessage ? (
         <p className="location-bar-note" role="status">
           {routeMessage}
         </p>

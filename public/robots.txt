@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /prihlaseni
+Disallow: /registrace
+Disallow: /nove-heslo

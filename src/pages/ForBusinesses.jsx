@@ -41,7 +41,9 @@ export default function ForBusinesses() {
             <li>Po odeslání žádost zkontroluje administrátor. Teprve po schválení se podnik objeví ve výsledcích.</li>
           </ol>
           <p>
-            Osobní podporu projektu najdeš na stránce <Link to="/podpor-me">Podpoř mě</Link>.
+            Osobní podporu projektu najdeš na stránce <Link to="/podpor-me">Podpoř mě</Link>. Text{' '}
+            <Link to="/obchodni-podminky">obchodních podmínek</Link> a{' '}
+            <Link to="/ochrana-osobnich-udaju">ochrany osobních údajů</Link> ještě musí doplnit provozovatel.
           </p>
         </section>
       )}

@@ -73,11 +73,46 @@ describe('placePhoto', () => {
     assert.equal(resolveDetailHero(null), null)
   })
 
+  it('nedoložená fotka z webu ustoupí ilustraci z Pixabay', () => {
+    const restaurant = {
+      name: 'Test',
+      heroImageKind: 'official',
+      heroImageUrl: 'https://example.cz/og.jpg',
+      foodIllustrationKind: 'pixabay',
+      foodIllustrationUrl: '/food-illustrations/pixabay/1.jpg',
+      foodIllustrationDetailUrl: '/food-illustrations/pixabay/1.jpg',
+      foodIllustrationDish: 'pizza',
+      foodIllustrationPixabayId: 1,
+      foodIllustrationLicense: 'pixabay',
+    }
+    const photo = resolveDetailHero(restaurant)
+    assert.equal(photo.provider, 'pixabay')
+    assert.equal(photo.kind, 'illustration')
+    assert.match(photo.alt, /Ilustrační/)
+    assert.match(photo.alt, /pizza/)
+  })
+
+  it('doložená oficiální fotka má přednost před Pixabay', () => {
+    const photo = resolveDetailHero({
+      name: 'Test',
+      heroImageKind: 'official',
+      heroImageRights: 'documented',
+      heroImageUrl: 'https://example.cz/oficialni.jpg',
+      foodIllustrationKind: 'pixabay',
+      foodIllustrationUrl: '/food-illustrations/pixabay/1.jpg',
+      foodIllustrationDish: 'pizza',
+    })
+    assert.equal(photo.kind, 'official')
+    assert.equal(photo.rights, 'documented')
+    assert.equal(photo.url, 'https://example.cz/oficialni.jpg')
+  })
+
   it('licence a atribuce', () => {
     assert.equal(licenseLabel('cc0'), 'CC0')
     assert.equal(licenseLabel('pdm'), 'Public Domain')
     assert.equal(licenseLabel('by'), 'CC BY')
     assert.equal(licenseLabel('by-sa'), 'CC BY-SA')
+    assert.equal(licenseLabel('pixabay'), 'Pixabay')
     assert.equal(needsAttribution('cc0'), false)
     assert.equal(needsAttribution('pdm'), false)
     assert.equal(needsAttribution('by'), true)

@@ -4,6 +4,7 @@ import StarRating from './StarRating'
 import { useAuth } from '../context/authSession'
 import { loginPath } from '../utils/authReturn'
 import { formatReviewDate } from '../utils/communityText'
+import { fetchWithTimeout } from '../utils/fetchTimeout'
 
 const EMPTY = {
   summary: { count: 0, average: null, label: 'Zatím bez hodnocení' },
@@ -26,7 +27,7 @@ export default function RestaurantReviews({ restaurantId }) {
 
   useEffect(() => {
     let cancelled = false
-    fetch(`/api/reviews?restaurantId=${encodeURIComponent(restaurantId)}`, { credentials: 'same-origin' })
+    fetchWithTimeout(`/api/reviews?restaurantId=${encodeURIComponent(restaurantId)}`, { credentials: 'same-origin' })
       .then((response) => response.json().catch(() => ({})))
       .then((body) => {
         if (cancelled) return
@@ -69,7 +70,7 @@ export default function RestaurantReviews({ restaurantId }) {
     setNotice('')
     setPending(true)
     try {
-      const response = await fetch('/api/reviews', {
+      const response = await fetchWithTimeout('/api/reviews', {
         method: mine ? 'PUT' : 'POST',
         credentials: 'same-origin',
         headers: { 'content-type': 'application/json' },
@@ -97,7 +98,7 @@ export default function RestaurantReviews({ restaurantId }) {
     setPending(true)
     setError('')
     try {
-      const response = await fetch(`/api/reviews?restaurantId=${encodeURIComponent(restaurantId)}`, {
+      const response = await fetchWithTimeout(`/api/reviews?restaurantId=${encodeURIComponent(restaurantId)}`, {
         method: 'DELETE',
         credentials: 'same-origin',
       })
@@ -221,7 +222,7 @@ function ReviewItem({ review, onReported, onError }) {
     event.preventDefault()
     setPending(true)
     try {
-      const response = await fetch('/api/review-reports', {
+      const response = await fetchWithTimeout('/api/review-reports', {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'content-type': 'application/json' },
@@ -246,7 +247,12 @@ function ReviewItem({ review, onReported, onError }) {
   return (
     <article className="review-item" data-author-id={review.authorId}>
       <header className="review-item-head">
-        <strong>{review.authorLabel}</strong>
+        <strong>
+          {review.authorLabel}
+          {review.moderationStatus === 'pending' ? (
+            <span className="review-pending-badge">Čeká na schválení</span>
+          ) : null}
+        </strong>
         <StarRating rating={review.rating} size="sm" source="CheapEats" />
         {date ? <time dateTime={review.createdAt}>{date}</time> : null}
       </header>

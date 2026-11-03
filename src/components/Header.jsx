@@ -9,6 +9,25 @@ function isActive(pathname, to) {
   return pathname === to || pathname.startsWith(`${to}/`)
 }
 
+function NavLinks({ links, pathname, onNavigate, linkClass, firstItemRef }) {
+  return links.map((item, index) => {
+    const active = isActive(pathname, item.to)
+    return (
+      <li key={item.to}>
+        <Link
+          ref={index === 0 ? firstItemRef : undefined}
+          to={item.to}
+          className={`${linkClass}${active ? ' is-active' : ''}`}
+          aria-current={active ? 'page' : undefined}
+          onClick={onNavigate}
+        >
+          {item.label}
+        </Link>
+      </li>
+    )
+  })
+}
+
 export default function Header() {
   const location = useLocation()
   const { pathname } = location
@@ -68,6 +87,7 @@ export default function Header() {
 
   const links = [
     { to: '/results', label: 'Najít jídlo' },
+    { to: '/odmeny', label: 'Slevy a body' },
     { to: '/oblibene', label: 'Oblíbené' },
     { to: '/pro-podniky', label: 'Pro podniky' },
     { to: '/podpor-me', label: 'Podpoř mě' },
@@ -75,17 +95,49 @@ export default function Header() {
 
   if (isAdmin) {
     links.push({ to: '/admin/zadosti', label: 'Administrace žádostí' })
+    links.push({ to: '/admin/odmeny', label: 'Odměny a recenze' })
   }
+
+  const close = () => setOpen(false)
 
   return (
     <header className="site-header">
       <div className="site-header-inner" ref={rootRef}>
-        <Link to="/" className="brand" onClick={() => setOpen(false)}>
-          <Logo size={48} />
+        <Link to="/" className="brand" onClick={close}>
+          <Logo size={44} />
           <span className="brand-text">
             CheapEats <em>Brno</em>
           </span>
         </Link>
+
+        <nav className="header-desktop-nav" aria-label="Hlavní menu">
+          <ul className="header-desktop-list">
+            <NavLinks links={links} pathname={pathname} linkClass="header-desktop-link" />
+          </ul>
+          <div className="header-desktop-account">
+            {session.authenticated ? (
+              <>
+                <span className="header-account" title={session.email}>
+                  {session.email}
+                </span>
+                <button type="button" className="header-link header-logout" onClick={logout}>
+                  Odhlásit
+                </button>
+              </>
+            ) : (
+              <Link
+                to={loginPath(returnTo)}
+                className={`header-desktop-link header-desktop-link--cta${
+                  pathname.startsWith('/prihlaseni') || pathname.startsWith('/registrace')
+                    ? ' is-active'
+                    : ''
+                }`}
+              >
+                Přihlášení
+              </Link>
+            )}
+          </div>
+        </nav>
 
         <div className="header-menu">
           <button
@@ -106,7 +158,7 @@ export default function Header() {
           <nav
             id={menuId}
             className={`header-menu-panel${open ? ' is-open' : ''}`}
-            aria-label="Hlavní menu"
+            aria-label="Mobilní menu"
             aria-hidden={!open}
             inert={!open ? true : undefined}
           >
@@ -116,29 +168,20 @@ export default function Header() {
                 type="button"
                 className="header-menu-close"
                 aria-label="Zavřít menu"
-                onClick={() => setOpen(false)}
+                onClick={close}
               >
                 ×
               </button>
             </div>
 
             <ul className="header-menu-list">
-              {links.map((item, index) => {
-                const active = isActive(pathname, item.to)
-                return (
-                  <li key={item.to}>
-                    <Link
-                      ref={index === 0 ? firstItemRef : undefined}
-                      to={item.to}
-                      className={`header-menu-link${active ? ' is-active' : ''}`}
-                      aria-current={active ? 'page' : undefined}
-                      onClick={() => setOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                )
-              })}
+              <NavLinks
+                links={links}
+                pathname={pathname}
+                onNavigate={close}
+                linkClass="header-menu-link"
+                firstItemRef={firstItemRef}
+              />
 
               {session.authenticated ? (
                 <>
@@ -150,7 +193,7 @@ export default function Header() {
                       type="button"
                       className="header-menu-link header-menu-button"
                       onClick={() => {
-                        setOpen(false)
+                        close()
                         logout()
                       }}
                     >
@@ -163,7 +206,7 @@ export default function Header() {
                   <Link
                     to={loginPath(returnTo)}
                     className={`header-menu-link${pathname.startsWith('/prihlaseni') ? ' is-active' : ''}`}
-                    onClick={() => setOpen(false)}
+                    onClick={close}
                   >
                     Přihlášení
                   </Link>

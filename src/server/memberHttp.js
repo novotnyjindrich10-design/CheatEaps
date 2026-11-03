@@ -55,7 +55,7 @@ function notConfigured() {
       configured: false,
       authenticated: false,
       error: 'auth-not-configured',
-      message: 'Přihlášení ještě není zapnuté. Chybí SUPABASE_URL nebo SUPABASE_ANON_KEY na serveru.',
+      message: 'Přihlášení teď není k dispozici. Zkus to později.',
     },
     503,
   )
@@ -105,7 +105,7 @@ export async function authActionHttp(action, request, deps = {}) {
           sent: false,
           error: 'redirect-not-allowed',
           message:
-            'Návratovou adresu se nepodařilo sestavit. Obnov stránku a zkus to znovu, nebo v Supabase doplň Redirect URLs pro /nove-heslo.',
+            'Odkaz pro nové heslo se teď nepodařilo připravit. Obnov stránku a zkus to znovu.',
         },
         400,
       )

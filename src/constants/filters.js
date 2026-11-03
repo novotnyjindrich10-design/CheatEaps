@@ -3,6 +3,17 @@
  * Pořadí je odhad poptávky: v projektu nejsou statistiky používání kategorií.
  * Napřed běžné volby, potom ostatní.
  */
+
+/** Speciální dlaždice — nefiltruje restaurace, otevírá věrnostní odměny. */
+export const LOYALTY_CATEGORY = {
+  value: 'slevy',
+  label: 'Slevy',
+  emoji: '🎁',
+  home: true,
+  special: true,
+  href: '/odmeny',
+}
+
 export const FOOD_CATEGORIES = [
   { value: 'pizza', label: 'Pizza', emoji: '🍕', home: true },
   { value: 'burger', label: 'Burger', emoji: '🍔', home: true },
@@ -19,7 +30,14 @@ export const FOOD_CATEGORIES = [
   { value: 'zdrave', label: 'Zdravé', emoji: '🥑', home: true },
 ]
 
-export const HOME_CATEGORIES = FOOD_CATEGORIES.filter((c) => c.home)
+/** Pořadí v CategoryStrip: Slevy první, pak jídlo. */
+export const STRIP_CATEGORIES = [LOYALTY_CATEGORY, ...FOOD_CATEGORIES]
+
+export const HOME_CATEGORIES = [LOYALTY_CATEGORY, ...FOOD_CATEGORIES.filter((c) => c.home)]
+
+export function isLoyaltyCategory(value) {
+  return value === LOYALTY_CATEGORY.value
+}
 
 /** Kategorie, když OSM tagy nestačí. Není v dlaždicích na úvodní stránce. */
 export const UNKNOWN_CATEGORY = 'neuvedeno'
@@ -32,6 +50,7 @@ export const ALLOWED_PLACE_CATEGORIES = [
 /** Odkaz z hlavní stránky / karet kategorií na `type` (včetně Bez masa a Vegan). */
 export function buildCategoryHref(value) {
   if (!value) return '/results'
+  if (isLoyaltyCategory(value)) return LOYALTY_CATEGORY.href
   return `/results?type=${encodeURIComponent(value)}`
 }
 
@@ -83,11 +102,13 @@ export const DISTANCE_OPTIONS = [
 ]
 
 export const SORT_OPTIONS = [
+  { value: 'relevance', label: 'Nejrelevantnější' },
   { value: 'quality', label: 'Nejlíp zdokumentované' },
-  { value: 'rating', label: 'Nejlépe hodnocené' },
   { value: 'price-asc', label: 'Nejlevnější' },
   { value: 'price-desc', label: 'Nejdražší' },
   { value: 'distance', label: 'Nejblíž ke mně' },
+  { value: 'name', label: 'Abecedně' },
+  { value: 'rating', label: 'Ověřené Google hodnocení' },
 ]
 
 export const PRICE_CATEGORY_LABELS = {
@@ -98,5 +119,6 @@ export const PRICE_CATEGORY_LABELS = {
 
 export function normalizeCategoryParam(value) {
   if (!value) return ''
-  return LEGACY_CATEGORY_MAP[value] ?? value
+  const mapped = LEGACY_CATEGORY_MAP[value] ?? value
+  return FOOD_CATEGORIES.some((item) => item.value === mapped) ? mapped : ''
 }

@@ -55,6 +55,12 @@ describe('odkaz na nové heslo', () => {
 
     assert.equal(hasRecoveryCallback('http://127.0.0.1:5173/#access_token=a&refresh_token=b&type=recovery'), true)
     assert.equal(hasRecoveryCallback('http://127.0.0.1:5173/results'), false)
+    assert.equal(hasRecoveryCallback('http://127.0.0.1:5173/results?type=pizza'), false)
+    assert.equal(hasRecoveryCallback('http://127.0.0.1:5173/results?type=burger'), false)
+    assert.equal(hasRecoveryCallback('http://127.0.0.1:5173/results?type=asijske'), false)
+    assert.equal(hasRecoveryCallback('http://127.0.0.1:5173/results?type=kava'), false)
+    assert.equal(parseRecoveryLink('http://127.0.0.1:5173/results?type=pizza').status, 'missing')
+    assert.equal(hasRecoveryCallback('http://127.0.0.1:5173/?error=access_denied&error_code=otp_expired'), true)
     assert.deepEqual(
       recoveryCallbackLocation('http://127.0.0.1:5173/#access_token=a&refresh_token=b&type=recovery'),
       {

@@ -20,8 +20,8 @@ export const SETUP_TIME = {
 
 /** Co ještě není hotové, než se žádosti mají přijímat veřejně a než se má platit. */
 export const ORDER_GAPS = [
-  'Obchodní podmínky v projektu nejsou. Před veřejným spuštěním je potřeba je sepsat a na stránku odkázat.',
-  'Informace o zpracování osobních údajů v projektu nejsou. Před veřejným spuštěním je potřeba popsat, jaké údaje odcházejí e-mailem a kdo k nim má přístup.',
+  'Obchodní podmínky mají stránku /obchodni-podminky, ale text musí doplnit provozovatel. Dokud je tam označení k doplnění, nejde o platné podmínky.',
+  'Zásady ochrany osobních údajů mají stránku /ochrana-osobnich-udaju, ale identitu správce a právní text musí doplnit provozovatel.',
   'Žádost o zkušební měsíc je jen nezávazná prosba o kontakt. Neukládá se jako objednávka a fotografie se nenahrávají.',
   'Platební brána není zapojená. Z této stránky se nic nestrhává a předplatné se samo nespustí.',
 ]

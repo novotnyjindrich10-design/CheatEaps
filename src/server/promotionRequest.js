@@ -215,7 +215,7 @@ export function assessPromotionRequest(payload, now = Date.now()) {
       : 'Fotografie: žádné',
     '',
     'Stav: žádost o ruční kontakt. Platba neproběhla. Propagace není aktivní. Předplatné se nespustilo.',
-    'Obchodní podmínky a informace o zpracování osobních údajů na webu zatím nejsou.',
+    'Obchodní podmínky a zásady ochrany osobních údajů jsou na webu jen jako kostra. Právní text musí doplnit provozovatel.',
   ].join('\n')
 
   return {

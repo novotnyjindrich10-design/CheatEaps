@@ -651,6 +651,20 @@ export const categoryOverrides = {
     "confidence": "high",
     "evidence": "Kebab v názvu a nabídce (oprava z fastfood).",
     "sourceUrl": ""
+  },
+  "doe-boy-pizza-napoletana-brno-stefanikova-39": {
+    "category": "pizza",
+    "type": "Pizza",
+    "confidence": "high",
+    "evidence": "Název přímo uvádí Pizza Napoletana; nejde o odhad z obecných slov.",
+    "sourceUrl": ""
+  },
+  "local-cafe-restaurant-majdalenky-10": {
+    "category": "kava",
+    "type": "Kavárna",
+    "confidence": "medium",
+    "evidence": "Název LOCAL Cafe&Restaurant označuje kavárnu; bez menu nepřesouváme do jiné kuchyně.",
+    "sourceUrl": ""
   }
 }
 

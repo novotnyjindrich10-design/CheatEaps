@@ -3,6 +3,7 @@ export function officialHero(restaurant) {
   if (!restaurant.heroImageUrl) return null
   return {
     kind: 'official',
+    rights: restaurant.heroImageRights === 'documented' ? 'documented' : 'undocumented',
     url: restaurant.heroImageUrl,
     alt: restaurant.heroImageAlt || `Jídlo z oficiálního webu – ${restaurant.name}`,
     source: restaurant.heroImageSource || restaurant.officialWebsite,
@@ -11,15 +12,25 @@ export function officialHero(restaurant) {
 }
 
 export function foodIllustration(restaurant) {
-  if (restaurant?.foodIllustrationKind !== 'openverse') return null
+  const kind = restaurant?.foodIllustrationKind
+  if (kind !== 'openverse' && kind !== 'pixabay') return null
   if (!restaurant.foodIllustrationUrl) return null
+  const dish = restaurant.foodIllustrationDish || 'jídlo'
   return {
     kind: 'illustration',
+    provider: kind,
     url: restaurant.foodIllustrationUrl,
+    detailUrl: restaurant.foodIllustrationDetailUrl || restaurant.foodIllustrationUrl,
+    srcSet: restaurant.foodIllustrationSrcSet || '',
+    width: restaurant.foodIllustrationWidth || undefined,
+    height: restaurant.foodIllustrationHeight || undefined,
+    color: restaurant.foodIllustrationColor || '',
     alt:
       restaurant.foodIllustrationAlt ||
-      `Ilustrační fotografie: ${restaurant.foodIllustrationDish || 'jídlo'} (ne jídlo z podniku ${restaurant.name || ''})`,
-    dish: restaurant.foodIllustrationDish || '',
+      `Ilustrační fotografie: ${dish} (ne jídlo z podniku ${restaurant.name || ''})`,
+    dish,
+    theme: restaurant.foodIllustrationTheme || '',
+    pixabayId: restaurant.foodIllustrationPixabayId,
     license: restaurant.foodIllustrationLicense || '',
     licenseUrl: restaurant.foodIllustrationLicenseUrl || '',
     creator: restaurant.foodIllustrationCreator || '',
@@ -29,9 +40,17 @@ export function foodIllustration(restaurant) {
   }
 }
 
-/** Detail: oficiální foto → ilustrace jídla → null (SVG kuchyně). */
+/**
+ * Doložená oficiální fotka má přednost.
+ * Ilustrace z Pixabay nahradí hotlink z webu podniku, u kterého není doložená licence.
+ * Jinak zůstane oficiální snímek a až po něm starší ilustrace.
+ */
 export function resolveDetailHero(restaurant) {
-  return officialHero(restaurant) || foodIllustration(restaurant) || null
+  const official = officialHero(restaurant)
+  const illustration = foodIllustration(restaurant)
+  if (official?.rights === 'documented') return official
+  if (illustration?.provider === 'pixabay') return illustration
+  return official || illustration || null
 }
 
 export function licenseLabel(license) {
@@ -40,6 +59,7 @@ export function licenseLabel(license) {
   if (key === 'pdm') return 'Public Domain'
   if (key === 'by') return 'CC BY'
   if (key === 'by-sa') return 'CC BY-SA'
+  if (key === 'pixabay') return 'Pixabay'
   return license || ''
 }
 

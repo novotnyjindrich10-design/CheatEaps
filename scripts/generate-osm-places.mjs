@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { curatedPlaces } from '../src/data/curatedPlaces.js'
 import { osmPlaces as previousOsmPlaces } from '../src/data/osmPlaces.js'
+import { extractOsmContact } from '../src/utils/osmContact.js'
 
 function fold(value) {
   return String(value || '')
@@ -169,6 +170,16 @@ for (const el of osm.elements || []) {
     row.vegetarianInfo = 'V OpenStreetMap je u podniku vyznačená vegetariánská nabídka (diet:vegetarian / cuisine).'
   }
 
+  const contact = extractOsmContact(t)
+  if (contact.osmOpeningHours) {
+    row.osmOpeningHours = contact.osmOpeningHours
+    row.osmOpeningHoursDisplay = contact.osmOpeningHoursDisplay
+  }
+  if (contact.osmPhone) {
+    row.osmPhone = contact.osmPhone
+    row.osmPhoneTel = contact.osmPhoneTel
+  }
+
   places.push(row)
 }
 
@@ -209,12 +220,33 @@ for (const p of places) {
   if (prev.category !== p.category) categoryChanged += 1
 }
 
+// Zachovej existující záznamy (včetně category overrides) a jen doplň OSM kontakt.
+const freshById = new Map(places.map((p) => [p.id, p]))
+const merged = previousOsmPlaces.map((prev) => {
+  const fresh = freshById.get(prev.id)
+  const next = { ...prev }
+  delete next.osmOpeningHours
+  delete next.osmOpeningHoursDisplay
+  delete next.osmPhone
+  delete next.osmPhoneTel
+  if (!fresh) return next
+  if (fresh.osmOpeningHours) {
+    next.osmOpeningHours = fresh.osmOpeningHours
+    next.osmOpeningHoursDisplay = fresh.osmOpeningHoursDisplay
+  }
+  if (fresh.osmPhone) {
+    next.osmPhone = fresh.osmPhone
+    next.osmPhoneTel = fresh.osmPhoneTel
+  }
+  return next
+})
+
 const header = `/** Auto-generated from OpenStreetMap Overpass. Regeneruj: node scripts/generate-osm-places.mjs */
 export const osmPlaces = `
 
 writeFileSync(
   new URL('../src/data/osmPlaces.js', import.meta.url),
-  `${header}${JSON.stringify(places, null, 2)}\n`,
+  `${header}${JSON.stringify(merged, null, 2)}\n`,
   'utf8',
 )
 
@@ -223,5 +255,7 @@ console.log({
   withCurated: places.length + curatedPlaces.length,
   categoryChanged,
   unknownCategory: places.filter((p) => p.category === 'neuvedeno').length,
+  withOpeningHours: merged.filter((p) => p.osmOpeningHours).length,
+  withPhone: merged.filter((p) => p.osmPhone).length,
   skipped,
 })
