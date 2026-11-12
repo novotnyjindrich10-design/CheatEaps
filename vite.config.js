@@ -126,6 +126,8 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), apiDevMiddleware(env), sitemapPlugin(env)],
     server: {
+      // IPv4 i IPv6 — jinak http://127.0.0.1:5173 končí ERR_CONNECTION_REFUSED (jen ::1).
+      host: true,
       watch: {
         ignored: ['**/reports/**', '**/osm-brno-*.json'],
       },

@@ -8,7 +8,12 @@ import {
   sameCoordinates,
   UI_LOCATE_DEADLINE_MS,
 } from '../utils/geolocationLocate'
-import { applyRouteDistances, collectRouteDistances } from '../utils/routeDistance'
+import {
+  applyRouteDistances,
+  collectRouteDistances,
+  isFootRoutingEnabled,
+  resolveFootRouteTableUrl,
+} from '../utils/routeDistance'
 
 const STORAGE_ORIGIN = 'cheapeats.geo.origin'
 const STORAGE_PROMPT = 'cheapeats.geo.prompt'
@@ -307,6 +312,7 @@ export function LocationProvider({ children }) {
   )
 
   const originCacheKey = origin && hasFiniteLatLon(origin.lat, origin.lon) ? originKey(origin) : ''
+  const footRoutingOn = isFootRoutingEnabled()
   const cachedRoute = originCacheKey ? routeMemory.get(originCacheKey) : null
   let routeDistances = EMPTY_DISTANCES
   let routeStatus = 'idle'
@@ -315,6 +321,11 @@ export function LocationProvider({ children }) {
     routeDistances = cachedRoute.distances
     routeStatus = cachedRoute.status
     routeMessage = cachedRoute.message
+  } else if (originCacheKey && !footRoutingOn) {
+    // Haversine jen lokálně — bez volání veřejného demo OSRM.
+    routeDistances = EMPTY_DISTANCES
+    routeStatus = 'ready'
+    routeMessage = ''
   } else if (originCacheKey && routeState.key === originCacheKey) {
     routeDistances = routeState.distances
     routeStatus = routeState.status
@@ -324,7 +335,7 @@ export function LocationProvider({ children }) {
   }
 
   useEffect(() => {
-    if (!originCacheKey) return undefined
+    if (!originCacheKey || !footRoutingOn) return undefined
     if (routeMemory.has(originCacheKey)) return undefined
 
     const controller = new AbortController()
@@ -333,6 +344,7 @@ export function LocationProvider({ children }) {
 
     collectRouteDistances(origin, targets, {
       signal: controller.signal,
+      endpoint: resolveFootRouteTableUrl(),
       onChunk(distances) {
         if (!cancelled) {
           setRouteState({ key: originCacheKey, distances, status: 'loading', message: '' })
@@ -369,7 +381,7 @@ export function LocationProvider({ children }) {
       cancelled = true
       controller.abort()
     }
-  }, [origin, originCacheKey])
+  }, [origin, originCacheKey, footRoutingOn])
 
   const attachDistances = useCallback(
     (places) =>

@@ -378,7 +378,7 @@ export default function Results() {
 
             {viewMode === 'map' ? (
               <Suspense fallback={<p className="section-desc">Načítám mapu…</p>}>
-                <RestaurantMap restaurants={mapPlaces} />
+                <RestaurantMap restaurants={mapPlaces} userOrigin={origin} />
               </Suspense>
             ) : (
               <>

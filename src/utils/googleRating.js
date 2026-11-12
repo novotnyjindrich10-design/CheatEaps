@@ -27,7 +27,7 @@ export function mapsLinkFor(restaurant) {
   return buildMapsSearchUrl(restaurant?.name, restaurant?.address)
 }
 
-/** Navigace na cíl. Polohu uživatele do odkazu nevkládá. */
+/** Navigace na cíl. Polohu uživatele do odkazu nevkládá. `api=1` je verze Maps URL, ne API klíč. */
 export function mapsDirectionsUrl(restaurant) {
   const lat = restaurant?.lat
   const lon = restaurant?.lon
@@ -36,6 +36,17 @@ export function mapsDirectionsUrl(restaurant) {
   }
   const query = [restaurant?.name, restaurant?.address].filter(Boolean).join(', ')
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`
+}
+
+/** Stejný cíl v OpenStreetMap (bez Google účtu / API klíče). */
+export function osmDirectionsUrl(restaurant) {
+  const lat = restaurant?.lat
+  const lon = restaurant?.lon
+  if (typeof lat === 'number' && typeof lon === 'number' && Number.isFinite(lat) && Number.isFinite(lon)) {
+    return `https://www.openstreetmap.org/directions?engine=fossgis_osrm_foot&route=;${lat},${lon}#map=16/${lat}/${lon}`
+  }
+  const query = [restaurant?.name, restaurant?.address].filter(Boolean).join(', ')
+  return `https://www.openstreetmap.org/search?query=${encodeURIComponent(query)}`
 }
 
 export function googleStatusLabel(restaurant) {

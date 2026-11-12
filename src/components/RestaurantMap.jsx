@@ -5,18 +5,38 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet.markercluster'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import { SPONSORED_LABEL } from '../constants/monetization'
 import { boundsFromPlaces, BRNO_MAP_CENTER, BRNO_MAP_DEFAULT_ZOOM, placesForMap } from '../utils/mapPlaces'
 import { resolveMapTileConfig } from '../utils/mapTiles'
+import { ensureMaplibreWorker } from '../utils/maplibreWorker'
+import { hasFiniteLatLon } from '../utils/geo'
+
+function assetUrl(value) {
+  if (typeof value === 'string' && value) return value
+  if (value && typeof value === 'object' && typeof value.default === 'string') return value.default
+  return ''
+}
+
+const placeIcon = L.icon({
+  iconUrl: assetUrl(markerIcon) || markerIcon,
+  iconRetinaUrl: assetUrl(markerIcon2x) || markerIcon2x,
+  shadowUrl: assetUrl(markerShadow) || markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41],
+})
 
 // Vite bundluje ikony; default Leaflet cesty by v production selhaly.
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
+  iconRetinaUrl: placeIcon.options.iconRetinaUrl,
+  iconUrl: placeIcon.options.iconUrl,
+  shadowUrl: placeIcon.options.shadowUrl,
 })
 
 function escapeHtml(value) {
@@ -42,29 +62,75 @@ function popupHtml(place) {
   `
 }
 
-export default function RestaurantMap({ restaurants = [], selectedId = '', onSelect }) {
+async function addBasemap(map, tiles) {
+  if (tiles.mode === 'vector-style') {
+    ensureMaplibreWorker()
+    const { maplibreGL } = await import('@maplibre/maplibre-gl-leaflet')
+    if (tiles.attribution) {
+      map.attributionControl?.addAttribution(tiles.attribution)
+    }
+    const layer = maplibreGL({
+      style: tiles.styleUrl,
+      interactive: false,
+    })
+    layer.addTo(map)
+    // Skryj POI symboly z podkladu — jinak se pletou s našimi značkami podniků.
+    const hidePoi = () => {
+      const gl = typeof layer.getMaplibreMap === 'function' ? layer.getMaplibreMap() : null
+      if (!gl?.getStyle) return
+      const style = gl.getStyle()
+      for (const lyr of style?.layers || []) {
+        if (lyr.type !== 'symbol') continue
+        const id = String(lyr.id || '')
+        if (/poi|place_label|housenumber|transit/i.test(id)) {
+          try {
+            gl.setLayoutProperty(id, 'visibility', 'none')
+          } catch {
+            /* vrstva nemusí existovat */
+          }
+        }
+      }
+    }
+    const glMap = typeof layer.getMaplibreMap === 'function' ? layer.getMaplibreMap() : null
+    if (glMap) {
+      if (glMap.isStyleLoaded?.()) hidePoi()
+      else glMap.once?.('load', hidePoi)
+      glMap.on?.('styledata', hidePoi)
+    }
+    return layer
+  }
+
+  return L.tileLayer(tiles.url, {
+    attribution: tiles.attribution,
+    subdomains: tiles.subdomains || 'abcd',
+    maxZoom: 19,
+  }).addTo(map)
+}
+
+export default function RestaurantMap({ restaurants = [], selectedId = '', onSelect, userOrigin = null }) {
   const mapId = useId().replace(/:/g, '')
   const containerRef = useRef(null)
   const mapRef = useRef(null)
   const clusterRef = useRef(null)
   const markersRef = useRef(new Map())
+  const userLayerRef = useRef(null)
   const [ready, setReady] = useState(false)
+  const [basemapError, setBasemapError] = useState('')
   const places = useMemo(() => placesForMap(restaurants), [restaurants])
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return undefined
-    const tiles = resolveMapTileConfig()
+    let cancelled = false
     const map = L.map(containerRef.current, {
       center: [BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon],
       zoom: BRNO_MAP_DEFAULT_ZOOM,
+      minZoom: 10,
+      // MapLibre GL Leaflet vyžaduje maxZoom na L.map (jinak: "Map has no maxZoom specified").
+      maxZoom: 19,
       scrollWheelZoom: true,
       attributionControl: true,
     })
-    L.tileLayer(tiles.url, {
-      attribution: tiles.attribution,
-      subdomains: tiles.subdomains,
-      maxZoom: 19,
-    }).addTo(map)
+    mapRef.current = map
 
     const cluster = L.markerClusterGroup({
       showCoverageOnHover: false,
@@ -73,15 +139,43 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
       disableClusteringAtZoom: 17,
     })
     map.addLayer(cluster)
-    mapRef.current = map
     clusterRef.current = cluster
-    setReady(true)
+
+    const tiles = resolveMapTileConfig()
+    addBasemap(map, tiles)
+      .then(() => {
+        if (cancelled) return
+        setBasemapError('')
+        setReady(true)
+        requestAnimationFrame(() => map.invalidateSize())
+      })
+      .catch((error) => {
+        if (cancelled) return
+        console.error('FoodGo map basemap', error)
+        setBasemapError('Podklad mapy se nepodařilo načíst. Značky podniků zůstávají.')
+        setReady(true)
+        requestAnimationFrame(() => map.invalidateSize())
+      })
+
+    const onResize = () => map.invalidateSize()
+    window.addEventListener('resize', onResize)
+    const ro =
+      typeof ResizeObserver === 'function'
+        ? new ResizeObserver(() => {
+            map.invalidateSize()
+          })
+        : null
+    if (ro && containerRef.current) ro.observe(containerRef.current)
 
     return () => {
+      cancelled = true
+      window.removeEventListener('resize', onResize)
+      ro?.disconnect()
       map.remove()
       mapRef.current = null
       clusterRef.current = null
       markersRef.current = new Map()
+      userLayerRef.current = null
       setReady(false)
     }
   }, [])
@@ -98,6 +192,7 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
       const marker = L.marker([place.lat, place.lon], {
         title: place.name,
         riseOnHover: true,
+        icon: placeIcon,
       })
       marker.bindPopup(popupHtml(place), { maxWidth: 260 })
       marker.on('click', () => {
@@ -113,6 +208,7 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
     } else {
       map.setView([BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon], BRNO_MAP_DEFAULT_ZOOM)
     }
+    requestAnimationFrame(() => map.invalidateSize())
   }, [places, ready, onSelect])
 
   useEffect(() => {
@@ -123,6 +219,44 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
     mapRef.current.setView(latLng, Math.max(mapRef.current.getZoom(), 15), { animate: true })
     marker.openPopup()
   }, [selectedId, ready])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return
+
+    if (userLayerRef.current) {
+      map.removeLayer(userLayerRef.current)
+      userLayerRef.current = null
+    }
+
+    if (!hasFiniteLatLon(userOrigin?.lat, userOrigin?.lon)) return
+
+    const group = L.layerGroup()
+    const accuracy =
+      typeof userOrigin.accuracy === 'number' && Number.isFinite(userOrigin.accuracy)
+        ? Math.min(Math.max(userOrigin.accuracy, 40), 400)
+        : 80
+    L.circle([userOrigin.lat, userOrigin.lon], {
+      radius: accuracy,
+      color: '#1d6b4f',
+      weight: 1,
+      fillColor: '#2f9e73',
+      fillOpacity: 0.15,
+      interactive: false,
+      className: 'fg-user-location-accuracy',
+    }).addTo(group)
+    L.circleMarker([userOrigin.lat, userOrigin.lon], {
+      radius: 7,
+      color: '#fff',
+      weight: 2,
+      fillColor: '#1d6b4f',
+      fillOpacity: 1,
+      className: 'fg-user-location',
+      title: 'Tvoje poloha',
+    }).addTo(group)
+    group.addTo(map)
+    userLayerRef.current = group
+  }, [userOrigin, ready])
 
   return (
     <section className="restaurant-map" aria-label="Mapa restaurací v Brně">
@@ -135,6 +269,11 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
         <p className="restaurant-map-hint">
           Klikni na bod pro kartu. Filtry a hledání řídí stejný seznam jako výpis.
         </p>
+        {basemapError ? (
+          <p className="restaurant-map-hint" role="status">
+            {basemapError}
+          </p>
+        ) : null}
       </div>
       <div
         id={`map-${mapId}`}

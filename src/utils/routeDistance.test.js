@@ -7,7 +7,9 @@ import {
   collectRouteDistances,
   distancesFromTable,
   formatRouteDistance,
+  isFootRoutingEnabled,
   presentRouteDistance,
+  resolveFootRouteTableUrl,
 } from './routeDistance.js'
 
 const origin = { lat: 49.1955, lon: 16.6065 }
@@ -18,6 +20,15 @@ function originPlace(point) {
 }
 
 describe('vzdálenost po trase', () => {
+  it('ve výchozím stavu má pěší routing vypnutý', () => {
+    assert.equal(isFootRoutingEnabled({}), false)
+    assert.equal(isFootRoutingEnabled({ VITE_FOOT_ROUTING: '1' }), true)
+    assert.equal(
+      resolveFootRouteTableUrl({ VITE_FOOT_ROUTE_TABLE_URL: 'https://example.test/table' }),
+      'https://example.test/table',
+    )
+  })
+
   it('sestaví pěší tabulku bez API klíče a bez odhadu vzdušnou čarou', () => {
     const url = buildFootTableUrl(origin, [near, { id: 'b', lat: 49.2, lon: 16.61 }])
     assert.match(url, /\/routed-foot\/table\/v1\/foot\//)
@@ -47,6 +58,7 @@ describe('vzdálenost po trase', () => {
 
   it('stejný bod jako výchozí místo je 0 m, jiný chybějící údaj zůstane prázdný', async () => {
     const result = await collectRouteDistances(origin, [originPlace(origin), near], {
+      minIntervalMs: 0,
       fetchImpl: async () => ({
         ok: true,
         json: async () => ({ code: 'Ok', distances: [[null, null]] }),
@@ -58,6 +70,7 @@ describe('vzdálenost po trase', () => {
 
   it('při chybě služby nevrátí vzdušnou čáru', async () => {
     const result = await collectRouteDistances(origin, [near], {
+      minIntervalMs: 0,
       fetchImpl: async () => ({ ok: false, json: async () => ({ code: 'Error' }) }),
     })
     assert.equal(result.failedChunks, 1)
@@ -74,6 +87,7 @@ describe('vzdálenost po trase', () => {
     const sizes = []
     const result = await collectRouteDistances(origin, places, {
       chunkSize: 80,
+      minIntervalMs: 0,
       fetchImpl: async (url) => {
         const count = String(url).split('?')[0].split('/').pop().split(';').length
         sizes.push(count)

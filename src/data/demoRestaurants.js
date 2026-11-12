@@ -19,7 +19,7 @@ export const DATA_SOURCE_NOTES = [
     ? 'Ilustrační fotografie pocházejí z Pixabay, jsou uložené u nás a nejsou snímkem konkrétního podniku. U každé je autor a odkaz na Pixabay. Fotografii z webu podniku ukazujeme jen tam, kde je její použití doložené.'
     : 'Na detailu podniku je fotografie z webu podniku, pokud ji máme. Samotná adresa na webu není doložená licence k dalšímu užití. Jinak může být ilustrační fotografie typického jídla (Openverse, CC0/PDM/CC BY/CC BY-SA) nebo kresba typu kuchyně — ani jedno není snímek konkrétního podniku.',
   'Ověřenou cenu uvádíme jen s odkazem na menu. Cenový filtr bere ověřenou cenu; u rozpětí musí do limitu vejít i horní mez.',
-  'Přesná poloha se na náš server neposílá. Vzdálenost je délka pěší trasy z OpenStreetMap. Podnik bez ověřené polohy ji nemá a bez polohy uživatele se číslo nezobrazí.',
+  'Přesná poloha se na náš server neposílá. Vzdálenost v katalogu je vzdušná čára spočítaná v prohlížeči. Podnik bez ověřené polohy ji nemá a bez polohy uživatele se číslo nezobrazí.',
   'Oficiální weby pocházejí z OpenStreetMap nebo z ručně ověřených záznamů, ne z katalogů.',
   'Otevírací dobu a telefon bereme z OpenStreetMap, pokud je zápis čitelný. Neověřujeme je nezávisle. Stav Otevřeno/Zavřeno ukazujeme jen u jednoduchých a spolehlivých zápisů (Europe/Prague); složité pravidla necháváme jako neznámá.',
   'Google hodnocení zobrazujeme jako ověřené pouze po ověření přes Places API. Bez tohoto ověření je u podniku jen odkaz na vyhledání v Mapách.',

@@ -8,6 +8,7 @@ import {
   formatReviewCount,
   hasGoogleRating,
   mapsLinkFor,
+  osmDirectionsUrl,
 } from '../utils/googleRating'
 import { httpUrl, officialWebsiteOf } from '../utils/website'
 import { safeInternalPath } from '../utils/internalPath'
@@ -261,6 +262,14 @@ export default function RestaurantDetail() {
             className="btn btn-primary"
           >
             Navigovat
+          </a>
+          <a
+            href={osmDirectionsUrl(restaurant)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-secondary"
+          >
+            OpenStreetMap
           </a>
           <button type="button" className="btn btn-secondary" onClick={shareCurrent}>
             Sdílet odkaz

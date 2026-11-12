@@ -70,9 +70,9 @@ export default function Privacy() {
         <h3>Poloha</h3>
         <p>
           Souřadnice pro vzdálenost zůstávají v prohlížeči pod klíčem cheapeats.geo.origin. Na server
-          FoodGo se neposílají. Když polohu zapneš, prohlížeč se zeptá služby pěších tras na
-          routing.openstreetmap.de. Vypnutím polohy se záznam v prohlížeči smaže. Jinou dobu mazání
-          aplikace nestanovuje.
+          FoodGo se neposílají. Vzdálenost v katalogu se počítá lokálně vzdušnou čarou. Externí služba
+          pěších tras se ve výchozí konfiguraci nevolá. Vypnutím polohy se záznam v prohlížeči smaže.
+          Jinou dobu mazání aplikace nestanovuje.
         </p>
         <h3>Věrnostní body</h3>
         <p>
@@ -96,7 +96,10 @@ export default function Privacy() {
           <li>E-mail se posílá na api.resend.com, jen když je odesílání nastavené.</li>
           <li>Stránky se nasazují na Vercel. Jak dlouho platforma drží provozní záznamy, v tomhle projektu není.</li>
           <li>Písmo Plus Jakarta Sans a Fraunces je uložené u FoodGo. Prohlížeč ho nenačítá z cizího serveru. Analytický ani reklamní skript v aplikaci není.</li>
-          <li>Pěší vzdálenost se ptá routing.openstreetmap.de a posílá tam souřadnice výchozího místa a podniků.</li>
+          <li>
+            Podklad mapy se načítá z OpenFreeMap (nebo z vlastní šablony dlaždic / Carto, pokud je v env
+            nastavená). Souřadnice podniků zůstávají u FoodGo.
+          </li>
         </ul>
       </section>
 

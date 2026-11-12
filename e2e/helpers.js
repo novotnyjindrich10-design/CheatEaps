@@ -41,8 +41,18 @@ const TINY_PNG = Buffer.from(
   'base64',
 )
 
+/** Minimální MapLibre styl — E2E nemusí stahovat planet tiles. */
+const MOCK_MAP_STYLE = JSON.stringify({
+  version: 8,
+  name: 'FoodGo E2E mock',
+  sources: {},
+  layers: [{ id: 'background', type: 'background', paint: { 'background-color': '#e8eef2' } }],
+})
+
 function isMapTileUrl(url) {
-  return /basemaps\.cartocdn\.com|cartocdn\.com\/.*\/\d+\/\d+\/\d+|tile\.openstreetmap\.org/i.test(url)
+  return /basemaps\.cartocdn\.com|cartocdn\.com\/.*\/\d+\/\d+\/\d+|tile\.openstreetmap\.org|tiles\.openfreemap\.org|openfreemap\.org/i.test(
+    url,
+  )
 }
 
 export async function blockOutside(page, { allowMapTiles = false } = {}) {
@@ -50,6 +60,14 @@ export async function blockOutside(page, { allowMapTiles = false } = {}) {
     const url = route.request().url()
     if (isLocal(url)) return route.fallback()
     if (allowMapTiles && isMapTileUrl(url)) {
+      if (/styles\//i.test(url) || url.endsWith('.json')) {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: MOCK_MAP_STYLE,
+          headers: { 'access-control-allow-origin': '*' },
+        })
+      }
       return route.fulfill({ status: 200, contentType: 'image/png', body: TINY_PNG })
     }
     return route.abort()

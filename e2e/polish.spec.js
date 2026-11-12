@@ -25,8 +25,10 @@ test.describe('final polish — mapa s mock dlaždicemi', () => {
     await expect(page.locator('.restaurant-map-canvas')).toBeVisible({ timeout: 20_000 })
     await expect(page.locator('.restaurant-map-count')).toContainText(/bod/)
     await expect(page.locator('.leaflet-control-attribution')).toContainText(/OpenStreetMap/i)
-    await expect(page.locator('.leaflet-control-attribution')).toContainText(/CARTO/i)
-    await expect(page.locator('.leaflet-tile-pane img').first()).toBeVisible({ timeout: 15_000 })
+    await expect(page.locator('.leaflet-control-attribution')).toContainText(/OpenFreeMap|CARTO|OpenMapTiles/i)
+    await expect(
+      page.locator('.leaflet-tile-pane img, .leaflet-tile-pane canvas, .maplibregl-map').first(),
+    ).toBeVisible({ timeout: 15_000 })
     await page.getByRole('button', { name: 'Seznam' }).click()
     await expect(page).not.toHaveURL(/view=map/)
     await expect(page.locator('.restaurant-list li').first()).toBeVisible()
@@ -39,6 +41,7 @@ test.describe('final polish — mapa s mock dlaždicemi', () => {
     await expect(page.locator('.restaurant-map-canvas')).toBeVisible({ timeout: 20_000 })
     await expect(page.locator('.restaurant-map-count')).toContainText(/bod/)
     await expect(page.locator('.leaflet-control-attribution')).toContainText(/OpenStreetMap/i)
+    await expect(page.locator('.restaurant-map-count')).toContainText(/bod/)
   })
 })
 

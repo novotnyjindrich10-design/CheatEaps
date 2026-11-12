@@ -7,14 +7,27 @@ import {
 } from './geo.js'
 
 /**
- * Veřejná pěší instance OSRM od FOSSGIS (OpenStreetMap).
- * Bez API klíče. Volá se přímo z prohlížeče, ne z našeho serveru.
+ * Veřejná pěší instance OSRM od FOSSGIS (routing.openstreetmap.de).
+ * FOSSGIS ToS: max 1 req/s, ne pro weby s vyšším provozem, platný User-Agent.
+ * Prohlížeč UA knihovny nesplní — hromadné volání na ~800 podniků dostává 429 a porušuje podmínky.
+ *
+ * Výchozí: vypnuto. Katalog používá Haversine (vzdušnou čarou).
+ * Zapnutí jen s vlastním/compliant endpointem: VITE_FOOT_ROUTING=1 a volitelně VITE_FOOT_ROUTE_TABLE_URL.
  * Parametr fallback_speed se nenastavuje, aby chybějící trasa neskončila jako odhad vzdušnou čarou.
  */
 export const FOOT_ROUTE_TABLE_URL = 'https://routing.openstreetmap.de/routed-foot/table/v1/foot'
 
 /** Tabulka OSRM bere nejvýš 100 souřadnic včetně startu. */
 export const ROUTE_CHUNK_DESTINATIONS = 80
+
+export function isFootRoutingEnabled(env = import.meta.env) {
+  return String(env?.VITE_FOOT_ROUTING || '').trim() === '1'
+}
+
+export function resolveFootRouteTableUrl(env = import.meta.env) {
+  const custom = String(env?.VITE_FOOT_ROUTE_TABLE_URL || '').trim()
+  return custom || FOOT_ROUTE_TABLE_URL
+}
 
 export function chunkItems(items, size) {
   if (size < 1) throw new Error('Velikost dávky musí být kladná')
@@ -173,11 +186,14 @@ export async function collectRouteDistances(origin, places, options = {}) {
     signal,
     onChunk,
     chunkSize = ROUTE_CHUNK_DESTINATIONS,
+    endpoint = FOOT_ROUTE_TABLE_URL,
+    minIntervalMs = 1100,
   } = options
   const targets = places.filter((place) => hasVerifiedCoordinates(place))
   const chunks = chunkItems(targets, chunkSize)
   const distances = new Map()
   let failedChunks = 0
+  let lastRequestAt = 0
 
   for (const chunk of chunks) {
     if (signal?.aborted) {
@@ -185,8 +201,28 @@ export async function collectRouteDistances(origin, places, options = {}) {
       error.name = 'AbortError'
       throw error
     }
+    const wait = Math.max(0, minIntervalMs - (Date.now() - lastRequestAt))
+    if (wait > 0) {
+      await new Promise((resolve) => {
+        const timer = setTimeout(resolve, wait)
+        signal?.addEventListener?.(
+          'abort',
+          () => {
+            clearTimeout(timer)
+            resolve()
+          },
+          { once: true },
+        )
+      })
+      if (signal?.aborted) {
+        const error = new Error('aborted')
+        error.name = 'AbortError'
+        throw error
+      }
+    }
     try {
-      const response = await fetchImpl(buildFootTableUrl(origin, chunk), { signal })
+      lastRequestAt = Date.now()
+      const response = await fetchImpl(buildFootTableUrl(origin, chunk, endpoint), { signal })
       if (!response.ok) throw new Error(String(response.status))
       const payload = await response.json()
       if (payload?.code !== 'Ok' || !Array.isArray(payload.distances?.[0])) {
