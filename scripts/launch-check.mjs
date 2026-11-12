@@ -48,6 +48,24 @@ function loadEnvFile(path) {
 
 const RESEND_KEY_SHAPE = /^re_[1-9A-HJ-NP-Za-km-z]{8}_[1-9A-HJ-NP-Za-km-z]{24}$/
 
+function checkOperator() {
+  try {
+    const raw = readFileSync(resolve(root, 'src/constants/operator.js'), 'utf8')
+    const fields = ['legalName', 'ico', 'street', 'city', 'postalCode', 'email']
+    const missing = fields.filter((field) => {
+      const match = raw.match(new RegExp(`${field}:\\s*'([^']*)'`))
+      return !match || !String(match[1] || '').trim()
+    })
+    if (missing.length) {
+      add('BLOCKED', 'operator-identity', `prázdné: ${missing.join(', ')} — právní stránky nejsou vydatelné`)
+      return
+    }
+    add('PASS', 'operator-identity')
+  } catch (error) {
+    add('BLOCKED', 'operator-identity', error.message || 'nelze načíst operator.js')
+  }
+}
+
 function checkEnv() {
   const env = {
     ...loadEnvFile(resolve(root, '.env')),
@@ -66,14 +84,15 @@ function checkEnv() {
     add('PASS', 'env-file')
   }
 
-  if (!key) add('BLOCKED', 'resend-key', 'RESEND_API_KEY chybí')
-  else if (!RESEND_KEY_SHAPE.test(key)) add('BLOCKED', 'resend-key', `neočekávaný tvar (délka ${key.length})`)
+  // Free katalog v1 nesmí záviset na e-mailech — chybějící Resend = WARNING, ne BLOCKED.
+  if (!key) add('WARNING', 'resend-key', 'RESEND_API_KEY chybí — free katalog bez transakčních mailů OK')
+  else if (!RESEND_KEY_SHAPE.test(key)) add('WARNING', 'resend-key', `neočekávaný tvar (délka ${key.length})`)
   else add('PASS', 'resend-key', `present, length ${key.length}`)
 
-  if (!to) add('BLOCKED', 'resend-to', 'INQUIRY_TO_EMAIL chybí')
+  if (!to) add('WARNING', 'resend-to', 'INQUIRY_TO_EMAIL chybí — B2B poptávky/mail vypnuté')
   else add('PASS', 'resend-to')
 
-  if (!from) add('BLOCKED', 'resend-from', 'EMAIL_FROM chybí')
+  if (!from) add('WARNING', 'resend-from', 'EMAIL_FROM chybí — free katalog bez mailů OK')
   else if (from.includes('onboarding@resend.dev')) {
     add('WARNING', 'resend-from', 'trial FROM (onboarding@resend.dev) — ostré maily vyžadují ověřenou doménu')
   } else add('PASS', 'resend-from')
@@ -129,6 +148,7 @@ function summarize() {
 
 const offline = process.argv.includes('--offline') || process.env.LAUNCH_CHECK_OFFLINE === '1'
 
+checkOperator()
 const envOk = checkEnv()
 run('unit-tests', 'npm', ['test'])
 run('lint', 'npm', ['run', 'lint'])
@@ -136,6 +156,8 @@ run('build', 'npm', ['run', 'build'])
 run('catalog-audit', 'npm', ['run', 'audit:catalog'])
 if (offline) {
   add('WARNING', 'resend-api', 'přeskočeno (--offline / LAUNCH_CHECK_OFFLINE=1) — nevolá Resend API')
+} else if (!envOk.keyPresent || !envOk.keyShapeOk) {
+  add('WARNING', 'resend-api', 'přeskočeno — klíč není připravený (free katalog bez mailů)')
 } else {
   checkResendApi(envOk)
 }

@@ -70,6 +70,10 @@ export default function Terms() {
 
       <section>
         <h2>Placené služby pro podniky</h2>
+        <p className="deal-warning" role="status">
+          Ve veřejné free verzi není placená propagace spuštěná jako hotová služba. Online platba
+          neběží. Níže je popis připraveného ceníku v kódu, ne ostrý prodej.
+        </p>
         <p>
           Tahle část popisuje nabídku v aplikaci. Není to hotová smlouva, dokud ji provozovatel a
           právní kontrola nepotvrdí. Hledání restaurací zůstává zdarma a je oddělené od reklamy.

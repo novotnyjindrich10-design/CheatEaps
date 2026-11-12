@@ -33,6 +33,7 @@ import { useLocationState } from '../context/LocationContext'
 import LocationBar from '../components/LocationBar'
 import { parsePageParam, slicePage } from '../utils/pagination'
 import { DEALS_RESULTS_PATH, loginPath } from '../utils/authReturn'
+import { PUBLIC_V1 } from '../constants/publicV1'
 
 function formatPlaceCount(n) {
   if (n === 1) return '1 místo'
@@ -123,6 +124,26 @@ export default function Results() {
     const params = buildResultsSearchParams({ ...filters, cuisineType: '', dealsOnly: true })
     const qs = params.toString()
     return <Navigate to={qs ? `/results?${qs}` : DEALS_RESULTS_PATH} replace />
+  }
+
+  if (dealsGate && !PUBLIC_V1.memberDealsUi) {
+    return (
+      <main className="page results-page">
+        <div className="page-head results-head">
+          <Link to="/" className="back-link">
+            ← Domů
+          </Link>
+          <h1>Slevy zatím nejsou ve veřejné verzi</h1>
+          <p className="page-subtitle">
+            FoodGo teď spouštíme jako bezplatný katalog. Ověřené členské slevy doplníme později —
+            zatím hledej podle kuchyně, rozpočtu a vzdálenosti.
+          </p>
+          <Link to="/results" className="btn btn-primary">
+            Najít podnik
+          </Link>
+        </div>
+      </main>
+    )
   }
 
   // UI brána: katalog slev je ve veřejném JS — přihlášení jen omezuje zobrazení, data nešifruje.

@@ -26,5 +26,6 @@ describe('sitemap', () => {
     assert.equal(xml.includes('/api'), false)
     assert.equal(xml.includes('/porovnani'), false)
     assert.equal(xml.includes('/nabidka'), false)
+    assert.equal(xml.includes('/podpor-me'), false)
   })
 })

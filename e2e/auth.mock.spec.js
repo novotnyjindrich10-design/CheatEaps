@@ -52,23 +52,17 @@ test.describe('auth jen proti mockovanému API', () => {
     await page.getByRole('button', { name: 'Vytvořit účet' }).click()
     await expect(page.getByText('Potvrď e-mail a pak se přihlas.')).toBeVisible()
 
-    await page.goto('/prihlaseni?next=%2Fresults%3Fdeals%3D1')
+    await page.goto('/prihlaseni?next=%2Foblibene')
     await page.getByLabel('E-mail').fill('tester@example.com')
     await page.getByLabel('Heslo').fill('heslo-test-123')
     await page.getByRole('button', { name: 'Přihlásit se' }).click()
-    await expect(page).toHaveURL(/\/results\?deals=1/)
-    await expect(page.getByRole('heading', { name: 'Slevy' })).toBeVisible()
-    await expect(page.locator('.page-subtitle')).toContainText(/ISIC/i)
+    await expect(page).toHaveURL(/\/oblibene/)
     await expect(page.getByText('tester@example.com').first()).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Dhaba Beas Panská' })).toBeVisible({ timeout: 20_000 })
 
     // Session po hard reloadu (stejný mock session stav v Node).
     await page.reload({ waitUntil: 'domcontentloaded' })
-    await expect(page.getByRole('heading', { name: 'Slevy' })).toBeVisible({ timeout: 20_000 })
-    await expect(page.getByText('tester@example.com').first()).toBeVisible()
-
-    // Client navigace je levnější než další full load katalogu a pořád ověří session + favorites API.
-    await page.getByRole('link', { name: 'Oblíbené' }).first().click()
-    await expect(page).toHaveURL(/\/oblibene/)
+    await expect(page.getByText('tester@example.com').first()).toBeVisible({ timeout: 20_000 })
     await expect(page.getByRole('heading', { name: 'Dhaba Beas Panská' })).toBeVisible({ timeout: 20_000 })
 
     await page.goto('/restaurant/dhaba-beas-panska', { waitUntil: 'domcontentloaded' })

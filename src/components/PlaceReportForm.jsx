@@ -34,6 +34,13 @@ export default function PlaceReportForm({ restaurantId, restaurantName }) {
       })
       const body = await response.json().catch(() => ({}))
       if (!response.ok || body.ok !== true || body.stored !== true) {
+        if (response.status === 503 || body.error === 'not-ready') {
+          setError(
+            body.message
+              || 'Ukládání hlášení teď není zapnuté. Zkus to později, nebo napiš na kontakt v patičce.',
+          )
+          return
+        }
         setError(body.message || 'Hlášení se nepodařilo trvale uložit.')
         return
       }

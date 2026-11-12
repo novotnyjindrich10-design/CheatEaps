@@ -43,9 +43,12 @@ describe('bezpečnost Auth před vydáním', () => {
     assert.match(source, /!session\.configured && !session\.unreachable/)
   })
 
-  it('Slevy i deal-detail vyžadují přihlášení přes loginPath', () => {
+  it('Slevy i deal-detail vyžadují přihlášení přes loginPath (když je UI zapnuté)', () => {
     const results = fs.readFileSync(new URL('../pages/Results.jsx', import.meta.url), 'utf8')
     const deal = fs.readFileSync(new URL('../pages/DealDetail.jsx', import.meta.url), 'utf8')
+    const scope = fs.readFileSync(new URL('../constants/publicV1.js', import.meta.url), 'utf8')
+    assert.match(scope, /memberDealsUi:\s*false/)
+    assert.match(results, /dealsGate && !PUBLIC_V1\.memberDealsUi/)
     assert.match(results, /dealsGate && session\.ready && !session\.authenticated/)
     assert.match(results, /Navigate to=\{dealsLogin\}/)
     assert.match(deal, /Navigate to=\{loginPath\(here\)\}/)

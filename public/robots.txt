@@ -9,5 +9,6 @@ Disallow: /oblibene
 Disallow: /odmeny
 Disallow: /porovnani
 Disallow: /nabidka
+Disallow: /podpor-me
 
 Sitemap: https://cheat-eaps.vercel.app/sitemap.xml

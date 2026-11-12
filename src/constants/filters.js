@@ -4,9 +4,12 @@
  * Napřed běžné volby, potom ostatní.
  */
 
+import { publicCategories } from './publicV1.js'
+
 /**
  * Speciální dlaždice Slevy — filtruje podniky s ověřenou aktivní akcí (`?deals=1`).
- * Věrnostní body zůstávají na `/odmeny` (odkaz Slevy a body).
+ * Ve veřejné free v1 je skrytá (`PUBLIC_V1.memberDealsUi`).
+ * Věrnostní body zůstávají na `/odmeny`.
  */
 export const DEALS_CATEGORY = {
   value: 'slevy',
@@ -37,10 +40,13 @@ export const FOOD_CATEGORIES = [
   { value: 'zdrave', label: 'Zdravé', emoji: '🥑', home: true },
 ]
 
-/** Pořadí v CategoryStrip: Slevy první, pak jídlo. */
-export const STRIP_CATEGORIES = [DEALS_CATEGORY, ...FOOD_CATEGORIES]
+/** Pořadí v CategoryStrip: jídlo; Slevy jen když PUBLIC_V1.memberDealsUi. */
+export const STRIP_CATEGORIES = publicCategories([DEALS_CATEGORY, ...FOOD_CATEGORIES])
 
-export const HOME_CATEGORIES = [DEALS_CATEGORY, ...FOOD_CATEGORIES.filter((c) => c.home)]
+export const HOME_CATEGORIES = publicCategories([
+  DEALS_CATEGORY,
+  ...FOOD_CATEGORIES.filter((c) => c.home),
+])
 
 export function isDealsCategory(value) {
   return value === DEALS_CATEGORY.value

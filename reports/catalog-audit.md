@@ -1,6 +1,6 @@
 # FoodGo – audit katalogu (kategorie, popisy, fotografie)
 
-Vygenerováno: 2026-11-12T11:13:43.358Z
+Vygenerováno: 2026-11-12T13:46:31.966Z
 
 ## Souhrn
 

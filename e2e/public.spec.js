@@ -81,12 +81,12 @@ test.describe('veřejné stránky, desktop 1280', () => {
     expect(broken).toEqual([])
   })
 
-  test('slevy bez přihlášení přesměrují na přihlášení', async ({ page }) => {
+  test('slevy ve free v1 nejsou nabízené jako hotová služba', async ({ page }) => {
     await page.goto('/results?deals=1')
     await ready(page)
-    await expect(page).toHaveURL(/\/prihlaseni\?next=/, { timeout: 20_000 })
-    await expect(page.getByRole('heading', { name: 'Přihlášení' })).toBeVisible()
-    await expect(page.getByText(/ověřených ISIC nabídek/i)).toBeVisible()
+    await expect(page).toHaveURL(/\/results\?deals=1/)
+    await expect(page.getByRole('heading', { name: /Slevy zatím nejsou ve veřejné verzi/i })).toBeVisible()
+    await expect(page.locator('#main-content').getByRole('link', { name: 'Najít podnik' })).toBeVisible()
   })
 
   test('odměny bez tabulek ukážou Připravujeme', async ({ page }) => {
@@ -95,14 +95,13 @@ test.describe('veřejné stránky, desktop 1280', () => {
     await expect(page.getByRole('status').filter({ hasText: 'Připravujeme.' })).toBeVisible()
   })
 
-  test('nedostupné API neshodí katalog a slevy neotevře', async ({ page }) => {
+  test('nedostupné API neshodí katalog a slevy zůstanou vypnuté', async ({ page }) => {
     await page.unroute('**/api/**')
     await page.route('**/api/**', (route) => route.abort())
     await page.goto('/')
     await expect(page.getByRole('heading', { name: 'Najdi jídlo v Brně' })).toBeVisible()
     await page.goto('/results?deals=1')
-    await expect(page).toHaveURL(/\/prihlaseni/)
-    await expect(page.getByText('Stav účtu se nepodařilo ověřit.')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /Slevy zatím nejsou ve veřejné verzi/i })).toBeVisible()
     await page.goto('/odmeny')
     await expect(page.getByText('Odměny se nepodařilo načíst.')).toBeVisible()
   })

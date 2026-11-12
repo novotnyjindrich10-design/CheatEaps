@@ -1,14 +1,18 @@
+import { PUBLIC_V1 } from '../constants/publicV1.js'
 import { CANONICAL_ORIGIN } from '../constants/site.js'
 
-export const SITEMAP_PATHS = [
+const BASE_SITEMAP_PATHS = [
   '/',
   '/results',
   '/nevim-co-jist',
   '/pro-podniky',
-  '/podpor-me',
   '/ochrana-osobnich-udaju',
   '/obchodni-podminky',
 ]
+
+export const SITEMAP_PATHS = PUBLIC_V1.supportInSitemap
+  ? [...BASE_SITEMAP_PATHS.slice(0, 4), '/podpor-me', ...BASE_SITEMAP_PATHS.slice(4)]
+  : BASE_SITEMAP_PATHS
 
 export function publicSiteOrigin(value) {
   const origin = String(value || '').trim().replace(/\/$/, '')
