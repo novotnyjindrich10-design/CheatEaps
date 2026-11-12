@@ -1,7 +1,7 @@
 /**
  * Konfigurovatelné mapové podklady.
  *
- * Výchozí: OpenFreeMap Liberty (vektor přes MapLibre) — bez API klíče.
+ * Výchozí: OpenFreeMap Positron (vektor přes MapLibre) — bez API klíče.
  * Carto Voyager raster od 2026-09-25 vyžaduje free klíč → jen s VITE_CARTO_API_KEY.
  * Vlastní raster: VITE_MAP_TILE_URL se šablonou {z}/{x}/{y}.
  *
