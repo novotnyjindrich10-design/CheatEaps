@@ -312,5 +312,19 @@ describe('věrnostní body a odměny', () => {
     assert.equal((await noCode.json()).error, 'code-unavailable')
     assert.equal((await call('/api/loyalty/me', { user: account, store }).then((r) => r.json())).points, before)
   })
+
+  it('bez věrnostních tabulek neukáže SQL a neslibuje uplatnění', async () => {
+    const store = {
+      async listRewards() {
+        return { ok: false, error: 'not-ready' }
+      },
+    }
+    const response = await call('/api/loyalty/rewards', { store })
+    const body = await response.json()
+    assert.equal(response.status, 503)
+    assert.equal(body.error, 'not-ready')
+    assert.match(body.message, /Připravujeme/)
+    assert.equal(body.message.includes('.sql'), false)
+  })
 })
 

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { applySponsorships } from '../constants/monetization'
 import { listRestaurants, subscribePublished } from '../data/restaurants'
 import { setPublishedExtras } from '../data/publishedCatalog'
 
@@ -13,6 +14,7 @@ export function useCatalog() {
 export function CatalogProvider({ children }) {
   const [tick, setTick] = useState(0)
   const [loadState, setLoadState] = useState('loading')
+  const [sponsorships, setSponsorships] = useState([])
 
   useEffect(() => subscribePublished(() => setTick((n) => n + 1)), [])
 
@@ -37,8 +39,23 @@ export function CatalogProvider({ children }) {
     }
   }, [])
 
-  const restaurants = listRestaurants()
-  void tick
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/sponsorships', { credentials: 'same-origin' })
+      .then((res) => res.json())
+      .then((body) => {
+        if (!cancelled && body?.ok && Array.isArray(body.sponsorships)) setSponsorships(body.sponsorships)
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [tick])
+
+  const restaurants = useMemo(() => {
+    void tick
+    return applySponsorships(listRestaurants(), sponsorships)
+  }, [sponsorships, tick])
 
   const value = useMemo(
     () => ({

@@ -10,11 +10,31 @@
 
 export const YEARLY_MONTHS_BILLED = 10
 
-/** Jediný zdroj měsíčních cen. Roční cena je deset těchto plateb. */
+/** Jediný zdroj měsíčních cen. Roční cena je deset těchto plateb za 12 měsíců propagace. */
 export const PROMOTION_MONTHLY_PRICES = Object.freeze({
   start: 99,
   plus: 199,
   premium: 399,
+})
+
+/** Délka služby a způsob platby. Obnovení se samo nezapíná. */
+export const PERIOD_TERMS = Object.freeze({
+  mesicne: Object.freeze({
+    serviceDays: 30,
+    serviceLabel: '30 dní',
+    billing: 'jednorazove',
+    billingLabel: 'Jednorázová platba',
+    renewal: 'none',
+    renewalLabel: 'Samo se neobnovuje',
+  }),
+  rocne: Object.freeze({
+    serviceDays: 365,
+    serviceLabel: '12 měsíců (365 dní)',
+    billing: 'jednorazove',
+    billingLabel: 'Jednorázová platba',
+    renewal: 'none',
+    renewalLabel: 'Samo se neobnovuje',
+  }),
 })
 
 const PERIODS = new Set(['mesicne', 'rocne'])
@@ -43,6 +63,7 @@ export function quoteTrustedPrice(planId, periodId) {
   const monthly = PROMOTION_MONTHLY_PRICES[planId]
   const yearly = yearlyPrice(monthly)
   const yearlyBilling = periodId === 'rocne'
+  const terms = PERIOD_TERMS[periodId]
   return {
     ok: true,
     planId,
@@ -52,5 +73,9 @@ export function quoteTrustedPrice(planId, periodId) {
     amount: yearlyBilling ? yearly : monthly,
     savings: yearlyBilling ? yearlySavings(monthly) : 0,
     currency: 'CZK',
+    serviceDays: terms.serviceDays,
+    serviceLabel: terms.serviceLabel,
+    billing: terms.billing,
+    renewal: terms.renewal,
   }
 }

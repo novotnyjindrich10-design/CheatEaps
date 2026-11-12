@@ -26,23 +26,39 @@ export function AuthProvider({ children }) {
         unreachable: false,
       })
     } catch {
-      setSession({
+      // Síťová chyba ≠ vypnuté Auth. Formulář necháme použitelný (AuthPage bere unreachable).
+      setSession((prev) => ({
+        ready: true,
+        configured: prev.configured,
+        authenticated: false,
+        email: '',
+        unreachable: true,
+      }))
+    }
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    let settled = false
+    const finish = (next) => {
+      if (cancelled || settled) return
+      settled = true
+      setSession(next)
+    }
+    const timer = setTimeout(() => {
+      finish({
         ready: true,
         configured: false,
         authenticated: false,
         email: '',
         unreachable: true,
       })
-    }
-  }, [])
+    }, 8000)
 
-  useEffect(() => {
-    let cancelled = false
     fetch('/api/auth/session', { credentials: 'same-origin' })
       .then((response) => response.json().catch(() => ({})))
       .then((body) => {
-        if (cancelled) return
-        setSession({
+        finish({
           ready: true,
           configured: Boolean(body.configured),
           authenticated: Boolean(body.authenticated),
@@ -51,8 +67,7 @@ export function AuthProvider({ children }) {
         })
       })
       .catch(() => {
-        if (cancelled) return
-        setSession({
+        finish({
           ready: true,
           configured: false,
           authenticated: false,
@@ -60,8 +75,13 @@ export function AuthProvider({ children }) {
           unreachable: true,
         })
       })
+      .finally(() => {
+        clearTimeout(timer)
+      })
+
     return () => {
       cancelled = true
+      clearTimeout(timer)
     }
   }, [])
 

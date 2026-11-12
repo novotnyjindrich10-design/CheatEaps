@@ -24,6 +24,10 @@ describe('veřejné texty etapy 1', () => {
     const slot = source('../components/OperatorSlot.jsx')
     const app = source('../App.jsx')
     assert.match(slot, /Doplní provozovatel/)
+    assert.match(source('../components/LegalMissing.jsx'), /Kontaktní e-mail/)
+    assert.match(source('../components/LegalMissing.jsx'), /Právní status projektu/)
+    assert.equal(source('../components/LegalMissing.jsx').includes('@'), false)
+    assert.match(source('../components/LegalMissing.jsx'), /CONTACT_EMAIL/)
     for (const text of [privacy, terms]) {
       assert.match(text, /OperatorSlot/)
       assert.match(text, /není platn|nejsou platn/)

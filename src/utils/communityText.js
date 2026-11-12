@@ -73,7 +73,7 @@ export function reportReason(value) {
 export function parseRestaurantId(value) {
   const id = String(value ?? '')
   if (!RESTAURANT_ID.test(id)) {
-    return { ok: false, error: 'restaurant-unknown', message: 'Tahle restaurace v CheapEats není.' }
+    return { ok: false, error: 'restaurant-unknown', message: 'Tahle restaurace v FoodGo není.' }
   }
   return { ok: true, id }
 }

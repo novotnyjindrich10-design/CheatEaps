@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { getRestaurantById } from '../data/restaurants'
 import { allDealRows, dealValidityNote, publicDealById } from '../data/restaurantDeals'
 import { useAuth } from '../context/authSession'
 import { copyText } from '../utils/copyText'
 import { httpUrl } from '../utils/website'
-import { loginPath } from '../utils/authReturn'
+import { DEALS_RESULTS_PATH, loginPath } from '../utils/authReturn'
+import { safeInternalPath } from '../utils/internalPath'
 
 export default function DealDetail() {
   const { dealId } = useParams()
+  const location = useLocation()
   const decodedId = decodeURIComponent(dealId || '')
   const known = allDealRows().find((item) => item.id === decodedId) ?? null
   const live = publicDealById(decodedId)
@@ -18,6 +20,8 @@ export default function DealDetail() {
   const [detailError, setDetailError] = useState(false)
   const [copyState, setCopyState] = useState('')
   const here = `/nabidka/${encodeURIComponent(decodedId)}`
+  const back = safeInternalPath(location.state?.from, DEALS_RESULTS_PATH)
+  const backLabel = back === DEALS_RESULTS_PATH || back.startsWith('/results?') ? '← Slevy' : '← Zpět'
 
   useEffect(() => {
     if (!session.ready || !session.authenticated) return undefined
@@ -48,21 +52,47 @@ export default function DealDetail() {
     )
   }
 
-  const back = `/restaurant/${known.restaurantId}`
+  if (!session.ready) {
+    return (
+      <main className="page">
+        <Link to={back} className="back-link">
+          {backLabel}
+        </Link>
+        <p className="page-subtitle" role="status">
+          Ověřuji přihlášení… Nabídku zatím nezobrazujeme.
+        </p>
+      </main>
+    )
+  }
+
+  if (!session.authenticated) {
+    return <Navigate to={loginPath(here)} replace />
+  }
+
+  const publicSource = httpUrl(known.sourceUrl || live?.sourceUrl)
 
   if (!live) {
     return (
       <main className="page">
         <Link to={back} className="back-link">
-          ← {restaurant?.name || 'Podnik'}
+          {backLabel}
         </Link>
         <h1>Nabídka už neplatí</h1>
-        <p className="deal-warning">{known.headline} se nezobrazuje jako aktivní sleva.</p>
+        <p className="deal-warning">
+          {(known.title || known.headline)} se nezobrazuje jako aktivní ověřená sleva.
+        </p>
+        {publicSource ? (
+          <p>
+            <a href={publicSource} target="_blank" rel="noopener noreferrer">
+              Ověřit nabídku u zdroje
+            </a>
+          </p>
+        ) : null}
       </main>
     )
   }
 
-  const source = httpUrl(detail?.body?.sourceUrl)
+  const source = httpUrl(detail?.body?.sourceUrl) || publicSource
   const code = typeof detail?.body?.code === 'string' ? detail.body.code : ''
 
   const onCopy = async () => {
@@ -73,56 +103,72 @@ export default function DealDetail() {
   return (
     <main className="page deal-page">
       <Link to={back} className="back-link">
-        ← {restaurant?.name || 'Podnik'}
+        {backLabel}
       </Link>
       <p className="detail-kicker">{restaurant?.name || 'Restaurace'}</p>
-      <h1>{live.headline}</h1>
-      <p className="deal-warning" role="note">
-        {dealValidityNote(live)}
-        {live.validUntil ? ` Uvedený konec: ${live.validUntil}.` : ''} Kontrola {live.checkedAt}.
+      <h1>{live.title || live.headline}</h1>
+      {live.description ? <p className="page-subtitle">{live.description}</p> : null}
+      <p className="location-bar-caption">
+        Prohlížení této nabídky je v FoodGo zdarma. Body se neodečítají. Přihlášení do FoodGo
+        nenahrazuje průkaz ISIC.
       </p>
+      {live.salePrice != null ? (
+        <p>
+          Akční cena ze zdroje: <strong>{live.salePrice} Kč</strong>
+          {live.originalPrice != null ? ` (původní doložená: ${live.originalPrice} Kč)` : ''}
+        </p>
+      ) : null}
+      {dealValidityNote(live) ? (
+        <p className="deal-warning" role="note">
+          {dealValidityNote(live)} Kontrola {live.checkedAt}.
+        </p>
+      ) : (
+        <p className="location-bar-caption" role="note">
+          Ověřeno {live.checkedAt}
+          {live.validUntil && live.sourceHasEndDate ? `, platí do ${live.validUntil}` : ''}.
+        </p>
+      )}
 
-      {!session.ready ? <p>Načítám účet…</p> : null}
-
-      {session.ready && !session.authenticated ? (
-        <section className="deal-panel">
-          <h2>Podrobnosti jsou až po přihlášení</h2>
-          <p>
-            Štítek je veřejný. Kód, podmínky a postup CheapEats ukáže přihlášenému účtu. Restaurace tímhle účtem
-            slevu nepodmiňuje.
+      <section className="deal-panel">
+        {live.studentOnly ? (
+          <p className="deal-isic-required">
+            <strong>Vyžaduje platný průkaz ISIC.</strong> Přihlášení do FoodGo ho nenahrazuje.
           </p>
-          <Link to={loginPath(here)} className="btn btn-primary">
-            Přihlásit se
-          </Link>
-          <Link to={loginPath(here, 'signup')} className="btn btn-secondary">
-            Vytvořit účet
-          </Link>
-        </section>
-      ) : null}
+        ) : null}
+        {live.requiresLoyaltyApp ? <p>Vyžaduje externí věrnostní aplikaci restaurace.</p> : null}
+        {live.conditions?.length ? (
+          <>
+            <h2>Podmínky</h2>
+            <ul className="deal-steps">
+              {live.conditions.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+        <p className="detail-metric-note">Datum ověření: {live.checkedAt}</p>
+        {source ? (
+          <p>
+            <a href={source} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+              Ověřit nabídku
+            </a>
+          </p>
+        ) : null}
+      </section>
 
-      {session.authenticated && !detail && !detailError ? <p>Načítám postup…</p> : null}
-      {session.authenticated && detailError ? (
-        <p className="deal-warning">Postup se nepodařilo načíst.</p>
-      ) : null}
-      {session.authenticated && detail?.status === 401 ? (
+      {!detail && !detailError ? <p>Načítám postup…</p> : null}
+      {detailError ? <p className="deal-warning">Postup se nepodařilo načíst.</p> : null}
+      {detail?.status === 401 ? (
         <p className="deal-warning">
           Relace vypršela.{' '}
           <Link to={loginPath(here)}>Přihlas se znovu</Link>
         </p>
       ) : null}
-      {session.authenticated && detail?.status === 503 ? (
+      {detail?.status === 503 ? (
         <p className="deal-warning">{detail.body?.message || 'Přihlášení není zapnuté.'}</p>
       ) : null}
-      {session.authenticated && detail?.body?.ok ? (
+      {detail?.body?.ok ? (
         <section className="deal-panel">
-          {detail.body.studentOnly ? <p>Jen s platným studentským průkazem, který zdroj uvádí.</p> : null}
-          {detail.body.requiresLoyaltyApp ? <p>Vyžaduje externí věrnostní aplikaci restaurace.</p> : null}
-          <h2>Podmínky</h2>
-          <ul className="deal-steps">
-            {detail.body.conditions.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
           <h2>Jak ji uplatnit</h2>
           <ol className="deal-steps">
             {detail.body.steps.map((item) => (
@@ -142,13 +188,6 @@ export default function DealDetail() {
           ) : (
             <p>Tahle nabídka nemá kód.</p>
           )}
-          {source ? (
-            <p>
-              <a href={source} target="_blank" rel="noopener noreferrer">
-                Zdroj nabídky
-              </a>
-            </p>
-          ) : null}
         </section>
       ) : null}
     </main>

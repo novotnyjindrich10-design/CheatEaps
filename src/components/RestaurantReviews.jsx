@@ -119,13 +119,13 @@ export default function RestaurantReviews({ restaurantId }) {
   return (
     <section className="detail-section" id="recenze">
       <h2 className="detail-section-title">Recenze zákazníků</h2>
-      <p className="detail-address">Hodnocení CheapEats. S hodnocením na Google se nesčítá.</p>
+      <p className="detail-address">Hodnocení FoodGo. S hodnocením na Google se nesčítá.</p>
       {loading ? <p className="detail-address">Načítám recenze…</p> : null}
       {!loading && !error && data.summary.average == null ? (
         <p className="review-empty">{data.summary.label || 'Zatím bez hodnocení'}</p>
       ) : null}
       {!loading && typeof data.summary.average === 'number' ? (
-        <StarRating rating={data.summary.average} reviewCount={data.summary.count} size="lg" source="CheapEats" />
+        <StarRating rating={data.summary.average} reviewCount={data.summary.count} size="lg" source="FoodGo" />
       ) : null}
 
       {error ? (
@@ -253,7 +253,7 @@ function ReviewItem({ review, onReported, onError }) {
             <span className="review-pending-badge">Čeká na schválení</span>
           ) : null}
         </strong>
-        <StarRating rating={review.rating} size="sm" source="CheapEats" />
+        <StarRating rating={review.rating} size="sm" source="FoodGo" />
         {date ? <time dateTime={review.createdAt}>{date}</time> : null}
       </header>
       <p>{review.body}</p>

@@ -1,11 +1,14 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { publicSiteOrigin, sitemapUrls, sitemapXml } from './sitemap.js'
+import { CANONICAL_ORIGIN } from '../constants/site.js'
+import { publicSiteOrigin, sitemapOrigin, sitemapUrls, sitemapXml } from './sitemap.js'
 
 describe('sitemap', () => {
-  it('bez veřejné https adresy nic nesestaví', () => {
+  it('prázdnou nebo ne-https adresu nahradí produkční kanonickou', () => {
     assert.equal(publicSiteOrigin('http://localhost:5173'), '')
-    assert.deepEqual(sitemapUrls('', ['a']), [])
+    assert.equal(sitemapOrigin(''), CANONICAL_ORIGIN)
+    assert.equal(sitemapOrigin('http://127.0.0.1:5173'), CANONICAL_ORIGIN)
+    assert.equal(sitemapUrls('', ['a'])[0], `${CANONICAL_ORIGIN}/`)
   })
 
   it('dává statické stránky a detail podniku jen jednou', () => {
@@ -16,7 +19,12 @@ describe('sitemap', () => {
     assert.match(urls.at(-1), /restaurant\/a%20b$/)
     const xml = sitemapXml(urls)
     assert.match(xml, /<loc>https:\/\/example\.cz\/<\/loc>/)
-    assert.equal(xml.includes('/admin/'), false)
+    assert.equal(xml.includes('/admin'), false)
     assert.equal(xml.includes('/prihlaseni'), false)
+    assert.equal(xml.includes('/odmeny'), false)
+    assert.equal(xml.includes('/oblibene'), false)
+    assert.equal(xml.includes('/api'), false)
+    assert.equal(xml.includes('/porovnani'), false)
+    assert.equal(xml.includes('/nabidka'), false)
   })
 })

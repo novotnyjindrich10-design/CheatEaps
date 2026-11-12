@@ -1,19 +1,37 @@
 /**
- * Nezávazná žádost o první měsíc propagace zdarma.
- * Cenu po zkušebním měsíci bere z quoteTrustedPrice. Částku z požadavku nečte.
- * Neukládá objednávku a nespouští platbu.
+ * Nezávazná poptávka placené propagace.
+ * Cenu bere z quoteTrustedPrice. Částku z požadavku nečte.
+ * Samo o sobě poptávku neukládá, platbu nespouští a reklamu nezapne.
  */
 import { findBusinessPlan, formatKc, normalizeWebAddress } from '../constants/businessPlans.js'
+import { presentPrice } from '../constants/operator.js'
 import { quoteTrustedPrice } from '../constants/promotionPrice.js'
 
 const LIMITS = {
   businessName: 100,
+  companyName: 160,
   contactName: 100,
   email: 200,
+  phone: 40,
+  billingAddress: 200,
+  ico: 16,
+  dic: 20,
+  placeId: 80,
   website: 300,
   socials: 1000,
   extra: 2000,
   photoName: 120,
+}
+
+export function icoChecksumOk(value) {
+  const digits = String(value ?? '').replace(/\s/g, '')
+  if (!/^\d{8}$/.test(digits)) return false
+  const weights = [8, 7, 6, 5, 4, 3, 2]
+  let sum = 0
+  for (let i = 0; i < 7; i += 1) sum += Number(digits[i]) * weights[i]
+  const mod = sum % 11
+  const check = mod === 0 ? 1 : mod === 1 ? 0 : 11 - mod
+  return check === Number(digits[7])
 }
 
 const WINDOW_MS = 60 * 60 * 1000
@@ -129,6 +147,40 @@ export function assessPromotionRequest(payload, now = Date.now()) {
   if (!isEmail(email.value)) {
     return fail(400, 'invalid-field', 'Zadej platný e-mail, například jmeno@podnik.cz.', 'email')
   }
+  const companyName = readText(payload, 'companyName', LIMITS.companyName, true, 'Název firmy')
+  if (!companyName.ok) return fail(400, 'invalid-field', companyName.message, companyName.field)
+  const phone = readText(payload, 'phone', LIMITS.phone, true, 'Telefon')
+  if (!phone.ok) return fail(400, 'invalid-field', phone.message, phone.field)
+  const phoneDigits = phone.value.replace(/\D/g, '')
+  if (phoneDigits.length < 9 || phoneDigits.length > 15) {
+    return fail(400, 'invalid-field', 'Zadej telefon, na kterém tě zastihneme.', 'phone')
+  }
+  const billingAddress = readText(payload, 'billingAddress', LIMITS.billingAddress, true, 'Fakturační adresa')
+  if (!billingAddress.ok) return fail(400, 'invalid-field', billingAddress.message, billingAddress.field)
+  const ico = readText(payload, 'ico', LIMITS.ico, false, 'IČO')
+  if (!ico.ok) return fail(400, 'invalid-field', ico.message, ico.field)
+  const icoDigits = ico.value.replace(/\s/g, '')
+  if (icoDigits && !icoChecksumOk(icoDigits)) {
+    return fail(400, 'invalid-field', 'IČO nemá platný tvar.', 'ico')
+  }
+  const dic = readText(payload, 'dic', LIMITS.dic, false, 'DIČ')
+  if (!dic.ok) return fail(400, 'invalid-field', dic.message, dic.field)
+  if (dic.value && !/^CZ\d{8,10}$/i.test(dic.value.replace(/\s/g, ''))) {
+    return fail(400, 'invalid-field', 'DIČ zadej ve tvaru CZ a čísel.', 'dic')
+  }
+  const placeId = readText(payload, 'placeId', LIMITS.placeId, false, 'Podnik v katalogu')
+  if (!placeId.ok) return fail(400, 'invalid-field', placeId.message, placeId.field)
+  if (placeId.value && !/^[a-z0-9][a-z0-9-]{0,79}$/.test(placeId.value)) {
+    return fail(400, 'invalid-field', 'Vybraný podnik nemá platný identifikátor.', 'placeId')
+  }
+  if (payload.termsAck !== true) {
+    return fail(
+      400,
+      'invalid-field',
+      'Potvrď, že jde o nezávaznou poptávku a že obchodní podmínky jsou text k právní kontrole.',
+      'termsAck',
+    )
+  }
 
   const plan = findBusinessPlan(payload.planId)
   const quotedMonthly = quoteTrustedPrice(payload.planId, 'mesicne')
@@ -189,23 +241,38 @@ export function assessPromotionRequest(payload, now = Date.now()) {
     return fail(400, 'rejected', 'Žádost se nepodařilo odeslat. Zkus to znovu.')
   }
 
+  if (!quotedShown.ok) {
+    return fail(400, 'unknown-period', 'Ceník má jen měsíční nebo roční zobrazení.', 'periodId')
+  }
+
   const shown = quotedShown.ok
     ? `${quotedShown.periodId === 'rocne' ? 'Roční zobrazení ceníku' : 'Měsíční zobrazení ceníku'}: ${formatKc(quotedShown.amount)} ${quotedShown.periodId === 'rocne' ? 'za rok' : 'za měsíc'}`
     : 'Ceník se nepodařilo dopočítat.'
+  const price = presentPrice(quotedShown.amount)
+  const serviceLabel = quotedShown.serviceLabel
 
   const text = [
-    'Nezávazná žádost o první měsíc propagace zdarma',
-    'CheapEats Brno',
+    'Nezávazná poptávka placené propagace',
+    'FoodGo Brno',
     '',
     `Podnik: ${businessName.value}`,
+    `Podnik v katalogu: ${placeId.value || 'neuveden'}`,
+    `Firma: ${companyName.value}`,
+    `IČO: ${icoDigits || 'neuvedeno'}`,
+    `DIČ: ${dic.value || 'neuvedeno'}`,
     `Kontakt: ${contactName.value}`,
     `E-mail: ${email.value}`,
+    `Telefon: ${phone.value}`,
+    `Fakturační adresa: ${billingAddress.value}`,
     `Web: ${websiteCheck.href || 'neuveden'}`,
     `Balíček: ${plan.name} (${plan.id})`,
-    'První měsíc: zdarma',
-    `Cena po zkušebním měsíci: ${formatKc(quotedMonthly.amount)} měsíčně`,
+    `Délka: ${serviceLabel}`,
+    'Platba: jednorázová. Samo se neobnovuje.',
+    `Měsíční sazba ceníku: ${formatKc(quotedMonthly.amount)} měsíčně`,
+    `Ceníková částka: ${formatKc(quotedShown.amount)}`,
+    price.vatNote,
     shown,
-    'Částka na ceníku není objednávka a není souhlas s platbou.',
+    'Tato poptávka není objednávka a úhrada z ní neplyne.',
     '',
     `Popis: ${description.value || 'neuveden'}`,
     `Sociální sítě: ${socialLines.join(', ') || 'neuvedeny'}`,
@@ -214,16 +281,121 @@ export function assessPromotionRequest(payload, now = Date.now()) {
       ? `Fotografie (jen názvy, soubory se nenahrály): ${photoNames.join(', ')}`
       : 'Fotografie: žádné',
     '',
-    'Stav: žádost o ruční kontakt. Platba neproběhla. Propagace není aktivní. Předplatné se nespustilo.',
-    'Obchodní podmínky a zásady ochrany osobních údajů jsou na webu jen jako kostra. Právní text musí doplnit provozovatel.',
+    'Stav: nezávazná poptávka. Platba neproběhla. Propagace není aktivní. Předplatné se nespustilo.',
+    'Obchodní podmínky a zásady ochrany osobních údajů jsou na webu kostra k právní kontrole.',
   ].join('\n')
 
   return {
     ok: true,
-    subject: oneLine(`Žádost o měsíc zdarma: ${businessName.value} (${plan.name})`).slice(0, 160),
+    subject: oneLine(`Poptávka propagace: ${businessName.value} (${plan.name})`).slice(0, 160),
     text,
     replyTo: email.value,
     emailKey: email.value.toLowerCase(),
+    record: {
+      businessName: businessName.value,
+      companyName: companyName.value,
+      contactName: contactName.value,
+      email: email.value,
+      phone: phone.value,
+      billingAddress: billingAddress.value,
+      ico: icoDigits,
+      dic: dic.value.replace(/\s/g, '').toUpperCase(),
+      placeId: placeId.value,
+      website: websiteCheck.href,
+      description: description.value,
+      extra: extra.value,
+      planId: plan.id,
+      planName: plan.name,
+      periodId: quotedShown.periodId,
+      amount: quotedShown.amount,
+      currency: 'CZK',
+      serviceDays: quotedShown.serviceDays,
+      serviceLabel,
+      renewal: 'none',
+      vatStatus: price.vatStatus,
+      vatNote: price.vatNote,
+      termsAck: true,
+    },
+  }
+}
+
+export function buildRestaurantConfirmation(assessment) {
+  const record = assessment.record
+  const reference = assessment.reference
+    ? `Číslo poptávky: ${assessment.reference}`
+    : 'Číslo poptávky se doplní, až bude evidence zapnutá.'
+  return {
+    to: assessment.replyTo,
+    subject: 'Poptávka propagace na FoodGo je přijatá',
+    text: [
+      'Dobrý den,',
+      '',
+      'přijali jsme nezávaznou poptávku placené propagace na FoodGo Brno.',
+      reference,
+      `Podnik: ${record.businessName}`,
+      `Balíček: ${record.planName}`,
+      `Délka: ${record.serviceLabel}`,
+      `Ceníková částka: ${formatKc(record.amount)}`,
+      record.vatNote,
+      '',
+      'Nic se nezaplatilo. Reklama se nezapnula. Platba se sama nestrhává.',
+      'Ozveme se na tento e-mail po kontrole.',
+      '',
+      'FoodGo Brno',
+    ].join('\n'),
+  }
+}
+
+async function postOne(mail, letter, fetchImpl) {
+  try {
+    const response = await fetchImpl('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${mail.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: mail.from,
+        to: [letter.to],
+        ...(letter.replyTo ? { reply_to: letter.replyTo } : {}),
+        subject: letter.subject,
+        text: letter.text,
+      }),
+    })
+    if (!response.ok) return { ok: false, error: 'email-failed' }
+    return { ok: true }
+  } catch {
+    return { ok: false, error: 'email-failed' }
+  }
+}
+
+export async function sendPromotionInquiryMail(assessment, env, fetchImpl) {
+  const mail = configured(env)
+  if (!mail) {
+    return { ok: false, operator: false, restaurant: false, error: 'email-not-configured' }
+  }
+  const operatorText = assessment.reference
+    ? `${assessment.text}\n\nČíslo evidence: ${assessment.reference}`
+    : assessment.text
+  const operatorSent = await postOne(mail, {
+    to: mail.to,
+    replyTo: assessment.replyTo,
+    subject: assessment.subject,
+    text: operatorText,
+  }, fetchImpl)
+  if (!operatorSent.ok) {
+    return { ok: false, operator: false, restaurant: false, error: operatorSent.error }
+  }
+  const confirmation = buildRestaurantConfirmation(assessment)
+  const restaurantSent = await postOne(mail, {
+    ...confirmation,
+    replyTo: mail.to,
+  }, fetchImpl)
+  return {
+    ok: true,
+    operator: true,
+    restaurant: restaurantSent.ok,
+    error: restaurantSent.ok ? '' : 'restaurant-email-failed',
   }
 }
 
@@ -235,6 +407,31 @@ function configured(env) {
     return null
   }
   return { apiKey, to, from }
+}
+
+export async function postResend(assessment, env, fetchImpl) {
+  const mail = configured(env)
+  if (!mail) return { ok: false, status: 503, error: 'email-not-configured' }
+  try {
+    const response = await fetchImpl('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${mail.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: mail.from,
+        to: [mail.to],
+        reply_to: assessment.replyTo,
+        subject: assessment.subject,
+        text: assessment.text,
+      }),
+    })
+    if (!response.ok) return { ok: false, status: 502, error: 'email-failed' }
+    return { ok: true }
+  } catch {
+    return { ok: false, status: 502, error: 'email-failed' }
+  }
 }
 
 export async function deliverPromotionRequest(assessment, env, fetchImpl, now, ip) {
@@ -257,32 +454,11 @@ export async function deliverPromotionRequest(assessment, env, fetchImpl, now, i
     return fail(429, 'rate-limited', 'Z tohoto kontaktu už přišlo víc žádostí. Zkus to později.')
   }
 
-  let response
-  try {
-    response = await fetchImpl('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${mail.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: mail.from,
-        to: [mail.to],
-        reply_to: assessment.replyTo,
-        subject: assessment.subject,
-        text: assessment.text,
-      }),
-    })
-  } catch {
+  const posted = await postResend(assessment, env, fetchImpl)
+  if (!posted.ok) {
     release(emailKey)
     if (ipKey) release(ipKey)
-    return fail(502, 'email-failed', 'E-mail se nepodařilo odeslat. Žádost neodešla, můžeš to zkusit znovu.')
-  }
-
-  if (!response.ok) {
-    release(emailKey)
-    if (ipKey) release(ipKey)
-    return fail(502, 'email-failed', 'E-mail se nepodařilo odeslat. Žádost neodešla, můžeš to zkusit znovu.')
+    return fail(posted.status, posted.error, 'E-mail se nepodařilo odeslat. Žádost neodešla, můžeš to zkusit znovu.')
   }
 
   return {
@@ -293,7 +469,7 @@ export async function deliverPromotionRequest(assessment, env, fetchImpl, now, i
       accepted: true,
       paid: false,
       activated: false,
-      message: 'Žádost o první měsíc zdarma je přijatá. Nic se nezaplatilo a propagace se sama nezapnula.',
+      message: 'Poptávka propagace je přijatá e-mailem. Nic se nezaplatilo a propagace se sama nezapnula.',
     },
   }
 }

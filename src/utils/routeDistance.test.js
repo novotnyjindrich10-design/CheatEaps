@@ -91,7 +91,7 @@ describe('vzdálenost po trase', () => {
     assert.equal(result.failedChunks, 0)
   })
 
-  it('neznámou a načítanou vzdálenost nezobrazí jako číslo', () => {
+  it('hned ukáže Haversine a pěší trasu jen u OSRM', () => {
     const places = applyRouteDistances(
       [
         { id: 'known', lat: 49.2, lon: 16.6 },
@@ -103,22 +103,37 @@ describe('vzdálenost po trase', () => {
         ['known', 1.2],
         ['none', null],
       ]),
-      { hasOrigin: true, pending: true },
+      { hasOrigin: true, pending: true, origin: { lat: 49.195, lon: 16.608 } },
     )
     const byId = Object.fromEntries(places.map((place) => [place.id, place]))
     assert.equal(byId.known.distanceKm, 1.2)
     assert.equal(byId.known.distanceState, 'route')
-    assert.equal(byId.wait.distanceKm, null)
-    assert.equal(byId.wait.distanceState, 'loading')
-    assert.equal(byId.none.distanceState, 'unavailable')
+    assert.ok(typeof byId.wait.distanceKm === 'number' && byId.wait.distanceKm > 0)
+    assert.equal(byId.wait.distanceState, 'air-pending')
+    assert.equal(byId.none.distanceState, 'air-pending')
+    assert.ok(typeof byId.none.distanceKm === 'number')
     assert.equal(byId.nocoords.distanceState, 'unverified')
     assert.equal(byId.nocoords.locationVerified, false)
     assert.equal(formatRouteDistance(byId.known.distanceKm, byId.known.distanceState), '1,2 km')
-    assert.equal(formatRouteDistance(byId.wait.distanceKm, byId.wait.distanceState), '…')
-    assert.equal(formatRouteDistance(byId.none.distanceKm, byId.none.distanceState), '—')
+    assert.match(formatRouteDistance(byId.wait.distanceKm, byId.wait.distanceState), /m|km/)
     assert.deepEqual(presentRouteDistance(byId.known.distanceKm, byId.known.distanceState), {
       value: '1,2 km',
       caption: 'pěšky',
+    })
+    assert.equal(presentRouteDistance(byId.wait.distanceKm, byId.wait.distanceState).caption, 'vzdušnou čarou · počítám trasu')
+  })
+
+  it('po výpadku trasy zůstane vzdušná vzdálenost', () => {
+    const [place] = applyRouteDistances(
+      [{ id: 'near', lat: 49.2, lon: 16.6 }],
+      new Map(),
+      { hasOrigin: true, pending: false, origin: { lat: 49.195, lon: 16.608 } },
+    )
+    assert.equal(place.distanceState, 'air')
+    assert.ok(place.distanceKm > 0)
+    assert.deepEqual(presentRouteDistance(place.distanceKm, place.distanceState), {
+      value: formatRouteDistance(place.distanceKm, 'air'),
+      caption: 'vzdušnou čarou',
     })
   })
 

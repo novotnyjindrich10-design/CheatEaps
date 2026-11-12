@@ -110,6 +110,27 @@ describe('chytré hledání', () => {
     assert.equal(suggestKeyAction({ key: 'Escape' }, { open: true, suggestions, activeIndex: 0 }).type, 'close')
   })
 
+  it('neplete si podobná slova a bez masa nebere burger jen s vegetariánskou položkou', () => {
+    const extra = [
+      ...places,
+      place('piazza', { name: 'Gelateria Piazza', category: 'kava' }),
+      place('steak', { name: "Let's STEAKing", category: 'burger' }),
+      place('bk', { name: 'Burger King', category: 'burger', vegetarianFriendly: true }),
+      place('beas', { name: 'Dhaba', category: 'vegetarianske', vegetarianFriendly: true }),
+    ]
+    const pizzaIds = filterAndSortRestaurants(extra, { search: 'pizza' }).map((item) => item.id)
+    assert.equal(pizzaIds.includes('piazza'), false)
+    assert.ok(pizzaIds.includes('alfa'))
+    assert.deepEqual(
+      filterAndSortRestaurants(extra, { search: 'Burger King' }).map((item) => item.id),
+      ['bk'],
+    )
+    const meatFree = filterAndSortRestaurants(extra, { search: 'bez masa' }).map((item) => item.id)
+    assert.equal(meatFree.includes('bk'), false)
+    assert.ok(meatFree.includes('beas'))
+    assert.ok(meatFree.includes('vegan-burger'))
+  })
+
   it('zrušení cenového limitu z dotazu nechá zbytek hledání', () => {
     const intent = interpretSearchQuery('pizza do 200 Veveří')
     assert.equal(intent.maxBudget, '200')

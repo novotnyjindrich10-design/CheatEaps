@@ -119,7 +119,10 @@ export default function AdminApplications() {
   return (
     <main className="page admin-page">
       <h1 className="section-title">Žádosti o podniky</h1>
-      <p className="section-desc">Přihlášen jako {me.email}. Schválení zveřejní podnik v katalogu CheapEats.</p>
+      <p className="section-desc">
+        Přihlášen jako {me.email}. Schválení zveřejní podnik v katalogu FoodGo.{' '}
+        <Link to="/admin/propagace">Poptávky propagace</Link>
+      </p>
 
       <div className="admin-filters">
         {['pending', 'needs_changes', 'approved', 'rejected', ''].map((value) => (

@@ -6,7 +6,7 @@
  * Specifické name hints mají přednost před obecnou kategorií.
  */
 
-export const UA = 'CheapEatsBrno/1.0 (student project; Openverse food illustrations)'
+export const UA = 'FoodGoBrno/1.0 (student project; Openverse food illustrations)'
 export const OPENVERSE = 'https://api.openverse.org/v1/images/'
 export const ALLOWED = new Set(['cc0', 'pdm', 'by', 'by-sa'])
 export const PREFERRED = new Set(['cc0', 'pdm'])

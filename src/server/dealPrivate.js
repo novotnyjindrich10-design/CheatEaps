@@ -77,6 +77,16 @@ export const DEAL_PRIVATE = {
     ],
     steps: ['Před zaplacením ukaž platný průkaz ISIC nebo ITIC. Kód stránka neuvádí.'],
   },
+  'mcdonalds-isic-cheeseburger-menu': {
+    code: '',
+    sourceUrl: 'https://www.isic.cz/slevy/cr/mcdonald-s/729',
+    conditions: [
+      'Jednou za den.',
+      'Cheeseburger, střední hranolky a střední nápoj 0,4 l za 109 Kč.',
+      'Stránka neuvádí datum začátku ani konce.',
+    ],
+    steps: ['Před zaplacením ukaž platný průkaz ISIC nebo ITIC. Kód stránka neuvádí.'],
+  },
   'burger-king-isic-steakhouse': {
     code: '',
     sourceUrl: 'https://www.isic.cz/en/discounts/discounts-in-the-czech-republic/burger-king/720',

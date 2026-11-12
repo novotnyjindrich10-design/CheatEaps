@@ -16,9 +16,39 @@ function LocationPin() {
   )
 }
 
+function locationStatusText({ status, activeGps, activeManual, origin, originFresh }) {
+  if (status === 'locating') return 'Zjišťuji polohu…'
+  if (status === 'updated') return 'Poloha načtena'
+  if (status === 'current') return 'Poloha je aktuální'
+  if (status === 'denied') return 'Poloha je v prohlížeči zakázaná'
+  if (
+    status === 'timeout' ||
+    status === 'unavailable' ||
+    status === 'error' ||
+    status === 'invalid' ||
+    status === 'unsupported' ||
+    status === 'insecure'
+  ) {
+    return 'Polohu se nepodařilo zjistit'
+  }
+  if (activeGps && originFresh) return 'Poloha je aktivní'
+  if (activeGps) return 'Poslední uložená poloha — aktualizuj, nebo ji zapomeň'
+  if (activeManual) return `Výchozí místo: ${origin.label}`
+  return 'Vzdálenost je volitelná'
+}
+
 export default function LocationBar({ places = [], variant = 'default' }) {
-  const { origin, status, errorMessage, locate, clearOrigin, setManualOrigin, routeStatus, routeMessage } =
-    useLocationState()
+  const {
+    origin,
+    originFresh,
+    status,
+    errorMessage,
+    locate,
+    forgetOrigin,
+    setManualOrigin,
+    routeStatus,
+    routeMessage,
+  } = useLocationState()
   const activeGps = origin?.type === 'gps' && hasFiniteLatLon(origin.lat, origin.lon)
   const activeManual = origin?.type === 'manual' && hasFiniteLatLon(origin.lat, origin.lon)
   const active = activeGps || activeManual
@@ -34,31 +64,41 @@ export default function LocationBar({ places = [], variant = 'default' }) {
       .slice(0, 6)
   }, [places, query])
 
-  let statusText = 'Vzdálenost je volitelná.'
-  if (activeGps) statusText = 'Poloha je aktivní.'
-  else if (activeManual) statusText = `Výchozí místo: ${origin.label}.`
+  const statusText = locationStatusText({ status, activeGps, activeManual, origin, originFresh })
+  const buttonLabel = locating
+    ? 'Zjišťuji polohu…'
+    : activeGps
+      ? 'Aktualizovat polohu'
+      : 'Použít moji polohu'
 
   return (
     <section className={`location-bar${variant === 'hero' ? ' location-bar--hero' : ''}`} aria-label="Poloha">
-      <button
-        type="button"
-        className={`btn btn-primary location-btn${activeGps ? ' is-active' : ''}`}
-        onClick={locate}
-        disabled={locating}
-        aria-busy={locating}
-      >
-        <LocationPin />
-        {locating ? 'Zjišťuji polohu…' : activeGps ? 'Aktualizovat polohu' : 'Zapnout polohu'}
-      </button>
-      <button type="button" className="location-manual-toggle" onClick={() => setManualOpen((open) => !open)}>
-        Zadat místo
-      </button>
-      {active ? (
-        <button type="button" className="location-manual-toggle" onClick={clearOrigin}>
-          Vypnout polohu
+      <div className="location-bar-actions">
+        <button
+          type="button"
+          className={`btn btn-primary location-btn${activeGps ? ' is-active' : ''}`}
+          onClick={() => locate({ forceRefresh: activeGps, highAccuracy: activeGps })}
+          disabled={locating}
+          aria-busy={locating}
+        >
+          <LocationPin />
+          {buttonLabel}
         </button>
-      ) : null}
-      <p className={`location-bar-status${active ? ' is-on' : ''}`} role="status">
+        <button type="button" className="location-manual-toggle" onClick={() => setManualOpen((open) => !open)}>
+          Zadat místo
+        </button>
+        {active ? (
+          <button type="button" className="location-manual-toggle" onClick={forgetOrigin}>
+            Zapomenout moji polohu
+          </button>
+        ) : null}
+      </div>
+      <p
+        className={`location-bar-status${
+          active || locating || status === 'updated' || status === 'current' ? ' is-on' : ''
+        }`}
+        role="status"
+      >
         {statusText}
       </p>
       {errorMessage ? (
@@ -99,7 +139,7 @@ export default function LocationBar({ places = [], variant = 'default' }) {
         </div>
       ) : null}
       {variant !== 'hero' && active && routeStatus === 'loading' ? (
-        <p className="location-bar-caption">Počítám pěší vzdálenost…</p>
+        <p className="location-bar-caption">Doplňuji pěší vzdálenosti… zatím je vzdušná čára.</p>
       ) : null}
       {variant !== 'hero' && active && routeMessage ? (
         <p className="location-bar-note" role="status">

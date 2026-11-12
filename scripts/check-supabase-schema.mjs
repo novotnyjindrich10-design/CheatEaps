@@ -1,5 +1,5 @@
 /**
- * Kontrola, jestli remote Supabase už má tabulky CheapEats.
+ * Kontrola, jestli remote Supabase už má tabulky FoodGo.
  * Čte jen .env (SUPABASE_URL + SUPABASE_ANON_KEY). Žádné tajemství nevypisuje.
  * Spuštění: node scripts/check-supabase-schema.mjs
  */
@@ -39,6 +39,15 @@ const tables = [
   'published_places',
 ]
 
+/** Volitelné — až po supabase/loyalty.sql. Chybějící jen hlásíme, exit code nemění. */
+const loyaltyTables = [
+  'loyalty_points',
+  'loyalty_transactions',
+  'loyalty_rewards',
+  'loyalty_reward_codes',
+  'loyalty_redemptions',
+]
+
 console.log('host', new URL(base).host)
 console.log('key_kind', key.startsWith('sb_publishable') ? 'publishable' : key.includes('.') ? 'jwt-like' : 'other')
 
@@ -60,9 +69,33 @@ for (const table of tables) {
   }
 }
 
+console.log('\nLoyalty (volitelné, supabase/loyalty.sql):')
+let loyaltyMissing = 0
+for (const table of loyaltyTables) {
+  const res = await fetch(`${base}/rest/v1/${table}?select=*&limit=0`, { headers })
+  const text = await res.text()
+  const missingTable = res.status === 404 || /PGRST205|Could not find the table/i.test(text)
+  const forbidden = res.status === 401 || res.status === 403
+  if (missingTable) {
+    loyaltyMissing += 1
+    console.log(`${table}: MISSING`)
+  } else if (forbidden) {
+    console.log(`${table}: EXISTS (read blocked for anon — očekávané)`)
+  } else if (res.ok) {
+    console.log(`${table}: EXISTS`)
+  } else {
+    console.log(`${table}: HTTP ${res.status} ${text.slice(0, 120)}`)
+  }
+}
+
 console.log(
   missing
-    ? `\nChybí ${missing} tabulek. V SQL Editoru spusť supabase/bootstrap-all.sql`
-    : '\nVšechny kontrolované tabulky jsou dostupné (nebo správně chráněné RLS).',
+    ? `\nChybí ${missing} základních tabulek. V SQL Editoru spusť supabase/bootstrap-all.sql`
+    : '\nZákladní tabulky jsou dostupné (nebo správně chráněné RLS).',
 )
+if (loyaltyMissing) {
+  console.log(`Loyalty: chybí ${loyaltyMissing} tabulek. Po schválení spusť supabase/loyalty.sql`)
+} else {
+  console.log('Loyalty tabulky jsou dostupné (nebo správně chráněné RLS).')
+}
 process.exit(missing ? 1 : 0)

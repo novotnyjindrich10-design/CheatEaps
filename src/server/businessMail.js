@@ -2,8 +2,9 @@
  * E-mail majiteli po schválení podniku (Resend, server-side).
  * Neoznačuje neodeslaný e-mail za úspěch.
  */
+import { CONTACT_EMAIL } from '../constants/brand.js'
 
-const SUPPORT_EMAIL = 'novotnyjindrich10@gmail.com'
+const SUPPORT_EMAIL = CONTACT_EMAIL
 
 function configured(env) {
   const apiKey = String(env.RESEND_API_KEY ?? '').trim()
@@ -19,7 +20,7 @@ export function buildApprovalEmail({ businessName, placeUrl, ownerEmail }) {
   const lines = [
     'Dobrý den,',
     '',
-    `máme radost — podnik „${name}“ je teď zveřejněný na CheapEats Brno.`,
+    `máme radost — podnik „${name}“ je teď zveřejněný na FoodGo Brno.`,
     '',
     'Lidé, kteří u nás hledají, kde se dobře najíst, ho můžou najít ve výsledcích a na stránce podniku.',
   ]
@@ -32,11 +33,11 @@ export function buildApprovalEmail({ businessName, placeUrl, ownerEmail }) {
     '',
     'Děkujeme, že jste s námi.',
     '',
-    'Tým CheapEats Brno',
+    'Tým FoodGo Brno',
   )
   return {
     to,
-    subject: 'Váš podnik je nyní na CheapEats!',
+    subject: 'Váš podnik je nyní na FoodGo!',
     text: lines.join('\n'),
   }
 }

@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/authSession'
-import { rememberResetNext, postLoginTarget } from '../utils/authReturn'
+import { authGateCopy, rememberResetNext, postLoginTarget } from '../utils/authReturn'
 
 export default function AuthPage({ mode = 'login' }) {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const next = postLoginTarget(params.toString())
+  const gate = authGateCopy(next)
   const { session, submit } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -15,6 +16,11 @@ export default function AuthPage({ mode = 'login' }) {
   const [pending, setPending] = useState(false)
   const signup = mode === 'signup'
   const recover = !signup && params.get('obnova') === '1'
+
+  useEffect(() => {
+    if (!session.ready || !session.authenticated || recover) return
+    navigate(next, { replace: true })
+  }, [session.ready, session.authenticated, recover, next, navigate])
 
   const onRecover = async (event) => {
     event.preventDefault()
@@ -74,29 +80,29 @@ export default function AuthPage({ mode = 'login' }) {
 
   return (
     <main className="page auth-page">
-      <Link to={next} className="back-link">
-        ← Zpět k nabídce
+      <Link to={gate.headline ? '/' : next} className="back-link">
+        ← {gate.headline ? 'Zpět domů' : 'Zpět k nabídce'}
       </Link>
       <h1>{signup ? 'Registrace' : recover ? 'Zapomenuté heslo' : 'Přihlášení'}</h1>
-      <p className="page-subtitle">
-        Účet CheapEats odemkne kód a postup uplatnění. Restaurace kvůli tomu svůj ceník nemění.
-      </p>
+      {gate.headline && !recover ? <p className="auth-gate-headline">{gate.headline}</p> : null}
+      <p className="page-subtitle">{recover ? 'Pošleme odkaz pro nastavení nového hesla.' : gate.lead}</p>
+      {gate.note && !recover ? <p className="location-bar-caption">{gate.note}</p> : null}
 
       {session.unreachable ? (
         <p className="deal-warning" role="status">
-          Přihlášení teď neodpovídá. Zkus to za chvíli.
+          Stav účtu se nepodařilo ověřit. Formulář necháváme otevřený — zkus se přihlásit, nebo obnov stránku.
         </p>
       ) : null}
 
       {!session.ready ? <p className="page-subtitle">Načítám stav účtu…</p> : null}
 
-      {session.ready && !session.configured ? (
+      {session.ready && !session.configured && !session.unreachable ? (
         <p className="deal-warning" role="status">
           Přihlášení teď není k dispozici. Zkus to později.
         </p>
       ) : null}
 
-      {session.configured && recover ? (
+      {(session.configured || session.unreachable) && recover ? (
         <form className="auth-form" onSubmit={onRecover}>
           <label>
             E-mail
@@ -126,7 +132,7 @@ export default function AuthPage({ mode = 'login' }) {
         </form>
       ) : null}
 
-      {session.configured && !recover ? (
+      {(session.configured || session.unreachable) && !recover ? (
         <form className="auth-form" onSubmit={onSubmit}>
           <label>
             E-mail

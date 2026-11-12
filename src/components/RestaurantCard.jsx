@@ -6,13 +6,18 @@ import { formatCardPrice } from '../utils/price'
 import { cardExcerpt } from '../utils/placeCopy'
 import { presentRouteDistance } from '../utils/routeDistance'
 import { currentInternalPath } from '../utils/internalPath'
-import { dealBadgesForRestaurant } from '../data/restaurantDeals'
+import {
+  dealHighlightLabel,
+  publicDealsForRestaurant,
+} from '../data/restaurantDeals'
+import { isDealCardVariant } from '../utils/dealCardVariant'
 import { resolveCardMedia } from '../utils/cardMedia'
 import { presentOsmContact } from '../utils/osmContact'
 import CuisineIllustration from './CuisineIllustration'
 import { useCompare } from '../context/CompareContext'
+import { showSponsoredLabel, SPONSORED_LABEL } from '../constants/monetization'
 
-export default function RestaurantCard({ restaurant, index = 0 }) {
+export default function RestaurantCard({ restaurant, index = 0, variant = 'default' }) {
   const from = currentInternalPath(useLocation())
   const compare = useCompare()
   const inCompare = compare.has(restaurant?.id)
@@ -20,26 +25,42 @@ export default function RestaurantCard({ restaurant, index = 0 }) {
   const [mediaReady, setMediaReady] = useState(false)
   if (!restaurant?.id) return null
 
+  const isDeal = isDealCardVariant(variant)
   const { id, name, type, address, distanceKm, distanceState } = restaurant
   const distance = presentRouteDistance(distanceKm, distanceState)
   const tags = getRestaurantTags(restaurant)
   const category = getRestaurantCategory(restaurant)
   const priceDisplay = formatCardPrice(restaurant)
   const excerpt = cardExcerpt(restaurant, 110)
-  const dealBadges = dealBadgesForRestaurant(id)
+  const deals = isDeal ? publicDealsForRestaurant(id) : []
+  const primaryDeal = deals[0] ?? null
+  const highlight = primaryDeal ? dealHighlightLabel(primaryDeal) : 'Sleva'
   const media = !mediaBroken ? resolveCardMedia(restaurant) : null
   const detailState = { from, ...(Number.isInteger(media?.pixabayId) ? { pixabayId: media.pixabayId } : {}) }
   const contact = presentOsmContact(restaurant)
   const hoursCard = contact.hasHours
     ? contact.hoursDisplay.split('\n').filter(Boolean).join(' · ')
     : null
+  const offerHref = primaryDeal
+    ? `/nabidka/${encodeURIComponent(primaryDeal.id)}`
+    : `/results?deals=1`
+  const offerSummary =
+    primaryDeal?.description ||
+    primaryDeal?.title ||
+    primaryDeal?.headline ||
+    excerpt
 
   return (
     <article
-      className={`restaurant-card restaurant-card--${category}`}
+      className={`restaurant-card restaurant-card--${category}${isDeal ? ' restaurant-card--deal' : ''}${showSponsoredLabel(restaurant) ? ` restaurant-card--sponsored restaurant-card--sponsored-${restaurant.sponsorship?.planId || 'start'}` : ''}`}
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms` }}
     >
-      <Link to={`/restaurant/${id}`} state={detailState} className="restaurant-card-media-link">
+      <Link
+        to={isDeal ? offerHref : `/restaurant/${id}`}
+        state={detailState}
+        className="restaurant-card-media-link"
+        aria-label={isDeal ? `${name}: ${highlight}` : name}
+      >
         <div
           className="restaurant-card-media"
           style={media?.color ? { backgroundColor: media.color } : undefined}
@@ -48,10 +69,16 @@ export default function RestaurantCard({ restaurant, index = 0 }) {
             <img
               src={media.url}
               srcSet={media.srcSet || undefined}
-              sizes={media.srcSet ? '(max-width: 720px) 92vw, 380px' : undefined}
+              sizes={
+                media.srcSet
+                  ? isDeal
+                    ? '(max-width: 720px) 94vw, (max-width: 1100px) 46vw, 520px'
+                    : '(max-width: 720px) 92vw, 380px'
+                  : undefined
+              }
               width={media.width || 940}
               height={media.height || 650}
-              alt={media.kind === 'illustration' ? 'Ilustrační fotografie' : ''}
+              alt={media.alt || (media.kind === 'illustration' ? `Ilustrační fotografie – ${name}` : name)}
               className={[media.transparent ? 'is-cutout' : '', mediaReady ? 'is-ready' : 'is-pending']
                 .filter(Boolean)
                 .join(' ')}
@@ -69,6 +96,11 @@ export default function RestaurantCard({ restaurant, index = 0 }) {
             <span className="restaurant-card-price-value">{priceDisplay.primary}</span>
             <span className="restaurant-card-price-status">{priceDisplay.status}</span>
           </span>
+          {isDeal ? (
+            <span className="restaurant-card-deal-chip" aria-label={`Nabídka: ${highlight}`}>
+              {highlight}
+            </span>
+          ) : null}
           {media?.kind === 'illustration' ? (
             <span className="restaurant-card-media-note">Ilustrační fotografie</span>
           ) : null}
@@ -76,72 +108,63 @@ export default function RestaurantCard({ restaurant, index = 0 }) {
         </div>
       </Link>
 
-      {dealBadges.length > 0 ? (
-        <div className="restaurant-card-deals">
-          {dealBadges.map((badge) => (
-            <Link
-              key={badge.label}
-              to={
-                badge.count > 1
-                  ? `/restaurant/${id}#nabidky`
-                  : `/nabidka/${encodeURIComponent(badge.dealId)}`
-              }
-              state={{ from }}
-              className="deal-badge"
-            >
-              {badge.label}
-              {badge.count > 1 ? ` · ${badge.count}` : ''}
-            </Link>
-          ))}
-        </div>
-      ) : null}
-
       <div className="restaurant-card-body">
-        <Link to={`/restaurant/${id}`} state={detailState} className="restaurant-card-link">
-          <div className="restaurant-card-top">
+        {isDeal ? (
+          <>
             <p className="restaurant-card-type">{type}</p>
-            {tags.length > 0 ? (
-              <div className="restaurant-card-tag-row">
-                {tags.map((tag) => (
-                  <span key={tag.key} className={`tag tag--${tag.tone}`}>
-                    {tag.label}
-                  </span>
-                ))}
-              </div>
+            <h2 className="restaurant-card-title">{name}</h2>
+            {primaryDeal?.title || primaryDeal?.headline ? (
+              <p className="restaurant-card-deal-title">{primaryDeal.title || primaryDeal.headline}</p>
             ) : null}
-          </div>
-
-          <h2 className="restaurant-card-title">{name}</h2>
-          {address ? <p className="restaurant-card-address">{address}</p> : null}
-          {hoursCard ? (
-            <p className="restaurant-card-hours" title={contact.unverifiedNote}>
-              <span className="restaurant-card-hours-label">Otevírací doba</span>
-              <span className="restaurant-card-hours-value">{hoursCard}</span>
-            </p>
-          ) : null}
-          <p className="restaurant-card-desc">{excerpt}</p>
-        </Link>
-
-        <div className="restaurant-card-meta restaurant-card-meta--two">
-          <div className="restaurant-card-meta-item">
-            <span className="meta-label">Cena</span>
-            <span className={`meta-value meta-value--price meta-value--${priceDisplay.tone || 'missing'}`}>
-              {priceDisplay.primary}
-            </span>
-            {priceDisplay.status ? (
-              <span className={`meta-price-caption meta-price-caption--${priceDisplay.tone || 'missing'}`}>
-                {priceDisplay.status}
-              </span>
+            {offerSummary ? <p className="restaurant-card-desc">{offerSummary}</p> : null}
+            {primaryDeal?.studentOnly ? (
+              <p className="restaurant-card-deal-term">Vyžaduje ISIC</p>
             ) : null}
-          </div>
+            {deals.length > 1 ? (
+              <p className="restaurant-card-deal-more">+ další nabídky u tohoto podniku</p>
+            ) : null}
+          </>
+        ) : (
+          <Link to={`/restaurant/${id}`} state={detailState} className="restaurant-card-link">
+            <div className="restaurant-card-top">
+              <p className="restaurant-card-type">{type}</p>
+              {showSponsoredLabel(restaurant) ? (
+                <p className="sponsored-badge">{SPONSORED_LABEL}</p>
+              ) : null}
+              {tags.length > 0 ? (
+                <div className="restaurant-card-tag-row">
+                  {tags.map((tag) => (
+                    <span key={tag.key} className={`tag tag--${tag.tone}`}>
+                      {tag.label}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
+            <h2 className="restaurant-card-title">{name}</h2>
+            {address ? <p className="restaurant-card-address">{address}</p> : null}
+            {hoursCard ? (
+              <p className="restaurant-card-hours" title={contact.unverifiedNote}>
+                <span className="restaurant-card-hours-label">Otevírací doba</span>
+                <span className="restaurant-card-hours-value">{hoursCard}</span>
+              </p>
+            ) : null}
+            <p className="restaurant-card-desc">{excerpt}</p>
+          </Link>
+        )}
+
+        <div className={`restaurant-card-meta${isDeal ? '' : ' restaurant-card-meta--distance'}`}>
           <div className="restaurant-card-meta-item">
             <span className="meta-label">Vzdálenost</span>
             <span
               className="meta-value"
               aria-label={
-                distanceState === 'loading' || distanceState === 'locating'
-                  ? 'Počítám pěší vzdálenost'
-                  : undefined
+                distanceState === 'locating'
+                  ? 'Zjišťuji polohu'
+                  : distanceState === 'air-pending'
+                    ? 'Vzdušná vzdálenost, počítám pěší trasu'
+                    : undefined
               }
             >
               {distance.value}
@@ -150,29 +173,40 @@ export default function RestaurantCard({ restaurant, index = 0 }) {
           </div>
         </div>
 
-        <div className="restaurant-card-actions">
-          <a
-            href={mapsNavigateUrl(restaurant)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-card"
-          >
-            Navigovat
-          </a>
-          <Link to={`/restaurant/${id}`} state={detailState} className="btn btn-card btn-card--primary">
-            Detail
-            <span className="btn-card-arrow" aria-hidden="true">
-              →
-            </span>
-          </Link>
-          <button
-            type="button"
-            className={`btn btn-card compare-card-toggle${inCompare ? ' is-on' : ''}`}
-            aria-pressed={inCompare}
-            onClick={() => compare.toggle(id)}
-          >
-            {inCompare ? 'V porovnání' : 'Porovnat'}
-          </button>
+        <div className={`restaurant-card-actions${isDeal ? ' restaurant-card-actions--deal' : ''}`}>
+          {isDeal ? (
+            <Link to={offerHref} state={{ from }} className="btn btn-card btn-card--primary">
+              Zobrazit nabídku
+              <span className="btn-card-arrow" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          ) : (
+            <>
+              <a
+                href={mapsNavigateUrl(restaurant)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-card"
+              >
+                Navigovat
+              </a>
+              <Link to={`/restaurant/${id}`} state={detailState} className="btn btn-card btn-card--primary">
+                Detail
+                <span className="btn-card-arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+              <button
+                type="button"
+                className={`btn btn-card compare-card-toggle${inCompare ? ' is-on' : ''}`}
+                aria-pressed={inCompare}
+                onClick={() => compare.toggle(id)}
+              >
+                {inCompare ? 'V porovnání' : 'Porovnat'}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </article>

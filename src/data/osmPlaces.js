@@ -114,7 +114,7 @@ export const osmPlaces = [
   {
     "id": "amici-pizza-burgers-palackeho-trida-82",
     "name": "Amici Pizza & Burgers",
-    "description": "Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: pizza;burger.",
+    "description": "Záznam z OpenStreetMap (pizzerie). Kuchyně dle OSM: pizza;burger.",
     "type": "Pizza",
     "category": "pizza",
     "address": "Palackého třída 82, 61200 Brno",
@@ -670,9 +670,9 @@ export const osmPlaces = [
   {
     "id": "buffalo-american-steakhouse-krizkovskeho-416-22",
     "name": "Buffalo American Steakhouse",
-    "description": "Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: steak_house.",
-    "type": "Kavárna",
-    "category": "kava",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "type": "Restaurace",
+    "category": "neuvedeno",
     "address": "Křížkovského 416/22, Brno",
     "website": "https://restauracebuffalo.cz/"
   },
@@ -794,9 +794,9 @@ export const osmPlaces = [
   {
     "id": "butcher-s-dobrovskeho-96-29",
     "name": "Butcher's",
-    "description": "Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: barbecue;steak_house;pasta.",
-    "type": "Kavárna",
-    "category": "kava",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "type": "Restaurace",
+    "category": "neuvedeno",
     "address": "Dobrovského 96/29, 61200 Brno",
     "website": "https://www.butchers.cz/"
   },
@@ -3504,9 +3504,9 @@ export const osmPlaces = [
   {
     "id": "monte-bu-udolni-76",
     "name": "Monte Bú",
-    "description": "Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: steak_house.",
-    "type": "Kavárna",
-    "category": "kava",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "type": "Restaurace",
+    "category": "neuvedeno",
     "address": "Údolní 76, 60200 Brno",
     "website": "https://www.monte-bu.cz/"
   },
@@ -4460,8 +4460,8 @@ export const osmPlaces = [
     "id": "plzensky-dvur-sumavska-29a",
     "name": "Plzeňský dvůr",
     "description": "Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: regional;steak_house.",
-    "type": "Kavárna",
-    "category": "kava",
+    "type": "Restaurace",
+    "category": "neuvedeno",
     "address": "Šumavská 29a, 60200 Brno",
     "website": "https://www.plzenskydvur.cz/"
   },
@@ -4643,9 +4643,9 @@ export const osmPlaces = [
   {
     "id": "prime-steak-palackeho-trida-162",
     "name": "Prime Steak",
-    "description": "Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: steak_house.",
-    "type": "Kavárna",
-    "category": "kava",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "type": "Restaurace",
+    "category": "neuvedeno",
     "address": "Palackého třída 162, 61200 Brno",
     "website": "https://www.primesteak.cz/"
   },
@@ -5381,9 +5381,9 @@ export const osmPlaces = [
   {
     "id": "steak-house-k1-bubenickova-11",
     "name": "Steak House K1",
-    "description": "Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: steak_house;italian.",
-    "type": "Kavárna",
-    "category": "kava",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "type": "Restaurace",
+    "category": "neuvedeno",
     "address": "Bubeníčkova 11, 61500 Brno",
     "website": "https://k1steakhouse.cz/restaurace/take-away",
     "vegetarianFriendly": true,
@@ -5849,7 +5849,7 @@ export const osmPlaces = [
   {
     "id": "tri-kocketyri-nadrazni-22",
     "name": "Tři Kočketýři",
-    "description": "Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: burger.",
+    "description": "Záznam z OpenStreetMap (burger restaurace). Kuchyně dle OSM: burger.",
     "type": "Burger",
     "category": "burger",
     "address": "Nádražní 22, 60200 Brno",

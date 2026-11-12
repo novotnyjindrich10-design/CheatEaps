@@ -35,7 +35,7 @@ export function getRestaurantTags(restaurant) {
   }
 
   if (restaurant.lunchMenu) {
-    tags.push({ key: 'lunch', label: 'Polední menu', tone: 'sky' })
+    tags.push({ key: 'lunch', label: 'Polední zmínka (OSM)', tone: 'sky' })
   }
 
   if (

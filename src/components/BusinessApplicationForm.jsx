@@ -205,11 +205,12 @@ export default function BusinessApplicationForm({ onClose }) {
   return (
     <section className="biz-form" aria-label="Žádost o přidání podniku">
       <div className="biz-form-toolbar">
-        <h2>Žádost o přidání podniku · START FREE</h2>
+        <h2>Žádost o zveřejnění v katalogu</h2>
         <button type="button" className="header-link" onClick={onClose}>
           Zavřít
         </button>
       </div>
+      <p className="biz-note">Tohle není objednávka. Platba se nestrhává a reklama se nezapne.</p>
 
       <ol className="biz-form-steps" aria-label="Průběh vyplňování">
         {STEPS.map((item, index) => (
@@ -321,7 +322,7 @@ export default function BusinessApplicationForm({ onClose }) {
           <div className="biz-check-card">
             <h3>Kontrola a vylepšení popisu</h3>
             <p className="biz-form-hint">
-              Spustí pravidlovou kontrolu CheapEats (oprava mezer/pravopisu drobných chyb). Nejde o jazykový model a nic si nevymýšlí.
+              Spustí pravidlovou kontrolu FoodGo (oprava mezer/pravopisu drobných chyb). Nejde o jazykový model a nic si nevymýšlí.
             </p>
             <button type="button" className="btn btn-primary" disabled={busy === 'review'} onClick={runDescriptionReview}>
               {busy === 'review' ? 'Kontroluji…' : 'Zkontrolovat a vylepšit'}

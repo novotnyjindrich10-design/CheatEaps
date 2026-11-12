@@ -4,16 +4,27 @@ import Logo from './Logo'
 import { useAuth } from '../context/authSession'
 import { loginPath } from '../utils/authReturn'
 
-function isActive(pathname, to) {
+function isActive(pathname, search, to) {
   if (to === '/') return pathname === '/'
-  return pathname === to || pathname.startsWith(`${to}/`)
+  const [path, query = ''] = to.split('?')
+  if (!(pathname === path || pathname.startsWith(`${path}/`))) return false
+  const want = new URLSearchParams(query)
+  const have = new URLSearchParams(search || '')
+  if ([...want.keys()].length === 0) {
+    if (path === '/results') return have.get('view') !== 'map'
+    return true
+  }
+  for (const [key, value] of want.entries()) {
+    if (have.get(key) !== value) return false
+  }
+  return true
 }
 
-function NavLinks({ links, pathname, onNavigate, linkClass, firstItemRef }) {
+function NavLinks({ links, pathname, search, onNavigate, linkClass, firstItemRef }) {
   return links.map((item, index) => {
-    const active = isActive(pathname, item.to)
+    const active = isActive(pathname, search, item.to)
     return (
-      <li key={item.to}>
+      <li key={`${item.to}-${item.label}`}>
         <Link
           ref={index === 0 ? firstItemRef : undefined}
           to={item.to}
@@ -28,6 +39,20 @@ function NavLinks({ links, pathname, onNavigate, linkClass, firstItemRef }) {
   })
 }
 
+const PRIMARY_LINKS = [
+  { to: '/', label: 'Úvod' },
+  { to: '/results', label: 'Najít podnik' },
+  { to: '/results?view=map', label: 'Mapa' },
+  { to: '/oblibene', label: 'Oblíbené' },
+]
+
+/** Vedlejší cesty — nepatří do hlavní lišty, dokud nejsou jádrem produktu. */
+const SECONDARY_LINKS = [
+  { to: '/nevim-co-jist', label: 'Nevím, co jíst' },
+  { to: '/results?verified=1', label: 'Ověřené ceny' },
+  { to: '/pro-podniky', label: 'Pro podniky' },
+]
+
 export default function Header() {
   const location = useLocation()
   const { pathname } = location
@@ -35,21 +60,41 @@ export default function Header() {
   const returnTo = `${pathname}${location.search || ''}`
   const pathKey = `${pathname}${location.search || ''}`
   const [open, setOpen] = useState(false)
+  const [moreOpen, setMoreOpen] = useState(false)
   const [menuPath, setMenuPath] = useState(pathKey)
   const [adminFlag, setAdminFlag] = useState(false)
   const menuId = useId()
+  const moreId = useId()
   const rootRef = useRef(null)
+  const moreRef = useRef(null)
   const firstItemRef = useRef(null)
+  const toggleRef = useRef(null)
 
   if (menuPath !== pathKey) {
     setMenuPath(pathKey)
     if (open) setOpen(false)
+    if (moreOpen) setMoreOpen(false)
   }
 
   const isAdmin = Boolean(session.authenticated && adminFlag)
 
+  const adminLinks = isAdmin
+    ? [
+        { to: '/admin/zadosti', label: 'Administrace žádostí' },
+        { to: '/admin/propagace', label: 'Propagace' },
+        { to: '/admin/odmeny', label: 'Odměny a recenze' },
+      ]
+    : []
+
+  const moreLinks = [...SECONDARY_LINKS, ...adminLinks]
+  const search = location.search || ''
+  const moreActive = moreLinks.some((item) => isActive(pathname, search, item.to))
+
   useEffect(() => {
-    if (!session.authenticated) return undefined
+    if (!session.authenticated) {
+      setAdminFlag(false)
+      return undefined
+    }
     let cancelled = false
     fetch('/api/admin/me', { credentials: 'same-origin' })
       .then((res) => res.json().catch(() => ({})))
@@ -68,35 +113,40 @@ export default function Header() {
     if (!open) return undefined
 
     const onKey = (event) => {
-      if (event.key === 'Escape') setOpen(false)
-    }
-    const onPointer = (event) => {
-      if (!rootRef.current?.contains(event.target)) setOpen(false)
+      if (event.key === 'Escape') {
+        setOpen(false)
+        toggleRef.current?.focus()
+      }
     }
 
+    document.documentElement.classList.add('nav-drawer-open')
     document.addEventListener('keydown', onKey)
-    document.addEventListener('pointerdown', onPointer)
     const focusTimer = window.setTimeout(() => firstItemRef.current?.focus(), 0)
 
     return () => {
+      document.documentElement.classList.remove('nav-drawer-open')
       document.removeEventListener('keydown', onKey)
-      document.removeEventListener('pointerdown', onPointer)
       window.clearTimeout(focusTimer)
     }
   }, [open])
 
-  const links = [
-    { to: '/results', label: 'Najít jídlo' },
-    { to: '/odmeny', label: 'Slevy a body' },
-    { to: '/oblibene', label: 'Oblíbené' },
-    { to: '/pro-podniky', label: 'Pro podniky' },
-    { to: '/podpor-me', label: 'Podpoř mě' },
-  ]
+  useEffect(() => {
+    if (!moreOpen) return undefined
 
-  if (isAdmin) {
-    links.push({ to: '/admin/zadosti', label: 'Administrace žádostí' })
-    links.push({ to: '/admin/odmeny', label: 'Odměny a recenze' })
-  }
+    const onKey = (event) => {
+      if (event.key === 'Escape') setMoreOpen(false)
+    }
+    const onPointer = (event) => {
+      if (!moreRef.current?.contains(event.target)) setMoreOpen(false)
+    }
+
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('pointerdown', onPointer)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('pointerdown', onPointer)
+    }
+  }, [moreOpen])
 
   const close = () => setOpen(false)
 
@@ -106,13 +156,46 @@ export default function Header() {
         <Link to="/" className="brand" onClick={close}>
           <Logo size={44} />
           <span className="brand-text">
-            CheapEats <em>Brno</em>
+            FoodGo <em>Brno</em>
           </span>
         </Link>
 
         <nav className="header-desktop-nav" aria-label="Hlavní menu">
           <ul className="header-desktop-list">
-            <NavLinks links={links} pathname={pathname} linkClass="header-desktop-link" />
+            <NavLinks
+              links={PRIMARY_LINKS}
+              pathname={pathname}
+              search={search}
+              linkClass="header-desktop-link"
+            />
+            <li className="header-more" ref={moreRef}>
+              <button
+                type="button"
+                className={`header-desktop-link header-more-toggle${moreOpen || moreActive ? ' is-active' : ''}`}
+                aria-expanded={moreOpen}
+                aria-controls={moreId}
+                aria-haspopup="true"
+                onClick={() => setMoreOpen((value) => !value)}
+              >
+                Více
+                <span className="header-more-caret" aria-hidden="true" />
+              </button>
+              <div
+                id={moreId}
+                className={`header-more-panel${moreOpen ? ' is-open' : ''}`}
+                hidden={!moreOpen}
+              >
+                <ul className="header-more-list">
+                  <NavLinks
+                    links={moreLinks}
+                    pathname={pathname}
+                    search={search}
+                    onNavigate={() => setMoreOpen(false)}
+                    linkClass="header-more-link"
+                  />
+                </ul>
+              </div>
+            </li>
           </ul>
           <div className="header-desktop-account">
             {session.authenticated ? (
@@ -142,6 +225,7 @@ export default function Header() {
         <div className="header-menu">
           <button
             type="button"
+            ref={toggleRef}
             className={`header-menu-toggle${open ? ' is-open' : ''}`}
             aria-label={open ? 'Zavřít menu' : 'Otevřít menu'}
             aria-expanded={open}
@@ -154,68 +238,93 @@ export default function Header() {
               <span />
             </span>
           </button>
-
-          <nav
-            id={menuId}
-            className={`header-menu-panel${open ? ' is-open' : ''}`}
-            aria-label="Mobilní menu"
-            aria-hidden={!open}
-            inert={!open ? true : undefined}
-          >
-            <div className="header-menu-panel-head">
-              <p>Menu</p>
-              <button
-                type="button"
-                className="header-menu-close"
-                aria-label="Zavřít menu"
-                onClick={close}
-              >
-                ×
-              </button>
-            </div>
-
-            <ul className="header-menu-list">
-              <NavLinks
-                links={links}
-                pathname={pathname}
-                onNavigate={close}
-                linkClass="header-menu-link"
-                firstItemRef={firstItemRef}
-              />
-
-              {session.authenticated ? (
-                <>
-                  <li className="header-menu-account" aria-label="Přihlášený účet">
-                    {session.email}
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      className="header-menu-link header-menu-button"
-                      onClick={() => {
-                        close()
-                        logout()
-                      }}
-                    >
-                      Odhlásit
-                    </button>
-                  </li>
-                </>
-              ) : (
-                <li>
-                  <Link
-                    to={loginPath(returnTo)}
-                    className={`header-menu-link${pathname.startsWith('/prihlaseni') ? ' is-active' : ''}`}
-                    onClick={close}
-                  >
-                    Přihlášení
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </nav>
         </div>
       </div>
+
+      <div
+        className={`header-menu-backdrop${open ? ' is-open' : ''}`}
+        hidden={!open}
+        onClick={close}
+        aria-hidden="true"
+      />
+
+      <nav
+        id={menuId}
+        className={`header-menu-drawer${open ? ' is-open' : ''}`}
+        aria-label="Mobilní menu"
+        aria-hidden={!open}
+        inert={!open ? true : undefined}
+      >
+        <div className="header-menu-drawer-inner">
+          <div className="header-menu-panel-head">
+            <p>Menu</p>
+            <button
+              type="button"
+              className="header-menu-close"
+              aria-label="Zavřít menu"
+              onClick={close}
+            >
+              ×
+            </button>
+          </div>
+
+          <ul className="header-menu-list">
+            <li className="header-menu-group" aria-hidden="true">
+              Hlavní
+            </li>
+            <NavLinks
+              links={PRIMARY_LINKS}
+              pathname={pathname}
+              search={search}
+              onNavigate={close}
+              linkClass="header-menu-link"
+              firstItemRef={firstItemRef}
+            />
+            <li className="header-menu-group" aria-hidden="true">
+              Další
+            </li>
+            <NavLinks
+              links={moreLinks}
+              pathname={pathname}
+              search={search}
+              onNavigate={close}
+              linkClass="header-menu-link"
+            />
+
+            {session.authenticated ? (
+              <>
+                <li className="header-menu-account" aria-label="Přihlášený účet">
+                  {session.email}
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className="header-menu-link header-menu-button"
+                    onClick={() => {
+                      close()
+                      logout()
+                    }}
+                  >
+                    Odhlásit
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li>
+                <Link
+                  to={loginPath(returnTo)}
+                  className={`header-menu-link header-menu-link--cta${
+                    pathname.startsWith('/prihlaseni') ? ' is-active' : ''
+                  }`}
+                  onClick={close}
+                >
+                  Přihlášení
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
+      </nav>
     </header>
   )
 }

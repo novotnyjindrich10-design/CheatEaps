@@ -21,9 +21,9 @@ export const DATA_SOURCE_NOTES = [
   'Ověřenou cenu uvádíme jen s odkazem na menu. Cenový filtr bere ověřenou cenu; u rozpětí musí do limitu vejít i horní mez.',
   'Přesná poloha se na náš server neposílá. Vzdálenost je délka pěší trasy z OpenStreetMap. Podnik bez ověřené polohy ji nemá a bez polohy uživatele se číslo nezobrazí.',
   'Oficiální weby pocházejí z OpenStreetMap nebo z ručně ověřených záznamů, ne z katalogů.',
-  'Otevírací dobu a telefon bereme z OpenStreetMap, pokud je zápis čitelný. Neověřujeme je nezávisle a stav Otevřeno/Zavřeno z nich neodvozujeme.',
+  'Otevírací dobu a telefon bereme z OpenStreetMap, pokud je zápis čitelný. Neověřujeme je nezávisle. Stav Otevřeno/Zavřeno ukazujeme jen u jednoduchých a spolehlivých zápisů (Europe/Prague); složité pravidla necháváme jako neznámá.',
   'Google hodnocení zobrazujeme jako ověřené pouze po ověření přes Places API. Bez tohoto ověření je u podniku jen odkaz na vyhledání v Mapách.',
-  'Sleva na kartě je jen nabídka, kterou jsme našli na oficiální stránce ISIC nebo řetězce. Kód a postup jsou až po přihlášení. Nabídka bez data konce není garantovaná.',
+  'Ověřené slevy jsou jen v kategorii Slevy po přihlášení. Podmínky a odkaz Ověřit nabídku jsou u konkrétní nabídky; kód uplatnění je až po přihlášení. Běžné výsledky ani detail podniku slevu nezobrazují.',
 ]
 
 export const DEMO_DATA_NOTICE = DATA_SOURCE_NOTES.join(' ')
@@ -57,6 +57,7 @@ function place(entry) {
     ...foodIllustration,
     category,
     type: override?.type || entry.type,
+    description: override?.description || entry.description,
     cuisineType: category,
   }
   restaurant.locationVerified = hasVerifiedCoordinates(restaurant)

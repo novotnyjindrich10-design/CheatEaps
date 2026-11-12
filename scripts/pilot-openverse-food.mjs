@@ -11,7 +11,7 @@ import { curatedPlaces } from '../src/data/curatedPlaces.js'
 import { osmPlaces } from '../src/data/osmPlaces.js'
 import { placePhotos } from '../src/data/placePhotos.js'
 
-const UA = 'CheapEatsBrno/1.0 (student project; Openverse illustration pilot)'
+const UA = 'FoodGoBrno/1.0 (student project; Openverse illustration pilot)'
 const OPENVERSE = 'https://api.openverse.org/v1/images/'
 const OUT_DIR = new URL('../public/food-illustrations/', import.meta.url)
 const ALLOWED = new Set(['cc0', 'pdm', 'by', 'by-sa'])

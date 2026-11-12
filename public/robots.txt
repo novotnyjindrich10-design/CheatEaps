@@ -1,7 +1,13 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /prihlaseni
 Disallow: /registrace
 Disallow: /nove-heslo
+Disallow: /oblibene
+Disallow: /odmeny
+Disallow: /porovnani
+Disallow: /nabidka
+
+Sitemap: https://cheat-eaps.vercel.app/sitemap.xml

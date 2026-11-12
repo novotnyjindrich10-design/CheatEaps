@@ -24,14 +24,22 @@ import { loadDotEnv } from './lib/loadDotEnv.mjs'
 import { pixabayManualPhotoByPlaceId, pixabayManualPhotos } from '../src/data/pixabayManualPicks.js'
 
 const MAX_REQUESTS = 31
-const MAX_DOWNLOADS = 160
+/** Strop lokálních náhledů — vyšší fond = méně opakování u kaváren, české kuchyně a pizzy. */
+const MAX_DOWNLOADS = 420
 const CACHE_MS = 24 * 60 * 60 * 1000
-const PER_PAGE = 30
+const PER_PAGE = 80
+const CACHE_VERSION = `p${PER_PAGE}-v2`
 
+/**
+ * Dotazy jsou cílené na nejčastější témata katalogu (káva, české, pizza, …).
+ * page: 2 u vybraných témat rozšíří fond bez nových frází.
+ */
 const SEARCHES = [
   { theme: 'pizza', query: 'margherita pizza' },
   { theme: 'pizza', query: 'wood fired pizza' },
+  { theme: 'pizza', query: 'pepperoni pizza' },
   { theme: 'burger', query: 'cheeseburger' },
+  { theme: 'burger', query: 'smash burger food' },
   { theme: 'kebab', query: 'shawarma wrap' },
   { theme: 'pho', query: 'vietnamese pho' },
   { theme: 'vietnamese', query: 'vietnamese food' },
@@ -41,40 +49,50 @@ const SEARCHES = [
   { theme: 'cina', query: 'chinese noodles' },
   { theme: 'asijske', query: 'asian noodle bowl' },
   { theme: 'asijske', query: 'asian rice bowl' },
-  { theme: 'indian', query: 'indian curry naan' },
   { theme: 'mexiko', query: 'tacos' },
   { theme: 'pasta', query: 'pasta dish' },
   { theme: 'ceske', query: 'goulash dumplings' },
   { theme: 'ceske', query: 'schnitzel potatoes' },
+  { theme: 'ceske', query: 'roast pork dumplings' },
   { theme: 'kava', query: 'latte art' },
   { theme: 'kava', query: 'espresso cup' },
+  { theme: 'kava', query: 'cappuccino foam' },
+  { theme: 'kava', query: 'coffee cup cafe', page: 2 },
   { theme: 'sladke', query: 'pastry dessert' },
   { theme: 'sladke', query: 'croissant' },
   { theme: 'zdrave', query: 'salad bowl' },
-  { theme: 'vegetarianske', query: 'vegetable curry' },
   { theme: 'veganske', query: 'veggie burger' },
   { theme: 'fastfood', query: 'french fries' },
   { theme: 'fried_chicken', query: 'fried chicken' },
-  { theme: 'bubble_tea', query: 'bubble tea' },
-  { theme: 'poke', query: 'poke bowl' },
-  { theme: 'baguette', query: 'baguette sandwich' },
   { theme: 'neuvedeno', query: 'plated dinner' },
   { theme: 'neuvedeno', query: 'gourmet main course' },
 ]
 
 const KEEP = {
-  pizza: 8,
-  sushi: 8,
-  asijske: 10,
-  ceske: 10,
-  kava: 12,
-  sladke: 8,
-  neuvedeno: 12,
-  vegetarianske: 4,
+  pizza: 40,
+  burger: 26,
+  kebab: 12,
+  pho: 6,
+  vietnamese: 6,
+  sushi: 9,
+  ramen: 4,
+  cina: 8,
+  asijske: 30,
+  mexiko: 8,
+  pasta: 5,
+  ceske: 50,
+  kava: 70,
+  sladke: 16,
+  zdrave: 8,
   veganske: 4,
+  fastfood: 14,
+  fried_chicken: 5,
+  neuvedeno: 45,
+  vegetarianske: 4,
   bubble_tea: 4,
   poke: 4,
   baguette: 4,
+  indian: 4,
 }
 
 const NEUTRAL_SPEC = {
@@ -109,13 +127,16 @@ function places() {
   })
 }
 
-function cacheFile(query) {
-  const name = createHash('sha256').update(query).digest('hex').slice(0, 16)
+function cacheFile(query, page) {
+  const name = createHash('sha256')
+    .update(`${CACHE_VERSION}|${page}|${query}`)
+    .digest('hex')
+    .slice(0, 16)
   return new URL(`${name}.json`, cacheDir)
 }
 
-function readCache(query) {
-  const file = cacheFile(query)
+function readCache(query, page) {
+  const file = cacheFile(query, page)
   if (!existsSync(file)) return null
   try {
     const cached = JSON.parse(readFileSync(file, 'utf8'))
@@ -126,12 +147,12 @@ function readCache(query) {
   }
 }
 
-function writeCache(query, hits) {
+function writeCache(query, page, hits) {
   mkdirSync(cacheDir, { recursive: true })
-  writeFileSync(cacheFile(query), JSON.stringify({ fetchedAt: Date.now(), query, hits }))
+  writeFileSync(cacheFile(query, page), JSON.stringify({ fetchedAt: Date.now(), query, page, hits }))
 }
 
-async function search(key, query) {
+async function search(key, query, page = 1) {
   const url = new URL('https://pixabay.com/api/')
   url.searchParams.set('key', key)
   url.searchParams.set('q', query)
@@ -144,7 +165,7 @@ async function search(key, query) {
   url.searchParams.set('order', 'popular')
   url.searchParams.set('lang', 'en')
   url.searchParams.set('per_page', String(PER_PAGE))
-  url.searchParams.set('page', '1')
+  url.searchParams.set('page', String(page))
 
   let response
   try {
@@ -185,6 +206,7 @@ function writeLibrary({ photosById, idsByTheme, assignment, generatedAt }) {
   const body = `/**
  * Vygenerováno scripts/fetch-pixabay-illustrations.mjs z Pixabay API.
  * V souboru jsou jen lokální cesty stažených náhledů, ne cizí URL.
+ * Ruční výjimky drží src/data/pixabayManualPicks.js.
  */
 export const pixabayLibraryReady = ${Object.keys(assignment).length > 0}
 
@@ -255,30 +277,46 @@ async function main() {
 
   for (let i = 0; i < SEARCHES.length; i += 1) {
     const row = SEARCHES[i]
-    const cached = readCache(row.query)
+    const page = Number.isInteger(row.page) && row.page > 0 ? row.page : 1
+    const cached = readCache(row.query, page)
     if (cached) {
       buckets.get(row.theme).push(...cached)
-      console.log(`${i + 1}/${SEARCHES.length} ${row.theme}: cache, ${cached.length} kandidátů`)
+      console.log(`${i + 1}/${SEARCHES.length} ${row.theme}: cache p${page}, ${cached.length} kandidátů`)
       continue
     }
-    const result = await search(key, row.query)
-    writeCache(row.query, result.hits)
+    const result = await search(key, row.query, page)
+    writeCache(row.query, page, result.hits)
     buckets.get(row.theme).push(...result.hits)
     console.log(
-      `${i + 1}/${SEARCHES.length} ${row.theme}: ${result.hits.length} kandidátů, zbývá požadavků ${result.remaining ?? '?'}`,
+      `${i + 1}/${SEARCHES.length} ${row.theme}: p${page} ${result.hits.length} kandidátů, zbývá požadavků ${result.remaining ?? '?'}`,
     )
     if (i < SEARCHES.length - 1) await new Promise((resolve) => setTimeout(resolve, 700))
   }
 
   const selectedById = new Map()
   const idsByTheme = {}
-  for (const [theme, rawPhotos] of buckets) {
+  /** Jedno Pixabay ID smí patřit jen do jednoho tématu (jinak burger dostane fastfood snímek). */
+  const claimedIds = new Set()
+  const themeOrder = [...buckets.keys()].sort((a, b) => {
+    const rank = (theme) => {
+      if (theme === 'pizza' || theme === 'burger' || theme === 'kava' || theme === 'ceske') return 0
+      if (theme === 'neuvedeno' || theme === 'fastfood') return 2
+      return 1
+    }
+    return rank(a) - rank(b) || a.localeCompare(b)
+  })
+  for (const theme of themeOrder) {
+    const rawPhotos = buckets.get(theme) || []
     const selected = selectPixabayPhotos(rawPhotos, specFor(theme), {
       limit: KEEP[theme] || 6,
-      perUser: 3,
+      perUser: theme === 'kava' || theme === 'ceske' || theme === 'pizza' ? 6 : 4,
+      excludeIds: claimedIds,
     })
     idsByTheme[theme] = selected.map((photo) => photo.id)
-    for (const photo of selected) selectedById.set(photo.id, { ...photo, theme, dish: specFor(theme).dish })
+    for (const photo of selected) {
+      claimedIds.add(photo.id)
+      selectedById.set(photo.id, { ...photo, theme, dish: specFor(theme).dish })
+    }
     console.log(`${theme}: vybráno ${selected.length}`)
   }
 
@@ -298,6 +336,31 @@ async function main() {
 
   let saved = 0
   for (const photo of chosen) {
+    const existingJpg = new URL(`${photo.id}.jpg`, imageDir)
+    const existingPng = new URL(`${photo.id}.png`, imageDir)
+    const existingWebp = new URL(`${photo.id}.webp`, imageDir)
+    if (existsSync(existingJpg) || existsSync(existingPng) || existsSync(existingWebp)) {
+      const localUrl = existsSync(existingJpg)
+        ? `/food-illustrations/pixabay/${photo.id}.jpg`
+        : existsSync(existingPng)
+          ? `/food-illustrations/pixabay/${photo.id}.png`
+          : `/food-illustrations/pixabay/${photo.id}.webp`
+      photosById[photo.id] = {
+        id: photo.id,
+        width: photo.displayWidth,
+        height: photo.displayHeight,
+        user: photo.user,
+        userId: photo.userId,
+        pageUrl: photo.pageUrl,
+        profileUrl: photo.profileUrl,
+        cardUrl: localUrl,
+        detailUrl: localUrl,
+        theme: photo.theme,
+        dish: photo.dish,
+      }
+      saved += 1
+      continue
+    }
     try {
       const localUrl = await downloadSelected(photo)
       photosById[photo.id] = {

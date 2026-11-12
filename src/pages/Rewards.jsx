@@ -9,6 +9,7 @@ export default function Rewards() {
   const [redemptions, setRedemptions] = useState([])
   const [history, setHistory] = useState([])
   const [error, setError] = useState('')
+  const [status, setStatus] = useState('loading')
   const [busyId, setBusyId] = useState('')
   const [flash, setFlash] = useState(null)
 
@@ -18,9 +19,18 @@ export default function Rewards() {
       const rewardsRes = await fetch('/api/loyalty/rewards', { credentials: 'same-origin' })
       const rewardsBody = await rewardsRes.json().catch(() => ({}))
       if (!rewardsRes.ok || !rewardsBody.ok) {
-        setError(rewardsBody.message || 'Odměny se nepodařilo načíst.')
+        const preparing =
+          rewardsBody.error === 'not-ready' ||
+          rewardsBody.error === 'auth-not-configured' ||
+          rewardsRes.status === 503
+        setData(null)
+        setRedemptions([])
+        setHistory([])
+        setStatus(preparing ? 'preparing' : 'error')
+        setError(preparing ? '' : rewardsBody.message || 'Odměny se nepodařilo načíst.')
         return
       }
+      setStatus('ready')
       setData(rewardsBody)
       if (session.authenticated) {
         const [redRes, histRes] = await Promise.all([
@@ -36,6 +46,7 @@ export default function Rewards() {
         setHistory([])
       }
     } catch {
+      setStatus('error')
       setError('Odměny se nepodařilo načíst.')
     }
   }
@@ -82,11 +93,33 @@ export default function Rewards() {
         </Link>
         <h1>Slevy a odměny</h1>
         <p className="page-subtitle">
-          Za schválenou recenzi získáš {data?.reviewRewardPoints ?? 5} bodů. Body spravuje server — nejde je
-          upravit z prohlížeče.
+          {status === 'preparing' ? (
+            <>
+              Věrnostní body připravujeme. Získávání a utrácení bodů teď není zapnuté. Ověřené ISIC nabídky
+              jsou zvlášť v kategorii <Link to="/results?deals=1">Slevy</Link> — po přihlášení zdarma, bez bodů.
+            </>
+          ) : status === 'ready' ? (
+            <>
+              Za schválenou recenzi získáš {data?.reviewRewardPoints ?? 5} bodů. Body spravuje server — nejde je
+              upravit z prohlížeče. Ověřené ISIC nabídky třetích stran jsou zvlášť v kategorii{' '}
+              <Link to="/results?deals=1">Slevy</Link> — po přihlášení zdarma, bez odečtu bodů.
+            </>
+          ) : (
+            'Načítám stav odměn.'
+          )}
         </p>
       </div>
 
+      {status === 'preparing' ? (
+        <p className="empty-state" role="status">
+          Připravujeme. Až budou odměny zapnuté, uvidíš tu zůstatek a možnosti uplatnění.
+        </p>
+      ) : null}
+
+      {status === 'error' && error ? <p className="form-error">{error}</p> : null}
+
+      {status === 'ready' ? (
+      <>
       <section className="loyalty-balance" aria-labelledby="loyalty-balance-title">
         <h2 id="loyalty-balance-title" className="section-title">
           Tvoje body
@@ -213,6 +246,8 @@ export default function Rewards() {
             )}
           </section>
         </>
+      ) : null}
+      </>
       ) : null}
     </main>
   )

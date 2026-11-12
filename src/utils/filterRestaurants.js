@@ -16,6 +16,31 @@ import {
 
 export { CATEGORY_SEARCH_ALIASES, foldSearchText }
 
+/**
+ * Prázdné řazení = výchozí „Nejblíž ke mně“.
+ * S polohou řadíme podle vzdálenosti; bez polohy neslibujeme vzdálenost a držíme abecedu.
+ * Explicitní „distance“ bez polohy se chová stejně (bez falešných km).
+ */
+export function resolveEffectiveSort(sortBy, { hasOrigin = false } = {}) {
+  const requested = sortBy && SORTS.has(sortBy) ? sortBy : ''
+  if (!requested || requested === 'distance') {
+    return hasOrigin ? 'distance' : 'name'
+  }
+  return requested
+}
+
+/** True, když UI žádá řazení podle vzdálenosti (výchozí nebo explicitní). */
+export function wantsDistanceSort(sortBy) {
+  return !sortBy || sortBy === 'distance'
+}
+
+function compareByNameThenId(a, b) {
+  return (
+    String(a.name || '').localeCompare(String(b.name || ''), 'cs') ||
+    String(a.id).localeCompare(String(b.id))
+  )
+}
+
 function tighterBudget(urlBudget, queryBudget) {
   const values = [urlBudget, queryBudget]
     .filter((value) => value !== '' && value != null)
@@ -55,6 +80,12 @@ function matchesVegetarianIntent(restaurant) {
   )
 }
 
+/** „bez masa“ = podniky bez masa, ne každá restaurace s jednou vegetariánskou položkou. */
+function matchesMeatFreeSearch(restaurant) {
+  const category = getRestaurantCategory(restaurant)
+  return category === 'vegetarianske' || category === 'veganske' || Boolean(restaurant?.veganFriendly)
+}
+
 /**
  * Filtruje a řadí restaurace.
  * Hledání: název, adresa, doložené jídlo, typ kuchyně a veřejné slevy.
@@ -69,7 +100,7 @@ export function filterAndSortRestaurants(restaurants, options) {
     maxBudget = '',
     cuisineType = '',
     maxDistance = '',
-    sortBy = 'quality',
+    sortBy = '',
     vegetarianOnly = false,
     veganOnly = false,
     verifiedPricesOnly = false,
@@ -83,6 +114,7 @@ export function filterAndSortRestaurants(restaurants, options) {
   const budget = tighterBudget(maxBudget, intent.maxBudget)
   const categoryFilter = normalizeCategoryParam(cuisineType)
   const scores = new Map()
+  const effectiveSort = resolveEffectiveSort(sortBy, { hasOrigin })
 
   let list = restaurants.filter((r) => {
     if (verifiedPricesOnly && !hasVerifiedPrice(r)) return false
@@ -100,17 +132,20 @@ export function filterAndSortRestaurants(restaurants, options) {
     }
 
     if (maxDistance !== '' && hasOrigin) {
-      if (r.distanceKm == null || r.distanceKm > Number(maxDistance)) return false
+      // Limit vzdálenosti bere známé km (pěšky i vzdušnou čáru). Bez čísla podnik vynecháme.
+      if (r.distanceState === 'locating') return false
+      if (r.distanceKm == null || !Number.isFinite(Number(r.distanceKm))) return false
+      if (Number(r.distanceKm) > Number(maxDistance)) return false
     }
 
     if (veganOnly || intent.veganOnly) {
       if (veganOnly && !intent.veganOnly) {
         if (!r.veganFriendly) return false
       } else if (!matchesVeganIntent(r)) return false
-    } else if (vegetarianOnly || intent.vegetarianOnly) {
-      if (vegetarianOnly && !intent.vegetarianOnly) {
-        if (!r.vegetarianFriendly && !r.veganFriendly) return false
-      } else if (!matchesVegetarianIntent(r)) return false
+    } else if (intent.vegetarianOnly) {
+      if (!matchesMeatFreeSearch(r)) return false
+    } else if (vegetarianOnly) {
+      if (!matchesVegetarianIntent(r)) return false
     }
 
     if (intent.lunchOnly && !r.lunchMenu) return false
@@ -126,30 +161,30 @@ export function filterAndSortRestaurants(restaurants, options) {
   }
 
   list = [...list].sort((a, b) => {
-    switch (sortBy) {
+    switch (effectiveSort) {
       case 'price-asc':
-        return compareByPrice(a, b, 'asc')
+        return compareByPrice(a, b, 'asc') || compareByNameThenId(a, b)
       case 'price-desc':
-        return compareByPrice(a, b, 'desc')
+        return compareByPrice(a, b, 'desc') || compareByNameThenId(a, b)
       case 'distance':
-        return missingLast(a, b, (r) => r.distanceKm, 'asc')
+        return missingLast(a, b, (r) => r.distanceKm, 'asc') || compareByNameThenId(a, b)
       case 'name':
-        return (
-          String(a.name || '').localeCompare(String(b.name || ''), 'cs') ||
-          String(a.id).localeCompare(String(b.id))
-        )
+        return compareByNameThenId(a, b)
       case 'rating':
-        return missingLast(
-          a,
-          b,
-          (r) => (r.googleRatingStatus === 'verified' ? r.googleRating : null),
-          'desc',
+        return (
+          missingLast(
+            a,
+            b,
+            (r) => (r.googleRatingStatus === 'verified' ? r.googleRating : null),
+            'desc',
+          ) || compareByNameThenId(a, b)
         )
       case 'relevance':
-        return (scores.get(b.id) || 0) - (scores.get(a.id) || 0) || compareByRecordQuality(a, b)
+        return (scores.get(b.id) || 0) - (scores.get(a.id) || 0) || compareByNameThenId(a, b)
       case 'quality':
-      default:
         return compareByRecordQuality(a, b)
+      default:
+        return compareByNameThenId(a, b)
     }
   })
 
@@ -159,18 +194,20 @@ export function filterAndSortRestaurants(restaurants, options) {
 export function parseResultsSearchParams(searchParams) {
   const veganOnly = searchParams.get('vegan') === '1'
   const vegetarianOnly = searchParams.get('veg') === '1'
+  const view = searchParams.get('view') === 'map' ? 'map' : 'list'
 
   return {
     search: searchParams.get('q') ?? '',
     maxBudget: finiteParam(searchParams.get('budget')),
     cuisineType: normalizeCategoryParam(searchParams.get('type') ?? ''),
     maxDistance: finiteParam(searchParams.get('distance')),
-    sortBy: SORTS.has(searchParams.get('sort')) ? searchParams.get('sort') : 'quality',
+    sortBy: SORTS.has(searchParams.get('sort')) ? searchParams.get('sort') : '',
     veganOnly,
     vegetarianOnly: veganOnly ? false : vegetarianOnly,
     verifiedPricesOnly: searchParams.get('verified') === '1',
     dealsOnly: searchParams.get('deals') === '1',
     hoursOnly: searchParams.get('hours') === '1',
+    view,
   }
 }
 
@@ -180,7 +217,7 @@ export function buildResultsSearchParams(filters) {
   if (filters.maxBudget) params.set('budget', filters.maxBudget)
   if (filters.cuisineType) params.set('type', filters.cuisineType)
   if (filters.maxDistance) params.set('distance', filters.maxDistance)
-  if (filters.sortBy && filters.sortBy !== 'quality') params.set('sort', filters.sortBy)
+  if (filters.sortBy) params.set('sort', filters.sortBy)
   if (filters.veganOnly) {
     params.set('vegan', '1')
   } else if (filters.vegetarianOnly) {
@@ -189,5 +226,6 @@ export function buildResultsSearchParams(filters) {
   if (filters.verifiedPricesOnly) params.set('verified', '1')
   if (filters.dealsOnly) params.set('deals', '1')
   if (filters.hoursOnly) params.set('hours', '1')
+  if (filters.view === 'map') params.set('view', 'map')
   return params
 }

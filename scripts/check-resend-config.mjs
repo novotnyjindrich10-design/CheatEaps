@@ -1,0 +1,69 @@
+/**
+ * Kontrola Resend / e-mail env bez vypisování tajemství.
+ * Spuštění: node scripts/check-resend-config.mjs
+ */
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+
+function load(path) {
+  if (!existsSync(path)) return {}
+  const out = {}
+  for (const line of readFileSync(path, 'utf8').replace(/^\uFEFF/, '').split(/\r?\n/)) {
+    if (!line || line.trimStart().startsWith('#') || !line.includes('=')) continue
+    const i = line.indexOf('=')
+    out[line.slice(0, i).trim()] = line.slice(i + 1).trim()
+  }
+  return out
+}
+
+const env = { ...load(resolve('.env')), ...load(resolve('.env.local')), ...process.env }
+const required = ['RESEND_API_KEY', 'INQUIRY_TO_EMAIL', 'EMAIL_FROM']
+const optional = ['PUBLIC_SITE_URL']
+
+function describeKey(name) {
+  const value = String(env[name] ?? '').trim()
+  if (!value) return { name, present: false }
+  const info = {
+    name,
+    present: true,
+    length: value.length,
+  }
+  if (name === 'RESEND_API_KEY') {
+    info.prefixOk = value.startsWith('re_')
+    // Oficiální tvar: re_ + 8 + _ + 24 (base58) = 36 znaků.
+    info.shapeOk = /^re_[1-9A-HJ-NP-Za-km-z]{8}_[1-9A-HJ-NP-Za-km-z]{24}$/.test(value)
+    info.lengthOk = value.length === 36
+  }
+  if (name === 'INQUIRY_TO_EMAIL') {
+    info.looksLikeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  }
+  if (name === 'EMAIL_FROM') {
+    info.hasAt = value.includes('@')
+    info.usesResendDev = /onboarding@resend\.dev/i.test(value)
+  }
+  return info
+}
+
+const report = {
+  required: required.map(describeKey),
+  optional: optional.map(describeKey),
+  readyForTrialSend: required.every((name) => {
+    const value = String(env[name] ?? '').trim()
+    if (!value) return false
+    if (name === 'RESEND_API_KEY') {
+      return /^re_[1-9A-HJ-NP-Za-km-z]{8}_[1-9A-HJ-NP-Za-km-z]{24}$/.test(value)
+    }
+    return true
+  }),
+  notes: [
+    'Zkušební režim bez vlastní domény: EMAIL_FROM=FoodGo <onboarding@resend.dev>',
+    'INQUIRY_TO_EMAIL musí být e-mail přihlášený v Resend účtu (jinak Resend doručení odmítne).',
+    'Ostré doručení na libovolné adresy vyžaduje ověřenou doménu v Resend.',
+    'Klíče patří jen do .env / Vercel Environment Variables, nikdy do Gitu ani VITE_*.',
+    'Chybí-li klíč: npm run resend:key (lokální Windows dialog, ne Chat).',
+    'readyForTrialSend=true znamená jen lokálně kompletní env, ne ověřené doručení.',
+  ],
+}
+
+console.log(JSON.stringify(report, null, 2))
+process.exit(report.readyForTrialSend ? 0 : 2)

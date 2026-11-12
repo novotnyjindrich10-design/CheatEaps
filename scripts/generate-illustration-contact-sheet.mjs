@@ -1,5 +1,5 @@
 /**
- * Lokální kontaktní list unikátních ilustrací CheapEats Brno.
+ * Lokální kontaktní list unikátních ilustrací FoodGo Brno.
  *
  * Spuštění z kořene projektu:
  *   node scripts/generate-illustration-contact-sheet.mjs
@@ -473,7 +473,7 @@ function render(model) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="illustration-count" content="${model.illustrationCount}">
-  <title>Kontaktní list ilustrací (${model.illustrationCount}) — CheapEats Brno</title>
+  <title>Kontaktní list ilustrací (${model.illustrationCount}) — FoodGo Brno</title>
   <style>
     :root { color-scheme: light; --ink: #1f1a17; --muted: #5e564f; --line: #e4dcd2; --paper: #f6f3ee; --card: #fff; --ill: #1f6b4a; --official: #8a4b08; --warn: #8d1d1d; }
     * { box-sizing: border-box; }
@@ -541,7 +541,7 @@ function render(model) {
 <body>
   <main>
     <h1>Kontaktní list ilustrací</h1>
-    <p>CheapEats Brno. Všechny unikátní ilustrace z aktuálního katalogu, každá jednou. Oficiální fotografie konkrétních podniků jsou ve vlastní sekci.</p>
+    <p>FoodGo Brno. Všechny unikátní ilustrace z aktuálního katalogu, každá jednou. Oficiální fotografie konkrétních podniků jsou ve vlastní sekci.</p>
     <section class="howto">
       <h2>Jak přehled otevřít</h2>
       <ol>

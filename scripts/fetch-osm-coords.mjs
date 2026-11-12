@@ -11,7 +11,7 @@ if (!existsSync(dumpPath)) {
 }
 
 const dump = JSON.parse(readFileSync(dumpPath, 'utf8'))
-const headers = { 'User-Agent': 'CheapEatsBrno/1.0 (student project; OSM API)' }
+const headers = { 'User-Agent': 'FoodGoBrno/1.0 (student project; OSM API)' }
 
 async function getJson(url) {
   const res = await fetch(url, { headers })

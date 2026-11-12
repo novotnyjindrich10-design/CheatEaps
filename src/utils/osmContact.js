@@ -1,4 +1,4 @@
-/** Otevírací doba a telefon z OSM tagů. Bez odhadu stavu Otevřeno/Zavřeno. */
+/** Otevírací doba a telefon z OSM tagů. Stav open/closed řeší openingStatus.js jen u spolehlivých vzorů. */
 
 const DAY_MAP = {
   mo: 'Po',

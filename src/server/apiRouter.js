@@ -7,8 +7,22 @@ import { businessHttp } from './businessApplications.js'
 import { communityHttp } from './community.js'
 import { loyaltyHttp } from './loyalty.js'
 import { authActionHttp, dealDetailHttp } from './memberHttp.js'
+import { paymentReturnHttp, paymentStatusHttp, paymentWebhookHttp } from './payments.js'
 import { promotionRequestHttp } from './promotionRequest.js'
+import {
+  adminPromotionOrdersHttp,
+  adminPromotionReviewHttp,
+  promotionOrdersHttp,
+  sponsorshipsHttp,
+} from './promotionOrders.js'
 import { quotePromotionHttp } from './quotePromotion.js'
+import { placeReportsHttp } from './placeReports.js'
+import { placeStatsHttp } from './placeStats.js'
+import { placePixabayPhotoId } from '../data/pixabayLibrary.data.js'
+
+function catalogPlaceExists(id) {
+  return Object.prototype.hasOwnProperty.call(placePixabayPhotoId, id)
+}
 
 const AUTH_ACTIONS = {
   '/api/auth/login': 'login',
@@ -81,12 +95,31 @@ export async function apiRouter(incoming) {
 
     if (pathname === '/api/promotion-request') return await promotionRequestFetch(request)
 
+    if (pathname === '/api/promotion-orders') {
+      const response = await promotionOrdersHttp(request)
+      return response
+    }
+    if (pathname === '/api/sponsorships') return await sponsorshipsHttp(request)
+    if (pathname === '/api/admin/promotion-orders') return await adminPromotionOrdersHttp(request)
+    if (pathname === '/api/admin/promotion-orders/review') return await adminPromotionReviewHttp(request)
+    if (pathname === '/api/payments/webhook') return await paymentWebhookHttp(request)
+    if (pathname === '/api/payments/return') return await paymentReturnHttp(request)
+    if (pathname === '/api/payments/status') return await paymentStatusHttp(request)
+
     if (pathname === '/api/quote-promotion') {
       try {
         return await quotePromotionHttp(request)
       } catch {
         return json({ ok: false, error: 'internal-error', message: 'Cenu se nepodařilo spočítat.' }, 500)
       }
+    }
+
+    if (pathname === '/api/place-reports') {
+      return await placeReportsHttp(request, { placeExists: catalogPlaceExists })
+    }
+
+    if (pathname === '/api/place-stats' || pathname === '/api/place-stats/event') {
+      return await placeStatsHttp(request, { placeExists: catalogPlaceExists })
     }
 
     return json({ ok: false, message: 'Neznámá adresa.' }, 404)

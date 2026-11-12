@@ -390,6 +390,31 @@
   opacity: 0.7;
 }
 
+.biz-quote {
+  margin: 12px 18px;
+  padding: 12px 14px;
+  border: 1px solid rgba(12, 125, 104, 0.35);
+  border-radius: var(--radius);
+  background: #f7fffc;
+}
+
+.biz-quote p {
+  margin: 0 0 6px;
+}
+
+.biz-place-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.biz-check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 14px 18px;
+}
+
 .biz-how ol {
   max-width: 40em;
 }
@@ -749,10 +774,20 @@
   font-weight: 650;
 }
 
-.admin-note input {
+.admin-note input,
+.admin-draft {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 12px;
+}
+
+.admin-draft {
+  width: 100%;
+  min-height: 9rem;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  white-space: pre-wrap;
 }
 
 .admin-list {

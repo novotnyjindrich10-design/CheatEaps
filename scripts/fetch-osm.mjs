@@ -21,7 +21,7 @@ for (const url of endpoints) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': 'CheapEatsBrno/1.0 (student project; OSM Overpass)',
+        'User-Agent': 'FoodGoBrno/1.0 (student project; OSM Overpass)',
       },
       body: new URLSearchParams({ data: query }),
     })

@@ -75,7 +75,7 @@ async function fetchImageCandidate(site) {
   try {
     const res = await fetch(site, {
       signal: ctrl.signal,
-      headers: { 'User-Agent': 'CheapEatsBrno/1.0 (student project; photo attribution)' },
+      headers: { 'User-Agent': 'FoodGoBrno/1.0 (student project; photo attribution)' },
       redirect: 'follow',
     })
     if (!res.ok) return null

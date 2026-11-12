@@ -24,7 +24,7 @@ export function reviewDescription(raw, context = {}) {
     return {
       ok: false,
       engine: 'rules',
-      engineLabel: 'Pravidlová kontrola CheapEats (ne jazykový model)',
+      engineLabel: 'Pravidlová kontrola FoodGo (ne jazykový model)',
       message: 'Nejdřív napiš popis podniku.',
       original: '',
       suggested: '',
@@ -53,7 +53,7 @@ export function reviewDescription(raw, context = {}) {
   return {
     ok: true,
     engine: 'rules',
-    engineLabel: 'Pravidlová kontrola CheapEats (ne jazykový model)',
+    engineLabel: 'Pravidlová kontrola FoodGo (ne jazykový model)',
     message:
       suggested === original
         ? 'Úprava nezasáhla do významu — text už byl v pořádku, nebo šlo jen o drobnosti.'

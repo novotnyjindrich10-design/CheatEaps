@@ -66,14 +66,13 @@ function notConfigured() {
   )
 }
 
-const NOT_READY =
-  'Oblíbené a recenze v databázi ještě nejsou. V SQL editoru spusť supabase/community.sql. Nejdřív musí být spuštěný supabase/auth-rls.sql.'
+const NOT_READY = 'Oblíbené a recenze teď nejsou k dispozici. Zkus to později.'
 
 function fail(error, status, cookies = [], extra = {}) {
   const message = {
     'not-ready': NOT_READY,
     'auth-required': 'Nejdřív se přihlas.',
-    'restaurant-unknown': 'Tahle restaurace v CheapEats není.',
+    'restaurant-unknown': 'Tahle restaurace v FoodGo není.',
     'review-exists': 'U téhle restaurace už recenzi máš. Můžeš ji upravit.',
     'review-missing': 'Tvoje recenze u téhle restaurace není.',
     'not-owner': 'Upravit a smazat jde jen vlastní recenzi.',
@@ -101,7 +100,7 @@ function knownRestaurant(id, exists) {
   const parsed = parseRestaurantId(id)
   if (!parsed.ok) return parsed
   if (!exists(parsed.id)) {
-    return { ok: false, error: 'restaurant-unknown', message: 'Tahle restaurace v CheapEats není.' }
+    return { ok: false, error: 'restaurant-unknown', message: 'Tahle restaurace v FoodGo není.' }
   }
   return parsed
 }
@@ -613,7 +612,7 @@ async function reviewsHttp(request, url, deps) {
       moderationStatus: status,
       message:
         status === 'pending'
-          ? 'Recenze čeká na schválení. Po schválení dostaneš 5 bodů.'
+          ? 'Recenze čeká na schválení.'
           : 'Recenze je uložená.',
     },
     200,

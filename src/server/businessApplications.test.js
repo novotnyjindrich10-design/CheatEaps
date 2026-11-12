@@ -104,7 +104,7 @@ describe('API žádostí o podnik', () => {
         accessToken: 't',
         env: {
           RESEND_API_KEY: 're_test',
-          EMAIL_FROM: 'CheapEats <onboarding@resend.dev>',
+          EMAIL_FROM: 'FoodGo <onboarding@resend.dev>',
           PUBLIC_SITE_URL: 'http://localhost:5173',
         },
         fetchImpl,
@@ -118,10 +118,10 @@ describe('API žádostí o podnik', () => {
     assert.equal(isPublishedPlaceId(approvedBody.placeId), true)
     assert.equal(fetches.length, 1)
     const mailPayload = JSON.parse(fetches[0].init.body)
-    assert.equal(mailPayload.subject, 'Váš podnik je nyní na CheapEats!')
-    assert.match(mailPayload.text, /zveřejněný na CheapEats/i)
+    assert.equal(mailPayload.subject, 'Váš podnik je nyní na FoodGo!')
+    assert.match(mailPayload.text, /zveřejněný na FoodGo/i)
     assert.match(mailPayload.text, /restaurant\//)
-    assert.match(mailPayload.text, /novotnyjindrich10@gmail\.com/)
+    assert.match(mailPayload.text, /foodgocz@gmail\.com/)
 
     const again = await adminReviewApplicationHttp(
       req('http://127.0.0.1/api/admin/business-applications/review', {
@@ -152,7 +152,7 @@ describe('API žádostí o podnik', () => {
       ownerEmail: 'a@b.cz',
       placeUrl: 'http://localhost/restaurant/test',
     })
-    assert.equal(letter.subject, 'Váš podnik je nyní na CheapEats!')
+    assert.equal(letter.subject, 'Váš podnik je nyní na FoodGo!')
     const result = await sendBusinessApprovalEmail(
       { businessName: 'Test', ownerEmail: 'a@b.cz', placeUrl: 'http://x/restaurant/test' },
       {},

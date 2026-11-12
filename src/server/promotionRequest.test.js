@@ -23,7 +23,7 @@ const now = 1_700_000_000_000
 const env = {
   RESEND_API_KEY: 'test-key',
   INQUIRY_TO_EMAIL: 'owner@example.com',
-  EMAIL_FROM: 'CheapEats <onboarding@resend.dev>',
+  EMAIL_FROM: 'FoodGo <onboarding@resend.dev>',
 }
 
 function payload(overrides = {}) {
@@ -38,6 +38,10 @@ function payload(overrides = {}) {
     socials: 'https://instagram.com/bistro',
     extra: 'Telefon po domluvě',
     photoNames: ['vydej.jpg'],
+    companyName: 'Bistro Test s.r.o.',
+    phone: '+420777000111',
+    billingAddress: 'Testovací 1, Brno',
+    termsAck: true,
     openedAt: now - 5000,
     amount: 12345,
     price: 1,
@@ -60,7 +64,7 @@ beforeEach(() => {
   resetPromotionRequestLimits()
 })
 
-describe('žádost o měsíc zdarma', () => {
+describe('poptávka placené propagace', () => {
   it('složí e-mail se všemi balíčky a ignoruje částku od klienta', async () => {
     const cases = [
       ['start', 99],
@@ -81,7 +85,8 @@ describe('žádost o měsíc zdarma', () => {
       assert.equal(sent.body.activated, false)
       const text = calls[0].body.text
       assert.match(text, new RegExp(`${monthly} Kč měsíčně`))
-      assert.match(text, /První měsíc: zdarma/)
+      assert.equal(text.includes('zdarma'), false)
+      assert.match(text, /Nezávazná poptávka/)
       assert.match(text, /Bistro Test/)
       assert.match(text, new RegExp(`${planId}@example.com`))
       assert.match(text, /vydej.jpg/)

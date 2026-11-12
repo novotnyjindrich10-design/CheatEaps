@@ -73,13 +73,13 @@ export default function Support() {
   return (
     <main className="page support-page">
       <article className="support-story">
-        <p className="support-kicker">CheapEats Brno</p>
+        <p className="support-kicker">FoodGo Brno</p>
         <h1>Podpoř mě</h1>
         <p className="support-hello">
-          <strong>Ahoj! 👋 Jsem tvůrce CheapEats Brno.</strong>
+          <strong>Ahoj! 👋 Jsem tvůrce FoodGo Brno.</strong>
         </p>
         <p>
-          Je mi 16 let a CheapEats tvořím jako vlastní studentský projekt. Baví mě programování,
+          Je mi 16 let a FoodGo tvořím jako vlastní studentský projekt. Baví mě programování,
           technologie a vymýšlení věcí, které lidem reálně usnadňují život.
         </p>
         <p>
@@ -89,7 +89,7 @@ export default function Support() {
         </p>
         <p>
           Vývoj a provoz mě zatím stojí vlastní peníze a aktuálně jsem kvůli projektu v mínusu.
-          Pokud se ti CheapEats líbí nebo ti pomáhá najít něco dobrého k jídlu, můžeš jeho další
+          Pokud se ti FoodGo líbí nebo ti pomáhá najít něco dobrého k jídlu, můžeš jeho další
           vývoj dobrovolně podpořit libovolnou částkou.
         </p>
         <p>
@@ -97,7 +97,7 @@ export default function Support() {
           restaurace ani žádnou jinou výhodu.
         </p>
         <p>
-          <strong>Díky, že CheapEats používáš a pomáháš mu růst! ❤️</strong>
+          <strong>Díky, že FoodGo používáš a pomáháš mu růst! ❤️</strong>
         </p>
       </article>
 
@@ -174,7 +174,7 @@ export default function Support() {
 
           <p id="support-pending" className="support-pending">
             {PAYMENT_READY
-              ? 'Pokračuješ na platební stránku. CheapEats údaje o kartě neukládá. Podpora zůstává dobrovolná a bez protislužby.'
+              ? 'Pokračuješ na platební stránku. FoodGo údaje o kartě neukládá. Podpora zůstává dobrovolná a bez protislužby.'
               : 'Možnost podpory se připravuje. Tlačítko teď nespouští skutečnou platbu.'}
           </p>
 
@@ -183,7 +183,7 @@ export default function Support() {
             className="btn btn-primary btn-lg support-submit"
             aria-describedby="support-voluntary support-pending"
           >
-            Podpořit CheapEats
+            Podpořit FoodGo
           </button>
           <p className="support-status" role="status" aria-live="polite">
             {notice}

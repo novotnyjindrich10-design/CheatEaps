@@ -117,15 +117,28 @@ export function withinOneEdit(a, b) {
   return edits <= 1
 }
 
-/** exact = podřetězec, fuzzy = nejvýš jeden překlep ve slově dlouhém alespoň 4 znaky. */
+function searchWords(text) {
+  return foldSearchText(text)
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean)
+}
+
+/**
+ * exact = celé slovo, nebo krátký prefix pro našeptávač („pi“ → pizza).
+ * Delší dotaz nesmí trefit cizí slovo zevnitř (pizza → piazza, king → steaking).
+ * fuzzy = nejvýš jeden překlep ve slově dlouhém alespoň 4 znaky.
+ */
 export function tokenHits(token, text) {
-  const folded = foldSearchText(text)
   const needle = foldSearchText(token)
-  if (!needle || !folded) return ''
-  if (folded.includes(needle)) return 'exact'
+  const words = searchWords(text)
+  if (!needle || words.length === 0) return ''
+  if (words.some((word) => word === needle)) return 'exact'
+  if (needle.length >= 2 && needle.length <= 3 && words.some((word) => word.startsWith(needle))) {
+    return 'exact'
+  }
   if (needle.length < 4) return ''
-  for (const word of folded.split(' ')) {
-    if (!word || Math.abs(word.length - needle.length) > 1) continue
+  for (const word of words) {
+    if (Math.abs(word.length - needle.length) > 1) continue
     if (withinOneEdit(needle, word)) return 'fuzzy'
   }
   return ''
@@ -230,8 +243,8 @@ export function describeSearchIntent(query) {
     )
   }
   if (intent.veganOnly) notes.push('veganské možnosti')
-  if (intent.vegetarianOnly) notes.push('vegetariánské možnosti')
-  if (intent.lunchOnly) notes.push('polední menu uvedené v datech')
+  if (intent.vegetarianOnly) notes.push('podniky bez masa')
+  if (intent.lunchOnly) notes.push('zmínka o poledním menu v OSM datech (ne denní jídelníček)')
   return notes
 }
 
@@ -292,12 +305,16 @@ export function matchRestaurantQuery(restaurant, intent) {
   let score = 0
   if (intent.cuisineType) {
     if (getRestaurantCategory(restaurant) === intent.cuisineType) score += 6
-    else if (
-      intent.consumedCategoryToken &&
-      tokenHits(intent.consumedCategoryToken, documentedSearchBlob(restaurant))
-    ) {
-      score += 3
-    } else return null
+    else {
+      const hit = intent.consumedCategoryToken
+        ? tokenHits(intent.consumedCategoryToken, documentedSearchBlob(restaurant))
+        : ''
+      const aliases = CATEGORY_SEARCH_ALIASES[intent.cuisineType] || []
+      const typedExactly =
+        intent.consumedCategoryToken === intent.cuisineType || aliases.includes(intent.consumedCategoryToken)
+      if (hit === 'exact' || (hit === 'fuzzy' && !typedExactly)) score += 3
+      else return null
+    }
     if (
       intent.consumedCategoryToken &&
       tokenHits(intent.consumedCategoryToken, restaurant?.name) === 'exact'

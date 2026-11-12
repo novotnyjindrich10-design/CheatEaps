@@ -1,8 +1,9 @@
-const STATIC_PATHS = [
+import { CANONICAL_ORIGIN } from '../constants/site.js'
+
+export const SITEMAP_PATHS = [
   '/',
   '/results',
-  '/odmeny',
-  '/oblibene',
+  '/nevim-co-jist',
   '/pro-podniky',
   '/podpor-me',
   '/ochrana-osobnich-udaju',
@@ -15,10 +16,14 @@ export function publicSiteOrigin(value) {
   return origin
 }
 
+/** Prázdné nebo ne-https PUBLIC_SITE_URL nesmí do sitemap dostat localhost. */
+export function sitemapOrigin(value) {
+  return publicSiteOrigin(value) || CANONICAL_ORIGIN
+}
+
 export function sitemapUrls(origin, ids) {
-  const base = publicSiteOrigin(origin)
-  if (!base) return []
-  const urls = STATIC_PATHS.map((path) => (path === '/' ? `${base}/` : `${base}${path}`))
+  const base = sitemapOrigin(origin)
+  const urls = SITEMAP_PATHS.map((path) => (path === '/' ? `${base}/` : `${base}${path}`))
   const seen = new Set()
   for (const id of ids) {
     const safe = String(id || '').trim()

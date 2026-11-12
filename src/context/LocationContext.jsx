@@ -1,9 +1,17 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { restaurants } from '../data/restaurants'
 import { geolocationErrorMessage, hasFiniteLatLon, hasVerifiedCoordinates } from '../utils/geo'
+import {
+  geolocationOptions,
+  isStoredOriginFresh,
+  requestGeolocationPosition,
+  sameCoordinates,
+  UI_LOCATE_DEADLINE_MS,
+} from '../utils/geolocationLocate'
 import { applyRouteDistances, collectRouteDistances } from '../utils/routeDistance'
 
 const STORAGE_ORIGIN = 'cheapeats.geo.origin'
+const STORAGE_PROMPT = 'cheapeats.geo.prompt'
 const EMPTY_DISTANCES = new Map()
 const routeMemory = new Map()
 
@@ -15,19 +23,19 @@ export function useLocationState() {
   return ctx
 }
 
-function readJson(key) {
+function readJson(key, storage = localStorage) {
   try {
-    const raw = localStorage.getItem(key)
+    const raw = storage.getItem(key)
     return raw ? JSON.parse(raw) : null
   } catch {
     return null
   }
 }
 
-function writeJson(key, value) {
+function writeJson(key, value, storage = localStorage) {
   try {
-    if (value == null) localStorage.removeItem(key)
-    else localStorage.setItem(key, JSON.stringify(value))
+    if (value == null) storage.removeItem(key)
+    else storage.setItem(key, JSON.stringify(value))
   } catch {
     /* soukromý režim / plné úložiště */
   }
@@ -40,6 +48,26 @@ function readStoredOrigin() {
   return saved
 }
 
+/** dismissed | accepted | null (ještě nerozhodnuto) */
+function readPromptChoice() {
+  try {
+    const raw = localStorage.getItem(STORAGE_PROMPT)
+    if (raw === 'dismissed' || raw === 'accepted') return raw
+    return null
+  } catch {
+    return null
+  }
+}
+
+function writePromptChoice(choice) {
+  try {
+    if (!choice) localStorage.removeItem(STORAGE_PROMPT)
+    else localStorage.setItem(STORAGE_PROMPT, choice)
+  } catch {
+    /* ignore */
+  }
+}
+
 function originKey(origin) {
   return `${origin.lat.toFixed(4)},${origin.lon.toFixed(4)}`
 }
@@ -48,70 +76,220 @@ export function LocationProvider({ children }) {
   const [origin, setOrigin] = useState(readStoredOrigin)
   const [status, setStatus] = useState(() => (readStoredOrigin() ? 'ready' : 'idle'))
   const [errorMessage, setErrorMessage] = useState('')
+  const [promptChoice, setPromptChoice] = useState(readPromptChoice)
   const [routeState, setRouteState] = useState({
     key: '',
     distances: new Map(),
     status: 'idle',
     message: '',
   })
+  const locateGeneration = useRef(0)
+  const locateCancelRef = useRef(null)
+  const updatedFlashTimer = useRef(null)
+  const autoLocateAttempted = useRef(false)
+  const originRef = useRef(origin)
+  originRef.current = origin
+
   const persistOrigin = useCallback((next) => {
     setOrigin(next)
     writeJson(STORAGE_ORIGIN, next)
   }, [])
 
-  const locate = useCallback(() => {
-    setErrorMessage('')
-    if (typeof window !== 'undefined' && window.isSecureContext === false) {
-      setStatus('insecure')
-      setErrorMessage(geolocationErrorMessage('insecure'))
-      return
+  const clearUpdatedFlash = useCallback(() => {
+    if (updatedFlashTimer.current != null) {
+      clearTimeout(updatedFlashTimer.current)
+      updatedFlashTimer.current = null
     }
-    if (typeof navigator === 'undefined' || !navigator.geolocation) {
-      setStatus('unsupported')
-      setErrorMessage(geolocationErrorMessage('unsupported'))
-      return
-    }
+  }, [])
 
-    setStatus('locating')
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const lat = pos?.coords?.latitude
-        const lon = pos?.coords?.longitude
-        if (!hasFiniteLatLon(lat, lon)) {
-          setStatus('invalid')
-          setErrorMessage(geolocationErrorMessage('invalid'))
-          return
-        }
-        persistOrigin({
-          lat,
-          lon,
-          label: 'Moje poloha',
-          type: 'gps',
-          updatedAt: new Date().toISOString(),
-        })
+  const flashStatus = useCallback(
+    (nextStatus, generation, ms = 2200) => {
+      setStatus(nextStatus)
+      clearUpdatedFlash()
+      updatedFlashTimer.current = setTimeout(() => {
+        if (generation !== locateGeneration.current) return
         setStatus('ready')
-        setErrorMessage('')
-      },
-      (err) => {
-        const code = err?.code
-        const reason = code === 1 ? 'denied' : code === 2 ? 'unavailable' : code === 3 ? 'timeout' : 'error'
-        setStatus(reason)
-        setErrorMessage(geolocationErrorMessage(reason))
-      },
-      { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 },
-    )
-  }, [persistOrigin])
+        updatedFlashTimer.current = null
+      }, ms)
+    },
+    [clearUpdatedFlash],
+  )
+
+  const locate = useCallback(
+    ({ highAccuracy = false, forceRefresh = false } = {}) => {
+      clearUpdatedFlash()
+      setErrorMessage('')
+
+      if (locateCancelRef.current) {
+        locateCancelRef.current()
+        locateCancelRef.current = null
+      }
+
+      const generation = ++locateGeneration.current
+      const isCurrent = () => generation === locateGeneration.current
+      const previous = originRef.current
+
+      setStatus('locating')
+
+      const { cancel } = requestGeolocationPosition({
+        geolocation: typeof navigator !== 'undefined' ? navigator.geolocation : null,
+        isSecureContext: typeof window === 'undefined' ? true : window.isSecureContext !== false,
+        options: geolocationOptions({ highAccuracy, forceRefresh }),
+        uiDeadlineMs: UI_LOCATE_DEADLINE_MS,
+        isCurrent,
+        onSuccess(pos) {
+          const lat = pos?.coords?.latitude
+          const lon = pos?.coords?.longitude
+          if (!hasFiniteLatLon(lat, lon)) {
+            setStatus('invalid')
+            setErrorMessage(geolocationErrorMessage('invalid'))
+            return
+          }
+          const next = {
+            lat,
+            lon,
+            label: 'Moje poloha',
+            type: 'gps',
+            updatedAt: new Date().toISOString(),
+          }
+          persistOrigin(next)
+          writePromptChoice('accepted')
+          setPromptChoice('accepted')
+          setErrorMessage('')
+          if (forceRefresh && sameCoordinates(previous, next)) {
+            flashStatus('current', generation)
+          } else {
+            flashStatus('updated', generation)
+          }
+        },
+        onError({ reason }) {
+          setStatus(reason)
+          setErrorMessage(geolocationErrorMessage(reason))
+          if (reason === 'denied') {
+            writePromptChoice('dismissed')
+            setPromptChoice('dismissed')
+            // Po odebrání oprávnění nesmí zůstat stará GPS poloha jako „aktuální“.
+            if (originRef.current?.type === 'gps') {
+              persistOrigin(null)
+              setRouteState({ key: '', distances: new Map(), status: 'idle', message: '' })
+            }
+          }
+        },
+      })
+
+      locateCancelRef.current = cancel
+    },
+    [clearUpdatedFlash, flashStatus, persistOrigin],
+  )
+
+  const dismissPrompt = useCallback(() => {
+    writePromptChoice('dismissed')
+    setPromptChoice('dismissed')
+  }, [])
+
+  const acceptPrompt = useCallback(() => {
+    writePromptChoice('accepted')
+    setPromptChoice('accepted')
+    locate({ forceRefresh: false, highAccuracy: false })
+  }, [locate])
+
+  useEffect(() => {
+    return () => {
+      locateGeneration.current += 1
+      locateCancelRef.current?.()
+      locateCancelRef.current = null
+      clearUpdatedFlash()
+    }
+  }, [clearUpdatedFlash])
 
   const clearOrigin = useCallback(() => {
+    if (locateCancelRef.current) {
+      locateCancelRef.current()
+      locateCancelRef.current = null
+    }
+    locateGeneration.current += 1
+    clearUpdatedFlash()
     persistOrigin(null)
     setStatus('idle')
     setErrorMessage('')
     setRouteState({ key: '', distances: new Map(), status: 'idle', message: '' })
-  }, [persistOrigin])
+  }, [clearUpdatedFlash, persistOrigin])
+
+  /** Vymaže uložené souřadnice i volbu výzvy — bezpečné „zapomenout“. */
+  const forgetOrigin = useCallback(() => {
+    clearOrigin()
+    writePromptChoice(null)
+    setPromptChoice(null)
+  }, [clearOrigin])
+
+  // Automaticky: granted → načti GPS. Denied → smaž uloženou GPS (nesmí se tvářit jako aktuální).
+  useEffect(() => {
+    if (typeof navigator === 'undefined' || !navigator.permissions?.query) {
+      autoLocateAttempted.current = true
+      return undefined
+    }
+
+    let cancelled = false
+    let permissionStatus = null
+    let onChange = null
+
+    const dropDeniedGps = () => {
+      if (originRef.current?.type !== 'gps') return
+      clearOrigin()
+      writePromptChoice('dismissed')
+      setPromptChoice('dismissed')
+      setStatus('denied')
+      setErrorMessage(geolocationErrorMessage('denied'))
+    }
+
+    const refreshIfGranted = () => {
+      writePromptChoice('accepted')
+      setPromptChoice('accepted')
+      locate({ forceRefresh: false })
+    }
+
+    navigator.permissions
+      .query({ name: 'geolocation' })
+      .then((result) => {
+        if (cancelled) return
+        permissionStatus = result
+
+        if (result.state === 'denied') {
+          dropDeniedGps()
+        } else if (result.state === 'granted' && !autoLocateAttempted.current) {
+          refreshIfGranted()
+        }
+
+        autoLocateAttempted.current = true
+
+        onChange = () => {
+          if (cancelled) return
+          if (result.state === 'denied') dropDeniedGps()
+          else if (result.state === 'granted') refreshIfGranted()
+        }
+        result.addEventListener?.('change', onChange)
+      })
+      .catch(() => {
+        autoLocateAttempted.current = true
+      })
+
+    return () => {
+      cancelled = true
+      if (permissionStatus && onChange) {
+        permissionStatus.removeEventListener?.('change', onChange)
+      }
+    }
+  }, [clearOrigin, locate])
 
   const setManualOrigin = useCallback(
     (place) => {
       if (!hasVerifiedCoordinates(place)) return
+      if (locateCancelRef.current) {
+        locateCancelRef.current()
+        locateCancelRef.current = null
+      }
+      locateGeneration.current += 1
+      clearUpdatedFlash()
       persistOrigin({
         lat: place.lat,
         lon: place.lon,
@@ -120,10 +298,12 @@ export function LocationProvider({ children }) {
         placeId: place.id,
         updatedAt: new Date().toISOString(),
       })
+      writePromptChoice('accepted')
+      setPromptChoice('accepted')
       setStatus('ready')
       setErrorMessage('')
     },
-    [persistOrigin],
+    [clearUpdatedFlash, persistOrigin],
   )
 
   const originCacheKey = origin && hasFiniteLatLon(origin.lat, origin.lon) ? originKey(origin) : ''
@@ -167,9 +347,9 @@ export function LocationProvider({ children }) {
           distances: result.distances,
           status: failedAll ? 'error' : 'ready',
           message: failedAll
-            ? 'Pěší vzdálenost se teď nepodařilo zjistit.'
+            ? 'Pěší trasu se teď nepodařilo zjistit — ukazujeme vzdušnou vzdálenost.'
             : result.failedChunks > 0
-              ? 'U části podniků se pěší vzdálenost nepodařilo zjistit.'
+              ? 'U části podniků chybí pěší trasa — u nich je vzdušná vzdálenost.'
               : '',
         }
         if (!failedAll) routeMemory.set(originCacheKey, next)
@@ -181,7 +361,7 @@ export function LocationProvider({ children }) {
           key: originCacheKey,
           distances: new Map(),
           status: 'error',
-          message: 'Pěší vzdálenost se teď nepodařilo zjistit.',
+          message: 'Pěší trasu se teď nepodařilo zjistit — ukazujeme vzdušnou vzdálenost.',
         })
       })
 
@@ -197,23 +377,50 @@ export function LocationProvider({ children }) {
         hasOrigin: Boolean(origin) && hasFiniteLatLon(origin.lat, origin.lon),
         pending: routeStatus === 'loading',
         originStatus: status,
+        origin,
       }),
     [origin, routeDistances, routeStatus, status],
   )
 
+  const originFresh = Boolean(origin) && isStoredOriginFresh(origin)
+  const showLocationPrompt =
+    !origin && promptChoice == null && status !== 'denied' && status !== 'locating'
+
   const value = useMemo(
     () => ({
       origin,
+      originFresh,
       status,
       errorMessage,
       locate,
       clearOrigin,
+      forgetOrigin,
       setManualOrigin,
       attachDistances,
       routeStatus,
       routeMessage,
+      promptChoice,
+      showLocationPrompt,
+      acceptPrompt,
+      dismissPrompt,
     }),
-    [origin, status, errorMessage, locate, clearOrigin, setManualOrigin, attachDistances, routeStatus, routeMessage],
+    [
+      origin,
+      originFresh,
+      status,
+      errorMessage,
+      locate,
+      clearOrigin,
+      forgetOrigin,
+      setManualOrigin,
+      attachDistances,
+      routeStatus,
+      routeMessage,
+      promptChoice,
+      showLocationPrompt,
+      acceptPrompt,
+      dismissPrompt,
+    ],
   )
 
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>

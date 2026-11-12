@@ -13,31 +13,34 @@ function withPhoto(restaurant, photoId) {
 }
 
 /**
- * Na jedné stránce se stejná fotka neopakuje, dokud má téma aspoň dva snímky.
- * Detail bez předaného id zůstává u stabilního přiřazení.
+ * Na jedné stránce se stejná fotka neopakuje, dokud má téma volné snímky.
+ * Preferuje katalogové přiřazení; když by se na stránce opakovalo, vezme
+ * další snímek ze stejného tématu. Ruční výjimky nemění.
+ * Výsledek je deterministický pro dané pořadí restaurací na stránce.
  */
 export function varyPixabayOnPage(restaurants) {
   if (!pixabayLibraryReady || !Array.isArray(restaurants) || restaurants.length < 2) {
     return restaurants
   }
-  const recent = []
+  const usedOnPage = new Set()
   let changed = false
   const next = restaurants.map((restaurant) => {
     if (restaurant?.foodIllustrationKind !== 'pixabay') return restaurant
     if (Number.isInteger(pixabayManualPhotoByPlaceId[restaurant.id])) {
-      recent.push(restaurant.foodIllustrationPixabayId)
+      usedOnPage.add(restaurant.foodIllustrationPixabayId)
       return restaurant
     }
     const theme = restaurant.foodIllustrationTheme
     const pool = pixabayIdsByTheme[theme] || []
     const current = restaurant.foodIllustrationPixabayId
-    if (pool.length < 2 || !Number.isInteger(current)) return restaurant
+    if (pool.length < 2 || !Number.isInteger(current)) {
+      if (Number.isInteger(current)) usedOnPage.add(current)
+      return restaurant
+    }
     const start = pool.indexOf(current)
-    const order = start >= 0 ? pool.slice(start).concat(pool.slice(0, start)) : [current]
-    const gap = Math.max(1, pool.length - 1)
-    const blocked = new Set(recent.slice(-gap))
-    const pick = order.find((id) => !blocked.has(id)) || current
-    recent.push(pick)
+    const order = start >= 0 ? pool.slice(start).concat(pool.slice(0, start)) : [current, ...pool]
+    const pick = order.find((id) => !usedOnPage.has(id)) || current
+    usedOnPage.add(pick)
     if (pick === current) return restaurant
     changed = true
     return withPhoto(restaurant, pick)

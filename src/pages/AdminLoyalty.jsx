@@ -156,7 +156,7 @@ export default function AdminLoyalty() {
             {pending.map((review) => (
               <li key={review.id}>
                 <div>
-                  <strong>{review.authorLabel}</strong> · {review.restaurantId} · {review.rating}/5
+                  <strong>{review.authorLabel}</strong> · <Link to={`/restaurant/${encodeURIComponent(review.restaurantId)}`}>{review.restaurantId}</Link> · {review.rating}/5
                   <p className="section-desc">{review.body}</p>
                 </div>
                 <div className="loyalty-admin-actions">

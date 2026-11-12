@@ -94,7 +94,7 @@ async function fetchText(url) {
       redirect: 'follow',
       headers: {
         'user-agent':
-          'Mozilla/5.0 CheapEatsPriceAudit/1.0 (research; +https://localhost) AppleWebKit/537.36',
+          'Mozilla/5.0 FoodGoPriceAudit/1.0 (research; +https://localhost) AppleWebKit/537.36',
         accept: 'text/html,application/xhtml+xml',
       },
     })

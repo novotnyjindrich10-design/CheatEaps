@@ -32,6 +32,37 @@ describe('katalog podniků', () => {
     }
   })
 
+  it('Prime Steak je restaurace se steakem, ne kavárna', () => {
+    const id = 'prime-steak-palackeho-trida-162'
+    const place = mergedPlaces().find((row) => row.id === id)
+    assert.ok(place)
+    const override = categoryOverrides[id]
+    assert.equal(override.category, 'neuvedeno')
+    assert.equal(override.type, 'Restaurace')
+    assert.match(override.description, /steak/i)
+    assert.equal(place.category, 'neuvedeno')
+    assert.equal(place.type, 'Restaurace')
+    assert.match(place.description, /steak/i)
+    assert.equal(place.description.toLowerCase().includes('kavár'), false)
+    assert.equal(placePixabayPhotoId[id], 617430)
+    const photo = pixabayPhotosById[617430]
+    assert.match(photo.pageUrl, /rumpsteak|steak/i)
+    assert.match(photo.cardUrl, /617430/)
+  })
+
+  it('žádný podnik se steak v názvu/OSM cuisine není kategorie kava', () => {
+    const offenders = mergedPlaces().filter((place) => {
+      const category = categoryOverrides[place.id]?.category || place.category
+      const name = String(place.name || '').toLowerCase()
+      return /steak/.test(name) && category === 'kava'
+    })
+    assert.deepEqual(offenders.map((place) => place.id), [])
+  })
+
+  it('katalog má stabilní počet unikátních ID', () => {
+    assert.equal(mergedPlaces().length, 775)
+  })
+
   it('lokální Pixabay fotky přiřazené podnikům existují', () => {
     const ids = new Set(mergedPlaces().map((place) => place.id))
     for (const [placeId, photoId] of Object.entries(placePixabayPhotoId)) {

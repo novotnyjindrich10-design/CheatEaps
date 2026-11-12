@@ -151,7 +151,7 @@ export default function NewPassword() {
 
       {done ? (
         <section className="deal-panel">
-          <p role="status">Heslo je změněné. Můžeš se přihlásit nebo pokračovat do CheapEats.</p>
+          <p role="status">Heslo je změněné. Můžeš se přihlásit nebo pokračovat do FoodGo.</p>
           <Link to="/prihlaseni" className="btn btn-primary">
             Přejít na přihlášení
           </Link>

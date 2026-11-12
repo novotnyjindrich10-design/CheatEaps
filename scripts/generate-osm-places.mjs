@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'fs'
 import { curatedPlaces } from '../src/data/curatedPlaces.js'
 import { osmPlaces as previousOsmPlaces } from '../src/data/osmPlaces.js'
 import { extractOsmContact } from '../src/utils/osmContact.js'
+import { classifyOsmTags } from '../src/utils/cuisineClassify.js'
 
 function fold(value) {
   return String(value || '')
@@ -34,42 +35,8 @@ function parseStreetHouse(address) {
   return { street: match[1], house: match[2] }
 }
 
-function classifyFromCuisine(cuisine) {
-  const c = String(cuisine || '').toLowerCase()
-  if (!c.trim()) return null
-  if (/pizza/.test(c)) return { type: 'Pizza', category: 'pizza' }
-  if (/burger/.test(c)) return { type: 'Burger', category: 'burger' }
-  if (/kebab|doner|döner|gyros/.test(c)) return { type: 'Kebab', category: 'kebab' }
-  if (/chinese|szechuan|sichuan/.test(c)) return { type: 'Čína', category: 'cina' }
-  if (
-    /vietnamese|thai|japanese|sushi|asian|indian|korean|nepalese|noodle|ramen/.test(c)
-  ) {
-    return { type: 'Asijské', category: 'asijske' }
-  }
-  if (/mexican|taco|burrito/.test(c)) return { type: 'Mexiko', category: 'mexiko' }
-  if (/ice_cream|dessert|pastry|cake|pancake|waffle|crepe/.test(c)) {
-    return { type: 'Sladké', category: 'sladke' }
-  }
-  if (/healthy|salad/.test(c)) return { type: 'Zdravé', category: 'zdrave' }
-  if (/coffee|cafe|tea|teahouse|bubble_tea/.test(c)) return { type: 'Kavárna', category: 'kava' }
-  if (/czech|regional|local/.test(c)) return { type: 'České', category: 'ceske' }
-  if (/sandwich|chicken|fried/.test(c)) return { type: 'Fast food', category: 'fastfood' }
-  return null
-}
-
 function classify(tags) {
-  const fromCuisine = classifyFromCuisine(tags.cuisine)
-  if (fromCuisine) return fromCuisine
-
-  const amenity = tags.amenity
-  if (amenity === 'ice_cream') return { type: 'Sladké', category: 'sladke' }
-  if (amenity === 'cafe') return { type: 'Kavárna', category: 'kava' }
-  if (amenity === 'fast_food' || amenity === 'food_court') {
-    return { type: 'Fast food', category: 'fastfood' }
-  }
-  if (amenity === 'canteen') return { type: 'Jídelna', category: 'neuvedeno' }
-  if (amenity === 'restaurant') return { type: 'Restaurace', category: 'neuvedeno' }
-  return { type: 'Neuvedeno', category: 'neuvedeno' }
+  return classifyOsmTags({ cuisine: tags.cuisine, amenity: tags.amenity })
 }
 
 const osm = JSON.parse(readFileSync(new URL('../osm-brno-food.json', import.meta.url), 'utf8'))
@@ -137,14 +104,31 @@ for (const el of osm.elements || []) {
   }
   usedIds.add(id)
 
-  const amenityCs = {
-    cafe: 'kavárna',
-    restaurant: 'restaurace',
-    fast_food: 'rychlé občerstvení',
-    ice_cream: 'zmrzlina / sladké',
-    canteen: 'jídelna',
-    food_court: 'food court',
-  }[t.amenity] || 'podnik s jídlem'
+  // Popisek podle výsledné kategorie (cuisine má přednost před amenity=cafe).
+  const amenityCs =
+    {
+      pizza: 'pizzerie',
+      burger: 'burger restaurace',
+      kebab: 'kebab',
+      cina: 'čínská restaurace',
+      asijske: 'asijská restaurace',
+      mexiko: 'mexická restaurace',
+      sladke: 'sladké / cukrárna',
+      zdrave: 'zdravé bistro',
+      kava: 'kavárna',
+      ceske: 'česká restaurace',
+      fastfood: 'rychlé občerstvení',
+      neuvedeno: t.amenity === 'canteen' ? 'jídelna' : 'restaurace',
+    }[category] ||
+    {
+      cafe: 'kavárna',
+      restaurant: 'restaurace',
+      fast_food: 'rychlé občerstvení',
+      ice_cream: 'zmrzlina / sladké',
+      canteen: 'jídelna',
+      food_court: 'food court',
+    }[t.amenity] ||
+    'podnik s jídlem'
 
   const bits = [`Záznam z OpenStreetMap (${amenityCs}).`]
   if (t.cuisine) bits.push(`Kuchyně dle OSM: ${t.cuisine}.`)

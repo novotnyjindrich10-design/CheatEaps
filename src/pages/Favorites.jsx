@@ -5,8 +5,13 @@ import { useAuth } from '../context/authSession'
 import { useLocationState } from '../context/LocationContext'
 import { getRestaurantById } from '../data/restaurants'
 import { loginPath } from '../utils/authReturn'
+import { removeMissingLocalFavorites } from '../utils/localFavorites'
 import { varyPixabayOnPage } from '../utils/pageIllustrations'
 import { fetchWithTimeout } from '../utils/fetchTimeout'
+
+function placeExists(id) {
+  return Boolean(getRestaurantById(id))
+}
 
 export default function Favorites() {
   const { session } = useAuth()
@@ -15,10 +20,23 @@ export default function Favorites() {
   const [missing, setMissing] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [source, setSource] = useState('local')
 
   useEffect(() => {
-    if (!session.ready || !session.authenticated) return undefined
+    if (!session.ready) return undefined
+
+    if (!session.authenticated) {
+      const cleaned = removeMissingLocalFavorites(placeExists)
+      setIds(cleaned)
+      setMissing(0)
+      setSource('local')
+      setError('')
+      setLoading(false)
+      return undefined
+    }
+
     let cancelled = false
+    setLoading(true)
     fetchWithTimeout('/api/favorites', { credentials: 'same-origin' })
       .then((response) => response.json().catch(() => ({})))
       .then((body) => {
@@ -31,6 +49,7 @@ export default function Favorites() {
         const places = body.ids.map((id) => getRestaurantById(id)).filter(Boolean)
         setIds(places.map((place) => place.id))
         setMissing(body.ids.length - places.length)
+        setSource('account')
         setError('')
         setLoading(false)
       })
@@ -56,23 +75,26 @@ export default function Favorites() {
     <main className="page">
       <div className="page-head">
         <h1>Oblíbené</h1>
-        <p className="page-subtitle">Restaurace, které sis uložil ke svému účtu CheapEats.</p>
+        <p className="page-subtitle">
+          {source === 'account'
+            ? 'Restaurace uložené k účtu FoodGo.'
+            : 'Restaurace uložené v tomto prohlížeči. Po přihlášení je můžeš synchronizovat s účtem.'}
+        </p>
       </div>
 
-      {!session.ready || (session.authenticated && loading) ? <p className="page-subtitle">Načítám oblíbené…</p> : null}
+      {!session.ready || (session.authenticated && loading) ? (
+        <p className="page-subtitle">Načítám oblíbené…</p>
+      ) : null}
 
       {session.ready && !session.authenticated ? (
-        <div className="empty-state">
-          <p>Oblíbené restaurace uvidíš po přihlášení. Zůstanou u účtu i na dalším zařízení.</p>
-          <p className="favorite-auth-links">
-            <Link to={login} className="btn btn-primary">
-              Přihlásit se
-            </Link>
-            <Link to={signup} className="btn btn-secondary">
-              Vytvořit účet
-            </Link>
-          </p>
-        </div>
+        <p className="favorite-auth-links">
+          <Link to={login} className="btn btn-secondary">
+            Přihlásit se
+          </Link>
+          <Link to={signup} className="btn btn-secondary">
+            Vytvořit účet
+          </Link>
+        </p>
       ) : null}
 
       {error ? (
@@ -81,24 +103,26 @@ export default function Favorites() {
         </p>
       ) : null}
 
-      {session.authenticated && !loading && !error && restaurants.length === 0 ? (
+      {session.ready && !loading && restaurants.length === 0 && !error ? (
         <div className="empty-state">
-          <p>Zatím tu nic nemáš. Srdíčko na detailu restaurace ji sem přidá.</p>
+          <p>Zatím tu nic není. Ulož podnik tlačítkem srdce v detailu.</p>
           <Link to="/results" className="btn btn-primary">
-            Prohlížet restaurace
+            Najít podnik
           </Link>
         </div>
       ) : null}
 
       {missing > 0 ? (
-        <p className="detail-address">Některé uložené podniky už v katalogu nejsou, tak je tu nezobrazujeme.</p>
+        <p className="location-bar-caption" role="status">
+          {missing} uložených ID už v katalogu není.
+        </p>
       ) : null}
 
       {restaurants.length > 0 ? (
         <ul className="restaurant-list">
           {restaurants.map((restaurant, index) => (
             <li key={restaurant.id}>
-              <RestaurantCard restaurant={restaurant} index={index} />
+              <RestaurantCard restaurant={restaurant} priority={index < 2} />
             </li>
           ))}
         </ul>

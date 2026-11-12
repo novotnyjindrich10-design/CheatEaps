@@ -31,7 +31,7 @@ const PILOT_IDS = [
   'monogram-espresso-bar',
 ]
 
-const UA = 'CheapEatsBrno/1.0 (student project; photo license research; not for bulk download)'
+const UA = 'FoodGoBrno/1.0 (student project; photo license research; not for bulk download)'
 const BLOCKED = [
   'unsplash.com',
   'pexels.com',

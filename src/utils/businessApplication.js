@@ -231,7 +231,7 @@ export function assessBusinessApplication(input, options = {}) {
   const existingKeys = options.existingKeys ?? new Set()
   const key = normalizeKey(businessName, address)
   if (existingKeys.has(key)) {
-    errors.duplicate = 'Podobný podnik nebo pobočka už v CheapEats je, nebo čeká na kontrolu.'
+    errors.duplicate = 'Podobný podnik nebo pobočka už v FoodGo je, nebo čeká na kontrolu.'
   }
 
   const categoryMeta = getCategoryMeta(category)

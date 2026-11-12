@@ -2,9 +2,9 @@
  * Vstupní bod dat restaurací.
  * Seznam podniků: src/data/demoRestaurants.js + schválené podniky z publishedCatalog.
  */
-export { DATA_SOURCE_NOTES, DEMO_DATA_NOTICE, demoRestaurants as restaurants } from './demoRestaurants'
+export { DATA_SOURCE_NOTES, DEMO_DATA_NOTICE, demoRestaurants as restaurants } from './demoRestaurants.js'
 
-import { demoRestaurants } from './demoRestaurants'
+import { demoRestaurants } from './demoRestaurants.js'
 import { getPublishedExtras, subscribePublished } from './publishedCatalog.js'
 import { mapsDirectionsUrl } from '../utils/googleRating'
 

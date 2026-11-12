@@ -7,14 +7,16 @@ import LocationBar from '../components/LocationBar'
 import RestaurantCard from '../components/RestaurantCard'
 import { useCatalog } from '../context/CatalogContext'
 import { useLocationState } from '../context/LocationContext'
+import { partitionPlacements } from '../constants/monetization'
 import { compareByRecordQuality } from '../utils/recordQuality'
 import { suppressCatalogDuplicates } from '../utils/catalogDuplicates'
+import { filterAndSortRestaurants } from '../utils/filterRestaurants'
 import { varyPixabayOnPage } from '../utils/pageIllustrations'
 
-const RECOMMENDED_COUNT = 12
+const FEATURED_COUNT = 12
 
-/** Různé kategorie. V každé je první nejlíp zdokumentovaný podnik. */
-function pickRecommended(places, limit = RECOMMENDED_COUNT) {
+/** Bez polohy: různé kategorie, v každé nejlíp zdokumentovaný podnik. */
+function pickRecommended(places, limit = FEATURED_COUNT) {
   const byCategory = new Map()
   for (const place of suppressCatalogDuplicates(places)) {
     const key = place.category || 'neuvedeno'
@@ -50,11 +52,23 @@ function pickRecommended(places, limit = RECOMMENDED_COUNT) {
   return picked.sort(compareByRecordQuality)
 }
 
+function pickNearest(places, limit = FEATURED_COUNT) {
+  return filterAndSortRestaurants(places, {
+    hasOrigin: true,
+    sortBy: 'distance',
+  }).slice(0, limit)
+}
+
 export default function Home() {
   const { restaurants } = useCatalog()
-  const { attachDistances } = useLocationState()
-  const recommended = useMemo(() => pickRecommended(restaurants), [restaurants])
-  const featured = varyPixabayOnPage(attachDistances(recommended))
+  const { attachDistances, origin } = useLocationState()
+  const hasOrigin = Boolean(origin)
+  const organic = useMemo(() => partitionPlacements(restaurants).organic, [restaurants])
+  const located = useMemo(() => attachDistances(organic), [attachDistances, organic])
+  const featured = useMemo(() => {
+    const picked = hasOrigin ? pickNearest(located) : pickRecommended(located)
+    return varyPixabayOnPage(picked)
+  }, [hasOrigin, located])
 
   return (
     <main className="page home-page">
@@ -64,6 +78,9 @@ export default function Home() {
             <span className="home-hero-line">Najdi jídlo</span>{' '}
             <span className="home-hero-line home-hero-accent">v Brně</span>
           </h1>
+          <p className="home-hero-lead">
+            Hledej podle chuti, rozpočtu a vzdálenosti. FoodGo odděluje ověřené údaje od odhadů.
+          </p>
           <HomeSearch />
           <LocationBar places={restaurants} variant="hero" />
         </div>
@@ -78,13 +95,17 @@ export default function Home() {
         <CategoryStrip asLinks variant="grid" />
       </section>
 
-      <section className="home-listings" aria-labelledby="recommended-title">
+      <section className="home-listings" aria-labelledby="featured-title">
         <div className="section-heading section-heading--split">
           <div>
-            <h2 id="recommended-title" className="section-title">
-              Doporučené podniky
+            <h2 id="featured-title" className="section-title">
+              {hasOrigin ? 'Nejbližší podniky' : 'Doporučené podniky'}
             </h2>
-            <p className="section-desc">Nejlíp zdokumentované podniky z různých kuchyní.</p>
+            <p className="section-desc">
+              {hasOrigin
+                ? 'Seřazeno od nejbližšího podle tvé polohy. Vzdálenost ukazujeme jen u podniků se souřadnicemi.'
+                : 'Nejlíp zdokumentované podniky z různých kuchyní. Zapni polohu výše a uvidíš nejbližší první.'}
+            </p>
           </div>
           <Link to="/results" className="btn btn-secondary">
             Celý seznam
@@ -123,24 +144,24 @@ export default function Home() {
           <h2 id="paths-title" className="section-title">
             Kam dál
           </h2>
-          <p className="section-desc">Rychlé cesty k tomu, co CheapEats umí hned teď.</p>
+          <p className="section-desc">Rychlé cesty k tomu, co FoodGo umí hned teď.</p>
         </div>
         <div className="home-path-grid">
+          <Link to="/results?view=map" className="home-path-card">
+            <h3>Mapa Brna</h3>
+            <p>Body restaurací podle filtrů. Klikni na bod a otevři detail.</p>
+          </Link>
+          <Link to="/nevim-co-jist" className="home-path-card">
+            <h3>Nevím, co jíst</h3>
+            <p>Náhodný podnik podle ceny, kategorie a volitelně okolí.</p>
+          </Link>
           <Link to="/results?verified=1" className="home-path-card">
             <h3>Ověřené ceny</h3>
             <p>Jen podniky s doloženou cenou z menu.</p>
           </Link>
-          <Link to="/results?deals=1" className="home-path-card">
-            <h3>Slevy a výhody</h3>
-            <p>Nabídky, které jsme našli u oficiálních zdrojů.</p>
-          </Link>
           <Link to="/oblibene" className="home-path-card">
             <h3>Oblíbené</h3>
-            <p>Ulož si podniky po přihlášení a vrať se k nim později.</p>
-          </Link>
-          <Link to="/pro-podniky" className="home-path-card">
-            <h3>Pro podniky</h3>
-            <p>Pošli žádost o přidání provozovny do katalogu.</p>
+            <p>Ulož podniky v prohlížeči — bez účtu i po přihlášení.</p>
           </Link>
         </div>
       </section>

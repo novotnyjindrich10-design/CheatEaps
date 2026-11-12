@@ -1,35 +1,50 @@
-import { BrowserRouter, Link, Routes, Route } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+import { BrowserRouter, Link, Navigate, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
+import ErrorBoundary from './components/ErrorBoundary'
+import LocationPrompt from './components/LocationPrompt'
 import Home from './pages/Home'
 import Results from './pages/Results'
 import RestaurantDetail from './pages/RestaurantDetail'
-import Support from './pages/ForBusiness'
-import ForBusinesses from './pages/ForBusinesses'
-import AdminApplications from './pages/AdminApplications'
 import { LocationProvider } from './context/LocationContext'
 import { AuthProvider } from './context/AuthContext'
 import { CatalogProvider } from './context/CatalogContext'
 import DataSources from './components/DataSources'
 import { pixabayLibraryReady } from './data/pixabayLibrary'
-import AuthPage from './pages/AuthPage'
-import NewPassword from './pages/NewPassword'
-import DealDetail from './pages/DealDetail'
-import Favorites from './pages/Favorites'
-import Rewards from './pages/Rewards'
-import AdminLoyalty from './pages/AdminLoyalty'
-import Privacy from './pages/Privacy'
-import Terms from './pages/Terms'
 import RecoveryRedirect from './components/RecoveryRedirect'
 import PageMeta from './components/PageMeta'
-import Compare from './pages/Compare'
 import CompareBar from './components/CompareBar'
 import { CompareProvider } from './context/CompareContext'
+import { CONTACT_EMAIL } from './constants/brand'
+
+const Support = lazy(() => import('./pages/ForBusiness'))
+const ForBusinesses = lazy(() => import('./pages/ForBusinesses'))
+const AdminApplications = lazy(() => import('./pages/AdminApplications'))
+const AdminPromotions = lazy(() => import('./pages/AdminPromotions'))
+const AuthPage = lazy(() => import('./pages/AuthPage'))
+const NewPassword = lazy(() => import('./pages/NewPassword'))
+const DealDetail = lazy(() => import('./pages/DealDetail'))
+const Favorites = lazy(() => import('./pages/Favorites'))
+const Rewards = lazy(() => import('./pages/Rewards'))
+const AdminLoyalty = lazy(() => import('./pages/AdminLoyalty'))
+const Privacy = lazy(() => import('./pages/Privacy'))
+const Terms = lazy(() => import('./pages/Terms'))
+const Compare = lazy(() => import('./pages/Compare'))
+const SurpriseMe = lazy(() => import('./pages/SurpriseMe'))
+
+function RouteFallback() {
+  return (
+    <main className="page">
+      <p className="section-desc">Načítám…</p>
+    </main>
+  )
+}
 
 function NotFound() {
   return (
     <main className="page">
       <h1 className="section-title">Stránka nenalezena</h1>
-      <p className="section-desc">Tahle adresa v CheapEats není.</p>
+      <p className="section-desc">Tahle adresa v FoodGo není.</p>
       <Link to="/" className="btn btn-primary">
         Zpět na úvod
       </Link>
@@ -45,16 +60,25 @@ function App() {
       <LocationProvider>
       <CompareProvider>
         <div className="app">
+          <a className="skip-link" href="#main-content">
+            Přeskočit na obsah
+          </a>
           <RecoveryRedirect />
           <PageMeta />
           <Header />
+          <LocationPrompt />
           <CompareBar />
+          <div id="main-content" tabIndex={-1}>
+          <ErrorBoundary>
+          <Suspense fallback={<RouteFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/results" element={<Results />} />
             <Route path="/restaurant/:id" element={<RestaurantDetail />} />
             <Route path="/oblibene" element={<Favorites />} />
+            <Route path="/nevim-co-jist" element={<SurpriseMe />} />
             <Route path="/porovnani" element={<Compare />} />
+            <Route path="/results/mapa" element={<Navigate to="/results?view=map" replace />} />
             <Route path="/odmeny" element={<Rewards />} />
             <Route path="/nabidka/:dealId" element={<DealDetail />} />
             <Route path="/prihlaseni" element={<AuthPage mode="login" />} />
@@ -65,20 +89,26 @@ function App() {
             <Route path="/ochrana-osobnich-udaju" element={<Privacy />} />
             <Route path="/obchodni-podminky" element={<Terms />} />
             <Route path="/admin/zadosti" element={<AdminApplications />} />
+            <Route path="/admin/propagace" element={<AdminPromotions />} />
             <Route path="/admin/odmeny" element={<AdminLoyalty />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
+          </ErrorBoundary>
+          </div>
           <footer className="site-footer">
-            <p className="footer-brand">CheapEats Brno</p>
+            <p className="footer-brand">FoodGo Brno</p>
             <p className="footer-tagline">Katalog jídla v Brně. Ověřené údaje oddělujeme od odhadů.</p>
             <p className="footer-support">
-              <Link to="/results">Najít jídlo</Link>
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
               {' · '}
-              <Link to="/odmeny">Slevy a body</Link>
+              <Link to="/results">Najít podnik</Link>
+              {' · '}
+              <Link to="/results?view=map">Mapa</Link>
+              {' · '}
+              <Link to="/oblibene">Oblíbené</Link>
               {' · '}
               <Link to="/pro-podniky">Pro podniky</Link>
-              {' · '}
-              <Link to="/podpor-me">Podpoř mě</Link>
               {' · '}
               <Link to="/ochrana-osobnich-udaju">Ochrana osobních údajů</Link>
               {' · '}

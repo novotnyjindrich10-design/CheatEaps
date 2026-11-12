@@ -7,7 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "test": "node --test src/utils/price.test.js src/utils/filterRestaurants.test.js src/utils/geo.test.js src/utils/routeDistance.test.js src/utils/matchOsmCoordinates.test.js src/utils/googleRating.test.js src/utils/website.test.js src/utils/internalPath.test.js src/utils/restaurantTags.test.js src/utils/recordQuality.test.js src/utils/deals.test.js src/utils/recoveryLink.test.js src/utils/placePhoto.test.js src/utils/openverseFoodAssign.test.js src/utils/businessApplication.test.js src/utils/descriptionReview.test.js src/constants/businessPlans.test.js src/constants/promotionPrice.test.js src/constants/supportPayment.test.js src/server/quotePromotionEndpoint.test.js src/server/promotionRequest.test.js src/server/memberHttp.test.js src/server/community.test.js src/server/businessApplications.test.js src/server/placeExistence.test.js src/server/apiRouter.test.js src/server/loyalty.test.js src/server/loyaltySql.test.js src/pages/publicCopy.test.js src/utils/pagination.test.js src/utils/cardMedia.test.js src/utils/pixabayLibrary.test.js src/utils/pixabaySelect.test.js src/utils/osmContact.test.js src/utils/osmContactAssign.test.js src/utils/catalogDuplicates.test.js src/utils/marqueeOffset.test.js src/utils/pageMeta.test.js src/utils/sitemap.test.js src/utils/catalogIntegrity.test.js src/utils/discovery.test.js",
+    "test:e2e": "playwright test",
+    "audit:catalog": "node scripts/audit-catalog.mjs",
+    "check:resend": "node scripts/check-resend-config.mjs",
+    "check:resend-api": "node scripts/check-resend-api.mjs",
+    "check:ready": "node scripts/launch-check.mjs",
+    "resend:key": "powershell -NoProfile -STA -ExecutionPolicy Bypass -File scripts/write-resend-env.ps1",
+    "resend:emails": "node scripts/set-resend-emails.mjs",
+    "test": "node --test \"src/**/*.test.js\"",
     "data:openverse-food-pilot": "node scripts/pilot-openverse-food.mjs",
     "data:openverse-food-bulk": "node scripts/assign-openverse-food-bulk.mjs",
     "data:food-illustration-quality": "node scripts/fix-food-illustration-quality.mjs",
@@ -24,15 +31,19 @@
     "data:coordinates": "node scripts/generate-place-coordinates.mjs",
     "data:official-photos": "node scripts/scan-official-photos.mjs",
     "data:food-photo-pilot": "node scripts/pilot-food-photos.mjs",
-    "data:pixabay-illustrations": "node scripts/fetch-pixabay-illustrations.mjs"
+    "data:pixabay-illustrations": "node scripts/fetch-pixabay-illustrations.mjs",
+    "launch:check": "node scripts/launch-check.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",

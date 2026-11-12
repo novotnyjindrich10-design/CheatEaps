@@ -6,6 +6,9 @@ import {
   needsAttribution,
   officialHero,
   resolveDetailHero,
+  googlePlacesPhoto,
+  shareImageUrl,
+  toMediaRecord,
 } from './placePhoto.js'
 
 describe('placePhoto', () => {
@@ -118,4 +121,64 @@ describe('placePhoto', () => {
     assert.equal(needsAttribution('by'), true)
     assert.equal(needsAttribution('by-sa'), true)
   })
+
+  it('googlePlacesPhoto bez explicitního zapnutí nic nevrátí a nepřijme vzdálenou URL', () => {
+    assert.equal(googlePlacesPhoto({ googlePhotoUrl: '/food-illustrations/x.jpg' }), null)
+    assert.equal(
+      googlePlacesPhoto({
+        googlePhotoEnabled: true,
+        googlePhotoUrl: 'https://maps.googleapis.com/photo',
+      }),
+      null,
+    )
+    const photo = googlePlacesPhoto({
+      name: 'Test',
+      googlePhotoEnabled: true,
+      googlePhotoUrl: '/places/google/test.jpg',
+      googlePhotoAttribution: 'Google',
+    })
+    assert.equal(photo.kind, 'google_places')
+    assert.equal(photo.url, '/places/google/test.jpg')
+  })
+
+  it('shareImageUrl bere same-origin cestu a jinak logo', () => {
+    const origin = 'https://cheat-eaps.vercel.app'
+    assert.equal(shareImageUrl({}, origin), `${origin}/logo-mark.png`)
+    assert.equal(
+      shareImageUrl(
+        {
+          foodIllustrationKind: 'pixabay',
+          foodIllustrationUrl: '/food-illustrations/pixabay/1.jpg',
+          foodIllustrationLicense: 'pixabay',
+        },
+        origin,
+      ),
+      `${origin}/food-illustrations/pixabay/1.jpg`,
+    )
+    assert.equal(
+      shareImageUrl(
+        {
+          heroImageKind: 'official',
+          heroImageUrl: 'https://cizi.example/og.jpg',
+        },
+        origin,
+      ),
+      `${origin}/logo-mark.png`,
+    )
+  })
+
+  it('toMediaRecord sjednotí pole pro budoucí API', () => {
+    const record = toMediaRecord(
+      resolveDetailHero({
+        name: 'Test',
+        heroImageKind: 'official',
+        heroImageRights: 'documented',
+        heroImageUrl: '/official.jpg',
+      }),
+    )
+    assert.equal(record.imageUrl, '/official.jpg')
+    assert.equal(record.verified, true)
+    assert.equal(record.kind, 'official')
+  })
+
 })

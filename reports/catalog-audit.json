@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-11-12T11:13:43.358Z",
+  "placeCount": 775,
+  "expectedPlaceCount": 775,
+  "overrideCount": 100,
+  "byCategory": {
+    "vegetarianske": 2,
+    "veganske": 2,
+    "zdrave": 10,
+    "ceske": 123,
+    "pizza": 72,
+    "burger": 25,
+    "kebab": 21,
+    "cina": 12,
+    "asijske": 93,
+    "mexiko": 11,
+    "kava": 191,
+    "sladke": 32,
+    "fastfood": 37,
+    "neuvedeno": 144
+  },
+  "ruleBugs": [],
+  "confirmed": [],
+  "suspected": [],
+  "steakPlacesWithSafeCategory": [
+    "buffalo-american-steakhouse-krizkovskeho-416-22",
+    "butcher-s-dobrovskeho-96-29",
+    "monte-bu-udolni-76",
+    "plzensky-dvur-sumavska-29a",
+    "prime-steak-palackeho-trida-162",
+    "steak-house-k1-bubenickova-11"
+  ],
+  "manualReview": [
+    {
+      "id": "cha-do-zelny-trh-10",
+      "reason": "OSM tea;chinese;japanese;asian;korean — teď kava; ověřit zda čajovna nebo asijská restaurace"
+    },
+    {
+      "id": "fenix-lounge-restaurace-masarykova-32",
+      "reason": "OSM teahouse;pizza;middle_eastern — kategorie pizza; ověřit zaměření lounge"
+    },
+    {
+      "id": "coffee4all-chironova-8",
+      "reason": "Override kava, OSM má i pizza — záměrná kavárna, držet"
+    },
+    {
+      "id": "bar-caffe-elephant-lidicka-43",
+      "reason": "Amenity cafe + cuisine local;regional → ceske; popis stále „kavárna“"
+    },
+    {
+      "id": "park-lane-luzanecka-4a",
+      "reason": "Amenity cafe + regional → ceske; ověřit zda kavárna nebo restaurace"
+    },
+    {
+      "id": "kimono-bayerova-572-2",
+      "reason": "Amenity cafe + japanese → asijske; ověřit koncept"
+    },
+    {
+      "id": "plzensky-dvur-sumavska-29a",
+      "reason": "Po opravě neuvedeno (steak+regional); případně ručně ceske podle webu"
+    }
+  ],
+  "summary": {
+    "confirmedErrors": 0,
+    "suspectedCount": 7,
+    "steakCoffeeFixedProbe": 6
+  }
+}

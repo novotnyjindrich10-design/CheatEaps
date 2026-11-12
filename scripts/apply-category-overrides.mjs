@@ -4,52 +4,20 @@
  *
  * node scripts/apply-category-overrides.mjs
  */
-import { readFileSync, writeFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
+import { writeFileSync } from 'node:fs'
 import { categoryOverrides, illustrationRemovals } from '../src/data/categoryOverrides.js'
 import { osmPlaces } from '../src/data/osmPlaces.js'
 import { curatedPlaces } from '../src/data/curatedPlaces.js'
 import { osmFacts } from '../src/data/osmFacts.js'
 import { ALLOWED_PLACE_CATEGORIES } from '../src/constants/filters.js'
+import { TYPE_BY_CATEGORY, classifyFromCuisine } from '../src/utils/cuisineClassify.js'
 
 const OSM_PATH = new URL('../src/data/osmPlaces.js', import.meta.url)
 const AUDIT_MD = new URL('../reports/restaurant-category-audit.md', import.meta.url)
 const AUDIT_JSON = new URL('../reports/restaurant-category-audit.json', import.meta.url)
 
-const TYPE_BY_CATEGORY = {
-  pizza: 'Pizza',
-  burger: 'Burger',
-  asijske: 'Asijské',
-  ceske: 'České',
-  vegetarianske: 'Bez masa',
-  veganske: 'Vegan',
-  kebab: 'Kebab',
-  cina: 'Čína',
-  mexiko: 'Mexiko',
-  kava: 'Kavárna',
-  fastfood: 'Fast food',
-  sladke: 'Sladké',
-  zdrave: 'Zdravé',
-  neuvedeno: 'Restaurace',
-}
-
 function classifyFromOsmCuisine(cuisine) {
-  const c = String(cuisine || '').toLowerCase()
-  if (!c.trim()) return null
-  if (/pizza/.test(c)) return 'pizza'
-  if (/burger/.test(c)) return 'burger'
-  if (/kebab|doner|döner|gyros/.test(c)) return 'kebab'
-  if (/chinese|szechuan|sichuan/.test(c)) return 'cina'
-  if (/vietnamese|thai|japanese|sushi|asian|indian|korean|nepalese|noodle|ramen/.test(c)) {
-    return 'asijske'
-  }
-  if (/mexican|taco|burrito/.test(c)) return 'mexiko'
-  if (/ice_cream|dessert|pastry|cake|pancake|waffle|crepe/.test(c)) return 'sladke'
-  if (/healthy|salad/.test(c)) return 'zdrave'
-  if (/coffee|cafe|tea|teahouse|bubble_tea/.test(c)) return 'kava'
-  if (/czech|regional|local/.test(c)) return 'ceske'
-  if (/sandwich|chicken|fried/.test(c)) return 'fastfood'
-  return null
+  return classifyFromCuisine(cuisine)?.category || null
 }
 
 function beforeCounts(places) {

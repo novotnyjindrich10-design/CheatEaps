@@ -8,6 +8,7 @@ export const NEW_PASSWORD_PATH = '/nove-heslo'
 
 const ACCESS_COOKIE = 'ce_access'
 const REFRESH_COOKIE = 'ce_refresh'
+/** PKCE verifier cookie — čteme/mažeme při recovery. Nevystavujeme ji z prohlížeče; nastavení vyžaduje PKCE flow (teď používáme implicit + token_hash). */
 const PKCE_COOKIE = 'ce_pkce'
 const WINDOW_MS = 15 * 60 * 1000
 const MAX_ATTEMPTS = 8
@@ -39,6 +40,7 @@ export function readCookie(header, name) {
 export function authConfig(env = process.env) {
   const raw = String(env.SUPABASE_URL ?? '').trim()
   const anonKey = String(env.SUPABASE_ANON_KEY ?? '').trim()
+  const serviceRoleKey = String(env.SUPABASE_SERVICE_ROLE_KEY ?? '').trim()
   let parsed = null
   try {
     parsed = raw ? new URL(raw) : null
@@ -55,7 +57,7 @@ export function authConfig(env = process.env) {
   const configured = Boolean(
     parsed && (parsed.protocol === 'https:' || parsed.protocol === 'http:') && parsed.hostname && anonKey,
   )
-  return { url, anonKey, configured }
+  return { url, anonKey, serviceRoleKey, configured }
 }
 
 function cookie(name, value, maxAge, secure) {
@@ -474,22 +476,27 @@ export function validateCredentials(email, password) {
 }
 
 export async function resolveUser(request, config, fetchImpl) {
+  const secure = requestIsSecure(request)
+  const clear = clearSessionCookies(secure)
   const access = readCookie(request.headers.get('cookie'), ACCESS_COOKIE)
   if (access) {
     const user = await fetchAuthUser(config, access, fetchImpl)
     if (user.ok && user.body?.email) return { user: user.body, accessToken: access, cookies: [] }
   }
   const refresh = readCookie(request.headers.get('cookie'), REFRESH_COOKIE)
-  if (!refresh) return { user: null, accessToken: '', cookies: [] }
+  if (!refresh) {
+    // Neplatný nebo vypršelý access bez refresh → smaž stale cookies, ať se neopakují.
+    return { user: null, accessToken: '', cookies: access ? clear : [] }
+  }
   const next = await refreshSession(config, refresh, fetchImpl)
   const tokens = next.ok ? tokensFromBody(next.body) : null
-  if (!tokens) return { user: null, accessToken: '', cookies: [] }
+  if (!tokens) return { user: null, accessToken: '', cookies: clear }
   const user = await fetchAuthUser(config, tokens.access_token, fetchImpl)
-  if (!user.ok || !user.body?.email) return { user: null, accessToken: '', cookies: [] }
+  if (!user.ok || !user.body?.email) return { user: null, accessToken: '', cookies: clear }
   return {
     user: user.body,
     accessToken: tokens.access_token,
-    cookies: sessionCookies(tokens, requestIsSecure(request)),
+    cookies: sessionCookies(tokens, secure),
   }
 }
 

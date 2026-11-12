@@ -23,7 +23,16 @@ const ROUTES = [
   { path: '/api/admin/business-applications/review', method: 'POST' },
   { path: '/api/admin/business-applications/resend-email', method: 'POST' },
   { path: '/api/promotion-request', method: 'GET', expectStatus: 405 },
+  { path: '/api/promotion-orders', method: 'GET' },
+  { path: '/api/sponsorships', method: 'GET', expectStatus: 200 },
+  { path: '/api/admin/promotion-orders', method: 'GET' },
+  { path: '/api/admin/promotion-orders/review', method: 'POST' },
+  { path: '/api/payments/status', method: 'GET', expectStatus: 200 },
+  { path: '/api/payments/return', method: 'GET', expectStatus: 200 },
+  { path: '/api/payments/webhook', method: 'GET', expectStatus: 405 },
   { path: '/api/quote-promotion', method: 'GET', expectStatus: 405 },
+  { path: '/api/place-reports', method: 'GET', expectStatus: [403, 503] },
+  { path: '/api/place-stats', method: 'GET', expectStatus: [403, 503] },
   { path: '/api/loyalty/rewards', method: 'GET' },
   { path: '/api/loyalty/me', method: 'GET' },
   { path: '/api/loyalty/redeem', method: 'POST' },
@@ -65,7 +74,9 @@ describe('apiRouter', () => {
   it('směruje všechny známé endpointy a neplete si admin cesty', async () => {
     for (const route of ROUTES) {
       const { response, body } = await assertRouted(route.path, { method: route.method })
-      if (route.expectStatus != null) {
+      if (Array.isArray(route.expectStatus)) {
+        assert.ok(route.expectStatus.includes(response.status), `${route.path} status ${response.status}`)
+      } else if (route.expectStatus != null) {
         assert.equal(response.status, route.expectStatus, route.path)
       }
       assert.notEqual(body.message, 'Neznámá adresa.', route.path)

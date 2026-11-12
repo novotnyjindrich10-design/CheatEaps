@@ -16,14 +16,18 @@ import StarRating from '../components/StarRating'
 import FoodHero from '../components/FoodHero'
 import { presentRouteDistance } from '../utils/routeDistance'
 import { useLocationState } from '../context/LocationContext'
-import { dealValidityNote, publicDealsForRestaurant } from '../data/restaurantDeals'
 import FavoriteButton from '../components/FavoriteButton'
+import PlaceReportForm from '../components/PlaceReportForm'
 import RestaurantReviews from '../components/RestaurantReviews'
 import { presentOsmContact } from '../utils/osmContact'
+import { openingStatusNow } from '../utils/openingStatus'
+import { fetchWithTimeout } from '../utils/fetchTimeout'
 import { applyPixabayChoice } from '../utils/pageIllustrations'
 import { applyPageMeta } from '../utils/pageMeta'
+import { shareImageUrl } from '../utils/placePhoto'
 import { useCatalog } from '../context/CatalogContext'
 import { similarRestaurants } from '../utils/similarPlaces'
+import { formatSponsorshipRange, partitionPlacements, showSponsoredLabel, SPONSORED_LABEL } from '../constants/monetization'
 import { sharePlaceLink } from '../utils/sharePlace'
 import RestaurantCard from '../components/RestaurantCard'
 
@@ -34,10 +38,23 @@ export default function RestaurantDetail() {
   const backLabel = backTo === '/' || backTo.startsWith('/?') ? '← Domů' : '← Zpět'
   const { attachDistances } = useLocationState()
   const { restaurants } = useCatalog()
-  const restaurant = getRestaurantById(id)
+  const restaurant = restaurants.find((place) => place.id === decodeURIComponent(id ?? '')) ?? getRestaurantById(id)
   const [shareNote, setShareNote] = useState('')
+
+  useEffect(() => {
+    if (!restaurant?.id) return
+    fetchWithTimeout('/api/place-stats/event', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ restaurantId: restaurant.id, event: 'profile_view' }),
+    }).catch(() => {})
+  }, [restaurant?.id])
+
   const similar = useMemo(
-    () => (restaurant ? similarRestaurants(restaurants, restaurant, 6) : []),
+    () =>
+      restaurant
+        ? similarRestaurants(partitionPlacements(restaurants).organic, restaurant, 6)
+        : [],
     [restaurant, restaurants],
   )
 
@@ -57,8 +74,8 @@ export default function RestaurantDetail() {
   useEffect(() => {
     if (!restaurant) {
       applyPageMeta({
-        title: 'Podnik nenalezen | CheapEats Brno',
-        description: 'Tenhle podnik v katalogu CheapEats Brno není.',
+        title: 'Podnik nenalezen | FoodGo Brno',
+        description: 'Tenhle podnik v katalogu FoodGo Brno není.',
         path: `/restaurant/${encodeURIComponent(id || '')}`,
         robots: 'noindex',
       })
@@ -66,11 +83,12 @@ export default function RestaurantDetail() {
     }
     const where = restaurant.address ? `, ${restaurant.address}` : ''
     applyPageMeta({
-      title: `${restaurant.name} | CheapEats Brno`,
-      description: `${restaurant.name}${where}. Detail v katalogu CheapEats Brno.`.slice(0, 180),
+      title: `${restaurant.name} | FoodGo Brno`,
+      description: `${restaurant.name}${where}. Detail v katalogu FoodGo Brno.`.slice(0, 180),
       path: `/restaurant/${encodeURIComponent(restaurant.id)}`,
+      image: typeof location !== 'undefined' ? shareImageUrl(restaurant, location.origin) : undefined,
     })
-  }, [id, restaurant])
+  }, [id, restaurant, location.origin])
 
   if (!restaurant) {
     return (
@@ -122,7 +140,6 @@ export default function RestaurantDetail() {
   const lede = cardExcerpt(restaurant, 220)
   const verified = hasVerifiedPrice(restaurant)
   const estimated = hasEstimatePrice(restaurant)
-  const deals = publicDealsForRestaurant(restaurant.id)
   const contact = presentOsmContact(restaurant)
   const heroRestaurant = applyPixabayChoice(restaurant, location.state?.pixabayId)
 
@@ -136,6 +153,15 @@ export default function RestaurantDetail() {
         <header className="detail-hero">
           <div className="detail-hero-copy">
             <p className="detail-kicker">{foodMeta ? foodMeta.label : type}</p>
+            {showSponsoredLabel(restaurant) ? (
+              <p className="detail-kicker sponsored-badge">
+                {SPONSORED_LABEL}
+                {formatSponsorshipRange(restaurant.sponsorship)
+                  ? ` · ${formatSponsorshipRange(restaurant.sponsorship)}`
+                  : ''}
+                . Placená propagace, ne hodnocení návštěvníků.
+              </p>
+            ) : null}
             <div className="detail-title-row">
               <h1 className="detail-title">{name}</h1>
               <FavoriteButton restaurantId={restaurant.id} />
@@ -162,9 +188,11 @@ export default function RestaurantDetail() {
             <dt>Vzdálenost</dt>
             <dd
               aria-label={
-                distanceState === 'loading' || distanceState === 'locating'
-                  ? 'Počítám pěší vzdálenost'
-                  : undefined
+                distanceState === 'locating'
+                  ? 'Zjišťuji polohu'
+                  : distanceState === 'air-pending'
+                    ? 'Vzdušná vzdálenost, počítám pěší trasu'
+                    : undefined
               }
             >
               {distance.value}
@@ -178,6 +206,27 @@ export default function RestaurantDetail() {
             <dt>Adresa</dt>
             <dd className="detail-metric-address">{address || 'Adresa není k dispozici'}</dd>
           </div>
+          {googleOk ? (
+            <div className="detail-metric">
+              <dt>Google hodnocení</dt>
+              <dd>
+                <StarRating rating={googleRating} reviewCount={googleReviewCount} size="sm" />
+              </dd>
+              {typeof googleReviewCount === 'number' ? (
+                <p className="detail-metric-note">{formatReviewCount(googleReviewCount)}</p>
+              ) : null}
+              {googleRatingCheckedAt ? (
+                <p className="detail-metric-note">Ověřeno {googleRatingCheckedAt}</p>
+              ) : null}
+              {profileUrl ? (
+                <p className="detail-metric-note">
+                  <a href={profileUrl} target="_blank" rel="noopener noreferrer">
+                    Profil na Google Maps
+                  </a>
+                </p>
+              ) : null}
+            </div>
+          ) : null}
         </dl>
 
         {facts.length > 0 || categoryLabel ? (
@@ -279,14 +328,34 @@ export default function RestaurantDetail() {
           </h2>
           {contact.hasHours ? (
             <>
+              {(() => {
+                const openState = openingStatusNow(contact.hoursRaw)
+                if (openState.status === 'open') {
+                  return (
+                    <p className="open-now-badge open-now-badge--open" role="status">
+                      Otevřeno teď (podle OSM, Europe/Prague)
+                    </p>
+                  )
+                }
+                if (openState.status === 'closed') {
+                  return (
+                    <p className="open-now-badge open-now-badge--closed" role="status">
+                      Teď zavřeno (podle OSM, Europe/Prague)
+                    </p>
+                  )
+                }
+                return (
+                  <p className="detail-source-note">
+                    Stav Otevřeno / Zavřeno u tohoto zápisu spolehlivě neodvozujeme.
+                  </p>
+                )
+              })()}
               <ul className="detail-hours-list">
                 {contact.hoursDisplay.split('\n').map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <p className="detail-source-note">
-                {contact.unverifiedNote} Stav Otevřeno / Zavřeno z těchto údajů neodvozujeme.
-              </p>
+              <p className="detail-source-note">{contact.unverifiedNote}</p>
             </>
           ) : (
             <p className="detail-pending-note">
@@ -371,23 +440,14 @@ export default function RestaurantDetail() {
           </section>
         ) : null}
 
-        {deals.length > 0 ? (
-          <section className="detail-section" id="nabidky">
-            <h2 className="detail-section-title">Slevy a výhody</h2>
-            <ul className="deal-list">
-              {deals.map((deal) => (
-                <li key={deal.id}>
-                  <Link to={`/nabidka/${encodeURIComponent(deal.id)}`} state={{ from: backTo }}>
-                    {deal.headline}
-                  </Link>
-                  <p className="detail-metric-note">{dealValidityNote(deal)}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
         <RestaurantReviews restaurantId={restaurant.id} />
+
+        <section className="detail-section" aria-labelledby="report-title">
+          <h2 id="report-title" className="visually-hidden">
+            Nahlásit chybu
+          </h2>
+          <PlaceReportForm restaurantId={restaurant.id} restaurantName={restaurant.name} />
+        </section>
 
         {similar.length > 0 ? (
           <section className="detail-section" aria-labelledby="similar-title">
@@ -404,26 +464,6 @@ export default function RestaurantDetail() {
                 </li>
               ))}
             </ul>
-          </section>
-        ) : null}
-
-        {googleOk ? (
-          <section className="detail-section">
-            <h2 className="detail-section-title">Hodnocení na Google</h2>
-            <StarRating rating={googleRating} reviewCount={googleReviewCount} size="lg" />
-            {typeof googleReviewCount === 'number' ? (
-              <p className="detail-address">{formatReviewCount(googleReviewCount)}</p>
-            ) : null}
-            {googleRatingCheckedAt ? (
-              <p className="detail-address">Ověřeno {googleRatingCheckedAt}</p>
-            ) : null}
-            {profileUrl ? (
-              <p className="detail-address">
-                <a href={profileUrl} target="_blank" rel="noopener noreferrer">
-                  Profil pobočky na Google Maps
-                </a>
-              </p>
-            ) : null}
           </section>
         ) : null}
       </article>

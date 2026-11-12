@@ -89,12 +89,13 @@ export function scorePixabayPhoto(photo, spec) {
   return score
 }
 
-export function selectPixabayPhotos(rawPhotos, spec, { limit = 8, perUser = 3 } = {}) {
+export function selectPixabayPhotos(rawPhotos, spec, { limit = 8, perUser = 3, excludeIds = null } = {}) {
   const ranked = []
   const seen = new Set()
+  const blocked = excludeIds instanceof Set ? excludeIds : new Set(excludeIds || [])
   for (const raw of rawPhotos || []) {
     const photo = raw?.downloadUrl ? raw : normalizePixabayPhoto(raw)
-    if (!photo || seen.has(photo.id)) continue
+    if (!photo || seen.has(photo.id) || blocked.has(photo.id)) continue
     const score = scorePixabayPhoto(photo, spec)
     if (score < 0) continue
     seen.add(photo.id)
@@ -114,14 +115,20 @@ export function selectPixabayPhotos(rawPhotos, spec, { limit = 8, perUser = 3 } 
   return kept
 }
 
-/** Sousedi v poli dostanou různé fotky, dokud na to fond stačí. */
+/**
+ * Deterministické přiřazení fotek v rámci tématu.
+ * Preferuje unikátní snímek, dokud fond stačí; při nedostatku rovnoměrně střídá.
+ * Pořadí placeIds i pool musí být stabilní (např. abecedně / dle skóre).
+ */
 export function assignPhotoIds(placeIdsByTheme, idsByTheme) {
   const assignment = {}
   for (const [theme, placeIds] of Object.entries(placeIdsByTheme || {})) {
     const pool = idsByTheme?.[theme] || []
-    if (!pool.length) continue
-    placeIds.forEach((placeId, index) => {
-      assignment[placeId] = pool[index % pool.length]
+    if (!pool.length || !placeIds?.length) continue
+    const sortedPlaces = [...placeIds].sort()
+    const sortedPool = [...pool].sort((a, b) => Number(a) - Number(b) || String(a).localeCompare(String(b)))
+    sortedPlaces.forEach((placeId, index) => {
+      assignment[placeId] = sortedPool[index % sortedPool.length]
     })
   }
   return assignment

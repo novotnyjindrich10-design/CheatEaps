@@ -72,7 +72,9 @@ export async function authActionHttp(action, request, deps = {}) {
       return json({ ok: true, configured: false, authenticated: false })
     }
     const resolved = await resolveUser(request, config, fetchImpl)
-    if (!resolved.user) return json({ ok: true, configured: true, authenticated: false })
+    if (!resolved.user) {
+      return json({ ok: true, configured: true, authenticated: false }, 200, resolved.cookies)
+    }
     return json(
       { ok: true, configured: true, authenticated: true, email: resolved.user.email },
       200,
@@ -294,7 +296,8 @@ export async function dealDetailHttp(request, deps = {}) {
     )
   }
   const detail = DEAL_PRIVATE[deal.offerId]
-  if (!detail?.sourceUrl) {
+  const sourceUrl = deal.sourceUrl || detail?.sourceUrl || ''
+  if (!sourceUrl || !detail) {
     return json({ ok: false, error: 'deal-unavailable', message: 'K téhle nabídce nemáme postup.' }, 404, resolved.cookies)
   }
 
@@ -304,15 +307,16 @@ export async function dealDetailHttp(request, deps = {}) {
       authenticated: true,
       id: deal.id,
       restaurantId: deal.restaurantId,
-      headline: deal.headline,
+      headline: deal.title || deal.headline,
       code: detail.code || '',
-      conditions: detail.conditions,
+      conditions: deal.conditions?.length ? deal.conditions : detail.conditions,
       steps: detail.steps,
-      sourceUrl: detail.sourceUrl,
+      sourceUrl,
       validFrom: deal.validFrom,
       validUntil: deal.validUntil,
       verification: deal.verification,
-      validityFullyVerified: deal.verification === 'verified' && Boolean(deal.validFrom && deal.validUntil),
+      validityFullyVerified:
+        deal.verification === 'verified' && Boolean(deal.sourceHasEndDate && deal.validUntil),
       studentOnly: deal.studentOnly,
       requiresLoyaltyApp: deal.requiresLoyaltyApp,
       checkedAt: deal.checkedAt,

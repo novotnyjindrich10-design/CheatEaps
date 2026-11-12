@@ -6,6 +6,8 @@ import {
   filterAndSortRestaurants,
   foldSearchText,
   parseResultsSearchParams,
+  resolveEffectiveSort,
+  wantsDistanceSort,
 } from './filterRestaurants.js'
 
 const SOURCE = 'https://example.com/menu'
@@ -44,7 +46,7 @@ function range(id, min, max) {
 }
 
 function ids(list, budget) {
-  return filterAndSortRestaurants(list, { maxBudget: String(budget), sortBy: 'rating' }).map(
+  return filterAndSortRestaurants(list, { maxBudget: String(budget), sortBy: 'name' }).map(
     (item) => item.id,
   )
 }
@@ -108,7 +110,7 @@ describe('filtr maximální ceny', () => {
     const sorted = filterAndSortRestaurants(list, { sortBy: 'price-asc' }).map((item) => item.id)
     assert.deepEqual(sorted, ['wide', 'tight', 'exact', 'estimate-cheap', 'unknown'])
     const budgeted = ids(list, 150)
-    assert.deepEqual(budgeted, ['tight', 'exact'])
+    assert.deepEqual(budgeted, ['exact', 'tight'])
   })
 })
 
@@ -201,15 +203,17 @@ describe('filtry dohromady', () => {
     assert.equal(parsed.maxDistance, '')
   })
 
-  it('neznámé řazení v URL spadne na kvalitu záznamu', () => {
+  it('neznámé řazení v URL spadne na automatické (prázdné)', () => {
     const parsed = parseResultsSearchParams(new URLSearchParams('sort=nahodne'))
-    assert.equal(parsed.sortBy, 'quality')
-    assert.equal(parseResultsSearchParams(new URLSearchParams('')).sortBy, 'quality')
+    assert.equal(parsed.sortBy, '')
+    assert.equal(parseResultsSearchParams(new URLSearchParams('')).sortBy, '')
     assert.equal(parseResultsSearchParams(new URLSearchParams('sort=rating')).sortBy, 'rating')
     assert.equal(parseResultsSearchParams(new URLSearchParams('sort=price-asc')).sortBy, 'price-asc')
+    assert.equal(parseResultsSearchParams(new URLSearchParams('sort=distance')).sortBy, 'distance')
+    assert.equal(parseResultsSearchParams(new URLSearchParams('sort=quality')).sortBy, 'quality')
   })
 
-  it('výchozí řazení dává nahoru lépe zdokumentovaný podnik', () => {
+  it('výchozí řazení bez polohy je abecední a ignoruje ověřenou cenu', () => {
     const thin = place('thin', { name: 'Aaa', category: 'pizza' })
     const rich = place('rich', {
       name: 'Zzz',
@@ -231,11 +235,17 @@ describe('filtry dohromady', () => {
     })
     assert.deepEqual(
       filterAndSortRestaurants([thin, rich], { cuisineType: 'pizza' }).map((item) => item.id),
-      ['rich', 'thin'],
+      ['thin', 'rich'],
     )
     assert.deepEqual(
       filterAndSortRestaurants([veganThin, veganRich], { veganOnly: true }).map((item) => item.id),
-      ['vegan-rich', 'vegan-thin'],
+      ['vegan-thin', 'vegan-rich'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants([thin, rich], { cuisineType: 'pizza', sortBy: 'quality' }).map(
+        (item) => item.id,
+      ),
+      ['rich', 'thin'],
     )
     const stars = place('stars', {
       name: 'Stars',
@@ -250,7 +260,66 @@ describe('filtry dohromady', () => {
     )
     assert.deepEqual(
       filterAndSortRestaurants([stars, rich], { cuisineType: 'pizza' }).map((item) => item.id),
-      ['rich', 'stars'],
+      ['stars', 'rich'],
+    )
+  })
+
+  it('s polohou řadí automaticky podle vzdálenosti bez ohledu na ověřenou cenu', () => {
+    const farVerified = place('far-verified', {
+      name: 'Zzz Far',
+      distanceKm: 3,
+      price: 99,
+      priceKind: 'menu',
+      priceSource: SOURCE,
+      priceVerifiedAt: VERIFIED_AT,
+    })
+    const nearUnverified = place('near-unverified', {
+      name: 'Aaa Near',
+      distanceKm: 0.4,
+    })
+    const mid = place('mid', { name: 'Mmm Mid', distanceKm: 1.1 })
+    const noCoords = place('no-coords', { name: 'Bez', distanceKm: null })
+    assert.deepEqual(
+      filterAndSortRestaurants([farVerified, nearUnverified, mid, noCoords], {
+        hasOrigin: true,
+      }).map((item) => item.id),
+      ['near-unverified', 'mid', 'far-verified', 'no-coords'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants([farVerified, nearUnverified], {
+        hasOrigin: true,
+        sortBy: 'quality',
+      }).map((item) => item.id),
+      ['far-verified', 'near-unverified'],
+    )
+  })
+
+  it('ruční a URL řazení má přednost před automatikou', () => {
+    const a = place('a', { name: 'Aaa', distanceKm: 5 })
+    const b = place('b', { name: 'Bbb', distanceKm: 1 })
+    assert.deepEqual(
+      filterAndSortRestaurants([a, b], { hasOrigin: true, sortBy: 'name' }).map((item) => item.id),
+      ['a', 'b'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants([a, b], { hasOrigin: true, sortBy: 'distance' }).map((item) => item.id),
+      ['b', 'a'],
+    )
+    const fromUrl = parseResultsSearchParams(new URLSearchParams('sort=name'))
+    assert.equal(fromUrl.sortBy, 'name')
+    assert.equal(buildResultsSearchParams(fromUrl).get('sort'), 'name')
+    assert.equal(buildResultsSearchParams({ sortBy: '' }).toString(), '')
+    assert.equal(buildResultsSearchParams({ sortBy: 'quality' }).get('sort'), 'quality')
+  })
+
+  it('podobná vzdálenost má stabilní sekundární řazení podle názvu', () => {
+    const twinB = place('twin-b', { name: 'Bistro B', distanceKm: 1.0 })
+    const twinA = place('twin-a', { name: 'Bistro A', distanceKm: 1.0 })
+    assert.deepEqual(
+      filterAndSortRestaurants([twinB, twinA], { hasOrigin: true, sortBy: 'distance' }).map(
+        (item) => item.id,
+      ),
+      ['twin-a', 'twin-b'],
     )
   })
 
@@ -298,12 +367,36 @@ describe('filtry dohromady', () => {
     assert.equal(buildResultsSearchParams({ ...defaults, dealsOnly: false }).toString(), '')
   })
 
-  it('během výpočtu trasy chybějící vzdálenost limit nesplní', () => {
+  it('bez čísla vzdálenosti limit nesplní', () => {
     const matched = filterAndSortRestaurants(
-      [place('wait', { distanceKm: null, distanceState: 'loading' })],
+      [place('wait', { distanceKm: null, distanceState: 'locating' })],
       { maxDistance: '2', hasOrigin: true },
     )
     assert.equal(matched.length, 0)
+  })
+
+  it('vzdálenostní filtr bere Haversine i pěší trasu', () => {
+    const matched = filterAndSortRestaurants(
+      [place('air', { distanceKm: 0.4, distanceState: 'air-pending' })],
+      { maxDistance: '1', hasOrigin: true },
+    )
+    assert.equal(matched.length, 1)
+    const listed = filterAndSortRestaurants(
+      [
+        place('b', { name: 'Beta', distanceKm: 0.4, distanceState: 'air-pending' }),
+        place('a', { name: 'Alfa', distanceKm: 1.2, distanceState: 'route' }),
+      ],
+      { sortBy: 'distance', hasOrigin: true },
+    ).map((item) => item.id)
+    assert.deepEqual(listed, ['b', 'a'])
+  })
+
+  it('stejná ověřená cena má stabilní pořadí podle názvu', () => {
+    const ordered = filterAndSortRestaurants(
+      [menu('b', 120), place('a', { name: 'Alfa', ...menu('a', 120) })],
+      { sortBy: 'price-asc' },
+    ).map((item) => item.id)
+    assert.deepEqual(ordered, ['a', 'b'])
   })
 })
 
@@ -359,7 +452,7 @@ describe('filtr slev', () => {
     )
   })
 
-  it('sleva nemění výchozí řazení podle kvality záznamu', () => {
+  it('sleva nemění výchozí řazení a ověřená cena ho sama o sobě neposune', () => {
     const thin = place('kfc-rasinova-2', { name: 'Aaa KFC', category: 'fastfood' })
     const rich = place('kfc-masarykova-39', {
       name: 'Zzz KFC',
@@ -372,6 +465,12 @@ describe('filtr slev', () => {
     })
     assert.deepEqual(
       filterAndSortRestaurants([thin, rich], { dealsOnly: true }).map((item) => item.id),
+      ['kfc-rasinova-2', 'kfc-masarykova-39'],
+    )
+    assert.deepEqual(
+      filterAndSortRestaurants([thin, rich], { dealsOnly: true, sortBy: 'quality' }).map(
+        (item) => item.id,
+      ),
       ['kfc-masarykova-39', 'kfc-rasinova-2'],
     )
   })
@@ -401,3 +500,26 @@ describe('kategorie', () => {
     }
   })
 })
+
+describe('výchozí řazení Nejblíž ke mně', () => {
+  it('resolveEffectiveSort bere vzdálenost jen s polohou', () => {
+    assert.equal(resolveEffectiveSort('', { hasOrigin: true }), 'distance')
+    assert.equal(resolveEffectiveSort('distance', { hasOrigin: true }), 'distance')
+    assert.equal(resolveEffectiveSort('', { hasOrigin: false }), 'name')
+    assert.equal(resolveEffectiveSort('distance', { hasOrigin: false }), 'name')
+    assert.equal(resolveEffectiveSort('quality', { hasOrigin: true }), 'quality')
+    assert.equal(wantsDistanceSort(''), true)
+    assert.equal(wantsDistanceSort('distance'), true)
+    assert.equal(wantsDistanceSort('name'), false)
+  })
+
+  it('bez polohy explicitní distance neřadí podle fiktivních km', () => {
+    const far = place('zzz', { distanceKm: 0.1 })
+    const near = place('aaa', { distanceKm: 9 })
+    assert.deepEqual(
+      filterAndSortRestaurants([far, near], { sortBy: 'distance', hasOrigin: false }).map((item) => item.id),
+      ['aaa', 'zzz'],
+    )
+  })
+})
+

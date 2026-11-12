@@ -95,6 +95,65 @@ describe('přihlášení', () => {
     assert.equal(body.authenticated, false)
     assert.equal(response.headers.getSetCookie().length, 0)
   })
+
+  it('neplatnou session smaže cookies a nepřihlásí', async () => {
+    const response = await authActionHttp(
+      'session',
+      new Request('http://127.0.0.1/api/auth/session', {
+        headers: { cookie: 'ce_access=stale-access; ce_refresh=stale-refresh' },
+      }),
+      {
+        env: ENV,
+        fetchImpl: (url) => {
+          const href = String(url)
+          if (href.includes('/auth/v1/user')) return jsonResponse({ message: 'invalid' }, 401)
+          if (href.includes('grant_type=refresh_token')) return jsonResponse({ message: 'invalid' }, 401)
+          return jsonResponse({}, 404)
+        },
+      },
+    )
+    const body = await response.json()
+    assert.equal(response.status, 200)
+    assert.equal(body.configured, true)
+    assert.equal(body.authenticated, false)
+    assert.equal(Object.hasOwn(body, 'email'), false)
+    const cookies = response.headers.getSetCookie().join('\n')
+    assert.match(cookies, /ce_access=.*Max-Age=0/)
+    assert.match(cookies, /ce_refresh=.*Max-Age=0/)
+    assert.match(cookies, /HttpOnly/)
+  })
+
+  it('platnou session obnoví bez hesla a anon klíče v odpovědi', async () => {
+    const response = await authActionHttp(
+      'session',
+      new Request('http://127.0.0.1/api/auth/session', {
+        headers: { cookie: 'ce_access=good-access' },
+      }),
+      { env: ENV, fetchImpl: userFetch },
+    )
+    const body = await response.json()
+    assert.equal(body.authenticated, true)
+    assert.equal(body.email, 'a@student.cz')
+    assert.equal(JSON.stringify(body).includes('good-access'), false)
+    assert.equal(JSON.stringify(body).includes('anon-test-key'), false)
+    assert.equal(response.headers.getSetCookie().length, 0)
+  })
+
+  it('odhlášení smaže cookies i bez platného access tokenu', async () => {
+    const response = await authActionHttp(
+      'logout',
+      new Request('http://127.0.0.1/api/auth/logout', { method: 'POST', headers: { cookie: 'ce_refresh=x' } }),
+      {
+        env: ENV,
+        fetchImpl: () => jsonResponse({}, 204),
+      },
+    )
+    const body = await response.json()
+    assert.equal(body.authenticated, false)
+    const cookies = response.headers.getSetCookie().join('\n')
+    assert.match(cookies, /ce_access=.*Max-Age=0/)
+    assert.match(cookies, /ce_refresh=.*Max-Age=0/)
+  })
 })
 
 describe('detail nabídky', () => {

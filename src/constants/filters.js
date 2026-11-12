@@ -4,15 +4,22 @@
  * Napřed běžné volby, potom ostatní.
  */
 
-/** Speciální dlaždice — nefiltruje restaurace, otevírá věrnostní odměny. */
-export const LOYALTY_CATEGORY = {
+/**
+ * Speciální dlaždice Slevy — filtruje podniky s ověřenou aktivní akcí (`?deals=1`).
+ * Věrnostní body zůstávají na `/odmeny` (odkaz Slevy a body).
+ */
+export const DEALS_CATEGORY = {
   value: 'slevy',
   label: 'Slevy',
   emoji: '🎁',
   home: true,
   special: true,
-  href: '/odmeny',
+  href: '/results?deals=1',
+  dealsFilter: true,
 }
+
+/** @deprecated Použij DEALS_CATEGORY. Alias kvůli starším importům. */
+export const LOYALTY_CATEGORY = DEALS_CATEGORY
 
 export const FOOD_CATEGORIES = [
   { value: 'pizza', label: 'Pizza', emoji: '🍕', home: true },
@@ -31,12 +38,17 @@ export const FOOD_CATEGORIES = [
 ]
 
 /** Pořadí v CategoryStrip: Slevy první, pak jídlo. */
-export const STRIP_CATEGORIES = [LOYALTY_CATEGORY, ...FOOD_CATEGORIES]
+export const STRIP_CATEGORIES = [DEALS_CATEGORY, ...FOOD_CATEGORIES]
 
-export const HOME_CATEGORIES = [LOYALTY_CATEGORY, ...FOOD_CATEGORIES.filter((c) => c.home)]
+export const HOME_CATEGORIES = [DEALS_CATEGORY, ...FOOD_CATEGORIES.filter((c) => c.home)]
 
+export function isDealsCategory(value) {
+  return value === DEALS_CATEGORY.value
+}
+
+/** @deprecated Alias — dlaždice Slevy teď filtruje slevy, ne věrnostní odměny. */
 export function isLoyaltyCategory(value) {
-  return value === LOYALTY_CATEGORY.value
+  return isDealsCategory(value)
 }
 
 /** Kategorie, když OSM tagy nestačí. Není v dlaždicích na úvodní stránce. */
@@ -50,7 +62,7 @@ export const ALLOWED_PLACE_CATEGORIES = [
 /** Odkaz z hlavní stránky / karet kategorií na `type` (včetně Bez masa a Vegan). */
 export function buildCategoryHref(value) {
   if (!value) return '/results'
-  if (isLoyaltyCategory(value)) return LOYALTY_CATEGORY.href
+  if (isDealsCategory(value)) return DEALS_CATEGORY.href
   return `/results?type=${encodeURIComponent(value)}`
 }
 
@@ -102,14 +114,28 @@ export const DISTANCE_OPTIONS = [
 ]
 
 export const SORT_OPTIONS = [
+  { value: '', label: 'Nejblíž ke mně' },
   { value: 'relevance', label: 'Nejrelevantnější' },
   { value: 'quality', label: 'Nejlíp zdokumentované' },
-  { value: 'price-asc', label: 'Nejlevnější' },
-  { value: 'price-desc', label: 'Nejdražší' },
-  { value: 'distance', label: 'Nejblíž ke mně' },
+  { value: 'price-asc', label: 'Nejlevnější (ověřené první)' },
+  { value: 'price-desc', label: 'Nejdražší (ověřené první)' },
   { value: 'name', label: 'Abecedně' },
   { value: 'rating', label: 'Ověřené Google hodnocení' },
 ]
+
+/** Popisek výchozího řazení podle toho, jestli je známá poloha. */
+export function defaultSortOptionLabel(hasOrigin = false) {
+  return hasOrigin ? 'Nejblíž ke mně' : 'Nejblíž ke mně (zapni polohu)'
+}
+
+export function sortOptionsForOrigin(hasOrigin = false) {
+  return SORT_OPTIONS.map((option) =>
+    option.value === '' ? { ...option, label: defaultSortOptionLabel(hasOrigin) } : option,
+  )
+}
+
+export const PRICE_SORT_NOTE =
+  'Řazení podle ceny bere nejdřív ověřené ceny z menu. Odhad a neznámá cena jdou až za ně — odhad se nevydává za potvrzenou cenu.'
 
 export const PRICE_CATEGORY_LABELS = {
   budget: 'Levné',

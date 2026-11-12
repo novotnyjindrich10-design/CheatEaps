@@ -4,39 +4,43 @@ import {
   HOME_CATEGORIES,
   STRIP_CATEGORIES,
   buildCategoryHref,
-  isLoyaltyCategory,
+  isDealsCategory,
 } from '../constants/filters'
 import { pixabayPhotosById } from '../data/pixabayLibrary'
 import { normalizeMarqueeOffset } from '../utils/marqueeOffset'
 
-/** Ověřené snímky z místní Pixabay knihovny. Slevy nemají vhodnou fotografii jídla. */
+/** Ověřené snímky z místní Pixabay knihovny (Pixabay Content License). Slevy = CSS gradient. */
 const CATEGORY_PHOTO_ID = {
   pizza: 10389335,
   burger: 4953465,
-  asijske: 5425611,
+  // Sushi — v knihovně (5425611 chybělo v metadata → plain „%“).
+  asijske: 354628,
   ceske: 2872112,
-  vegetarianske: 1819752,
-  veganske: 4783972,
+  // Zeleninové kari — jasně bez masa (ne burger / ne pečené maso).
+  vegetarianske: 4407744,
+  // Veggie burger + batátové hranolky — jiný snímek než beetroot wrap.
+  veganske: 3746476,
   kebab: 6109976,
   cina: 6896277,
   mexiko: 5932654,
   kava: 756490,
-  sladke: 1283822,
+  // Čokoládový dort — 1283822 chybělo v metadata → plain „%“.
+  sladke: 1850011,
   zdrave: 1786327,
 }
 
 const CATEGORY_PHOTO_POSITION = {
   pizza: 'center 48%',
   burger: 'center 38%',
-  asijske: 'center 34%',
+  asijske: 'center 40%',
   ceske: '46% 42%',
-  vegetarianske: '78% 46%',
-  veganske: 'center 72%',
+  vegetarianske: 'center 48%',
+  veganske: 'center 42%',
   kebab: '16% 36%',
   cina: 'center 40%',
   mexiko: 'center 42%',
   kava: 'center 40%',
-  sladke: '30% 42%',
+  sladke: 'center 38%',
   zdrave: 'center 44%',
 }
 
@@ -64,9 +68,11 @@ function usePrefersReducedMotion() {
 
 export default function CategoryStrip({
   activeType = '',
+  dealsActive = false,
   onSelect,
   asLinks = false,
   variant = 'pills',
+  autoScroll = true,
 }) {
   const navigate = useNavigate()
   const reducedMotion = usePrefersReducedMotion()
@@ -79,7 +85,7 @@ export default function CategoryStrip({
   const [canScrollRight, setCanScrollRight] = useState(false)
   const categories = variant === 'grid' ? HOME_CATEGORIES : STRIP_CATEGORIES
   const isGrid = variant === 'grid'
-  const marquee = isGrid && !reducedMotion
+  const marquee = isGrid && autoScroll && !reducedMotion
 
   useEffect(() => {
     if (!isGrid) return undefined
@@ -359,33 +365,41 @@ export default function CategoryStrip({
   }
 
   function handleSelect(value) {
-    if (isLoyaltyCategory(value)) {
-      navigate('/odmeny')
+    if (isDealsCategory(value) && !onSelect) {
+      navigate('/results?deals=1')
       return
     }
     onSelect?.(value)
+  }
+
+  function isSelected(value) {
+    if (isDealsCategory(value)) return Boolean(dealsActive)
+    return activeType === value
   }
 
   function renderCard(category, cloneKey) {
     const { value, label } = category
     const clone = Boolean(cloneKey)
     const photo = categoryPhoto(value)
-    return (
-      <Link
-        key={clone ? `${cloneKey}-${value}` : value}
-        to={buildCategoryHref(value)}
-        className={`category-card category-card--${value}${photo ? '' : ' category-card--plain'}`}
-        data-clone={clone ? cloneKey : undefined}
-        tabIndex={clone ? -1 : undefined}
-        aria-hidden={clone ? true : undefined}
-        onMouseDown={
-          clone
-            ? (event) => {
-                if (event.button === 0) event.preventDefault()
-              }
-            : undefined
-        }
-      >
+    const dealsTile = isDealsCategory(value)
+    const selected = !clone && isSelected(value)
+    const className = [
+      'category-card',
+      `category-card--${value}`,
+      !photo && !dealsTile ? 'category-card--plain' : '',
+      selected ? 'is-active' : '',
+    ]
+      .filter(Boolean)
+      .join(' ')
+    const chooseHere = Boolean(onSelect) && !asLinks
+    const shared = {
+      className,
+      'data-clone': clone ? cloneKey : undefined,
+      tabIndex: clone ? -1 : undefined,
+      'aria-hidden': clone ? true : undefined,
+    }
+    const body = (
+      <>
         {photo ? (
           <>
             <img
@@ -396,6 +410,7 @@ export default function CategoryStrip({
               height={photo.height}
               draggable="false"
               decoding="async"
+              loading={clone ? 'lazy' : 'eager'}
               style={{ objectPosition: CATEGORY_PHOTO_POSITION[value] || 'center' }}
               title={clone ? undefined : `Foto: ${photo.user}, Pixabay`}
             />
@@ -407,17 +422,50 @@ export default function CategoryStrip({
               height={photo.height}
               draggable="false"
               decoding="async"
+              loading={clone ? 'lazy' : 'eager'}
               aria-hidden="true"
               style={{ objectPosition: CATEGORY_PHOTO_POSITION[value] || 'center' }}
             />
           </>
-        ) : (
+        ) : dealsTile ? null : (
           <span className="category-card-art" aria-hidden="true">
             %
           </span>
         )}
         <span className="category-card-shade" aria-hidden="true" />
         <span className="category-card-label">{label}</span>
+      </>
+    )
+
+    if (chooseHere) {
+      return (
+        <button
+          key={clone ? `${cloneKey}-${value}` : value}
+          type="button"
+          {...shared}
+          aria-pressed={clone ? undefined : selected}
+          onClick={clone ? undefined : () => onSelect(value)}
+        >
+          {body}
+        </button>
+      )
+    }
+
+    return (
+      <Link
+        key={clone ? `${cloneKey}-${value}` : value}
+        to={buildCategoryHref(value)}
+        {...shared}
+        aria-current={selected ? 'page' : undefined}
+        onMouseDown={
+          clone
+            ? (event) => {
+                if (event.button === 0) event.preventDefault()
+              }
+            : undefined
+        }
+      >
+        {body}
       </Link>
     )
   }
@@ -463,9 +511,8 @@ export default function CategoryStrip({
           ? categories.map((category) => renderCard(category, ''))
           : categories.map((category) => {
               const { value, label, emoji } = category
-              const className = `category-pill category-pill--${value} ${
-                activeType === value ? 'is-active' : ''
-              }`
+              const selected = isSelected(value)
+              const className = `category-pill category-pill--${value} ${selected ? 'is-active' : ''}`
               const content = (
                 <>
                   <span className="category-pill-emoji" aria-hidden="true">
@@ -475,9 +522,14 @@ export default function CategoryStrip({
                 </>
               )
 
-              if (asLinks || isLoyaltyCategory(value)) {
+              if (asLinks) {
                 return (
-                  <Link key={value} to={buildCategoryHref(value)} className={className}>
+                  <Link
+                    key={value}
+                    to={buildCategoryHref(value)}
+                    className={className}
+                    aria-current={selected ? 'page' : undefined}
+                  >
                     {content}
                   </Link>
                 )

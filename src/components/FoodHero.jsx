@@ -5,6 +5,7 @@ import {
   licenseLabel,
   needsAttribution,
   officialHero,
+  resolveDetailHero,
 } from '../utils/placePhoto'
 import { getRestaurantCategory } from '../utils/restaurantTags'
 import { httpUrl } from '../utils/website'
@@ -98,17 +99,27 @@ function IllustrationCredit({ photo }) {
   )
 }
 
+function photoKey(photo) {
+  if (!photo) return ''
+  return photo.detailUrl || photo.url || ''
+}
+
 export default function FoodHero({ restaurant }) {
+  const preferred = resolveDetailHero(restaurant)
   const official = officialHero(restaurant)
   const illustration = foodIllustration(restaurant)
-  const [officialBroken, setOfficialBroken] = useState(false)
-  const [illustrationBroken, setIllustrationBroken] = useState(false)
+  const [brokenKeys, setBrokenKeys] = useState(() => new Set())
   const category = getRestaurantCategory(restaurant) || 'neuvedeno'
 
-  const photo =
-    (official && !officialBroken && official) ||
-    (illustration && !illustrationBroken && illustration) ||
-    null
+  const candidates = []
+  const seen = new Set()
+  for (const candidate of [preferred, official, illustration]) {
+    const key = photoKey(candidate)
+    if (!candidate || !key || seen.has(key) || brokenKeys.has(key)) continue
+    seen.add(key)
+    candidates.push(candidate)
+  }
+  const photo = candidates[0] || null
 
   if (!photo) {
     return (
@@ -117,6 +128,17 @@ export default function FoodHero({ restaurant }) {
         <figcaption>Ilustrace typu kuchyně, ne fotografie tohoto podniku</figcaption>
       </figure>
     )
+  }
+
+  const markBroken = () => {
+    const key = photoKey(photo)
+    if (!key) return
+    setBrokenKeys((prev) => {
+      if (prev.has(key)) return prev
+      const next = new Set(prev)
+      next.add(key)
+      return next
+    })
   }
 
   if (photo.kind === 'illustration') {
@@ -132,13 +154,33 @@ export default function FoodHero({ restaurant }) {
           loading="eager"
           decoding="async"
           style={photo.color ? { backgroundColor: photo.color } : undefined}
-          onError={() => setIllustrationBroken(true)}
+          onError={markBroken}
         />
         <figcaption>
           Ilustrační fotografie
           {photo.dish ? ` (${photo.dish})` : ''}, ne jídlo z tohoto podniku
         </figcaption>
         <IllustrationCredit photo={photo} />
+      </figure>
+    )
+  }
+
+  if (photo.kind === 'google_places') {
+    return (
+      <figure className="detail-hero-figure detail-hero-figure--photo">
+        <img
+          src={photo.url}
+          alt={photo.alt}
+          loading="eager"
+          decoding="async"
+          sizes="(max-width: 800px) 92vw, 440px"
+          referrerPolicy="no-referrer"
+          onError={markBroken}
+        />
+        <figcaption>
+          Foto z Google Places
+          {photo.attribution ? ` · ${photo.attribution}` : ''}
+        </figcaption>
       </figure>
     )
   }
@@ -154,7 +196,7 @@ export default function FoodHero({ restaurant }) {
         decoding="async"
         sizes="(max-width: 800px) 92vw, 440px"
         referrerPolicy="no-referrer"
-        onError={() => setOfficialBroken(true)}
+        onError={markBroken}
       />
       <figcaption>Foto z oficiálního webu podniku</figcaption>
     </figure>

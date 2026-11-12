@@ -665,6 +665,54 @@ export const categoryOverrides = {
     "confidence": "medium",
     "evidence": "Název LOCAL Cafe&Restaurant označuje kavárnu; bez menu nepřesouváme do jiné kuchyně.",
     "sourceUrl": ""
+  },
+  "prime-steak-palackeho-trida-162": {
+    "category": "neuvedeno",
+    "type": "Restaurace",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "confidence": "high",
+    "evidence":
+      "Oficiální web primesteak.cz a Michelin Guide: steakhouse s vlastní zrárnou hovězího; OSM cuisine=steak_house. Dříve chybně Kavárna (regex tea⊂steak).",
+    "sourceUrl": "https://www.primesteak.cz/"
+  },
+  "buffalo-american-steakhouse-krizkovskeho-416-22": {
+    "category": "neuvedeno",
+    "type": "Restaurace",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "confidence": "high",
+    "evidence": "Název a OSM cuisine=steak_house; oficiální web restauracebuffalo.cz. Dříve chybně Kavárna (regex tea⊂steak).",
+    "sourceUrl": "https://restauracebuffalo.cz/"
+  },
+  "butcher-s-dobrovskeho-96-29": {
+    "category": "neuvedeno",
+    "type": "Restaurace",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "confidence": "high",
+    "evidence": "OSM cuisine obsahuje steak_house; web butchers.cz. Dříve chybně Kavárna (regex tea⊂steak).",
+    "sourceUrl": "https://www.butchers.cz/"
+  },
+  "monte-bu-udolni-76": {
+    "category": "neuvedeno",
+    "type": "Restaurace",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "confidence": "high",
+    "evidence": "OSM cuisine=steak_house; web monte-bu.cz. Dříve chybně Kavárna (regex tea⊂steak).",
+    "sourceUrl": "https://www.monte-bu.cz/"
+  },
+  "plzensky-dvur-sumavska-29a": {
+    "category": "neuvedeno",
+    "type": "Restaurace",
+    "confidence": "high",
+    "evidence": "OSM cuisine=regional;steak_house — steak token má přednost před kavárnou. Dříve chybně Kavárna (regex tea⊂steak).",
+    "sourceUrl": "https://www.plzenskydvur.cz/"
+  },
+  "steak-house-k1-bubenickova-11": {
+    "category": "neuvedeno",
+    "type": "Restaurace",
+    "description": "Restaurace zaměřená na steaky a masové speciality.",
+    "confidence": "high",
+    "evidence": "Název Steak House K1 a OSM cuisine=steak_house;italian. Dříve chybně Kavárna (regex tea⊂steak).",
+    "sourceUrl": "https://k1steakhouse.cz/restaurace/take-away"
   }
 }
 

@@ -1,67 +1,81 @@
-const BRAND = 'CheapEats Brno'
+import { BRAND_CITY as BRAND } from '../constants/brand.js'
 
 const PAGES = {
   '/': {
-    title: 'CheapEats Brno — jídlo podle chuti a rozpočtu',
+    title: 'FoodGo Brno — kde se najíst v Brně podle chuti a rozpočtu',
     description:
-      'Katalog restaurací, kaváren a rychlého občerstvení v Brně. Hledej podle kategorie, ověřené ceny a vzdálenosti.',
+      'Kde se najíst v Brně: katalog restaurací, kaváren a rychlého občerstvení. Filtruj podle kategorie, ověřené ceny, vzdálenosti a studentských slev.',
   },
   '/results': {
-    title: 'Výsledky hledání | CheapEats Brno',
-    description: 'Filtrovaný seznam podniků v Brně podle kategorie, ceny, diety a vzdálenosti.',
+    title: 'Výsledky hledání | FoodGo Brno',
+    description: 'Levné restaurace a podniky v Brně podle kategorie, ceny, diety a vzdálenosti. Ověřené ceny oddělujeme od odhadů.',
   },
   '/oblibene': {
-    title: 'Oblíbené | CheapEats Brno',
-    description: 'Restaurace uložené k účtu CheapEats.',
+    title: 'Oblíbené | FoodGo Brno',
+    description: 'Restaurace uložené v prohlížeči nebo k účtu FoodGo.',
+    robots: 'noindex, nofollow',
+  },
+  '/nevim-co-jist': {
+    title: 'Nevím, co jíst | FoodGo Brno',
+    description: 'Náhodný tip na restauraci v Brně podle ceny, kategorie a vzdálenosti.',
   },
   '/porovnani': {
-    title: 'Porovnání podniků | CheapEats Brno',
-    description: 'Porovnání až tří podniků z katalogu CheapEats podle ceny, lokality a doložené nabídky.',
+    title: 'Porovnání podniků | FoodGo Brno',
+    description: 'Porovnání až tří podniků z katalogu FoodGo podle ceny, lokality a doložené nabídky.',
     robots: 'noindex',
   },
   '/odmeny': {
-    title: 'Slevy a body | CheapEats Brno',
-    description: 'Slevy nalezené u oficiálních zdrojů a stav věrnostních bodů CheapEats.',
+    title: 'Slevy a body | FoodGo Brno',
+    description: 'Slevy nalezené u oficiálních zdrojů a stav věrnostních bodů FoodGo.',
+    robots: 'noindex, nofollow',
   },
   '/pro-podniky': {
-    title: 'Pro podniky | CheapEats Brno',
-    description: 'Žádost o přidání provozovny do katalogu CheapEats Brno.',
+    title: 'Pro podniky | FoodGo Brno',
+    description: 'Placené balíčky propagace pro podniky v Brně. Hledání restaurací zůstává zdarma.',
   },
   '/podpor-me': {
-    title: 'Podpoř CheapEats Brno',
-    description: 'Dobrovolná podpora katalogu CheapEats Brno.',
+    title: 'Podpoř FoodGo Brno',
+    description: 'Dobrovolná podpora katalogu FoodGo Brno.',
   },
   '/ochrana-osobnich-udaju': {
-    title: 'Ochrana osobních údajů | CheapEats Brno',
-    description: 'Jak CheapEats Brno pracuje s účtem, recenzemi a polohou v prohlížeči.',
+    title: 'Ochrana osobních údajů | FoodGo Brno',
+    description: 'Jak FoodGo Brno pracuje s účtem, recenzemi a polohou v prohlížeči.',
   },
   '/obchodni-podminky': {
-    title: 'Obchodní podmínky | CheapEats Brno',
-    description: 'Podmínky používání katalogu CheapEats Brno. Text není právní posudek.',
+    title: 'Obchodní podmínky | FoodGo Brno',
+    description: 'Podmínky používání katalogu FoodGo Brno. Text není právní posudek.',
   },
   '/prihlaseni': {
-    title: 'Přihlášení | CheapEats Brno',
-    description: 'Přihlášení k účtu CheapEats.',
+    title: 'Přihlášení | FoodGo Brno',
+    description: 'Přihlášení k účtu FoodGo.',
     robots: 'noindex',
   },
   '/registrace': {
-    title: 'Registrace | CheapEats Brno',
-    description: 'Založení účtu CheapEats.',
+    title: 'Registrace | FoodGo Brno',
+    description: 'Založení účtu FoodGo.',
     robots: 'noindex',
   },
   '/nove-heslo': {
-    title: 'Nové heslo | CheapEats Brno',
-    description: 'Nastavení nového hesla k účtu CheapEats.',
+    title: 'Nové heslo | FoodGo Brno',
+    description: 'Nastavení nového hesla k účtu FoodGo.',
     robots: 'noindex',
   },
 }
 
 export function metaForPath(pathname) {
   const path = String(pathname || '/').split('?')[0] || '/'
+  if (path.startsWith('/nabidka/')) {
+    return {
+      title: `Nabídka | ${BRAND}`,
+      description: 'Detail slevy FoodGo. Kód je až po přihlášení.',
+      path,
+      robots: 'noindex, nofollow',
+    }
+  }
   if (path.startsWith('/admin')) {
     return {
       title: `Administrace | ${BRAND}`,
-      description: 'Interní správa CheapEats.',
+      description: 'Interní správa FoodGo.',
       path,
       robots: 'noindex, nofollow',
     }
@@ -69,7 +83,7 @@ export function metaForPath(pathname) {
   if (path.startsWith('/restaurant/')) {
     return {
       title: `Podnik | ${BRAND}`,
-      description: 'Detail podniku v katalogu CheapEats Brno.',
+      description: 'Detail podniku v katalogu FoodGo Brno.',
       path,
       robots: '',
     }
@@ -78,7 +92,7 @@ export function metaForPath(pathname) {
   if (!known) {
     return {
       title: `Stránka nenalezena | ${BRAND}`,
-      description: 'Tahle adresa v CheapEats není.',
+      description: 'Tahle adresa v FoodGo není.',
       path,
       robots: 'noindex',
     }
@@ -93,7 +107,7 @@ function setNamed(selector, create, value) {
     document.head.appendChild(node)
   }
   if (node.tagName === 'TITLE') node.textContent = value
-  else if (node.hasAttribute('href')) node.setAttribute('href', value)
+  else if (node.tagName === 'LINK') node.setAttribute('href', value)
   else node.setAttribute('content', value)
 }
 
@@ -138,10 +152,36 @@ export function applyPageMeta(meta) {
       el.setAttribute('property', 'og:url')
       return el
     }, url)
+    const image =
+      meta.image && String(meta.image).startsWith(location.origin)
+        ? meta.image
+        : meta.image && String(meta.image).startsWith('/')
+          ? `${location.origin}${meta.image}`
+          : `${location.origin}/logo-mark.png`
     setNamed('meta[property="og:image"]', () => {
       const el = document.createElement('meta')
       el.setAttribute('property', 'og:image')
       return el
-    }, `${location.origin}/logo-mark.png`)
+    }, image)
+    setNamed('meta[name="twitter:card"]', () => {
+      const el = document.createElement('meta')
+      el.setAttribute('name', 'twitter:card')
+      return el
+    }, 'summary_large_image')
+    setNamed('meta[name="twitter:title"]', () => {
+      const el = document.createElement('meta')
+      el.setAttribute('name', 'twitter:title')
+      return el
+    }, meta.title)
+    setNamed('meta[name="twitter:description"]', () => {
+      const el = document.createElement('meta')
+      el.setAttribute('name', 'twitter:description')
+      return el
+    }, meta.description)
+    setNamed('meta[name="twitter:image"]', () => {
+      const el = document.createElement('meta')
+      el.setAttribute('name', 'twitter:image')
+      return el
+    }, image)
   }
 }

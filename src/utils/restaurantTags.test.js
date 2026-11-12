@@ -39,4 +39,12 @@ describe('štítky nabídky', () => {
       ['vegan'],
     )
   })
+
+  it('polední zmínka z OSM se nevydává za hotové denní menu', () => {
+    const tags = getRestaurantTags({
+      category: 'ceske',
+      lunchMenu: true,
+    })
+    assert.equal(tags.find((tag) => tag.key === 'lunch')?.label, 'Polední zmínka (OSM)')
+  })
 })

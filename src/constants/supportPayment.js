@@ -1,5 +1,5 @@
 /**
- * Dobrovolná podpora CheapEats. Bez protislužby a bez údajů o kartě.
+ * Dobrovolná podpora FoodGo. Bez protislužby a bez údajů o kartě.
  *
  * Platba se smí spustit jen když SUPPORT_PAYMENT splní všechno najednou:
  * ověřenou adresu https, název parametru částky, jednotku `kc` nebo `halere`,

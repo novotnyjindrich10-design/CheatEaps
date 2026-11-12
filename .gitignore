@@ -36,3 +36,9 @@ dist-ssr
 # Cache odpovědí Pixabay API. Obrázky v public/food-illustrations/pixabay/ se verzují.
 .cache/
 supabase/.temp/
+
+# Playwright / lokální audit výstupy
+test-results/
+playwright-report/
+blob-report/
+docs/polish-screenshots/

@@ -5,7 +5,7 @@ export async function sharePlaceLink({ title, url, share, clipboard }) {
   if (!target) return { ok: false, reason: 'empty' }
   if (typeof share === 'function') {
     try {
-      await share({ title: title || 'CheapEats Brno', url: target })
+      await share({ title: title || 'FoodGo Brno', url: target })
       return { ok: true, method: 'share' }
     } catch (error) {
       if (error?.name === 'AbortError') return { ok: false, reason: 'abort' }

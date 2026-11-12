@@ -63,9 +63,25 @@ describe('výběr Pixabay fotek', () => {
     assert.equal(best.id, 2)
   })
 
+  it('vynechá už obsazená Pixabay ID z jiného tématu', () => {
+    const photos = [hit(1, 'pizza, margherita'), hit(2, 'pizza, margherita, wooden')]
+    const selected = selectPixabayPhotos(photos, pizza, { limit: 2, excludeIds: new Set([1]) })
+    assert.deepEqual(
+      selected.map((photo) => photo.id),
+      [2],
+    )
+  })
+
   it('sousední podniky dostanou různé fotky, dokud fond stačí', () => {
     const assignment = assignPhotoIds({ pizza: ['a', 'b', 'c', 'd'] }, { pizza: [10, 20, 30] })
     assert.deepEqual(assignment, { a: 10, b: 20, c: 30, d: 10 })
     assert.notEqual(assignment.a, assignment.b)
+  })
+
+  it('přiřazení je deterministické i při jiném pořadí vstupů', () => {
+    const a = assignPhotoIds({ pizza: ['c', 'a', 'b', 'd'] }, { pizza: [30, 10, 20] })
+    const b = assignPhotoIds({ pizza: ['d', 'b', 'a', 'c'] }, { pizza: [20, 30, 10] })
+    assert.deepEqual(a, b)
+    assert.equal(new Set(Object.values(a)).size, 3)
   })
 })

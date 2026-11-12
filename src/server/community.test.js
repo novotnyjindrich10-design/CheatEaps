@@ -26,7 +26,7 @@ beforeEach(() => {
   resetCommunityLimits()
 })
 
-describe('text recenzí a průměr CheapEats', () => {
+describe('text recenzí a průměr FoodGo', () => {
   it('odstraní HTML a skript a nenechá prázdnou značku', () => {
     assert.equal(cleanText('<script>alert(1)</script><img src=x onerror=alert(1)>Dobré jídlo'), 'Dobré jídlo')
     assert.equal(cleanText('<b>Ahoj</b>'), 'Ahoj')
@@ -294,7 +294,7 @@ describe('recenze', () => {
     const source = readFileSync(new URL('../components/RestaurantReviews.jsx', import.meta.url), 'utf8')
     assert.equal(source.includes('dangerouslySetInnerHTML'), false)
     assert.equal(source.includes('Hodnocení na Google'), false)
-    assert.match(source, /source="CheapEats"/)
+    assert.match(source, /source="FoodGo"/)
   })
 })
 

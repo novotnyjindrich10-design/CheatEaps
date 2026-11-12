@@ -2,6 +2,7 @@
  * HTTP obsluha POST /api/quote-promotion.
  * Cenu počítá quoteTrustedPrice. Částku z požadavku nečte.
  */
+import { presentPrice } from '../constants/operator.js'
 import { quoteTrustedPrice } from '../constants/promotionPrice.js'
 
 function json(body, status, headers) {
@@ -71,6 +72,7 @@ export async function quotePromotionHttp(request, quote = quoteTrustedPrice) {
     return json({ ok: false, error, message }, 400)
   }
 
+  const price = presentPrice(quoted.amount)
   return json(
     {
       ok: true,
@@ -81,6 +83,12 @@ export async function quotePromotionHttp(request, quote = quoteTrustedPrice) {
       amount: quoted.amount,
       savings: quoted.savings,
       currency: quoted.currency,
+      serviceDays: quoted.serviceDays,
+      serviceLabel: quoted.serviceLabel,
+      renewal: 'none',
+      vatStatus: price.vatStatus,
+      finalAmount: price.finalAmount,
+      paymentsEnabled: false,
     },
     200,
   )

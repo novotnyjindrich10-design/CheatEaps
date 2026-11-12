@@ -43,8 +43,7 @@ const MESSAGES = {
   'reward-expired': 'Platnost odměny už skončila.',
   'review-missing': 'Recenze neexistuje.',
   'review-rejected': 'Recenze je zamítnutá.',
-  'not-ready':
-    'Věrnostní tabulky v databázi ještě nejsou. V SQL editoru spusť supabase/loyalty.sql.',
+  'not-ready': 'Věrnostní body teď nejsou zapnuté. Připravujeme je.',
   failed: 'Požadavek se nepovedl.',
 }
 

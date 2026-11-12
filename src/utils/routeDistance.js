@@ -1,4 +1,10 @@
-import { coordinateIssue, formatDistance, hasFiniteLatLon, hasVerifiedCoordinates } from './geo.js'
+import {
+  airDistanceKm,
+  coordinateIssue,
+  formatDistance,
+  hasFiniteLatLon,
+  hasVerifiedCoordinates,
+} from './geo.js'
 
 /**
  * Veřejná pěší instance OSRM od FOSSGIS (OpenStreetMap).
@@ -57,7 +63,28 @@ function originDistanceState(originStatus) {
   return 'origin-failed'
 }
 
-export function applyRouteDistances(places, distanceById, { hasOrigin = false, pending = false, originStatus = 'idle' } = {}) {
+function airFallback(origin, place, pending) {
+  const km = airDistanceKm(origin, place)
+  if (typeof km !== 'number' || !Number.isFinite(km)) {
+    return { distanceKm: null, distanceState: 'unavailable' }
+  }
+  // pending = čekáme na pěší trasu; číslo už ukazujeme (Haversine), ne „…“.
+  return {
+    distanceKm: km,
+    distanceState: pending ? 'air-pending' : 'air',
+  }
+}
+
+/**
+ * Připojí vzdálenosti k podnikům.
+ * S polohou: ihned Haversine (air / air-pending), po OSRM upgrade na route (pěšky).
+ * Vzdušnou čáru nikdy nevydáváme za pěší trasu.
+ */
+export function applyRouteDistances(
+  places,
+  distanceById,
+  { hasOrigin = false, pending = false, originStatus = 'idle', origin = null } = {},
+) {
   return places.map((place) => {
     const issue = coordinateIssue(place)
     if (issue) {
@@ -77,27 +104,37 @@ export function applyRouteDistances(places, distanceById, { hasOrigin = false, p
       }
     }
     if (!distanceById?.has(place.id)) {
-      return { ...place, distanceKm: null, distanceState: pending ? 'loading' : 'unavailable', locationVerified: true }
+      const fallback = airFallback(origin, place, pending)
+      return { ...place, ...fallback, locationVerified: true }
     }
     const km = distanceById.get(place.id)
     if (typeof km !== 'number' || !Number.isFinite(km)) {
-      return { ...place, distanceKm: null, distanceState: 'unavailable', locationVerified: true }
+      // null z OSRM chunku / probíhající výpočet → Haversine, ne prázdná „—“
+      const fallback = airFallback(origin, place, pending)
+      return { ...place, ...fallback, locationVerified: true }
     }
     return { ...place, distanceKm: km, distanceState: 'route', locationVerified: true }
   })
 }
 
 export function formatRouteDistance(km, state) {
-  if (state === 'loading' || state === 'locating') return '…'
-  if (state === 'route') return formatDistance(km)
+  if (state === 'locating') return '…'
+  if (state === 'route' || state === 'air' || state === 'air-pending') {
+    if (typeof km !== 'number' || !Number.isFinite(km)) return '—'
+    return formatDistance(km)
+  }
   return '—'
 }
 
-/** Krátký popisek pod hodnotou. U známé trasy je to „pěšky“, jinak důvod, proč číslo není. */
+/** Krátký popisek pod hodnotou. Pěšky jen u skutečné trasy. */
 export function routeDistanceCaption(state) {
   switch (state) {
     case 'route':
       return 'pěšky'
+    case 'air-pending':
+      return 'vzdušnou čarou · počítám trasu'
+    case 'air':
+      return 'vzdušnou čarou'
     case 'unverified':
     case 'invalid':
       return 'bez ověřené polohy'
@@ -108,9 +145,11 @@ export function routeDistanceCaption(state) {
     case 'origin-failed':
       return 'poloha není dostupná'
     case 'unavailable':
-      return 'trasa není k dispozici'
+      return 'vzdálenost není k dispozici'
     case 'locating':
       return 'zjišťuji polohu'
+    case 'loading':
+      return 'počítám trasu'
     default:
       return ''
   }
@@ -121,6 +160,11 @@ export function presentRouteDistance(km, state) {
     value: formatRouteDistance(km, state),
     caption: routeDistanceCaption(state),
   }
+}
+
+/** Stavy se známým číslem km (řazení / filtr vzdálenosti). */
+export function hasUsableDistanceState(state) {
+  return state === 'route' || state === 'air' || state === 'air-pending'
 }
 
 export async function collectRouteDistances(origin, places, options = {}) {

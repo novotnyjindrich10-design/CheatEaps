@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/authSession'
+import { getRestaurantById } from '../data/restaurants'
 import { loginPath } from '../utils/authReturn'
 import { fetchWithTimeout } from '../utils/fetchTimeout'
+import { isLocalFavorite, toggleLocalFavorite } from '../utils/localFavorites'
 
 function Heart({ filled }) {
   return (
@@ -18,6 +20,10 @@ function Heart({ filled }) {
   )
 }
 
+function placeExists(id) {
+  return Boolean(getRestaurantById(id))
+}
+
 export default function FavoriteButton({ restaurantId }) {
   const { session } = useAuth()
   const [favorite, setFavorite] = useState(false)
@@ -26,8 +32,17 @@ export default function FavoriteButton({ restaurantId }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (!session.ready || !session.authenticated) return undefined
+    if (!session.ready) return undefined
+
+    if (!session.authenticated) {
+      setFavorite(isLocalFavorite(restaurantId, { exists: placeExists }))
+      setReady(true)
+      setError('')
+      return undefined
+    }
+
     let cancelled = false
+    setReady(false)
     fetchWithTimeout('/api/favorites', { credentials: 'same-origin' })
       .then((response) => response.json().catch(() => ({})))
       .then((body) => {
@@ -51,7 +66,17 @@ export default function FavoriteButton({ restaurantId }) {
     }
   }, [restaurantId, session.authenticated, session.ready])
 
-  const toggle = async () => {
+  const toggleGuest = () => {
+    setError('')
+    const result = toggleLocalFavorite(restaurantId, { exists: placeExists })
+    if (!result.ok) {
+      setError(result.message || 'Oblíbené se nepodařilo uložit.')
+      return
+    }
+    setFavorite(Boolean(result.favorite))
+  }
+
+  const toggleAuth = async () => {
     setError('')
     setPending(true)
     try {
@@ -77,7 +102,6 @@ export default function FavoriteButton({ restaurantId }) {
     }
   }
 
-  const next = loginPath(`/restaurant/${restaurantId}`)
   let control
   if (!session.ready || (session.authenticated && !ready)) {
     control = (
@@ -88,10 +112,15 @@ export default function FavoriteButton({ restaurantId }) {
     )
   } else if (!session.authenticated) {
     control = (
-      <Link className="favorite-button" to={next}>
-        <Heart filled={false} />
-        Uložit
-      </Link>
+      <button
+        type="button"
+        className={`favorite-button${favorite ? ' is-on' : ''}`}
+        aria-pressed={favorite}
+        onClick={toggleGuest}
+      >
+        <Heart filled={favorite} />
+        {favorite ? 'V oblíbených' : 'Uložit'}
+      </button>
     )
   } else {
     control = (
@@ -100,7 +129,7 @@ export default function FavoriteButton({ restaurantId }) {
         className={`favorite-button${favorite ? ' is-on' : ''}`}
         aria-pressed={favorite}
         disabled={pending}
-        onClick={toggle}
+        onClick={toggleAuth}
       >
         <Heart filled={favorite} />
         {pending ? 'Ukládám' : favorite ? 'V oblíbených' : 'Uložit'}
@@ -116,19 +145,16 @@ export default function FavoriteButton({ restaurantId }) {
           {error}
         </p>
       ) : null}
-      {session.authenticated && session.ready ? (
-        <p className="favorite-note">
-          <Link to="/oblibene">Seznam oblíbených</Link>
-        </p>
-      ) : null}
-      {!session.authenticated && session.ready ? (
-        <p className="favorite-note">
-          <Link to={next}>Přihlas se</Link>
-          {' nebo '}
-          <Link to={loginPath(`/restaurant/${restaurantId}`, 'signup')}>si založ účet</Link>
-          , ať restaurace zůstane u tebe.
-        </p>
-      ) : null}
+      <p className="favorite-note">
+        <Link to="/oblibene">Seznam oblíbených</Link>
+        {!session.authenticated && session.ready ? (
+          <>
+            {' · '}
+            <Link to={loginPath(`/restaurant/${restaurantId}`)}>Přihlas se</Link>
+            {' pro synchronizaci mezi zařízeními.'}
+          </>
+        ) : null}
+      </p>
     </div>
   )
 }

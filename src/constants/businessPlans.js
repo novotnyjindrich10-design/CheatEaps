@@ -4,7 +4,8 @@
  * Komponenty ceny neodvozují samy.
  */
 
-import { PROMOTION_MONTHLY_PRICES, quoteTrustedPrice } from './promotionPrice.js'
+import { presentPrice } from './operator.js'
+import { PERIOD_TERMS, PROMOTION_MONTHLY_PRICES, quoteTrustedPrice } from './promotionPrice.js'
 
 export { YEARLY_MONTHS_BILLED, yearlyPrice, yearlySavings } from './promotionPrice.js'
 
@@ -18,12 +19,12 @@ export const SETUP_TIME = {
   note: 'Jde o očekávanou dobu nastavení. Lhůta se nespouští automaticky a začíná až po potvrzení žádosti a dodání všech potřebných podkladů.',
 }
 
-/** Co ještě není hotové, než se žádosti mají přijímat veřejně a než se má platit. */
+/** Co musí provozovatel ještě potvrdit, než z poptávky vznikne smlouva a faktura. */
 export const ORDER_GAPS = [
-  'Obchodní podmínky mají stránku /obchodni-podminky, ale text musí doplnit provozovatel. Dokud je tam označení k doplnění, nejde o platné podmínky.',
-  'Zásady ochrany osobních údajů mají stránku /ochrana-osobnich-udaju, ale identitu správce a právní text musí doplnit provozovatel.',
-  'Žádost o zkušební měsíc je jen nezávazná prosba o kontakt. Neukládá se jako objednávka a fotografie se nenahrávají.',
-  'Platební brána není zapojená. Z této stránky se nic nestrhává a předplatné se samo nespustí.',
+  'Obchodní podmínky mají stránku /obchodni-podminky. Text je kostra k právní kontrole, dokud ho provozovatel nedoplní a neschválí.',
+  'Zásady ochrany osobních údajů mají stránku /ochrana-osobnich-udaju. Identitu správce a právní text musí doplnit provozovatel.',
+  'Platební brána není zapojená. Z této stránky se nic nestrhává. Poptávka platbu ani reklamu nezapne.',
+  'Automatické obnovení předplatného je vypnuté. Po uplynutí doby se propagace sama neprodlužuje.',
 ]
 
 export const BUSINESS_PLANS = [
@@ -33,18 +34,18 @@ export const BUSINESS_PLANS = [
     monthlyPrice: PROMOTION_MONTHLY_PRICES.start,
     descriptionMax: 400,
     photoMax: 1,
-    summary: 'Základní propagace podniku pro lidi, kteří na CheapEats hledají, kam zajít.',
+    summary: 'Zvýraznění v seznamu výsledků s označením Sponzorováno. Běžný zápis v katalogu zůstává zdarma a zvlášť.',
     recommended: false,
     perks: [
       {
-        title: 'Základní propagace podniku',
+        title: 'Základní placená propagace',
         detail:
-          'Domluvíme, jak se podnik na CheapEats představí. Vyplnění formuláře samo od sebe nic nezapne.',
+          'Po ověřené úhradě a zapnutí v administraci se podnik ukáže ve zvláštním bloku výsledků.',
       },
       {
-        title: 'Zvýrazněné označení podniku na CheapEats',
+        title: 'Označení Sponzorováno',
         detail:
-          'Označení v seznamu připravíme jako součást propagace. V aplikaci teď takové reklamní označení samo neběží.',
+          'Placené umístění má viditelný text Sponzorováno a není součást organického doporučení ani hodnocení.',
       },
       {
         title: 'Odkaz na vlastní web, pokud je k dispozici',
@@ -63,7 +64,7 @@ export const BUSINESS_PLANS = [
     monthlyPrice: PROMOTION_MONTHLY_PRICES.plus,
     descriptionMax: 800,
     photoMax: 2,
-    summary: 'Výraznější prezentace včetně fotografie, kterou si předem domluvíme.',
+    summary: 'Širší placená prezentace. Výraznější odlišení karty a delší text než u Startu.',
     recommended: true,
     perks: [
       {
@@ -73,12 +74,12 @@ export const BUSINESS_PLANS = [
       {
         title: 'Výraznější reklamní označení',
         detail:
-          'Silnější odlišení v seznamu. Zapneme ho až po domluvě. Teď v aplikaci samo neběží.',
+          'Karta v sponzorovaném bloku má silnější odlišení než Start. Pořád nese text Sponzorováno.',
       },
       {
-        title: 'Možnost prezentovat vlastní fotografii podniku',
+        title: 'Vlastní fotografie po přijetí poptávky',
         detail:
-          'Fotografii můžeš přiložit k objednávce. Na server se z formuláře zatím nenahrává a v seznamu podniků se sama nezobrazí.',
+          'Formulář soubory nenahrává. Po přijetí poptávky lze doplnit až dvě fotografie, které schválíme před zveřejněním.',
       },
       {
         title: 'Rozšířená prezentace podniku',
@@ -92,7 +93,7 @@ export const BUSINESS_PLANS = [
     monthlyPrice: PROMOTION_MONTHLY_PRICES.premium,
     descriptionMax: 1600,
     photoMax: 6,
-    summary: 'Největší prostor v rámci propagace. Přednostní místo jen tam, kde ho opravdu postavíme.',
+    summary: 'Největší placený rozsah. V sponzorovaném bloku se řadí před Start a Plus.',
     recommended: false,
     perks: [
       {
@@ -107,12 +108,12 @@ export const BUSINESS_PLANS = [
       {
         title: 'Více prostoru pro fotografie a informace o podniku',
         detail:
-          'K objednávce lze přiložit víc fotografií a delší popis než u nižších balíčků. Zobrazení na webu doladíme až při přípravě propagace.',
+          'Formulář soubory nenahrává. Po přijetí poptávky lze doplnit až šest fotografií a delší popis. Zveřejnění schválíme předem.',
       },
       {
-        title: 'Prioritní reklamní umístění ve vybraných částech webu, pokud bude skutečně implementováno',
+        title: 'Přednost v sponzorovaném bloku výsledků',
         detail:
-          'Přednostní místo na úvodu nebo ve výsledcích přidáme až ve chvíli, kdy bude v aplikaci postavené. Teď ho jako hotové nenabízíme.',
+          'Premium je ve zvláštním bloku nad Plus a Start. Do doporučených podniků na úvodu se jako nezávislý tip nedostane.',
       },
     ],
   },
@@ -154,6 +155,8 @@ export function quotePlan(plan, periodValue) {
     throw new Error('Neznámý balíček propagace.')
   }
   const yearlyBilling = quoted.periodId === 'rocne'
+  const terms = PERIOD_TERMS[quoted.periodId]
+  const price = presentPrice(quoted.amount)
   return {
     period: quoted.periodId,
     periodName: yearlyBilling ? 'Roční platba' : 'Měsíční platba',
@@ -162,6 +165,14 @@ export function quotePlan(plan, periodValue) {
     monthly: quoted.monthly,
     yearly: quoted.yearly,
     savings: quoted.savings,
+    serviceDays: terms.serviceDays,
+    serviceLabel: terms.serviceLabel,
+    billingLabel: terms.billingLabel,
+    renewalLabel: terms.renewalLabel,
+    renewal: terms.renewal,
+    finalAmount: price.finalAmount,
+    vatStatus: price.vatStatus,
+    vatNote: price.vatNote,
   }
 }
 
@@ -269,22 +280,22 @@ export function reviewOrder(input) {
   }
 
   const quote = quotePlan(plan, period)
-  const afterTrial = quoteTrustedPrice(plan.id, 'mesicne')
   const materials = materialsOf(input, plan, website, socials.map((line) => normalizeWebAddress(line).href))
   const priceLine = `${formatKc(quote.amount)} ${quote.amountLabel}`
-  const afterPriceText = afterTrial.ok ? `${formatKc(afterTrial.amount)} měsíčně` : ''
   const savingsLine = quote.savings
     ? `Úspora oproti 12 měsíčním platbám: ${formatKc(quote.savings)}.`
     : 'Roční úspora se u měsíční platby neuplatňuje.'
 
   const lines = [
-    'Žádost o první měsíc propagace zdarma na CheapEats Brno',
+    'Nezávazná poptávka placené propagace na FoodGo Brno',
     `Podnik: ${input.businessName.trim()}`,
     `Kontakt: ${input.contactName.trim()}`,
     `E-mail: ${input.email.trim()}`,
     `Balíček: ${plan.name}`,
-    'První měsíc: zdarma',
-    `Cena po zkušebním měsíci: ${afterPriceText}`,
+    `Délka: ${quote.serviceLabel}`,
+    `${quote.billingLabel}. ${quote.renewalLabel}.`,
+    `Ceníková částka: ${priceLine}`,
+    quote.vatNote,
     `Na ceníku je zobrazeno: ${quote.periodName}, ${priceLine}`,
     savingsLine,
     ...materials.map((item) => `${item.label}: ${item.value}`),
@@ -301,7 +312,10 @@ export function reviewOrder(input) {
       planName: plan.name,
       periodName: quote.periodName,
       priceText: priceLine,
-      afterPriceText,
+      serviceLabel: quote.serviceLabel,
+      billingLabel: quote.billingLabel,
+      renewalLabel: quote.renewalLabel,
+      vatNote: quote.vatNote,
       savingsText: savingsLine,
       materials,
       setupTitle: SETUP_TIME.title,
