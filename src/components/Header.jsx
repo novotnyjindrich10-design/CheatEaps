@@ -48,8 +48,6 @@ const PRIMARY_LINKS = [
 
 /** Vedlejší cesty — nepatří do hlavní lišty, dokud nejsou jádrem produktu. */
 const SECONDARY_LINKS = [
-  { to: '/nevim-co-jist', label: 'Nevím, co jíst' },
-  { to: '/results?verified=1', label: 'Ověřené ceny' },
   { to: '/pro-podniky', label: 'Pro podniky' },
 ]
 
@@ -280,9 +278,6 @@ export default function Header() {
               linkClass="header-menu-link"
               firstItemRef={firstItemRef}
             />
-            <li className="header-menu-group" aria-hidden="true">
-              Další
-            </li>
             <NavLinks
               links={moreLinks}
               pathname={pathname}

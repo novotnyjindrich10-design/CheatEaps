@@ -70,7 +70,7 @@ test.describe('desktop navigace 1280', () => {
     await expect(nav.getByRole('link', { name: 'Nevím, co jíst' })).toHaveCount(0)
 
     await nav.getByRole('button', { name: 'Více' }).click()
-    await expect(nav.getByRole('link', { name: 'Nevím, co jíst' })).toBeVisible()
+    await expect(nav.getByRole('link', { name: 'Nevím, co jíst' })).toHaveCount(0)
     await expect(nav.getByRole('link', { name: 'Pro podniky' })).toBeVisible()
     await nav.getByRole('link', { name: 'Pro podniky' }).click()
     await expect(page).toHaveURL(/\/pro-podniky/)
