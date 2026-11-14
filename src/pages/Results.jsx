@@ -118,6 +118,9 @@ export default function Results() {
       'Pěší vzdálenost se teď nepodařilo zjistit. Zkus polohu aktualizovat, nebo filtr vzdálenosti vypni.'
   } else if (filters.dealsOnly && filtered.length === 0) {
     emptyMessage = DEALS_EMPTY_MESSAGE
+  } else if ((filters.maxBudget || filters.verifiedPricesOnly) && filtered.length === 0) {
+    emptyMessage =
+      'Do limitu se počítá jen ověřená cena z menu (ne odhad). Aktuálně máme ověřenou cenu u části katalogu — zkus vyšší rozpočet, vypni „Jen ověřené ceny“, nebo prohlížej bez cenového filtru.'
   }
 
   if (isDealsCategory(rawType)) {

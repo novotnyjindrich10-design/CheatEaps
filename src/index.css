@@ -3895,6 +3895,11 @@ body:has(#root .app) #seo-snapshot {
   font-size: 0.92rem;
 }
 
+.restaurant-map-fit {
+  justify-self: start;
+  margin-top: 4px;
+}
+
 .restaurant-map-canvas {
   width: 100%;
   height: min(68vh, 620px);
@@ -3904,6 +3909,27 @@ body:has(#root .app) #seo-snapshot {
   overflow: hidden;
   background: var(--surface-soft);
   z-index: 0;
+}
+
+.fg-map-marker {
+  background: transparent;
+  border: 0;
+}
+
+.fg-map-marker-pin {
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin: 4px auto 0;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: #c45c26;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(20, 16, 12, 0.35);
+}
+
+.fg-map-marker--sponsored .fg-map-marker-pin {
+  background: #8a4b12;
 }
 
 .map-popup {
@@ -3917,10 +3943,16 @@ body:has(#root .app) #seo-snapshot {
 }
 
 .map-popup-address,
-.map-popup-sponsored {
+.map-popup-sponsored,
+.map-popup-price {
   margin: 0;
   color: #555;
   font-size: 0.85rem;
+}
+
+.map-popup-price {
+  font-weight: 650;
+  color: #2a2a2a;
 }
 
 .map-popup-link {

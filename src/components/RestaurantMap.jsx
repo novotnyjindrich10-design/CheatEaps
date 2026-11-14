@@ -10,7 +10,14 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import { SPONSORED_LABEL } from '../constants/monetization'
-import { boundsFromPlaces, BRNO_MAP_CENTER, BRNO_MAP_DEFAULT_ZOOM, placesForMap } from '../utils/mapPlaces'
+import {
+  boundsFromPlaces,
+  BRNO_MAP_CENTER,
+  BRNO_MAP_DEFAULT_ZOOM,
+  BRNO_MAP_MAX_BOUNDS,
+  placesFingerprint,
+  placesForMap,
+} from '../utils/mapPlaces'
 import { resolveMapTileConfig } from '../utils/mapTiles'
 import { ensureMaplibreWorker } from '../utils/maplibreWorker'
 import { hasFiniteLatLon } from '../utils/geo'
@@ -52,15 +59,30 @@ function popupHtml(place) {
     ? `<p class="map-popup-sponsored">${escapeHtml(SPONSORED_LABEL)}</p>`
     : ''
   const address = place.address ? `<p class="map-popup-address">${escapeHtml(place.address)}</p>` : ''
+  const price =
+    place.priceLabel
+      ? `<p class="map-popup-price">${escapeHtml(place.priceLabel)}${
+          place.priceStatus ? ` · ${escapeHtml(place.priceStatus)}` : ''
+        }</p>`
+      : ''
   return `
     <div class="map-popup">
       ${badge}
       <strong class="map-popup-title">${escapeHtml(place.name)}</strong>
       ${address}
+      ${price}
       <a class="map-popup-link" href="/restaurant/${encodeURIComponent(place.id)}">Otevřít detail</a>
     </div>
   `
 }
+
+const sponsoredIcon = L.divIcon({
+  className: 'fg-map-marker fg-map-marker--sponsored',
+  html: `<span class="fg-map-marker-pin" aria-hidden="true"></span>`,
+  iconSize: [28, 36],
+  iconAnchor: [14, 34],
+  popupAnchor: [0, -28],
+})
 
 async function addBasemap(map, tiles) {
   if (tiles.mode === 'vector-style') {
@@ -114,9 +136,23 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
   const clusterRef = useRef(null)
   const markersRef = useRef(new Map())
   const userLayerRef = useRef(null)
+  const fittedFingerprintRef = useRef('')
   const [ready, setReady] = useState(false)
   const [basemapError, setBasemapError] = useState('')
   const places = useMemo(() => placesForMap(restaurants), [restaurants])
+  const fingerprint = useMemo(() => placesFingerprint(places), [places])
+
+  const fitAllPlaces = () => {
+    const map = mapRef.current
+    if (!map) return
+    const bounds = boundsFromPlaces(places)
+    if (bounds) {
+      map.fitBounds(bounds, { padding: [28, 28], maxZoom: 15 })
+    } else {
+      map.setView([BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon], BRNO_MAP_DEFAULT_ZOOM)
+    }
+    fittedFingerprintRef.current = fingerprint
+  }
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return undefined
@@ -127,6 +163,8 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
       minZoom: 10,
       // MapLibre GL Leaflet vyžaduje maxZoom na L.map (jinak: "Map has no maxZoom specified").
       maxZoom: 19,
+      maxBounds: BRNO_MAP_MAX_BOUNDS,
+      maxBoundsViscosity: 0.65,
       scrollWheelZoom: true,
       attributionControl: true,
     })
@@ -176,6 +214,7 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
       clusterRef.current = null
       markersRef.current = new Map()
       userLayerRef.current = null
+      fittedFingerprintRef.current = ''
       setReady(false)
     }
   }, [])
@@ -192,7 +231,7 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
       const marker = L.marker([place.lat, place.lon], {
         title: place.name,
         riseOnHover: true,
-        icon: placeIcon,
+        icon: place.sponsored ? sponsoredIcon : placeIcon,
       })
       marker.bindPopup(popupHtml(place), { maxWidth: 260 })
       marker.on('click', () => {
@@ -202,14 +241,18 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
       markersRef.current.set(place.id, marker)
     }
 
-    const bounds = boundsFromPlaces(places)
-    if (bounds) {
-      map.fitBounds(bounds, { padding: [28, 28], maxZoom: 15 })
-    } else {
-      map.setView([BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon], BRNO_MAP_DEFAULT_ZOOM)
+    // FitBounds jen při změně množiny bodů — ne při každém re-renderu / psaní do hledání se stejným výsledkem.
+    if (fittedFingerprintRef.current !== fingerprint) {
+      const bounds = boundsFromPlaces(places)
+      if (bounds) {
+        map.fitBounds(bounds, { padding: [28, 28], maxZoom: 15 })
+      } else {
+        map.setView([BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon], BRNO_MAP_DEFAULT_ZOOM)
+      }
+      fittedFingerprintRef.current = fingerprint
     }
     requestAnimationFrame(() => map.invalidateSize())
-  }, [places, ready, onSelect])
+  }, [places, fingerprint, ready, onSelect])
 
   useEffect(() => {
     if (!selectedId || !ready) return
@@ -267,8 +310,14 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
             : `${places.length} ${places.length === 1 ? 'bod' : places.length < 5 ? 'body' : 'bodů'} na mapě`}
         </p>
         <p className="restaurant-map-hint">
-          Klikni na bod pro kartu. Filtry a hledání řídí stejný seznam jako výpis.
+          Klikni na bod pro kartu. Filtry a hledání řídí stejný seznam jako výpis. Podklad OpenFreeMap — bez API
+          klíče.
         </p>
+        {places.length > 0 ? (
+          <button type="button" className="btn btn-secondary restaurant-map-fit" onClick={fitAllPlaces}>
+            Zobrazit všechny body
+          </button>
+        ) : null}
         {basemapError ? (
           <p className="restaurant-map-hint" role="status">
             {basemapError}

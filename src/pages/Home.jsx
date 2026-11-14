@@ -127,7 +127,8 @@ export default function Home() {
             Podle rozpočtu
           </h2>
           <p className="section-desc">
-            Filtr bere jen ověřenou cenu z menu. U rozpětí musí do limitu vejít i horní mez.
+            Filtr bere jen ověřenou cenu z menu — ne odhad. U rozpětí musí do limitu vejít i horní mez.
+            Ověřenou cenu má zatím menší část katalogu; ostatní podniky uvidíš bez cenového limitu.
           </p>
           <div className="budget-chips">
             {QUICK_BUDGETS.map((amount) => (

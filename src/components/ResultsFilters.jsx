@@ -203,8 +203,8 @@ export default function ResultsFilters({
             </div>
             {filters.maxBudget ? (
               <p className="location-bar-caption filters-note">
-                Do limitu se počítá ověřená cena z menu. U rozpětí musí být do limitu i horní mez. Odhad se do rozpočtu
-                nepočítá.
+                Do limitu se počítá ověřená cena z menu (ne odhad). U rozpětí musí být do limitu i horní mez. Ověřenou
+                cenu má zatím jen část katalogu — bez limitu uvidíš i podniky s odhadem.
               </p>
             ) : null}
             {filters.vegetarianOnly || filters.veganOnly ? (

@@ -1,8 +1,25 @@
-import { hasVerifiedCoordinates } from './geo.js'
+import { BRNO_BOUNDS, hasVerifiedCoordinates } from './geo.js'
+import { formatCardPrice } from './price.js'
 
 /** Brno střed — výchozí viewport mapy. */
 export const BRNO_MAP_CENTER = Object.freeze({ lat: 49.1951, lon: 16.6068 })
 export const BRNO_MAP_DEFAULT_ZOOM = 12
+
+/** Volnější rám kolem Brna — mapa se neodscrolluje do Prahy, ale jde mírně oddálit. */
+export const BRNO_MAP_MAX_BOUNDS = Object.freeze([
+  [BRNO_BOUNDS.minLat - 0.08, BRNO_BOUNDS.minLon - 0.12],
+  [BRNO_BOUNDS.maxLat + 0.08, BRNO_BOUNDS.maxLon + 0.12],
+])
+
+/** Stabilní otisk sad bodů — fitBounds jen když se množina ID změní. */
+export function placesFingerprint(places) {
+  if (!places?.length) return ''
+  return places
+    .map((place) => place.id)
+    .filter(Boolean)
+    .sort()
+    .join('|')
+}
 
 /**
  * Body pro mapu z už filtrovaného seznamu.
@@ -13,6 +30,7 @@ export function placesForMap(restaurants) {
   const out = []
   for (const place of restaurants) {
     if (!place?.id || !hasVerifiedCoordinates(place)) continue
+    const price = formatCardPrice(place)
     out.push({
       id: place.id,
       name: String(place.name || '').trim() || place.id,
@@ -21,8 +39,10 @@ export function placesForMap(restaurants) {
       lon: place.lon,
       category: place.category || '',
       sponsored: Boolean(place.sponsored || place.placement === 'sponsored'),
-      priceFrom: place.priceFrom ?? null,
+      priceFrom: place.priceFrom ?? place.price ?? null,
       priceVerified: Boolean(place.priceVerified),
+      priceLabel: price.primary !== '—' ? price.primary : '',
+      priceStatus: price.status || '',
     })
   }
   return out

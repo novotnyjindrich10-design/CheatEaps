@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { boundsFromPlaces, placesForMap } from './mapPlaces.js'
+import { boundsFromPlaces, placesFingerprint, placesForMap } from './mapPlaces.js'
 
 describe('mapPlaces', () => {
   it('vynechá neplatné a mimo Brno souřadnice', () => {
@@ -16,11 +16,34 @@ describe('mapPlaces', () => {
     )
   })
 
-  it('označí sponzorované body', () => {
+  it('označí sponzorované body a připraví cenu do popupu', () => {
     const [place] = placesForMap([
-      { id: 's', name: 'S', lat: 49.2, lon: 16.6, sponsored: true },
+      {
+        id: 's',
+        name: 'S',
+        lat: 49.2,
+        lon: 16.6,
+        sponsored: true,
+        price: 149,
+        priceKind: 'menu',
+        priceVerified: true,
+        priceVerifiedAt: '2026-10-10',
+        priceSource: 'https://example.com',
+      },
     ])
     assert.equal(place.sponsored, true)
+    assert.match(String(place.priceLabel || ''), /149/)
+  })
+
+  it('fingerprint je stabilní bez ohledu na pořadí', () => {
+    assert.equal(
+      placesFingerprint([
+        { id: 'b' },
+        { id: 'a' },
+      ]),
+      placesFingerprint([{ id: 'a' }, { id: 'b' }]),
+    )
+    assert.equal(placesFingerprint([]), '')
   })
 
   it('prázdný výsledek nemá bounds', () => {
