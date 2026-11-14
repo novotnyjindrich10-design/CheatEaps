@@ -36,7 +36,7 @@ export function officialHero(restaurant) {
 
 export function foodIllustration(restaurant) {
   const kind = restaurant?.foodIllustrationKind
-  if (kind !== 'openverse' && kind !== 'pixabay') return null
+  if (kind !== 'openverse' && kind !== 'pixabay' && kind !== 'unsplash' && kind !== 'pexels') return null
   if (!restaurant.foodIllustrationUrl) return null
   const dish = restaurant.foodIllustrationDish || 'jídlo'
   return {
@@ -97,7 +97,13 @@ export function resolveDetailHero(restaurant) {
   const google = googlePlacesPhoto(restaurant)
   if (official?.rights === 'documented') return official
   if (google) return google
-  if (illustration?.provider === 'pixabay') return illustration
+  if (
+    illustration?.provider === 'pixabay' ||
+    illustration?.provider === 'unsplash' ||
+    illustration?.provider === 'pexels'
+  ) {
+    return illustration
+  }
   return official || illustration || null
 }
 
@@ -120,6 +126,8 @@ export function licenseLabel(license) {
   if (key === 'by') return 'CC BY'
   if (key === 'by-sa') return 'CC BY-SA'
   if (key === 'pixabay') return 'Pixabay'
+  if (key === 'unsplash') return 'Unsplash'
+  if (key === 'pexels') return 'Pexels'
   return license || ''
 }
 

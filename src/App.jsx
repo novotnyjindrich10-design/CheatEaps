@@ -119,6 +119,14 @@ function App() {
                 <a href="https://pixabay.com/" target="_blank" rel="noreferrer">
                   Fotografie z Pixabay
                 </a>
+                {' · '}
+                <a href="https://unsplash.com/" target="_blank" rel="noreferrer">
+                  Unsplash
+                </a>
+                {' · '}
+                <a href="https://www.pexels.com/" target="_blank" rel="noreferrer">
+                  Pexels
+                </a>
               </p>
             ) : null}
             <DataSources />

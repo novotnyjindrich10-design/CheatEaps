@@ -23,6 +23,13 @@ const MANUAL = {
   'burger-king-ceska-142-29': 5630800,
   'burger-king-videnska-132-100': 8918308,
   'burger-king-netroufalky-770': 3946012,
+  'let-s-steaking-dominikanska-3': 1108117,
+  'mcdonald-s-masarykova-32': 1199957,
+  'mcdonald-s-namesti-svobody-19': 580612,
+  'pod-lekarnou-slovakova-1': 3219483,
+  'oaza-slovakova-2': 1640777,
+  'fatfuck-smash-burgers-brno-hybesova-45': 1251198,
+  'radegast-sportbar-namesti-svobody-96-2': 2983098,
 }
 
 describe('knihovna Pixabay', () => {
@@ -38,7 +45,10 @@ describe('knihovna Pixabay', () => {
       assert.equal(placePixabayPhotoId[placeId], photoId)
       const illustration = getPlacePixabayIllustration(placeId)
       assert.equal(illustration.foodIllustrationUrl, `/food-illustrations/pixabay/${photoId}.jpg`)
-      assert.equal(illustration.foodIllustrationLicense, 'pixabay')
+      assert.ok(
+        ['pixabay', 'unsplash', 'pexels'].includes(illustration.foodIllustrationLicense),
+        `${placeId} license`,
+      )
       for (const pool of Object.values(pixabayIdsByTheme)) {
         assert.equal(pool.includes(photoId), false)
       }

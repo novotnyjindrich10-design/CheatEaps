@@ -25,11 +25,12 @@ export function varyPixabayOnPage(restaurants) {
   const usedOnPage = new Set()
   let changed = false
   const next = restaurants.map((restaurant) => {
-    if (restaurant?.foodIllustrationKind !== 'pixabay') return restaurant
-    if (Number.isInteger(pixabayManualPhotoByPlaceId[restaurant.id])) {
-      usedOnPage.add(restaurant.foodIllustrationPixabayId)
-      return restaurant
+    const manualId = pixabayManualPhotoByPlaceId[restaurant.id]
+    if (Number.isInteger(manualId)) {
+      usedOnPage.add(manualId)
+      return withPhoto(restaurant, manualId)
     }
+    if (restaurant?.foodIllustrationKind !== 'pixabay') return restaurant
     const theme = restaurant.foodIllustrationTheme
     const pool = pixabayIdsByTheme[theme] || []
     const current = restaurant.foodIllustrationPixabayId
@@ -52,8 +53,9 @@ export function varyPixabayOnPage(restaurants) {
 export function applyPixabayChoice(restaurant, photoId) {
   const id = Number(photoId)
   if (!restaurant || !Number.isInteger(id) || id <= 0) return restaurant
+  const manualId = pixabayManualPhotoByPlaceId[restaurant.id]
+  if (Number.isInteger(manualId)) return withPhoto(restaurant, manualId)
   if (restaurant.foodIllustrationKind !== 'pixabay') return restaurant
-  if (Number.isInteger(pixabayManualPhotoByPlaceId[restaurant.id])) return restaurant
   const pool = pixabayIdsByTheme[restaurant.foodIllustrationTheme] || []
   if (!pool.includes(id)) return restaurant
   return withPhoto(restaurant, id)

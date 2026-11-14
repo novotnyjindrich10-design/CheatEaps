@@ -62,21 +62,23 @@ describe('fotografie cílových podniků', () => {
   })
 
   it('každá pobočka Burger King má vlastní burger ilustraci a ne sdílí zakázaná ID', () => {
-    const ids = BURGER_KING.map((placeId) => {
-      assert.ok(Number.isInteger(pixabayManualPhotoByPlaceId[placeId]))
+    const urls = BURGER_KING.map((placeId) => {
+      const libraryId = pixabayManualPhotoByPlaceId[placeId]
+      assert.ok(Number.isInteger(libraryId))
+      assert.equal(FORBIDDEN_BK_IDS.has(libraryId), false)
+      assert.equal(FORBIDDEN_SANDWICH_IDS.has(libraryId), false)
       const restaurant = asRestaurant(placeId)
       assert.equal(restaurant.foodIllustrationTheme, 'burger')
-      assert.equal(FORBIDDEN_BK_IDS.has(restaurant.foodIllustrationPixabayId), false)
-      assert.equal(FORBIDDEN_SANDWICH_IDS.has(restaurant.foodIllustrationPixabayId), false)
       const hero = resolveDetailHero(restaurant)
       const card = resolveCardMedia(restaurant)
       assert.equal(hero?.kind, 'illustration')
-      assert.equal(hero?.provider, 'pixabay')
+      assert.ok(['pixabay', 'unsplash', 'pexels'].includes(hero?.provider), placeId)
       assert.equal(card?.url, hero?.url)
       assert.match(hero.alt, /Ilustrační/)
-      return restaurant.foodIllustrationPixabayId
+      assert.match(hero.url, new RegExp(`/food-illustrations/pixabay/${libraryId}\\.jpg$`))
+      return hero.url
     })
-    assert.equal(new Set(ids).size, ids.length, 'pobočky BK musí mít unikátní ilustrace')
+    assert.equal(new Set(urls).size, urls.length, 'pobočky BK musí mít unikátní ilustrace')
   })
 
   it('karta a detail používají stejný resolve pro Athena, Abu Rami i BK', () => {

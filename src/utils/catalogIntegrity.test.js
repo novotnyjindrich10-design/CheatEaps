@@ -72,7 +72,11 @@ describe('katalog podniků', () => {
       assert.match(photo.cardUrl, /^\/food-illustrations\/pixabay\//)
       assert.equal(existsSync(new URL(`../../public${photo.cardUrl}`, import.meta.url)), true, photo.cardUrl)
       assert.ok(photo.user)
-      assert.match(photo.pageUrl, /^https:\/\/pixabay\.com\//)
+      assert.match(
+        photo.pageUrl,
+        /^https:\/\/(pixabay\.com\/|unsplash\.com\/|www\.pexels\.com\/)/,
+        photo.pageUrl,
+      )
     }
   })
 })

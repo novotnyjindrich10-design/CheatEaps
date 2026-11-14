@@ -12,10 +12,18 @@ import { httpUrl } from '../utils/website'
 
 function IllustrationCredit({ photo }) {
   if (!photo || photo.kind !== 'illustration') return null
-  if (photo.provider === 'pixabay') {
+  if (photo.provider === 'pixabay' || photo.provider === 'unsplash' || photo.provider === 'pexels') {
     const creatorHref = httpUrl(photo.creatorUrl)
     const photoHref = httpUrl(photo.sourceUrl)
     const creator = photo.creator || 'autor neuveden'
+    const stockHref =
+      photo.provider === 'unsplash'
+        ? 'https://unsplash.com/'
+        : photo.provider === 'pexels'
+          ? 'https://www.pexels.com/'
+          : 'https://pixabay.com/'
+    const stockLabel =
+      photo.provider === 'unsplash' ? 'Unsplash' : photo.provider === 'pexels' ? 'Pexels' : 'Pixabay'
     return (
       <p className="detail-hero-credit">
         {photoHref ? (
@@ -34,8 +42,8 @@ function IllustrationCredit({ photo }) {
           creator
         )}
         {' na '}
-        <a href="https://pixabay.com/" target="_blank" rel="noreferrer">
-          Pixabay
+        <a href={stockHref} target="_blank" rel="noreferrer">
+          {stockLabel}
         </a>
       </p>
     )
