@@ -3,7 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
-import { publicSiteOrigin, sitemapUrls, sitemapXml } from './src/utils/sitemap.js'
+import { sitemapOrigin, sitemapUrls, sitemapXml } from './src/utils/sitemap.js'
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -107,14 +107,19 @@ function sitemapPlugin(env) {
     name: 'cheapeats-sitemap',
     apply: 'build',
     closeBundle() {
-      const origin = publicSiteOrigin(env.PUBLIC_SITE_URL)
-      if (!origin) return
+      const origin = sitemapOrigin(env.PUBLIC_SITE_URL)
       const xml = sitemapXml(sitemapUrls(origin, catalogIds()))
       const outDir = path.resolve('dist')
       mkdirSync(outDir, { recursive: true })
       writeFileSync(path.join(outDir, 'sitemap.xml'), xml)
       const robotsPath = path.join(outDir, 'robots.txt')
-      const robots = readFileSync(robotsPath, 'utf8').replace(/\s+$/, '')
+      let robots = readFileSync(robotsPath, 'utf8').replace(/\s+$/, '')
+      // Nahraď existující Sitemap řádky, ať se v dist nerodí duplicity.
+      robots = robots
+        .split(/\r?\n/)
+        .filter((line) => !/^Sitemap:\s*/i.test(line.trim()))
+        .join('\n')
+        .replace(/\s+$/, '')
       writeFileSync(robotsPath, `${robots}\nSitemap: ${origin}/sitemap.xml\n`)
     },
   }

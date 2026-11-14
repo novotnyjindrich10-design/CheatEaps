@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { metaForPath } from './pageMeta.js'
+import { isNonProductionHost, metaForPath } from './pageMeta.js'
 
 describe('metadata stránek', () => {
   it('má unikátní titulek úvodu a výsledků', () => {
@@ -12,6 +12,12 @@ describe('metadata stránek', () => {
     assert.match(home.description, /cen/i)
     assert.ok(home.description.length > 40)
     assert.equal(home.robots, '')
+  })
+
+  it('preview a localhost označí jako neprodukční host', () => {
+    assert.equal(isNonProductionHost('localhost'), true)
+    assert.equal(isNonProductionHost('cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app'), true)
+    assert.equal(isNonProductionHost('cheat-eaps.vercel.app'), false)
   })
 
   it('schová administraci a přihlášení před indexem', () => {

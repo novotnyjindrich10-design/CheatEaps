@@ -111,6 +111,15 @@ function setNamed(selector, create, value) {
   else node.setAttribute('content', value)
 }
 
+/** Preview / staging hostnames must not compete with production in search. */
+export function isNonProductionHost(hostname = typeof location !== 'undefined' ? location.hostname : '') {
+  const host = String(hostname || '').toLowerCase()
+  if (!host || host === 'localhost' || host === '127.0.0.1') return true
+  if (host.includes('-git-')) return true
+  if (host.endsWith('.vercel.app') && host !== 'cheat-eaps.vercel.app') return true
+  return false
+}
+
 export function applyPageMeta(meta) {
   if (typeof document === 'undefined' || !meta) return
   document.title = meta.title
@@ -134,7 +143,9 @@ export function applyPageMeta(meta) {
     el.setAttribute('property', 'og:type')
     return el
   }, 'website')
-  const robots = meta.robots || 'index,follow'
+  const robots = isNonProductionHost()
+    ? 'noindex, nofollow'
+    : meta.robots || 'index,follow'
   setNamed('meta[name="robots"]', () => {
     const el = document.createElement('meta')
     el.setAttribute('name', 'robots')
