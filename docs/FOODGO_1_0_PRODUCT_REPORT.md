@@ -2,7 +2,8 @@
 
 Datum: 2026-11-14  
 Větev: `foodgo-launch-preview`  
-Commit (před tímto sprintem): `e4d91ad`  
+HEAD Preview: `cedcfe3` (pushnuté na `foodgo-launch-preview`)  
+Před sprintem: `e4d91ad`  
 Preview: https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app  
 Produkce (neměněna): https://cheat-eaps.vercel.app
 
