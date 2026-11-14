@@ -1,28 +1,28 @@
 # FoodGo — Aktuální stav
 
-Datum: 2026-11-12  
-Režim: Final Release Sprint → Preview větev
+Datum: 2026-11-14  
+Režim: FoodGo 1.0 master transform → Preview větev
 
 ## Verdikt jednou větou
 
-Free katalog je technicky ready; veřejné vydání blokuje prázdný OPERATOR + právní/env/deploy kroky. Detail: `docs/FOODGO_RELEASE_FINAL.md`.
+Free katalog je technicky ready; veřejné vydání blokuje prázdný OPERATOR + právní/env/deploy kroky. Detail: `docs/FOODGO_1_0_PRODUCT_REPORT.md`.
 
 ## Stack
 
-React 19 · Vite 8 · Supabase · Vercel · Resend · Leaflet · Playwright · oxlint
+React 19 · Vite 8 · Supabase · Vercel · Resend · Leaflet · MapLibre/OpenFreeMap · Playwright · oxlint
 
 ## Veřejná v1 (PUBLIC_V1)
 
-- Zapnuto: katalog, mapa, poloha, detail, oblíbené, surprise, auth UI, neplacený zápis
+- Zapnuto: katalog, mapa (bez API klíče), poloha, detail, oblíbené, surprise, auth UI, neplacený zápis
 - Vypnuto jako ready: členské slevy, placená propagace, Podpoř mě v sitemap
 
-## Testy
+## Testy (2026-11-14)
 
 | Sada | Stav |
 | --- | --- |
-| Unit | **350/350 PASS** |
+| Unit | **354/354 PASS** |
 | Lint | exit 0 / warnings |
-| Build | PASS |
+| Build + SEO prerender | PASS (775 restaurant HTML) |
 | Catalog audit | PASS |
 | Playwright | **34/34 PASS** |
 | launch:check --offline | **BLOCKED** (`operator-identity`) |
@@ -33,7 +33,7 @@ React 19 · Vite 8 · Supabase · Vercel · Resend · Leaflet · Playwright · o
 2. Právní kontrola Privacy/Terms
 3. Vercel Production env + Supabase Auth redirects
 4. Schválený merge → main + deploy
-5. Volitelně SQL place-reports/stats
+5. Volitelně SQL place-reports/stats + Resend
 
 ## Preview
 
