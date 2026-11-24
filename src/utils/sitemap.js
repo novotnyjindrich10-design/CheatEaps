@@ -6,6 +6,10 @@ const BASE_SITEMAP_PATHS = [
   '/results',
   '/nevim-co-jist',
   '/pro-podniky',
+  '/o-foodgo',
+  '/kontakt',
+  '/reklamni-zvyrazneni',
+  '/cookies',
   '/ochrana-osobnich-udaju',
   '/obchodni-podminky',
 ]

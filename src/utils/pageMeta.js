@@ -51,6 +51,22 @@ const PAGES = {
     title: 'Obchodní podmínky | FoodGo Brno',
     description: 'Podmínky používání katalogu FoodGo Brno. Text není právní posudek.',
   },
+  '/o-foodgo': {
+    title: 'O FoodGo | FoodGo Brno',
+    description: 'Co je FoodGo Brno: katalog jídla v Brně podle chuti, ceny a vzdálenosti.',
+  },
+  '/kontakt': {
+    title: 'Kontakt | FoodGo Brno',
+    description: 'Kontakt na FoodGo Brno a údaje provozovatele po jejich doplnění.',
+  },
+  '/cookies': {
+    title: 'Cookies | FoodGo Brno',
+    description: 'Jak FoodGo Brno používá cookies a úložiště prohlížeče. Bez reklamních skriptů třetích stran.',
+  },
+  '/reklamni-zvyrazneni': {
+    title: 'Reklamní zvýraznění | FoodGo Brno',
+    description: 'Jak funguje placené označení Sponzorováno v katalogu FoodGo Brno.',
+  },
   '/prihlaseni': {
     title: 'Přihlášení | FoodGo Brno',
     description: 'Přihlášení k účtu FoodGo.',

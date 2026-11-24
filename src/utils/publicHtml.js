@@ -56,6 +56,28 @@ const PUBLIC_COPY = {
       'Tohle nejsou platné obchodní podmínky. Je to kostra stránky. Než podle nich někdo jedná, musí provozovatel doplnit označené části a nechat si text zkontrolovat.',
     ],
   },
+  '/o-foodgo': {
+    heading: 'O FoodGo',
+    paragraphs: [
+      'FoodGo Brno je katalog podniků s jídlem. Hledáš podle chuti, rozpočtu a vzdálenosti.',
+    ],
+  },
+  '/kontakt': {
+    heading: 'Kontakt',
+    paragraphs: ['Napiš na e-mail značky. Údaje provozovatele doplníme po ověření živnosti.'],
+  },
+  '/cookies': {
+    heading: 'Informace o cookies a úložišti',
+    paragraphs: [
+      'FoodGo nepoužívá reklamní ani analytické cookies třetích stran. Některá data zůstávají jen v prohlížeči.',
+    ],
+  },
+  '/reklamni-zvyrazneni': {
+    heading: 'Reklamní zvýraznění',
+    paragraphs: [
+      'Placené umístění je označené textem Sponzorováno. Neovlivňuje hodnocení ani cenu podniku.',
+    ],
+  },
 }
 
 export function escapeHtml(value) {

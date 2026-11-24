@@ -30,6 +30,7 @@ const Rewards = lazy(() => import('./pages/Rewards'))
 const AdminLoyalty = lazy(() => import('./pages/AdminLoyalty'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Terms = lazy(() => import('./pages/Terms'))
+const SiteInfo = lazy(() => import('./pages/SiteInfo'))
 const Compare = lazy(() => import('./pages/Compare'))
 const SurpriseMe = lazy(() => import('./pages/SurpriseMe'))
 
@@ -90,6 +91,10 @@ function App() {
             <Route path="/pro-podniky/ucet" element={<BusinessAccount />} />
             <Route path="/ochrana-osobnich-udaju" element={<Privacy />} />
             <Route path="/obchodni-podminky" element={<Terms />} />
+            <Route path="/o-foodgo" element={<SiteInfo kind="about" />} />
+            <Route path="/kontakt" element={<SiteInfo kind="contact" />} />
+            <Route path="/cookies" element={<SiteInfo kind="cookies" />} />
+            <Route path="/reklamni-zvyrazneni" element={<SiteInfo kind="ads" />} />
             <Route path="/admin/zadosti" element={<AdminApplications />} />
             <Route path="/admin/propagace" element={<AdminPromotions />} />
             <Route path="/admin/odmeny" element={<AdminLoyalty />} />
@@ -111,6 +116,14 @@ function App() {
               <Link to="/oblibene">Oblíbené</Link>
               {' · '}
               <Link to="/pro-podniky">Pro podniky</Link>
+              {' · '}
+              <Link to="/o-foodgo">O FoodGo</Link>
+              {' · '}
+              <Link to="/kontakt">Kontakt</Link>
+              {' · '}
+              <Link to="/reklamni-zvyrazneni">Reklama</Link>
+              {' · '}
+              <Link to="/cookies">Cookies</Link>
               {' · '}
               <Link to="/ochrana-osobnich-udaju">Ochrana osobních údajů</Link>
               {' · '}
