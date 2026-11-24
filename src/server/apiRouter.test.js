@@ -30,6 +30,8 @@ const ROUTES = [
   { path: '/api/payments/status', method: 'GET', expectStatus: 200 },
   { path: '/api/payments/return', method: 'GET', expectStatus: 200 },
   { path: '/api/payments/webhook', method: 'GET', expectStatus: 405 },
+  { path: '/api/payments/create', method: 'POST', expectStatus: [503, 400, 404] },
+  { path: '/api/payments/test-confirm', method: 'POST', expectStatus: [404, 401] },
   { path: '/api/quote-promotion', method: 'GET', expectStatus: 405 },
   { path: '/api/place-reports', method: 'GET', expectStatus: [403, 503] },
   { path: '/api/place-stats', method: 'GET', expectStatus: [403, 503] },

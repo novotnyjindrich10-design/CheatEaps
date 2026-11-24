@@ -60,6 +60,8 @@ function publicOrder(row) {
     vatNote: row.vatNote,
     placeId: row.placeId || '',
     businessName: row.businessName,
+    startsAt: row.startsAt || null,
+    endsAt: row.endsAt || null,
     paid: row.paymentStatus === 'paid',
     activated: row.status === 'active',
   }
@@ -644,14 +646,19 @@ export async function adminPromotionOrdersHttp(request, options = {}) {
   }
   const rows = listed.rows.map(adminOrder)
   const active = rows.filter((row) => row.activated && row.endsAt && Date.parse(row.endsAt) > (options.now ?? Date.now()))
+  const paidRows = rows.filter((row) => row.paymentStatus === 'paid')
+  const recordedRevenueCzk = paidRows.reduce((sum, row) => sum + (Number(row.amount) || 0), 0)
   return json({
     ok: true,
     orders: rows,
     stats: {
       inquiries: rows.length,
       activeSponsorships: active.length,
+      paidOrders: paidRows.length,
+      recordedRevenueCzk,
       impressionsMeasured: false,
-      note: 'Zobrazení a prokliky se neměří. Čísla jsou jen počty poptávek a aktivních umístění v evidenci.',
+      webhookErrorsStored: false,
+      note: 'Tržby jsou jen součet částek u objednávek se stavem platby paid v evidenci. Nejsou to peníze na účtu. Chyby webhooků se do databáze neukládají, dokud provozovatel neschválí auditní tabulku. Zobrazení a prokliky se neměří.',
     },
   })
 }

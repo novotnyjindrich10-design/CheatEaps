@@ -34,6 +34,80 @@ test.describe('final polish — mapa s mock dlaždicemi', () => {
     await expect(page.locator('.restaurant-list li').first()).toBeVisible()
   })
 
+  test('karta na mapě má detail, navigaci a panel podniků', async ({ page }) => {
+    await openAsGuest(page, { allowMapTiles: true })
+    await page.goto('/results?view=map&type=pizza')
+    await ready(page)
+    await expect(page.getByRole('button', { name: 'Moje poloha' })).toBeVisible()
+    const item = page.locator('.map-place-sheet-item').first()
+    await expect(item).toBeVisible()
+    await item.click()
+    await expect(page.getByRole('link', { name: 'Zobrazit detail' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Navigovat' })).toHaveAttribute('href', /openstreetmap\.org/)
+    await page.getByRole('link', { name: 'Zobrazit detail' }).click()
+    await expect(page).toHaveURL(/\/restaurant\//)
+  })
+
+  test('povolená poloha ukáže vzdálenost a mapa zůstane použitelná', async ({ page }) => {
+    await page.addInitScript(() => {
+      const position = {
+        coords: { latitude: 49.1951, longitude: 16.6068, accuracy: 20 },
+        timestamp: Date.now(),
+      }
+      navigator.geolocation.getCurrentPosition = (success) => success(position)
+      if (navigator.permissions?.query) {
+        navigator.permissions.query = async () => ({
+          state: 'granted',
+          addEventListener() {},
+          removeEventListener() {},
+        })
+      }
+    })
+    await openAsGuest(page, { allowMapTiles: true })
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/results?view=map&type=pizza')
+    await ready(page)
+    await page.getByRole('button', { name: 'Moje poloha' }).click()
+    await expect(page.locator('.map-place-sheet-meta').first()).toContainText(/km|m/, { timeout: 10_000 })
+    await expect(page.locator('.restaurant-map-canvas')).toBeVisible()
+    const overflow = await noHorizontalOverflow(page)
+    expect(overflow.overflow).toBe(false)
+  })
+
+  test('stránka propagace nabízí poptávku, ne nákup', async ({ page }) => {
+    await openAsGuest(page)
+    await page.goto('/pro-podniky')
+    await ready(page)
+    await expect(page.getByRole('heading', { name: 'Propagujte svůj podnik' })).toBeVisible()
+    await expect(page.getByRole('table')).toContainText('99 Kč')
+    await expect(page.getByRole('button', { name: 'Nezávazná poptávka' }).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: /Zaplatit|Koupit/ })).toHaveCount(0)
+    await page.getByRole('link', { name: 'Správa podniku' }).click()
+    await expect(page).toHaveURL(/\/pro-podniky\/ucet/)
+    await expect(page.getByRole('heading', { name: 'Správa podniku' })).toBeVisible()
+  })
+
+  test('odmítnutá poloha mapu neshodí', async ({ page }) => {
+    await page.addInitScript(() => {
+      navigator.geolocation.getCurrentPosition = (_success, error) => {
+        error?.({ code: 1, PERMISSION_DENIED: 1, message: 'denied' })
+      }
+      if (navigator.permissions?.query) {
+        navigator.permissions.query = async () => ({
+          state: 'denied',
+          addEventListener() {},
+          removeEventListener() {},
+        })
+      }
+    })
+    await openAsGuest(page, { allowMapTiles: true })
+    await page.goto('/results?view=map&type=pizza')
+    await ready(page)
+    await page.getByRole('button', { name: 'Moje poloha' }).click()
+    await expect(page.locator('.restaurant-map-canvas')).toBeVisible()
+    await expect(page.locator('.restaurant-map-count')).toContainText(/bod/)
+  })
+
   test('nedostupné dlaždice neshodí mapový canvas', async ({ page }) => {
     await openAsGuest(page, { allowMapTiles: false })
     await page.goto('/results?view=map&type=pizza')

@@ -31,10 +31,10 @@ const PUBLIC_COPY = {
     ],
   },
   '/pro-podniky': {
-    heading: 'Rozjeď svůj podnik na FoodGo',
+    heading: 'Propagujte svůj podnik',
     paragraphs: [
       'Dostaň svou restauraci mezi lidi, kteří hledají, kde se dobře najíst.',
-      'Placená propagace podniku. Hledání restaurací zůstává zdarma. Online platba není zapojená, jde poslat nezávaznou poptávku.',
+      'Balíčky propagace Start, Plus a Premium. Online platba není zapojená, jde poslat nezávaznou poptávku.',
     ],
   },
   '/podpor-me': {

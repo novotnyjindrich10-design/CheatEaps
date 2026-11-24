@@ -79,7 +79,16 @@ export default function Results() {
     setSearchParams(params, { replace: true })
   }, [filters, rawType, searchParams, setSearchParams])
 
-  const { attachDistances, origin, routeStatus } = useLocationState()
+  const {
+    attachDistances,
+    origin,
+    routeStatus,
+    locate,
+    status: locationStatus,
+    errorMessage: locationError,
+    forgetOrigin,
+  } = useLocationState()
+  const [mapFocusToken, setMapFocusToken] = useState(0)
   const located = useMemo(() => attachDistances(restaurants), [attachDistances, restaurants])
   const matched = useMemo(
     () =>
@@ -381,7 +390,18 @@ export default function Results() {
 
             {viewMode === 'map' ? (
               <Suspense fallback={<p className="section-desc">Načítám mapu…</p>}>
-                <RestaurantMap restaurants={mapPlaces} userOrigin={origin} />
+                <RestaurantMap
+                  restaurants={mapPlaces}
+                  userOrigin={origin}
+                  locating={locationStatus === 'locating'}
+                  locationError={locationError}
+                  focusToken={mapFocusToken}
+                  onLocate={() => {
+                    setMapFocusToken((token) => token + 1)
+                    locate({ forceRefresh: Boolean(origin), highAccuracy: Boolean(origin) })
+                  }}
+                  onForget={forgetOrigin}
+                />
               </Suspense>
             ) : (
               <>

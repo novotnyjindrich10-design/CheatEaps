@@ -90,7 +90,8 @@ export default function Terms() {
               </li>
             )
           })}
-          <li>Obě délky jsou jednorázová platba. Služba se sama neobnovuje.</li>
+          <li>Obě délky jsou jednorázová platba. Služba se sama neobnovuje. Není co vypínat, dokud obnovení nebude později samostatně zapnuté a schválené.</li>
+          <li>Web negarantuje návštěvnost, počet prokliků ani tržby podniku. Placené umístění není hodnocení a nemění pořadí „Nejblíž ke mně“.</li>
           <li>Z webu teď nejde zaplatit kartou. Poptávka úhradu nestrhne. Fakturu a zapnutí reklamy řeší provozovatel po ověření platby.</li>
           <li>Reklama má začátek a konec. Po konci zvýraznění skončí samo. Podnik v běžném katalogu tím nemizí.</li>
           <li>Smlouva vznikne až potvrzením poptávky provozovatelem, ne odesláním formuláře.</li>

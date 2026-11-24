@@ -3895,9 +3895,128 @@ body:has(#root .app) #seo-snapshot {
   font-size: 0.92rem;
 }
 
+.restaurant-map-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
 .restaurant-map-fit {
   justify-self: start;
-  margin-top: 4px;
+}
+
+.map-place-card {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 6px);
+  background: var(--surface);
+  animation: map-card-in 180ms ease;
+}
+
+.map-place-photo {
+  width: 112px;
+  height: 112px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: var(--surface-soft);
+}
+
+.map-place-copy {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-width: 0;
+}
+
+.map-place-title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.map-place-sponsored,
+.map-place-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.map-place-sponsored {
+  font-weight: 750;
+  color: #8a4b12;
+}
+
+.map-place-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.map-place-sheet {
+  display: grid;
+  gap: 8px;
+  max-height: 42dvh;
+  overflow: auto;
+  padding: 4px 2px calc(8px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
+.map-place-sheet-title {
+  margin: 0;
+  font-weight: 750;
+}
+
+.map-place-sheet-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.map-place-sheet-item {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.map-place-sheet-item.is-active {
+  border-color: var(--theme-accent, var(--accent));
+}
+
+.map-place-sheet-meta {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+@keyframes map-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-place-card {
+    animation: none;
+  }
 }
 
 .restaurant-map-canvas {
@@ -3928,8 +4047,59 @@ body:has(#root .app) #seo-snapshot {
   box-shadow: 0 2px 8px rgba(20, 16, 12, 0.35);
 }
 
+.fg-map-marker.is-selected .fg-map-marker-pin {
+  width: 26px;
+  height: 26px;
+  border-width: 3px;
+  box-shadow: 0 0 0 3px rgba(29, 107, 79, 0.35), 0 3px 10px rgba(20, 16, 12, 0.4);
+}
+
 .fg-map-marker--sponsored .fg-map-marker-pin {
   background: #8a4b12;
+}
+
+.fg-map-marker--pizza .fg-map-marker-pin {
+  background: #c0392b;
+}
+
+.fg-map-marker--burger .fg-map-marker-pin {
+  background: #a0522d;
+}
+
+.fg-map-marker--asia .fg-map-marker-pin {
+  background: #c45c26;
+}
+
+.fg-map-marker--czech .fg-map-marker-pin {
+  background: #6b4f2a;
+}
+
+.fg-map-marker--green .fg-map-marker-pin {
+  background: #2f7d4a;
+}
+
+.fg-map-marker--kebab .fg-map-marker-pin {
+  background: #b45309;
+}
+
+.fg-map-marker--mex .fg-map-marker-pin {
+  background: #b91c1c;
+}
+
+.fg-map-marker--coffee .fg-map-marker-pin {
+  background: #5c4033;
+}
+
+.fg-map-marker--fast .fg-map-marker-pin {
+  background: #d97706;
+}
+
+.fg-map-marker--sweet .fg-map-marker-pin {
+  background: #db2777;
+}
+
+.fg-map-marker--default .fg-map-marker-pin {
+  background: #c45c26;
 }
 
 .map-popup {
@@ -4037,9 +4207,23 @@ body:has(#root .app) #seo-snapshot {
 
 @media (max-width: 640px) {
   .restaurant-map-canvas {
-    height: 56vh;
+    height: min(62dvh, 560px);
     min-height: 280px;
     border-radius: 16px;
+  }
+
+  .map-place-card {
+    grid-template-columns: 1fr;
+  }
+
+  .map-place-photo {
+    width: 100%;
+    height: 160px;
+  }
+
+  .restaurant-map-actions .btn,
+  .map-place-actions .btn {
+    min-height: 44px;
   }
 
   .results-view-btn {

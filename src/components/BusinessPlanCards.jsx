@@ -42,7 +42,7 @@ export default function BusinessPlanCards({ onStart }) {
               ))}
             </ul>
             <button type="button" className="btn btn-primary biz-plan-cta" onClick={() => onStart?.(plan.id)}>
-              Poptat balíček
+              Nezávazná poptávka
             </button>
           </article>
         )

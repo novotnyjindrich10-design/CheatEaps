@@ -107,6 +107,8 @@ describe('poptávky propagace', () => {
     assert.equal(listed.status, 200)
     assert.equal(adminBody.orders.length, 1)
     assert.equal(adminBody.stats.impressionsMeasured, false)
+    assert.equal(adminBody.stats.recordedRevenueCzk, 0)
+    assert.equal(adminBody.stats.webhookErrorsStored, false)
     assert.equal(Object.hasOwn(adminBody.orders[0], 'accessHash'), false)
   })
 
@@ -228,12 +230,12 @@ describe('platební stavy', () => {
         headers: { 'x-cheapeats-signature': signature, 'content-type': 'application/json' },
         body: raw,
       }),
-      { env, store },
+      { env, store, now },
     )
     const firstBody = await first.json()
     assert.equal(first.status, 200)
     assert.equal(firstBody.paid, true)
-    assert.equal(firstBody.activated, false)
+    assert.equal(firstBody.activated, true)
     assert.equal(firstBody.duplicate, false)
 
     const second = await paymentWebhookHttp(
@@ -242,14 +244,15 @@ describe('platební stavy', () => {
         headers: { 'x-cheapeats-signature': signature, 'content-type': 'application/json' },
         body: raw,
       }),
-      { env, store },
+      { env, store, now },
     )
     assert.equal((await second.json()).duplicate, true)
 
     const listed = await store.list()
     assert.equal(listed.rows[0].paymentStatus, 'paid')
-    assert.equal(listed.rows[0].status, 'inquiry')
+    assert.equal(listed.rows[0].status, 'active')
     assert.equal(listed.rows[0].renewal, 'none')
+    assert.ok(listed.rows[0].endsAt)
   })
 
   it('bez tajemství webhook nic nezmění', async () => {

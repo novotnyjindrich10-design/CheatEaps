@@ -838,6 +838,32 @@
   }
 }
 
+.biz-compare-wrap {
+  overflow-x: auto;
+  margin: 0 0 18px;
+}
+
+.biz-compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.biz-compare th,
+.biz-compare td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.biz-compare caption {
+  caption-side: bottom;
+  padding-top: 8px;
+  color: var(--muted);
+  text-align: left;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .biz-page {
     animation: none;

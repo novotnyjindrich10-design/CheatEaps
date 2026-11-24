@@ -19,6 +19,7 @@ import { CONTACT_EMAIL } from './constants/brand'
 
 const Support = lazy(() => import('./pages/ForBusiness'))
 const ForBusinesses = lazy(() => import('./pages/ForBusinesses'))
+const BusinessAccount = lazy(() => import('./pages/BusinessAccount'))
 const AdminApplications = lazy(() => import('./pages/AdminApplications'))
 const AdminPromotions = lazy(() => import('./pages/AdminPromotions'))
 const AuthPage = lazy(() => import('./pages/AuthPage'))
@@ -86,6 +87,7 @@ function App() {
             <Route path="/nove-heslo" element={<NewPassword />} />
             <Route path="/podpor-me" element={<Support />} />
             <Route path="/pro-podniky" element={<ForBusinesses />} />
+            <Route path="/pro-podniky/ucet" element={<BusinessAccount />} />
             <Route path="/ochrana-osobnich-udaju" element={<Privacy />} />
             <Route path="/obchodni-podminky" element={<Terms />} />
             <Route path="/admin/zadosti" element={<AdminApplications />} />

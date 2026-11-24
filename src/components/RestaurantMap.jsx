@@ -10,6 +10,7 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import { SPONSORED_LABEL } from '../constants/monetization'
+import { hasFiniteLatLon } from '../utils/geo'
 import {
   boundsFromPlaces,
   BRNO_MAP_CENTER,
@@ -20,7 +21,6 @@ import {
 } from '../utils/mapPlaces'
 import { resolveMapTileConfig } from '../utils/mapTiles'
 import { ensureMaplibreWorker } from '../utils/maplibreWorker'
-import { hasFiniteLatLon } from '../utils/geo'
 
 function assetUrl(value) {
   if (typeof value === 'string' && value) return value
@@ -46,43 +46,33 @@ L.Icon.Default.mergeOptions({
   shadowUrl: placeIcon.options.shadowUrl,
 })
 
-function escapeHtml(value) {
-  return String(value || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-}
-
-function popupHtml(place) {
-  const badge = place.sponsored
-    ? `<p class="map-popup-sponsored">${escapeHtml(SPONSORED_LABEL)}</p>`
-    : ''
-  const address = place.address ? `<p class="map-popup-address">${escapeHtml(place.address)}</p>` : ''
-  const price =
-    place.priceLabel
-      ? `<p class="map-popup-price">${escapeHtml(place.priceLabel)}${
-          place.priceStatus ? ` · ${escapeHtml(place.priceStatus)}` : ''
-        }</p>`
-      : ''
-  return `
-    <div class="map-popup">
-      ${badge}
-      <strong class="map-popup-title">${escapeHtml(place.name)}</strong>
-      ${address}
-      ${price}
-      <a class="map-popup-link" href="/restaurant/${encodeURIComponent(place.id)}">Otevřít detail</a>
-    </div>
-  `
-}
-
-const sponsoredIcon = L.divIcon({
-  className: 'fg-map-marker fg-map-marker--sponsored',
-  html: `<span class="fg-map-marker-pin" aria-hidden="true"></span>`,
-  iconSize: [28, 36],
-  iconAnchor: [14, 34],
-  popupAnchor: [0, -28],
+const MARKER_TONES = Object.freeze({
+  pizza: 'pizza',
+  burger: 'burger',
+  asijske: 'asia',
+  ceske: 'czech',
+  vegetarianske: 'green',
+  veganske: 'green',
+  kebab: 'kebab',
+  cina: 'asia',
+  mexiko: 'mex',
+  kava: 'coffee',
+  fastfood: 'fast',
+  sladke: 'sweet',
+  zdrave: 'green',
 })
+
+function markerIconFor(place, selected) {
+  const tone = place.sponsored ? 'sponsored' : MARKER_TONES[place.category] || 'default'
+  const selectedClass = selected ? ' is-selected' : ''
+  return L.divIcon({
+    className: `fg-map-marker fg-map-marker--${tone}${selectedClass}`,
+    html: `<span class="fg-map-marker-pin" aria-hidden="true"></span>`,
+    iconSize: selected ? [32, 40] : [28, 36],
+    iconAnchor: selected ? [16, 38] : [14, 34],
+    popupAnchor: [0, -28],
+  })
+}
 
 async function addBasemap(map, tiles) {
   if (tiles.mode === 'vector-style') {
@@ -129,7 +119,63 @@ async function addBasemap(map, tiles) {
   }).addTo(map)
 }
 
-export default function RestaurantMap({ restaurants = [], selectedId = '', onSelect, userOrigin = null }) {
+function orderedPlaces(places) {
+  const ranked = places.map((place, index) => ({ place, index }))
+  const hasDistance = ranked.some((item) => typeof item.place.distanceKm === 'number')
+  if (!hasDistance) return places
+  ranked.sort((a, b) => {
+    const left = typeof a.place.distanceKm === 'number' ? a.place.distanceKm : Number.POSITIVE_INFINITY
+    const right = typeof b.place.distanceKm === 'number' ? b.place.distanceKm : Number.POSITIVE_INFINITY
+    if (left !== right) return left - right
+    return a.index - b.index
+  })
+  return ranked.map((item) => item.place)
+}
+
+function PlaceCard({ place }) {
+  if (!place) return null
+  return (
+    <article className="map-place-card" aria-live="polite">
+      {place.photoUrl ? (
+        <img className="map-place-photo" src={place.photoUrl} alt={place.photoAlt || ''} loading="lazy" decoding="async" />
+      ) : null}
+      <div className="map-place-copy">
+        {place.sponsored ? <p className="map-place-sponsored">{SPONSORED_LABEL}</p> : null}
+        <h2 className="map-place-title">{place.name}</h2>
+        {place.cuisineLabel ? <p className="map-place-meta">{place.cuisineLabel}</p> : null}
+        {place.address ? <p className="map-place-meta">{place.address}</p> : null}
+        {place.priceLabel ? (
+          <p className="map-place-meta">
+            {place.priceLabel}
+            {place.priceStatus ? ` · ${place.priceStatus}` : ''}
+          </p>
+        ) : null}
+        {place.ratingLabel ? <p className="map-place-meta">{place.ratingLabel}</p> : null}
+        {place.distanceLabel ? <p className="map-place-meta">{place.distanceLabel}</p> : null}
+        <div className="map-place-actions">
+          <Link className="btn btn-primary" to={place.detailPath}>
+            Zobrazit detail
+          </Link>
+          <a className="btn btn-secondary" href={place.navigateUrl} target="_blank" rel="noreferrer">
+            Navigovat
+          </a>
+        </div>
+      </div>
+    </article>
+  )
+}
+
+export default function RestaurantMap({
+  restaurants = [],
+  selectedId = '',
+  onSelect,
+  userOrigin = null,
+  onLocate,
+  locating = false,
+  locationError = '',
+  onForget,
+  focusToken = 0,
+}) {
   const mapId = useId().replace(/:/g, '')
   const containerRef = useRef(null)
   const mapRef = useRef(null)
@@ -137,10 +183,31 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
   const markersRef = useRef(new Map())
   const userLayerRef = useRef(null)
   const fittedFingerprintRef = useRef('')
+  const flownFocusRef = useRef(0)
+  const onSelectRef = useRef(onSelect)
+  const pickRef = useRef(() => {})
   const [ready, setReady] = useState(false)
   const [basemapError, setBasemapError] = useState('')
+  const [pickedId, setPickedId] = useState(selectedId || '')
+  const [trackedSelected, setTrackedSelected] = useState(selectedId || '')
+  const [panToken, setPanToken] = useState(0)
+  if (selectedId !== trackedSelected) {
+    setTrackedSelected(selectedId || '')
+    setPickedId(selectedId || '')
+  }
   const places = useMemo(() => placesForMap(restaurants), [restaurants])
   const fingerprint = useMemo(() => placesFingerprint(places), [places])
+  const ordered = useMemo(() => orderedPlaces(places), [places])
+  const visibleId = places.some((place) => place.id === pickedId) ? pickedId : ''
+  const picked = places.find((place) => place.id === visibleId) || null
+  const sheetPlaces = useMemo(() => {
+    const head = ordered.slice(0, 30)
+    if (picked && !head.some((place) => place.id === picked.id)) return [picked, ...head]
+    return head
+  }, [ordered, picked])
+  const hasOrigin = hasFiniteLatLon(userOrigin?.lat, userOrigin?.lon)
+
+  const pickPlace = (id) => pickRef.current(id)
 
   const fitAllPlaces = () => {
     const map = mapRef.current
@@ -220,6 +287,15 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
   }, [])
 
   useEffect(() => {
+    onSelectRef.current = onSelect
+    pickRef.current = (id) => {
+      setPickedId(id)
+      setPanToken((token) => token + 1)
+      onSelectRef.current?.(id)
+    }
+  }, [onSelect])
+
+  useEffect(() => {
     const map = mapRef.current
     const cluster = clusterRef.current
     if (!map || !cluster || !ready) return
@@ -231,11 +307,11 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
       const marker = L.marker([place.lat, place.lon], {
         title: place.name,
         riseOnHover: true,
-        icon: place.sponsored ? sponsoredIcon : placeIcon,
+        zIndexOffset: place.sponsored ? 200 : 0,
+        icon: markerIconFor(place, false),
       })
-      marker.bindPopup(popupHtml(place), { maxWidth: 260 })
       marker.on('click', () => {
-        onSelect?.(place.id)
+        pickRef.current(place.id)
       })
       cluster.addLayer(marker)
       markersRef.current.set(place.id, marker)
@@ -252,16 +328,33 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
       fittedFingerprintRef.current = fingerprint
     }
     requestAnimationFrame(() => map.invalidateSize())
-  }, [places, fingerprint, ready, onSelect])
+  }, [places, fingerprint, ready])
 
   useEffect(() => {
-    if (!selectedId || !ready) return
-    const marker = markersRef.current.get(selectedId)
+    if (!ready) return
+    for (const place of places) {
+      const marker = markersRef.current.get(place.id)
+      if (!marker) continue
+      const selected = place.id === visibleId
+      marker.setIcon(markerIconFor(place, selected))
+      marker.setZIndexOffset(selected ? 800 : place.sponsored ? 200 : 0)
+    }
+  }, [places, ready, visibleId])
+
+  useEffect(() => {
+    if (!panToken || !visibleId || !ready) return
+    const marker = markersRef.current.get(visibleId)
     if (!marker || !mapRef.current) return
     const latLng = marker.getLatLng()
     mapRef.current.setView(latLng, Math.max(mapRef.current.getZoom(), 15), { animate: true })
-    marker.openPopup()
-  }, [selectedId, ready])
+  }, [panToken, visibleId, ready])
+
+  useEffect(() => {
+    if (!ready || !focusToken || flownFocusRef.current === focusToken) return
+    if (!hasFiniteLatLon(userOrigin?.lat, userOrigin?.lon) || !mapRef.current) return
+    flownFocusRef.current = focusToken
+    mapRef.current.setView([userOrigin.lat, userOrigin.lon], 15, { animate: true })
+  }, [focusToken, ready, userOrigin])
 
   useEffect(() => {
     const map = mapRef.current
@@ -311,12 +404,33 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
         </p>
         <p className="restaurant-map-hint">
           Klikni na bod pro kartu. Filtry a hledání řídí stejný seznam jako výpis. Podklad OpenFreeMap — bez API
-          klíče.
+          klíče. Poloha zůstává v prohlížeči.
         </p>
-        {places.length > 0 ? (
-          <button type="button" className="btn btn-secondary restaurant-map-fit" onClick={fitAllPlaces}>
-            Zobrazit všechny body
+        <div className="restaurant-map-actions">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => onLocate?.()}
+            disabled={locating || !onLocate}
+            aria-busy={locating}
+          >
+            {locating ? 'Zjišťuji polohu…' : 'Moje poloha'}
           </button>
+          {places.length > 0 ? (
+            <button type="button" className="btn btn-secondary restaurant-map-fit" onClick={fitAllPlaces}>
+              Zobrazit všechny body
+            </button>
+          ) : null}
+          {hasOrigin && onForget ? (
+            <button type="button" className="btn btn-secondary" onClick={onForget}>
+              Zapomenout polohu
+            </button>
+          ) : null}
+        </div>
+        {locationError ? (
+          <p className="restaurant-map-hint" role="status">
+            {locationError} Mapa Brna funguje dál.
+          </p>
         ) : null}
         {basemapError ? (
           <p className="restaurant-map-hint" role="status">
@@ -331,12 +445,36 @@ export default function RestaurantMap({ restaurants = [], selectedId = '', onSel
         role="application"
         aria-label="Interaktivní mapa Brna"
       />
+      {picked ? <PlaceCard place={picked} /> : null}
       {places.length === 0 ? (
         <p className="restaurant-map-empty" role="status">
           Zkus uvolnit filtry, nebo přepni zpět na seznam.{' '}
           <Link to="/results">Otevřít výsledky</Link>
         </p>
-      ) : null}
+      ) : (
+        <div className="map-place-sheet">
+          <p className="map-place-sheet-title">{hasOrigin ? 'Nejbližší podniky' : 'Podniky v aktuálním filtru'}</p>
+          <ul className="map-place-sheet-list">
+            {sheetPlaces.map((place) => (
+              <li key={place.id}>
+                <button
+                  type="button"
+                  className={`map-place-sheet-item${place.id === visibleId ? ' is-active' : ''}`}
+                  aria-current={place.id === visibleId ? 'true' : undefined}
+                  onClick={() => pickPlace(place.id)}
+                >
+                  <span>{place.name}</span>
+                  <span className="map-place-sheet-meta">
+                    {[place.sponsored ? SPONSORED_LABEL : '', place.cuisineLabel, place.distanceLabel]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </section>
   )
 }

@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs'
 import { describe, it } from 'node:test'
 
 const sql = readFileSync(new URL('../../supabase/promotion-orders.sql', import.meta.url), 'utf8')
+const ownersSql = readFileSync(new URL('../../supabase/promotion-owners.sql', import.meta.url), 'utf8')
 const bootstrap = readFileSync(new URL('../../supabase/bootstrap-all.sql', import.meta.url), 'utf8')
 
 function stripSqlCommentsAndStrings(source) {
@@ -93,5 +94,16 @@ describe('SQL poptávek propagace', () => {
       sql,
       /grant execute on function public\.record_verified_payment\(text, text, text, text\) to anon/,
     )
+  })
+
+  it('připraví vlastníky a audit bez spuštění a bez mazání objednávek', () => {
+    assert.match(ownersSql, /NESPUSŤ bez výslovného schválení/)
+    assert.match(ownersSql, /place_owner_claims/)
+    assert.match(ownersSql, /promotion_audit_log/)
+    assert.match(ownersSql, /status = 'pending'/)
+    assert.match(ownersSql, /enable row level security/)
+    assert.doesNotMatch(bootstrap, /place_owner_claims/)
+    assert.doesNotMatch(stripSqlCommentsAndStrings(ownersSql), /\bdrop\s+table\b/i)
+    assert.doesNotMatch(ownersSql, /grant update on public\.place_owner_claims to authenticated/)
   })
 })

@@ -149,7 +149,9 @@ export default function AdminPromotions() {
       </p>
       {stats ? (
         <p className="section-desc">
-          Poptávek v evidenci: {stats.inquiries}. Aktivních umístění: {stats.activeSponsorships}. {stats.note}
+          Poptávek v evidenci: {stats.inquiries}. Aktivních umístění: {stats.activeSponsorships}.
+          {' '}
+          Evidovaná částka u stavu paid: {formatKc(stats.recordedRevenueCzk || 0)}. {stats.note}
         </p>
       ) : null}
       <label className="admin-note">

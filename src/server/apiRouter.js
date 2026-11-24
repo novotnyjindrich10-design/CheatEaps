@@ -7,7 +7,13 @@ import { businessHttp } from './businessApplications.js'
 import { communityHttp } from './community.js'
 import { loyaltyHttp } from './loyalty.js'
 import { authActionHttp, dealDetailHttp } from './memberHttp.js'
-import { paymentReturnHttp, paymentStatusHttp, paymentWebhookHttp } from './payments.js'
+import {
+  paymentCreateHttp,
+  paymentReturnHttp,
+  paymentStatusHttp,
+  paymentTestConfirmHttp,
+  paymentWebhookHttp,
+} from './payments.js'
 import { promotionRequestHttp } from './promotionRequest.js'
 import {
   adminPromotionOrdersHttp,
@@ -103,6 +109,8 @@ export async function apiRouter(incoming) {
     if (pathname === '/api/admin/promotion-orders') return await adminPromotionOrdersHttp(request)
     if (pathname === '/api/admin/promotion-orders/review') return await adminPromotionReviewHttp(request)
     if (pathname === '/api/payments/webhook') return await paymentWebhookHttp(request)
+    if (pathname === '/api/payments/test-confirm') return await paymentTestConfirmHttp(request)
+    if (pathname === '/api/payments/create') return await paymentCreateHttp(request)
     if (pathname === '/api/payments/return') return await paymentReturnHttp(request)
     if (pathname === '/api/payments/status') return await paymentStatusHttp(request)
 

@@ -1,65 +1,67 @@
 # FoodGo — Business & Payments
 
-Datum: 2026-11-14  
-Stav: **pouze testovací / vypnutá architektura**
+Datum: 2026-11-24  
+Větev: `foodgo-launch-preview`  
+Stav: **Comgate integrace v kódu; ostrý outbound vypnutý; sandbox outbound jen po env**
 
-## 1. Možné zdroje příjmů (realisticky)
+## 1. Zdroje příjmů
 
-| Produkt | Popis | Stav v kódu |
-| --- | --- | --- |
-| Sponzorovaná karta ve výsledcích | Oddělený blok „Sponzorováno“ | Model ready, UI vypnuté |
-| Rozšířený / ověřený profil | Oficiální web, foto s právy | Částečně (katalogová data) |
-| Sponzorovaný pin na mapě | Odlišný marker | Vizualizace připravena |
-| Neplacený zápis | Lead pro katalog | Zapnuto (`freeBusinessApplication`) |
-| Dobrovolná podpora | `/podpor-me` | Bez `paymentUrl` |
+| Produkt | Stav |
+| --- | --- |
+| Sponzorovaná karta / pin | Model ready; veřejný nákup UI = poptávka |
+| Neplacený zápis | Zapnuto |
+| Online Comgate Checkout | Kód hotový; vyžaduje merchant + secret + outbound flag |
 
-Organické výsledky zůstávají oddělené — klientský příznak `sponsored` se zahazuje.
+## 2. Tarify
 
-## 2. Připravené produkty / tarify
+- `constants/promotionPrice.js`: START 99 / PLUS 199 / PREMIUM 399 Kč za 30 dní
+- Roční = 10× měsíční (365 dní), jednorázově, bez auto-renewal
+- Cenu určuje jen server (`quoteTrustedPrice` / objednávková vrstva)
 
-- Ceník v `constants/promotionPrice.js` + plány v `businessPlans.js`
-- `presentPrice()` respektuje DPH režim provozovatele; bez potvrzeného VAT **neoznačuje** cenu za konečnou
-- Objednávky / admin workflow v `server/promotionOrders.js` (aktivace až po ověřené úhradě adminem/webhookem)
+## 3. Platební brána: Comgate
 
-## 3. Platební integrace — audit
-
-Soubor: `src/server/payments.js`
+Jedna brána (CZK, karty + bankovní metody). Stripe/GoPay se nezavádí paralelně.
 
 | Položka | Stav |
 | --- | --- |
-| `paymentConfig().enabled` | **vždy `false`** (`gateway-not-connected`) |
-| Návrat z brány | `paid: false` — success URL **neaktivuje** reklamu |
-| Webhook | HMAC SHA-256 + idempotence připravené |
-| Ostrý outbound | `buildGatewayPayment` → `gateway-not-wired` |
-| Stripe / GoPay / Comgate účet | **Nevytvořen agentem** |
+| `paymentConfig().enabled` | `true` jen při `PAYMENT_PROVIDER=comgate` + merchant + secret + webhook secret **a** (`PAYMENTS_SANDBOX_OUTBOUND=true` **nebo** `PAYMENTS_LIVE=true`) |
+| `POST /api/payments/create` | Založí Comgate relaci a vrátí `redirect` (s mock/fetch testy) |
+| Návrat z brány | `paid: false` — **neaktivuje** |
+| Webhook | HMAC SHA-256, kontrola částky/měny, idempotence, **auto-aktivace** propagace |
+| `POST /api/payments/test-confirm` | Simulace jen mimo production + `PAYMENTS_TEST_MODE` + secret ≥16 |
+| Ostrá sandbox transakce u Comgate | **Neproběhla** — chybí merchant účet provozovatele |
 
-### Volba poskytovatele (neověřené tržní údaje — ověřit před smlouvou)
+### Env (Vercel Preview / Production — nikdy do gitu)
 
-Pro ČR typicky stačí **jeden** poskytovatel s kartami + bankovními metodami (Comgate nebo GoPay). Stripe je silný mezinárodně; Apple/Google Pay závisí na aktivaci u zvolené brány.  
-**Nezavádět tři brány najednou.**
+```
+PAYMENT_PROVIDER=comgate
+PAYMENT_MERCHANT_ID=...
+PAYMENT_SECRET=...
+PAYMENT_WEBHOOK_SECRET=...
+PAYMENTS_SANDBOX_OUTBOUND=true   # teprve po sandbox účtu; LIVE nech false
+PAYMENTS_LIVE=false
+PAYMENTS_TEST_MODE=true          # jen Preview; nikdy na Production
+PAYMENT_TEST_SECRET=...          # ≥16 znaků
+```
 
-## 4. Bezpečný režim (aktuální)
+Webhook URL: `https://<host>/api/payments/webhook`  
+Create: `POST /api/payments/create` s `{ reference, accessKey }` po poptávce.
 
-1. Ceny se musí ověřovat server-side (už v objednávkové vrstvě).
-2. Propagace se aktivuje až po ověřené platbě (admin `mark_paid` / budoucí webhook) — **ne** po return URL.
-3. `PUBLIC_V1.paidPromotionUi = false` — veřejnost nevidí placené balíčky jako ready.
-4. Stránka Pro podniky vysvětluje, že online platba není zapojená.
+Ověření: status endpoint `GET /api/payments/status` → `enabled: true` + `reason: sandbox|live`.
 
-## 5. Chybějící podmínky pro ostrý provoz
+## 4. Bezpečný režim (aktuálně bez klíčů)
 
-1. Identita provozovatele (živnost / IČO) — případně zákonný zástupce, pokud je majitel nezletilý
-2. Smlouva s platební branou + KYC
-3. Ověřená fakturační a daňová pravidla
-4. Resend / e-mailová doména pro potvrzení objednávek
-5. Právní texty schválené člověkem
-6. Explicitní souhlas majitele projektu se založením platebního účtu
+1. Veřejnost vidí **Nezávazná poptávka**, ne „Zaplatit“.
+2. Return URL neaktivuje reklamu.
+3. Testovací platby neběží na Production (`VERCEL_ENV=production` blokuje test-confirm).
+4. Admin dashboard eviduje objednávky; test revenue oddělené od live přes `paymentSource` / test flag.
 
-## 6. Další kroky (až bude souhlas)
+## 5. Blokátory ostrých plateb
 
-1. Doplnit OPERATOR + DPH
-2. Zapnout `paidPromotionUi` jen na Preview
-3. Sandbox Comgate/GoPay (bez `PAYMENTS_LIVE`)
-4. E2E: neplatný webhook odmítnut; return URL neaktivuje
-5. Teprve po manuálním sign-off: live klíče mimo git
+1. Identita provozovatele (OPERATOR / IČO)
+2. Comgate smlouva + KYC + sandbox merchant
+3. Env klíče výše + webhook v Comgate portálu
+4. Schválené obchodní podmínky / fakturace
+5. Explicitní souhlas s `PAYMENTS_LIVE=true` (až po sandbox E2E)
 
-**Verdikt: FoodGo NENÍ připravené přijímat skutečné platby. Pouze testovací / vypnutý režim.**
+**Verdikt: kód brány je připravený. Skutečná sandbox transakce u Comgate ještě neproběhla → online platby se nesmí prezentovat jako funkční nákup.**
