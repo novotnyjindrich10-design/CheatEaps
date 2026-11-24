@@ -5,9 +5,8 @@
  * Spuštění: node scripts/test-promotion-migration-isolated.mjs
  */
 import { spawnSync } from 'node:child_process'
-import { readFileSync, writeFileSync, unlinkSync, mkdtempSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 const ROOT = resolve(process.cwd())
 const NAME = 'foodgo-promo-pg-test'
