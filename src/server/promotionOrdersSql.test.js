@@ -8,6 +8,10 @@ import { describe, it } from 'node:test'
 
 const sql = readFileSync(new URL('../../supabase/promotion-orders.sql', import.meta.url), 'utf8')
 const ownersSql = readFileSync(new URL('../../supabase/promotion-owners.sql', import.meta.url), 'utf8')
+const applyMissing = readFileSync(
+  new URL('../../supabase/promotion-apply-missing.sql', import.meta.url),
+  'utf8',
+)
 const bootstrap = readFileSync(new URL('../../supabase/bootstrap-all.sql', import.meta.url), 'utf8')
 
 function stripSqlCommentsAndStrings(source) {
@@ -111,5 +115,28 @@ describe('SQL poptávek propagace', () => {
     assert.doesNotMatch(stripSqlCommentsAndStrings(ownersSql), /\bdrop\s+table\b/i)
     assert.doesNotMatch(ownersSql, /grant update on public\.place_owner_claims to authenticated/)
     assert.doesNotMatch(ownersSql, /grant insert on public\.promotion_audit_log to authenticated/)
+  })
+
+  it('promotion-apply-missing.sql doplní jen RPC/owners bez destrukce dat', () => {
+    assert.match(applyMissing, /NESPUSŤ bez výslovného schválení/)
+    assert.match(applyMissing, /submit_promotion_inquiry/)
+    assert.match(applyMissing, /read_promotion_inquiry/)
+    assert.match(applyMissing, /record_verified_payment/)
+    assert.match(applyMissing, /place_owner_claims/)
+    assert.match(applyMissing, /promotion_audit_log/)
+    assert.match(applyMissing, /security definer/)
+    assert.match(applyMissing, /set search_path = public, extensions, pg_temp/)
+    assert.match(applyMissing, /activation-requires-admin/)
+    assert.match(applyMissing, /payment-requires-admin-or-webhook/)
+    assert.match(applyMissing, /grant execute on function public\.record_verified_payment\(text, text, text, text\) to service_role/)
+    assert.doesNotMatch(applyMissing, /grant execute on function public\.record_verified_payment\(text, text, text, text\) to anon/)
+    assert.doesNotMatch(applyMissing, /set status = 'active'/)
+    const strippedApply = stripSqlCommentsAndStrings(applyMissing)
+    assert.doesNotMatch(strippedApply, /\bdrop\s+table\b/i)
+    assert.doesNotMatch(strippedApply, /\btruncate\b/i)
+    assert.doesNotMatch(strippedApply, /\bdelete\s+from\b/i)
+    assert.doesNotMatch(strippedApply, /\balter\s+database\s+postgres\s+set\s+app\.payment_webhook_secret\b/i)
+    const dollars = applyMissing.match(/\$\$/g) || []
+    assert.equal(dollars.length % 2, 0)
   })
 })

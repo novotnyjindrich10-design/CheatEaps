@@ -85,26 +85,36 @@ https://*-jindrichcompany.vercel.app/nove-heslo
 
 ---
 
-## 5. SQL migrace (izolovaný test → produkce po schválení)
+## 5. SQL migrace (po schválení — jeden soubor)
 
-Kontrola: `node scripts/check-supabase-schema.mjs`  
-Offline kontrakt: `node scripts/sql-migration-dry-run.mjs` (nespouští DB)
+Kontrola před/po: `node scripts/check-supabase-schema.mjs`  
+Offline kontrakt: `node --test src/server/promotionOrdersSql.test.js`
 
-| Soubor | Stav na `pcptzyfoojmnspumcmsi` | Akce |
-| --- | --- | --- |
-| `supabase/bootstrap-all.sql` (základ) | **hotovo** — tabulky + `is_cheapeats_admin` | nic |
-| `supabase/promotion-orders.sql` | tabulky/view **ano**, RPC **ne** | po schválení **spustit celý soubor** (idempotentní `create table if not exists` + `create or replace function`) |
-| `supabase/promotion-owners.sql` | `place_owner_claims`, `promotion_audit_log` **MISSING** | po schválení spustit (až po funkčních RPC z orders) |
-| `alter database … app.payment_webhook_secret` | neověřeno (vyžaduje service/SQL) | až bude `PAYMENT_SECRET` — stejná hodnota |
-| `supabase/loyalty.sql` | chybí (volitelné V1) | neblokuje katalog |
-| `supabase/place-reports.sql` / `place-stats.sql` | chybí (volitelné) | neblokuje katalog |
+**Spusť po schválení (SQL Editor, celý soubor):**  
+`supabase/promotion-apply-missing.sql`
 
-**Pořadí po schválení:** 1) `promotion-orders.sql` → 2) `promotion-owners.sql` → 3) DB secret = `PAYMENT_SECRET` → 4) Vercel `SUPABASE_SERVICE_ROLE_KEY`.
+Doplní chybějící RPC (`submit_promotion_inquiry`, `read_promotion_inquiry`, `record_verified_payment`), trigger `guard_promotion_order`, RLS a tabulky `place_owner_claims` / `promotion_audit_log`. Existující tabulky `promotion_orders` nemaže. Žádné DELETE/TRUNCATE.
 
-**Rollback owners:** `drop table public.promotion_audit_log; drop table public.place_owner_claims;`
+| Stav na `pcptzyfoojmnspumcmsi` (před migrací) | |
+| --- | --- |
+| Základ + `is_cheapeats_admin` | hotovo |
+| Tabulky/view propagace | hotovo |
+| 3 RPC + guard | **chybí** → apply-missing |
+| Owners tabulky | **chybí** → apply-missing |
+| `app.payment_webhook_secret` | až bude Comgate `PAYMENT_SECRET` (samostatný SQL, ne v apply-missing) |
+| loyalty / place-reports / place-stats | volitelné, neblokuje poptávky |
 
-**Bezpečnost:** anon nesmí číst cizí objednávky; `record_verified_payment` jen `service_role`.  
-Izolovaná test DB / Docker v tomto běhu nebyly dostupné — migrace se **neaplikovaly** na produkci.
+**Záloha:** Dashboard → Database → Backups (nebo PITR) před Run.  
+**Rollback** (jen doplněk): viz komentář v hlavičce `promotion-apply-missing.sql`.
+
+**Po migraci ověř:**
+1. `node scripts/check-supabase-schema.mjs` → RPC PRESENT, owners EXISTS  
+2. Preview: odeslat poptávku Pro podniky → `stored: true` + `reference`  
+3. `GET /api/promotion-orders?reference=…&key=…` → stav `inquiry`  
+4. Admin (přihlášený admin): `GET /api/admin/promotion-orders` → seznam  
+5. Vercel Secret: `SUPABASE_SERVICE_ROLE_KEY` = `sb_secret_…` (Preview + Production) — webhook zatím bez Comgate secret nic nezapíše
+
+Produkční DB se bez tvého schválení **nespouští**. Docker/izolovaná DB v tomto běhu nebyla dostupná.
 
 ---
 
