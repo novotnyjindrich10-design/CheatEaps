@@ -22,15 +22,21 @@
 --        select * from public.promotion_orders;
 --        select * from public.promotion_payment_events;
 --
--- ROLLBACK (po této migraci, pokud je potřeba vrátit JEN doplněk):
+-- ROLLBACK — bezpečné (nesmaže uživatelská data v objednávkách):
 --   drop trigger if exists guard_promotion_order on public.promotion_orders;
 --   drop function if exists public.guard_promotion_order();
 --   drop function if exists public.submit_promotion_inquiry(jsonb, text, text);
 --   drop function if exists public.read_promotion_inquiry(text, text);
 --   drop function if exists public.record_verified_payment(text, text, text, text);
---   drop table if exists public.promotion_audit_log;
---   drop table if exists public.place_owner_claims;
---   -- promotion_orders / promotion_payment_events / view NEMĚŇ a NEDROPUJ
+--   -- promotion_orders / promotion_payment_events / view / řádky poptávek NEMĚŇ a NEDROPUJ
+--
+-- ROLLBACK owners tabulek (POZOR — smaže žádosti o vlastnictví a audit vzniklé PO migraci):
+--   Pouze pokud jsou tabulky prázdné, nebo po výslovném schválení ztráty těchto dat:
+--     select count(*) from public.place_owner_claims;
+--     select count(*) from public.promotion_audit_log;
+--     drop table if exists public.promotion_audit_log;
+--     drop table if exists public.place_owner_claims;
+--   Nikdy nedropuj public.promotion_orders kvůli rollbacku doplňku.
 --
 -- PO MIGRACI (mimo tento soubor, až bude Comgate secret):
 --   alter database postgres set app.payment_webhook_secret = '<PAYMENT_SECRET>';

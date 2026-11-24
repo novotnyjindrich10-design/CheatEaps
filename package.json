@@ -32,7 +32,8 @@
     "data:official-photos": "node scripts/scan-official-photos.mjs",
     "data:food-photo-pilot": "node scripts/pilot-food-photos.mjs",
     "data:pixabay-illustrations": "node scripts/fetch-pixabay-illustrations.mjs",
-    "launch:check": "node scripts/launch-check.mjs"
+    "launch:check": "node scripts/launch-check.mjs",
+    "test:promotion-sql": "node scripts/test-promotion-migration-isolated.mjs"
   },
   "dependencies": {
     "@maplibre/maplibre-gl-leaflet": "^0.1.4",

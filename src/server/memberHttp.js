@@ -68,15 +68,31 @@ export async function authActionHttp(action, request, deps = {}) {
   const secure = requestIsSecure(request)
 
   if (request.method === 'GET' && action === 'session') {
+    let supabaseHost = ''
+    try {
+      supabaseHost = config.url ? new URL(config.url).host : ''
+    } catch {
+      supabaseHost = ''
+    }
     if (!config.configured) {
-      return json({ ok: true, configured: false, authenticated: false })
+      return json({ ok: true, configured: false, authenticated: false, supabaseHost: '' })
     }
     const resolved = await resolveUser(request, config, fetchImpl)
     if (!resolved.user) {
-      return json({ ok: true, configured: true, authenticated: false }, 200, resolved.cookies)
+      return json(
+        { ok: true, configured: true, authenticated: false, supabaseHost },
+        200,
+        resolved.cookies,
+      )
     }
     return json(
-      { ok: true, configured: true, authenticated: true, email: resolved.user.email },
+      {
+        ok: true,
+        configured: true,
+        authenticated: true,
+        email: resolved.user.email,
+        supabaseHost,
+      },
       200,
       resolved.cookies,
     )
