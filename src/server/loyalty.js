@@ -3,6 +3,7 @@
  * Uživatel nemůže měnit body přes API — jen číst a uplatnit odměnu.
  */
 import { authConfig, resolveUser } from './supabaseAuth.js'
+import { supabaseApiHeaders } from './supabaseApiHeaders.js'
 
 export const REVIEW_REWARD_POINTS = 5
 
@@ -346,9 +347,7 @@ function restProblem(body, status) {
 
 async function rest(config, token, fetchImpl, path, { method = 'GET', body, prefer, headers: extra } = {}) {
   const headers = new Headers({
-    apikey: config.anonKey,
-    authorization: `Bearer ${token || config.anonKey}`,
-    accept: 'application/json',
+    ...supabaseApiHeaders({ apiKey: config.anonKey, accessToken: token || '' }),
     ...(extra || {}),
   })
   if (body !== undefined) headers.set('content-type', 'application/json')
@@ -366,10 +365,8 @@ async function rest(config, token, fetchImpl, path, { method = 'GET', body, pref
 
 async function rpc(config, token, fetchImpl, fn, args) {
   const headers = new Headers({
-    apikey: config.anonKey,
-    authorization: `Bearer ${token}`,
+    ...supabaseApiHeaders({ apiKey: config.anonKey, accessToken: token || '' }),
     'content-type': 'application/json',
-    accept: 'application/json',
   })
   const response = await fetchImpl(`${config.url}/rest/v1/rpc/${fn}`, {
     method: 'POST',

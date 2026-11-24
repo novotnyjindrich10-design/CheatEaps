@@ -8,6 +8,7 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { validatePlaceReport } from '../utils/placeReport.js'
 import { authConfig, resolveUser } from './supabaseAuth.js'
+import { supabaseApiHeaders } from './supabaseApiHeaders.js'
 
 const recentByIp = new Map()
 const sqlPath = resolve(fileURLToPath(new URL('.', import.meta.url)), '../../supabase/place-reports.sql')
@@ -48,10 +49,8 @@ async function callRpc(config, fetchImpl, name, args, accessToken = '') {
   const response = await fetchImpl(`${config.url}/rest/v1/rpc/${name}`, {
     method: 'POST',
     headers: {
-      apikey: config.anonKey,
-      Authorization: `Bearer ${accessToken || config.anonKey}`,
+      ...supabaseApiHeaders({ apiKey: config.anonKey, accessToken }),
       'content-type': 'application/json',
-      accept: 'application/json',
     },
     body: JSON.stringify(args),
   })
@@ -140,11 +139,7 @@ export function createSupabasePlaceReportStore({ config, accessToken = '', fetch
       const response = await fetchImpl(
         `${config.url}/rest/v1/place_reports?select=id,restaurant_id,reason,details,contact,status,created_at&order=created_at.desc&limit=200`,
         {
-          headers: {
-            apikey: config.anonKey,
-            Authorization: `Bearer ${accessToken || config.anonKey}`,
-            accept: 'application/json',
-          },
+          headers: supabaseApiHeaders({ apiKey: config.anonKey, accessToken }),
         },
       )
       const body = await response.json().catch(() => ({}))
@@ -175,11 +170,7 @@ async function profileIsAdmin(config, accessToken, fetchImpl, userId) {
   const response = await fetchImpl(
     `${config.url}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=is_admin`,
     {
-      headers: {
-        apikey: config.anonKey,
-        Authorization: `Bearer ${accessToken}`,
-        accept: 'application/json',
-      },
+      headers: supabaseApiHeaders({ apiKey: config.anonKey, accessToken }),
     },
   )
   if (!response.ok) return false

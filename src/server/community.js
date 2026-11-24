@@ -11,6 +11,7 @@ import {
   sortReviews,
 } from '../utils/communityText.js'
 import { authConfig, clientKey, resolveUser } from './supabaseAuth.js'
+import { supabaseApiHeaders } from './supabaseApiHeaders.js'
 import { isPublishedPlaceId } from './publishedPlaceIds.js'
 
 const restaurantIds = new Set()
@@ -256,9 +257,7 @@ function restProblem(body, status) {
 
 async function rest(config, token, fetchImpl, path, { method = 'GET', body, prefer } = {}) {
   const headers = new Headers({
-    apikey: config.anonKey,
-    authorization: `Bearer ${token || config.anonKey}`,
-    accept: 'application/json',
+    ...supabaseApiHeaders({ apiKey: config.anonKey, accessToken: token || '' }),
   })
   if (body !== undefined) headers.set('content-type', 'application/json')
   if (prefer) headers.set('prefer', prefer)

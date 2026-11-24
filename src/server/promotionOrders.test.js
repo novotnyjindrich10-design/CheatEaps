@@ -435,6 +435,32 @@ describe('platební stavy', () => {
     assert.equal(calls[0].auth, 'Bearer service-test')
     assert.equal(calls[0].apiKey, 'service-test')
     assert.notEqual(calls[0].auth, 'Bearer anon-test')
+
+    calls.length = 0
+    config.serviceRoleKey = 'sb_secret_payment_test'
+    const withNewSecret = createSupabasePromotionStore({
+      config,
+      fetchImpl: async (url, init) => {
+        calls.push({
+          url,
+          auth: init.headers.Authorization,
+          apiKey: init.headers.apikey,
+        })
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ ok: true, duplicate: false, activated: false }),
+        }
+      },
+    })
+    const paidNew = await withNewSecret.applyPayment({
+      eventId: 'e3',
+      reference: 'CE3',
+      status: 'paid',
+    })
+    assert.equal(paidNew.ok, true)
+    assert.equal(calls[0].apiKey, 'sb_secret_payment_test')
+    assert.equal(calls[0].auth, undefined)
   })
 })
 

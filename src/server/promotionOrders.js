@@ -6,6 +6,7 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto'
 import { assessPromotionRequest, sendPromotionInquiryMail } from './promotionRequest.js'
 import { authConfig, resolveUser } from './supabaseAuth.js'
+import { supabaseApiHeaders } from './supabaseApiHeaders.js'
 import { activeSponsorship } from '../constants/monetization.js'
 
 const OPEN = new Set(['inquiry', 'accepted', 'active'])
@@ -283,8 +284,7 @@ function rest(config, token, fetchImpl, path, { method = 'GET', body, apiKey } =
   return fetchImpl(`${config.url}/rest/v1/${path}`, {
     method,
     headers: {
-      apikey: key,
-      Authorization: `Bearer ${token || key}`,
+      ...supabaseApiHeaders({ apiKey: key, accessToken: token || '' }),
       'Content-Type': 'application/json',
       ...(method === 'POST' ? { Prefer: 'return=representation' } : {}),
     },

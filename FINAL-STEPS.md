@@ -37,9 +37,9 @@ Projekt `cheat-eaps` (team `jindrichcompany`). Aktuálně nastaveno: `SUPABASE_U
 | Proměnná | Kde získat | Preview | Production | Povinná katalog (zdarma) | Povinná platby | Ověření |
 | --- | --- | --- | --- | --- | --- | --- |
 | `SUPABASE_URL` | Supabase → Project Settings → API → Project URL | ano | ano | ano (účty/recenze) | ano (evidence) | `GET /api/auth/session` → `configured:true` |
-| `SUPABASE_ANON_KEY` | Supabase → API → `anon` `public` | ano | ano | ano (účty) | ano (inquiry RPC) | stejné + přihlášení |
+| `SUPABASE_ANON_KEY` | Settings → API Keys → **publishable** (`sb_publishable_…`); legacy JWT anon zatím nechej | ano | ano | ano (účty) | ano (inquiry RPC) | session + přihlášení; `node scripts/check-supabase-schema.mjs` hlásí `publishable` |
 | `PUBLIC_SITE_URL` | kanonický https origin webu | ano (`https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app`) | ano (`https://cheat-eaps.vercel.app` nebo vlastní doména) | doporučeno | doporučeno | sitemap / e-mailové odkazy |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → API → `service_role` (**secret**) | ano | ano | ne | ano (webhook → `record_verified_payment`) | jen server; nikdy `VITE_*`, nikdy do gitu/bundle |
+| `SUPABASE_SERVICE_ROLE_KEY` | Settings → API Keys → **secret** (`sb_secret_…`); legacy `service_role` zatím nechej | ano | ano | ne | ano (webhook → `record_verified_payment`) | jen server; nikdy `VITE_*`, nikdy do gitu/bundle |
 | `RESEND_API_KEY` | Resend → API Keys | ano | ano | ne (poptávka se uloží i bez e-mailu) | ne | `npm run check:resend` |
 | `EMAIL_FROM` | ověřená doména Resend (trial: `… <onboarding@resend.dev>`) | ano | ano | ne | ne | doručení poptávky |
 | `INQUIRY_TO_EMAIL` | schránka provozovatele | ano | ano | ne | ne | upozornění na poptávku |

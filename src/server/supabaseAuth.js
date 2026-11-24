@@ -39,8 +39,13 @@ export function readCookie(header, name) {
 
 export function authConfig(env = process.env) {
   const raw = String(env.SUPABASE_URL ?? '').trim()
-  const anonKey = String(env.SUPABASE_ANON_KEY ?? '').trim()
-  const serviceRoleKey = String(env.SUPABASE_SERVICE_ROLE_KEY ?? '').trim()
+  // Hodnota: legacy JWT anon NEBO nové sb_publishable_… (stejný env název).
+  // Alias SUPABASE_PUBLISHABLE_KEY jen pokud ANON_KEY chybí — tajný klíč sem nepatří.
+  const anonKey = String(env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY || '').trim()
+  // Hodnota: legacy service_role NEBO nové sb_secret_… Jen server, nikdy VITE_*.
+  const serviceRoleKey = String(
+    env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SECRET_KEY || '',
+  ).trim()
   let parsed = null
   try {
     parsed = raw ? new URL(raw) : null

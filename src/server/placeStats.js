@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { authConfig, resolveUser } from './supabaseAuth.js'
+import { supabaseApiHeaders } from './supabaseApiHeaders.js'
 
 const sqlPath = resolve(fileURLToPath(new URL('.', import.meta.url)), '../../supabase/place-stats.sql')
 
@@ -103,10 +104,8 @@ export function createSupabasePlaceStatsStore({ config, accessToken = '', fetchI
       const response = await fetchImpl(`${config.url}/rest/v1/rpc/record_place_stat`, {
         method: 'POST',
         headers: {
-          apikey: config.anonKey,
-          Authorization: `Bearer ${accessToken || config.anonKey}`,
+          ...supabaseApiHeaders({ apiKey: config.anonKey, accessToken }),
           'content-type': 'application/json',
-          accept: 'application/json',
         },
         body: JSON.stringify({
           p_restaurant_id: restaurantId,
@@ -134,11 +133,7 @@ export function createSupabasePlaceStatsStore({ config, accessToken = '', fetchI
       const response = await fetchImpl(
         `${config.url}/rest/v1/place_stats_daily?restaurant_id=eq.${encodeURIComponent(restaurantId)}&select=profile_views,route_clicks,website_clicks,phone_clicks`,
         {
-          headers: {
-            apikey: config.anonKey,
-            Authorization: `Bearer ${accessToken || config.anonKey}`,
-            accept: 'application/json',
-          },
+          headers: supabaseApiHeaders({ apiKey: config.anonKey, accessToken }),
         },
       )
       const body = await response.json().catch(() => [])
@@ -179,11 +174,7 @@ async function profileIsAdmin(config, accessToken, fetchImpl, userId) {
   const response = await fetchImpl(
     `${config.url}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=is_admin`,
     {
-      headers: {
-        apikey: config.anonKey,
-        Authorization: `Bearer ${accessToken}`,
-        accept: 'application/json',
-      },
+      headers: supabaseApiHeaders({ apiKey: config.anonKey, accessToken }),
     },
   )
   if (!response.ok) return false
