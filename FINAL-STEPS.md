@@ -1,162 +1,113 @@
-# FoodGo 1.0 — zbývající ruční kroky
+# FoodGo 1.0 — co udělat po návratu
 
-Jen to, co nejde dokončit bez provozovatele / Comgate / schválení.  
-Technický stav: větev `foodgo-launch-preview`, detail v `FOODGO-LAUNCH.md`.
-
-**Stav Supabase (projekt `pcptzyfoojmnspumcmsi`, ověřeno po obnovení z pauzy):**
-host `pcptzyfoojmnspumcmsi.supabase.co` je dostupný; Auth GoTrue odpovídá; základní tabulky (`profiles`, `favorites`, `reviews`, `review_reports`, `business_applications`, `published_places`) existují; `is_cheapeats_admin()` existuje. Tabulky `promotion_orders` / `promotion_payment_events` / view `promotion_sponsorships_public` existují, ale **RPC** `submit_promotion_inquiry`, `read_promotion_inquiry`, `record_verified_payment` **chybí** — evidence poptávek a webhook zápis zatím neběží end-to-end. `place_owner_claims` a `promotion_audit_log` chybí. Produkční DB se bez schválení neměnila.
+Větev: `foodgo-launch-preview`. Detail historie: `FOODGO-LAUNCH.md`.  
+SQL ke schválení: `supabase/promotion-apply-missing.sql`.
 
 ---
 
-## 1. Údaje provozovatele (blokuje vydání)
+## A. Hotové a ověřené (kód)
 
-| | |
+- Katalog 775 podniků, mapa, filtry, mobilní E2E (Playwright 38).
+- Auth session přes serverové cookies; návrat přes `next=` (open redirect blokován).
+- Comgate create/push/status v kódu; `PAYMENTS_LIVE` zůstává false.
+- Gap-fill SQL připravený (RPC + owners) — **nespouštěn na produkci**.
+- Kompatibilita `sb_publishable_` / `sb_secret_` (klíče jen v `apikey`).
+- HTML e-mailové šablony FoodGo + text fallback; poptávka se při výpadku mailu nesmaže, pokud je uložená.
+- Stránky: `/o-foodgo`, `/kontakt`, `/cookies`, `/reklamni-zvyrazneni` + odkazy v patičce.
+- Security headers ve `vercel.json` (nosniff, frame deny, referrer, permissions).
+- Produktové události v sessionStorage (bez externí analytiky).
+- CSV export objednávek v admin propagaci.
+- Unit/SQL kontrakty zelené v posledním běhu sprintu (viz report).
+
+---
+
+## B. Implementováno, čeká na konfiguraci
+
+| Co | Čeká na |
 | --- | --- |
-| **Kde** | Živnostenský úřad → pak soubor `src/constants/operator.js` |
-| **Co** | `legalName`, `ico`, `street`, `city`, `postalCode`, `email`; DPH: `vatStatus` (`non-payer`/`payer`), případně `dic`, `vatRatePercent`, `catalogPriceIncludesVat` |
-| **Ověření** | `npm run launch:check -- --offline` → žádné `BLOCKED` u `operator-identity` |
-
-Neveřejné (banka, hesla, klíče) do gitu nepatří.
-
----
-
-## 2. Právní texty
-
-| | |
-| --- | --- |
-| **Kde** | `/ochrana-osobnich-udaju`, `/obchodni-podminky` (+ kontrola s právníkem) |
-| **Co** | Schválit návrhy po doplnění OPERATOR |
-| **Ověření** | Stránky ukazují skutečné jméno/IČO/kontakt; bez placeholderů |
+| Evidence poptávek end-to-end | spuštění `promotion-apply-missing.sql` |
+| Webhook zápis úhrady | `SUPABASE_SERVICE_ROLE_KEY` + `app.payment_webhook_secret` |
+| Odesílání e-mailů | Resend API + ověřená doména |
+| Comgate create redirect | merchant ID + secret + sandbox flag |
+| place-stats / loyalty / reports | volitelné SQL soubory |
 
 ---
 
-## 3. Vercel environment variables
+## C. Tvůj ruční zásah (teď)
 
-Projekt `cheat-eaps` (team `jindrichcompany`). Aktuálně nastaveno: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (Preview + Production), `PUBLIC_SITE_URL` (jen Production). Protection Bypass pro Preview webhooky je na projektu zapnutý (`protectionBypassConfigured: true` u `/api/payments/status`).
+### C1. Supabase SQL (až schválíš)
 
-| Proměnná | Kde získat | Preview | Production | Povinná katalog (zdarma) | Povinná platby | Ověření |
-| --- | --- | --- | --- | --- | --- | --- |
-| `SUPABASE_URL` | Supabase → Project Settings → API → Project URL | ano | ano | ano (účty/recenze) | ano (evidence) | `GET /api/auth/session` → `configured:true` |
-| `SUPABASE_ANON_KEY` | Settings → API Keys → **publishable** (`sb_publishable_…`); legacy JWT anon zatím nechej | ano | ano | ano (účty) | ano (inquiry RPC) | session + přihlášení; `node scripts/check-supabase-schema.mjs` hlásí `publishable` |
-| `PUBLIC_SITE_URL` | kanonický https origin webu | ano (`https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app`) | ano (`https://cheat-eaps.vercel.app` nebo vlastní doména) | doporučeno | doporučeno | sitemap / e-mailové odkazy |
-| `SUPABASE_SERVICE_ROLE_KEY` | Settings → API Keys → **secret** (`sb_secret_…`); legacy `service_role` zatím nechej | ano | ano | ne | ano (webhook → `record_verified_payment`) | jen server; nikdy `VITE_*`, nikdy do gitu/bundle |
-| `RESEND_API_KEY` | Resend → API Keys | ano | ano | ne (poptávka se uloží i bez e-mailu) | ne | `npm run check:resend` |
-| `EMAIL_FROM` | ověřená doména Resend (trial: `… <onboarding@resend.dev>`) | ano | ano | ne | ne | doručení poptávky |
-| `INQUIRY_TO_EMAIL` | schránka provozovatele | ano | ano | ne | ne | upozornění na poptávku |
-| `PAYMENT_PROVIDER` | pevně `comgate` | sandbox | později | ne | ano | `GET /api/payments/status` |
-| `PAYMENT_MERCHANT_ID` | Comgate portál | sandbox | později | ne | ano | status → ne `gateway-not-connected` |
-| `PAYMENT_SECRET` | Comgate secret (≥16) | sandbox | později | ne | ano | create + push; stejná hodnota do DB `app.payment_webhook_secret` |
-| `PAYMENTS_SANDBOX_OUTBOUND` | `true` pro test create | ano | ne (nechat vypnuto) | ne | sandbox | outbound create v Preview |
-| `PAYMENTS_LIVE` | vždy `false`, dokud neproběhne sandbox E2E | `false` | `false` | ne | gate | test platba neaktivuje Production |
-| `VERCEL_AUTOMATION_BYPASS_SECRET` | Vercel → Deployment Protection → Protection Bypass | ano | až při live webhooku | ne | ano (push URL) | status → `protectionBypassConfigured` **bez** úniku hodnoty |
+1. [Supabase Dashboard](https://supabase.com/dashboard/project/pcptzyfoojmnspumcmsi) → **Database** → ověř Backups/PITR.
+2. → **SQL Editor** → New query.
+3. Vlož celý soubor `supabase/promotion-apply-missing.sql` → **Run**.
+4. Ověření: lokálně `node scripts/check-supabase-schema.mjs` → RPC PRESENT; owners EXISTS.
+5. Redeploy Preview není nutný pro SQL; API začne RPC používat hned.
 
-**`SUPABASE_SERVICE_ROLE_KEY`:** jen Environment Variables na Vercelu (Server / Secret). Nesmí být v klientském bundle, GitHubu, logu ani veřejném API. Kód ho čte jen v `src/server/*`.
+**Rollback:** komentář v hlavičce SQL souboru (drop funkcí + 2 owners tabulek; `promotion_orders` nedropuj).
 
-**UI:** [Vercel Dashboard](https://vercel.com) → team `jindrichcompany` → project `cheat-eaps` → Settings → Environment Variables.
+### C2. Supabase Auth URL
 
----
+1. [URL Configuration](https://supabase.com/dashboard/project/pcptzyfoojmnspumcmsi/auth/url-configuration)
+2. **Site URL:** `https://cheat-eaps.vercel.app`
+3. **Redirect URLs:**
+   - `https://cheat-eaps.vercel.app/nove-heslo`
+   - `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app/nove-heslo`
+   - `http://127.0.0.1:5173/nove-heslo`
+   - `http://localhost:5173/nove-heslo`
+4. Ověření: obnova hesla → `/nove-heslo`. Redeploy ne.
 
-## 4. Supabase Auth — Site URL a Redirect URLs
+### C3. Vercel env
 
-| | |
-| --- | --- |
-| **Kde** | [Supabase Dashboard](https://supabase.com/dashboard/project/pcptzyfoojmnspumcmsi/auth/url-configuration) → Authentication → URL Configuration |
+[Project cheat-eaps → Settings → Environment Variables](https://vercel.com/jindrichcompany/cheat-eaps/settings/environment-variables)
 
-**Site URL (Production):**
-```
-https://cheat-eaps.vercel.app
-```
-(až bude vlastní doména, Site URL na ni přepni a starou nech v Redirect listu)
+| Proměnná | Hodnota odkud | Typ | Preview | Production | Redeploy |
+| --- | --- | --- | --- | --- | --- |
+| `SUPABASE_URL` | Project URL | Secret/Config | ano | ano | ano po změně |
+| `SUPABASE_ANON_KEY` | API Keys → **publishable** `sb_publishable_…` | Secret | ano | ano | ano |
+| `SUPABASE_SERVICE_ROLE_KEY` | API Keys → **secret** `sb_secret_…` | **Secret** (jen server) | ano | ano | ano |
+| `PUBLIC_SITE_URL` | `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app` (Preview) / `https://cheat-eaps.vercel.app` (Prod) | Config | ano | ano | ano |
+| `RESEND_API_KEY` | resend.com → API Keys | Secret | ano | ano | ano |
+| `EMAIL_FROM` | ověřená doména, např. `FoodGo Brno <…@domena.cz>` | Config | ano | ano | ano |
+| `INQUIRY_TO_EMAIL` | tvoje schránka | Config | ano | ano | ano |
+| `PAYMENT_PROVIDER` | `comgate` | Config | sandbox | později | ano |
+| `PAYMENT_MERCHANT_ID` | portal.comgate.cz | Secret | sandbox | později | ano |
+| `PAYMENT_SECRET` | Comgate secret (≥16) | Secret | sandbox | později | ano |
+| `PAYMENTS_SANDBOX_OUTBOUND` | `true` | Config | ano | ne | ano |
+| `PAYMENTS_LIVE` | `false` | Config | ano | ano (nechat false) | ano |
 
-**Redirect URLs — přesně tyto řádky:**
-```
-https://cheat-eaps.vercel.app/nove-heslo
-https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app/nove-heslo
-http://127.0.0.1:5173/nove-heslo
-http://localhost:5173/nove-heslo
-```
+Ověření: `GET /api/auth/session` → `configured:true`; `GET /api/payments/status` → `PAYMENTS_LIVE` false / inquiry dokud chybí merchant.
 
-Volitelně (všechny Preview větve):
-```
-https://*-jindrichcompany.vercel.app/nove-heslo
-```
+**Nikdy** nedávej service/secret klíč do `VITE_*` ani do Gitu.
 
-**Ověření:** obnova hesla dorazí na `/nove-heslo` a uloží heslo; po přihlášení zůstane uživatel na webu (RecoveryRedirect zachytí tokeny i na Site URL).
+### C4. Resend
 
----
-
-## 5. SQL migrace (po schválení — jeden soubor)
-
-Kontrola před/po: `node scripts/check-supabase-schema.mjs`  
-Offline kontrakt: `node --test src/server/promotionOrdersSql.test.js`
-
-**Spusť po schválení (SQL Editor, celý soubor):**  
-`supabase/promotion-apply-missing.sql`
-
-Doplní chybějící RPC (`submit_promotion_inquiry`, `read_promotion_inquiry`, `record_verified_payment`), trigger `guard_promotion_order`, RLS a tabulky `place_owner_claims` / `promotion_audit_log`. Existující tabulky `promotion_orders` nemaže. Žádné DELETE/TRUNCATE.
-
-| Stav na `pcptzyfoojmnspumcmsi` (před migrací) | |
-| --- | --- |
-| Základ + `is_cheapeats_admin` | hotovo |
-| Tabulky/view propagace | hotovo |
-| 3 RPC + guard | **chybí** → apply-missing |
-| Owners tabulky | **chybí** → apply-missing |
-| `app.payment_webhook_secret` | až bude Comgate `PAYMENT_SECRET` (samostatný SQL, ne v apply-missing) |
-| loyalty / place-reports / place-stats | volitelné, neblokuje poptávky |
-
-**Záloha:** Dashboard → Database → Backups (nebo PITR) před Run.  
-**Rollback** (jen doplněk): viz komentář v hlavičce `promotion-apply-missing.sql`.
-
-**Po migraci ověř:**
-1. `node scripts/check-supabase-schema.mjs` → RPC PRESENT, owners EXISTS  
-2. Preview: odeslat poptávku Pro podniky → `stored: true` + `reference`  
-3. `GET /api/promotion-orders?reference=…&key=…` → stav `inquiry`  
-4. Admin (přihlášený admin): `GET /api/admin/promotion-orders` → seznam  
-5. Vercel Secret: `SUPABASE_SERVICE_ROLE_KEY` = `sb_secret_…` (Preview + Production) — webhook zatím bez Comgate secret nic nezapíše
-
-Produkční DB se bez tvého schválení **nespouští**. Docker/izolovaná DB v tomto běhu nebyla dostupná.
+1. [resend.com](https://resend.com) → Domains → ověř DNS.
+2. API Key → Vercel `RESEND_API_KEY`.
+3. `EMAIL_FROM` na ověřené doméně.
+4. Ověření: `npm run check:resend` (až bude klíč lokálně) / odeslání poptávky na Preview.
 
 ---
 
-## 6. Resend + doména
+## D. Dospělý provozovatel
 
-| | |
-| --- | --- |
-| **Kde** | [resend.com](https://resend.com) → Domains + API Keys |
-| **Co** | Ověřit DNS domény; `EMAIL_FROM` na ověřené doméně; stejné klíče do Vercel Preview + Production |
-| **Lokálně** | `npm run resend:key` → `npm run check:resend` |
-| **Ověření** | Poptávka Pro podniky / schválení žádosti dorazí |
-
-**Důležité:** výpadek Resend **nezruší** uloženou poptávku — server nejdřív volá `submit_promotion_inquiry`, e-mail je až potom. Bez RPC (současný stav) se evidence neuloží a zbývá jen e-mailová větev → proto nejdřív migrace RPC.
-
-Trial `onboarding@resend.dev` doručí jen na e-mail Resend účtu.
+1. Doplnit `src/constants/operator.js`: `legalName`, `ico`, `street`, `city`, `postalCode`, `email`, DPH (`vatStatus`…).
+2. Nechat zkontrolovat `/obchodni-podminky` a `/ochrana-osobnich-udaju` (jsou kostry).
+3. Comgate účet + sandbox E2E, teprve pak `PAYMENTS_LIVE`.
+4. Vlastní doména: nastav `PUBLIC_SITE_URL`, Auth redirects, Resend FROM, Comgate return/webhook URL; kód hardcoded cheat-eaps jen jako fallback v `site.js`.
+5. Merge `foodgo-launch-preview` → `main` a Production deploy **až po A–D**.
 
 ---
 
-## 7. Comgate sandbox → později live
+## E. Zbývající technické / záměrně neřešené
 
-Integrace v kódu je hotová (`create` / push / `status`). Po doplnění merchant údajů **není potřeba znovu programovat** platební systém — jen env + DB secret + Result URL.
-
-| | |
-| --- | --- |
-| **Kde** | [portal.comgate.cz](https://portal.comgate.cz) → připojení e-shopu |
-| **Sandbox postup** | 1) Preview env: `PAYMENT_PROVIDER=comgate`, `PAYMENT_MERCHANT_ID`, `PAYMENT_SECRET`, `PAYMENTS_SANDBOX_OUTBOUND=true`, `PAYMENTS_LIVE=false`, `SUPABASE_SERVICE_ROLE_KEY` 2) SQL `app.payment_webhook_secret` = stejný secret 3) Result/push URL: `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app/api/payments/webhook?x-vercel-protection-bypass=<BYPASS>` 4) Test platba v Comgate → admin `paid`/`active`, `paymentSource` u testu `gateway-test` |
-| **Live** | Jen po sandbox E2E + explicitní `PAYMENTS_LIVE=true` (Production bez toho test neaktivuje) |
-
-Žádné ostré platby v tomto běhu.
+- Produkční SQL ještě **neběží** (čeká schválení).
+- Docker/izolovaná DB na tomto stroji nebyla dostupná — migrace jen offline kontrakt.
+- Loyalty / place-reports / place-stats SQL volitelné.
+- Ostré e-maily a ostré platby záměrně neproběhly.
+- `launch:check` zůstane BLOCKED na `operator-identity`, dokud není OPERATOR.
 
 ---
 
-## 8. Vydání
+## Preview URL
 
-| | |
-| --- | --- |
-| **Kde** | GitHub `foodgo-launch-preview` → `main` (PR), Vercel Production |
-| **Až když** | Kroky 1–2 hotové; SQL RPC + Auth redirects; smoke Preview/Production; platby odděleně (7) |
-| **Rollback** | Vercel → předchozí Production → Promote |
-
----
-
-## Co už není ruční technická překážka
-
-Obnova hostitele Supabase (projekt znovu běží), mapa, katalog 775 souřadnic, Comgate kód (create/push/status), auto-aktivace s oddělením test/live, CSV fakturace, SQL kontrakty, schema check včetně propagace/RPC, Preview deploy pipeline.
+https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app
