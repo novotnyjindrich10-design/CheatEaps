@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CONTACT_EMAIL } from '../constants/brand'
 import { useAuth } from '../context/authSession'
@@ -25,6 +25,28 @@ export default function BusinessAccount() {
   const [order, setOrder] = useState(null)
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const [paying, setPaying] = useState(false)
+  const [payments, setPayments] = useState({ loading: true, enabled: false, live: false })
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/payments/status', { credentials: 'same-origin' })
+      .then((response) => response.json().catch(() => ({})))
+      .then((body) => {
+        if (cancelled) return
+        setPayments({
+          loading: false,
+          enabled: Boolean(body?.enabled),
+          live: Boolean(body?.live),
+        })
+      })
+      .catch(() => {
+        if (!cancelled) setPayments({ loading: false, enabled: false, live: false })
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const lookup = async (event) => {
     event.preventDefault()
@@ -47,6 +69,39 @@ export default function BusinessAccount() {
       setLoading(false)
     }
   }
+
+  const startPayment = async () => {
+    if (!order) return
+    setPaying(true)
+    setMessage('')
+    try {
+      const response = await fetch('/api/payments/create', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          reference: reference.trim(),
+          accessKey: accessKey.trim(),
+        }),
+      })
+      const body = await response.json().catch(() => ({}))
+      if (!response.ok || !body.ok || !body.redirect) {
+        setMessage(body.message || 'Platební bránu teď nejde otevřít. Poptávka zůstává uložená.')
+        return
+      }
+      window.location.assign(body.redirect)
+    } catch {
+      setMessage('Platební bránu teď nejde otevřít. Poptávka zůstává uložená.')
+    } finally {
+      setPaying(false)
+    }
+  }
+
+  const canPay =
+    order
+    && !order.paid
+    && order.status !== 'declined'
+    && order.status !== 'ended'
+    && payments.enabled
 
   return (
     <main className="page biz-page">
@@ -108,6 +163,19 @@ export default function BusinessAccount() {
             <p>Obnovení: samo se neobnovuje (jednorázové období, ne předplatné).</p>
             {order.startsAt ? <p>Začátek propagace: {when(order.startsAt)}</p> : null}
             {order.endsAt ? <p>Konec propagace: {when(order.endsAt)}</p> : <p>Datum konce se nastaví až po zapnutí propagace.</p>}
+            {canPay ? (
+              <p>
+                <button type="button" className="btn btn-primary" onClick={startPayment} disabled={paying}>
+                  {paying ? 'Otevírám bránu…' : payments.live ? 'Zaplatit online' : 'Zaplatit v testovací bráně'}
+                </button>
+              </p>
+            ) : null}
+            {!payments.loading && !payments.enabled && !order.paid ? (
+              <p className="section-desc">
+                Online platba ještě není zapojená. Po nastavení Comgate se tu objeví tlačítko. Do té doby stačí poptávka
+                a potvrzení e-mailem.
+              </p>
+            ) : null}
             <p>
               <Link to="/pro-podniky#balicky">Požádat o další propagaci</Link>
               {' '}

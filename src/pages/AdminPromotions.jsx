@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import AdminNav from '../components/AdminNav'
 import { formatKc } from '../constants/businessPlans'
 import { buildInvoiceDraft, buildOrdersCsv } from '../constants/invoiceDraft'
 import { loginPath } from '../utils/authReturn'
@@ -161,9 +162,7 @@ export default function AdminPromotions() {
         Přihlášen jako {me.email}. Reklama se zapne až po ověřené úhradě. Obnovení se samo nezapíná.
         Text faktury níže je jen podklad, ne platný doklad.
       </p>
-      <p>
-        <Link to="/admin/zadosti">Žádosti o katalog</Link>
-      </p>
+      <AdminNav />
       {stats ? (
         <p className="section-desc">
           Poptávek v evidenci: {stats.inquiries}. Aktivních umístění: {stats.activeSponsorships}.

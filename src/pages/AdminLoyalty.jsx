@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import AdminNav from '../components/AdminNav'
 import { useAuth } from '../context/authSession'
 import { loginPath } from '../utils/authReturn'
 
@@ -136,13 +137,11 @@ export default function AdminLoyalty() {
   }
 
   return (
-    <main className="page loyalty-admin-page">
+    <main className="page loyalty-admin-page admin-page">
       <div className="page-head">
-        <Link to="/admin/zadosti" className="back-link">
-          ← Administrace
-        </Link>
         <h1>Odměny a schvalování recenzí</h1>
       </div>
+      <AdminNav />
 
       {message ? <p className="form-success">{message}</p> : null}
       {error ? <p className="form-error">{error}</p> : null}

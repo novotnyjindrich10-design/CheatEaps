@@ -22,6 +22,8 @@ const ForBusinesses = lazy(() => import('./pages/ForBusinesses'))
 const BusinessAccount = lazy(() => import('./pages/BusinessAccount'))
 const AdminApplications = lazy(() => import('./pages/AdminApplications'))
 const AdminPromotions = lazy(() => import('./pages/AdminPromotions'))
+const AdminPlaces = lazy(() => import('./pages/AdminPlaces'))
+const AdminReports = lazy(() => import('./pages/AdminReports'))
 const AuthPage = lazy(() => import('./pages/AuthPage'))
 const NewPassword = lazy(() => import('./pages/NewPassword'))
 const DealDetail = lazy(() => import('./pages/DealDetail'))
@@ -97,6 +99,8 @@ function App() {
             <Route path="/reklamni-zvyrazneni" element={<SiteInfo kind="ads" />} />
             <Route path="/admin/zadosti" element={<AdminApplications />} />
             <Route path="/admin/propagace" element={<AdminPromotions />} />
+            <Route path="/admin/podniky" element={<AdminPlaces />} />
+            <Route path="/admin/hlaseni" element={<AdminReports />} />
             <Route path="/admin/odmeny" element={<AdminLoyalty />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

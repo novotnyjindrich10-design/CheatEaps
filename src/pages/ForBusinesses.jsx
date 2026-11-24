@@ -21,8 +21,9 @@ export default function ForBusinesses() {
           Placené zvýraznění v katalogu FoodGo. Hledání restaurací pro návštěvníky zůstává zdarma.
         </p>
         <p className="biz-note">
-          Online platba není zapojená. Tlačítko nezakládá nákup, nestrhává peníze a reklamu nezapne.
-          Jde o nezávaznou poptávku. Návštěvnost, prokliky ani tržby negarantujeme.
+          Nejdřív odešleš nezávaznou poptávku. Online platba se otevře až po nastavení Comgate a jen z účtu
+          podniku přes kód poptávky. Ostré platby zůstávají vypnuté, dokud není výslovně zapnutý ostrý režim.
+          Návštěvnost, prokliky ani tržby negarantujeme.
         </p>
         {!operatorReady ? (
           <p className="biz-note" role="status">

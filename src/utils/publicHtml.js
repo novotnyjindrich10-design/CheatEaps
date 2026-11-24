@@ -14,6 +14,8 @@ export const PRIVATE_PRERENDER_PATHS = [
   '/porovnani',
   '/admin/zadosti',
   '/admin/propagace',
+  '/admin/podniky',
+  '/admin/hlaseni',
   '/admin/odmeny',
 ]
 

@@ -373,8 +373,13 @@ export default function RestaurantMap({
     const onKey = (event) => {
       if (event.key === 'Escape') setExpanded(false)
     }
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKey)
+    }
   }, [expanded])
 
   useEffect(() => {
