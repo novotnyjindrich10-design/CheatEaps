@@ -113,3 +113,36 @@ export function boundsFromPlaces(places) {
     [maxLat, maxLon],
   ]
 }
+
+/** Popisky na mapě od tohoto zoomu, aby se při oddálení nepřekrývaly. */
+export const MAP_LABEL_MIN_ZOOM = 16
+
+/**
+ * Vybere body, jejichž popisek se vejde. Vyšší priority vyhraje blízký konflikt.
+ * @param {{ id: string, x: number, y: number, priority?: number }[]} points
+ */
+export function pickVisibleLabels(points, minDistancePx = 78) {
+  const ranked = [...(points || [])].sort((a, b) => {
+    const priority = (b.priority || 0) - (a.priority || 0)
+    if (priority !== 0) return priority
+    return String(a.id).localeCompare(String(b.id), 'cs')
+  })
+  const placed = []
+  const ids = []
+  for (const point of ranked) {
+    if (!point?.id || !Number.isFinite(point.x) || !Number.isFinite(point.y)) continue
+    const crowded = placed.some((item) => Math.hypot(item.x - point.x, item.y - point.y) < minDistancePx)
+    if (crowded) continue
+    placed.push(point)
+    ids.push(point.id)
+  }
+  return ids
+}
+
+export function escapeMapLabel(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}

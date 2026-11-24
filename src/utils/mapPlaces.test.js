@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { GOOGLE_STATUS_NEEDS_REVIEW, GOOGLE_STATUS_VERIFIED } from './googleRating.js'
-import { boundsFromPlaces, placesFingerprint, placesForMap } from './mapPlaces.js'
+import { boundsFromPlaces, placesFingerprint, placesForMap, pickVisibleLabels, escapeMapLabel } from './mapPlaces.js'
 
 describe('mapPlaces', () => {
   it('vynechá neplatné a mimo Brno souřadnice', () => {
@@ -103,5 +103,19 @@ describe('mapPlaces', () => {
   it('prázdný výsledek nemá bounds', () => {
     assert.equal(boundsFromPlaces([]), null)
     assert.ok(boundsFromPlaces([{ id: 'a', lat: 49.2, lon: 16.6 }]))
+  })
+
+  it('popisky blízko sebe schová a vybraný bod nechá', () => {
+    const visible = pickVisibleLabels([
+      { id: 'a', x: 0, y: 0, priority: 1 },
+      { id: 'b', x: 10, y: 0, priority: 1 },
+      { id: 'c', x: 200, y: 0, priority: 1 },
+      { id: 'vybrany', x: 8, y: 4, priority: 3 },
+    ])
+    assert.equal(visible.includes('vybrany'), true)
+    assert.equal(visible.includes('a'), false)
+    assert.equal(visible.includes('b'), false)
+    assert.equal(visible.includes('c'), true)
+    assert.equal(escapeMapLabel('<b>"A"&'), '&lt;b&gt;&quot;A&quot;&amp;')
   })
 })

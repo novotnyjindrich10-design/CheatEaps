@@ -4030,13 +4030,28 @@ body:has(#root .app) #seo-snapshot {
   z-index: 0;
 }
 
+.restaurant-map.is-expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  margin: 0;
+  padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+  background: var(--bg, #fff8f3);
+  overflow: auto;
+}
+
+.restaurant-map.is-expanded .restaurant-map-canvas {
+  height: min(78dvh, 920px);
+}
+
 .fg-map-marker {
   background: transparent;
   border: 0;
 }
 
 .fg-map-marker-pin {
-  display: block;
+  display: grid;
+  place-items: center;
   width: 22px;
   height: 22px;
   margin: 4px auto 0;
@@ -4045,6 +4060,14 @@ body:has(#root .app) #seo-snapshot {
   background: #c45c26;
   border: 2px solid #fff;
   box-shadow: 0 2px 8px rgba(20, 16, 12, 0.35);
+}
+
+.fg-map-marker-glyph {
+  display: block;
+  transform: rotate(45deg);
+  color: #fff;
+  font: 800 10px/1 var(--font, sans-serif);
+  text-align: center;
 }
 
 .fg-map-marker.is-selected .fg-map-marker-pin {
@@ -4100,6 +4123,21 @@ body:has(#root .app) #seo-snapshot {
 
 .fg-map-marker--default .fg-map-marker-pin {
   background: #c45c26;
+}
+
+.leaflet-tooltip.fg-map-label {
+  background: rgba(255, 252, 247, 0.96);
+  border: 1px solid rgba(90, 62, 43, 0.28);
+  border-radius: 8px;
+  color: #2a211c;
+  font-weight: 750;
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 2px 6px;
+  box-shadow: 0 1px 4px rgba(20, 16, 12, 0.16);
+  max-width: 168px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .map-popup {

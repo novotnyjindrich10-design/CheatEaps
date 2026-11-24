@@ -18,6 +18,9 @@ import {
   BRNO_MAP_MAX_BOUNDS,
   placesFingerprint,
   placesForMap,
+  pickVisibleLabels,
+  MAP_LABEL_MIN_ZOOM,
+  escapeMapLabel,
 } from '../utils/mapPlaces'
 import { resolveMapTileConfig } from '../utils/mapTiles'
 import { ensureMaplibreWorker } from '../utils/maplibreWorker'
@@ -62,12 +65,28 @@ const MARKER_TONES = Object.freeze({
   zdrave: 'green',
 })
 
+const MARKER_GLYPH = Object.freeze({
+  pizza: 'P',
+  burger: 'B',
+  asia: 'A',
+  czech: 'Č',
+  green: 'V',
+  kebab: 'K',
+  mex: 'M',
+  coffee: 'C',
+  fast: 'F',
+  sweet: 'S',
+  sponsored: '★',
+  default: '•',
+})
+
 function markerIconFor(place, selected) {
   const tone = place.sponsored ? 'sponsored' : MARKER_TONES[place.category] || 'default'
+  const glyph = MARKER_GLYPH[tone] || MARKER_GLYPH.default
   const selectedClass = selected ? ' is-selected' : ''
   return L.divIcon({
     className: `fg-map-marker fg-map-marker--${tone}${selectedClass}`,
-    html: `<span class="fg-map-marker-pin" aria-hidden="true"></span>`,
+    html: `<span class="fg-map-marker-pin" aria-hidden="true"><span class="fg-map-marker-glyph">${glyph}</span></span>`,
     iconSize: selected ? [32, 40] : [28, 36],
     iconAnchor: selected ? [16, 38] : [14, 34],
     popupAnchor: [0, -28],
@@ -188,6 +207,7 @@ export default function RestaurantMap({
   const pickRef = useRef(() => {})
   const [ready, setReady] = useState(false)
   const [basemapError, setBasemapError] = useState('')
+  const [expanded, setExpanded] = useState(false)
   const [pickedId, setPickedId] = useState(selectedId || '')
   const [trackedSelected, setTrackedSelected] = useState(selectedId || '')
   const [panToken, setPanToken] = useState(0)
@@ -342,6 +362,65 @@ export default function RestaurantMap({
   }, [places, ready, visibleId])
 
   useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return undefined
+    const frame = requestAnimationFrame(() => map.invalidateSize())
+    return () => cancelAnimationFrame(frame)
+  }, [expanded, ready])
+
+  useEffect(() => {
+    if (!expanded) return undefined
+    const onKey = (event) => {
+      if (event.key === 'Escape') setExpanded(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [expanded])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return undefined
+
+    const syncLabels = () => {
+      const show = map.getZoom() >= MAP_LABEL_MIN_ZOOM
+      const points = []
+      for (const place of places) {
+        const marker = markersRef.current.get(place.id)
+        if (!marker) continue
+        marker.unbindTooltip()
+        if (!show) continue
+        const point = map.latLngToContainerPoint(marker.getLatLng())
+        points.push({
+          id: place.id,
+          x: point.x,
+          y: point.y,
+          priority: place.id === visibleId ? 3 : place.sponsored ? 2 : 1,
+          name: place.name,
+        })
+      }
+      if (!show) return
+      const visible = new Set(pickVisibleLabels(points))
+      for (const point of points) {
+        if (!visible.has(point.id)) continue
+        const marker = markersRef.current.get(point.id)
+        marker?.bindTooltip(escapeMapLabel(point.name), {
+          permanent: true,
+          direction: 'top',
+          offset: [0, -30],
+          className: 'fg-map-label',
+          opacity: 1,
+        })
+      }
+    }
+
+    syncLabels()
+    map.on('zoomend moveend', syncLabels)
+    return () => {
+      map.off('zoomend moveend', syncLabels)
+    }
+  }, [places, ready, visibleId])
+
+  useEffect(() => {
     if (!panToken || !visibleId || !ready) return
     const marker = markersRef.current.get(visibleId)
     if (!marker || !mapRef.current) return
@@ -395,7 +474,7 @@ export default function RestaurantMap({
   }, [userOrigin, ready])
 
   return (
-    <section className="restaurant-map" aria-label="Mapa restaurací v Brně">
+    <section className={expanded ? 'restaurant-map is-expanded' : 'restaurant-map'} aria-label="Mapa restaurací v Brně">
       <div className="restaurant-map-toolbar">
         <p className="restaurant-map-count">
           {places.length === 0
@@ -403,8 +482,7 @@ export default function RestaurantMap({
             : `${places.length} ${places.length === 1 ? 'bod' : places.length < 5 ? 'body' : 'bodů'} na mapě`}
         </p>
         <p className="restaurant-map-hint">
-          Klikni na bod pro kartu. Filtry a hledání řídí stejný seznam jako výpis. Podklad OpenFreeMap — bez API
-          klíče. Poloha zůstává v prohlížeči.
+          Klikni na bod pro kartu. Při velkém přiblížení se ukážou názvy, které se vejdou vedle sebe. Podklad OpenFreeMap.
         </p>
         <div className="restaurant-map-actions">
           <button
@@ -421,6 +499,14 @@ export default function RestaurantMap({
               Zobrazit všechny body
             </button>
           ) : null}
+          <button
+            type="button"
+            className="btn btn-secondary"
+            aria-pressed={expanded}
+            onClick={() => setExpanded((value) => !value)}
+          >
+            {expanded ? 'Zmenšit mapu' : 'Mapa na větší plochu'}
+          </button>
           {hasOrigin && onForget ? (
             <button type="button" className="btn btn-secondary" onClick={onForget}>
               Zapomenout polohu
