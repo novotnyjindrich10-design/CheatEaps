@@ -6,6 +6,7 @@ import { googleRatings } from './googleRatings'
 import { officialWebsites } from './officialWebsites'
 import { osmFacts } from './osmFacts'
 import { placeCoordinates } from './placeCoordinates'
+import { coordinateOverrides } from './coordinateOverrides'
 import { placePhotos } from './placePhotos'
 import { getPlaceFoodIllustration } from './placeFoodIllustrations'
 import { getPlacePixabayIllustration, pixabayLibraryReady } from './pixabayLibrary'
@@ -36,7 +37,10 @@ function place(entry) {
   const google = googleRatings[entry.id] || {}
   const facts = osmFacts[entry.id] || {}
   const site = officialWebsites[entry.id] || {}
-  const coords = placeCoordinates[entry.id] || {}
+  const coords = {
+    ...(placeCoordinates[entry.id] || {}),
+    ...(coordinateOverrides[entry.id] || {}),
+  }
   const photo = placePhotos[entry.id] || {}
   const openverseIllustration = override?.removeIllustration
     ? null

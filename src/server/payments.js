@@ -1,31 +1,29 @@
 /**
- * Platební brána: Comgate (karty + bankovní metody v CZK).
- * Bez schválení a klíčů se ven nic neposílá.
- * Návrat z platební stránky platbu nepotvrzuje.
- * Ověřený webhook (podpis + částka + měna) zapíše úhradu a aktivuje propagaci.
- * Stejná událost se zpracuje jen jednou.
+ * Comgate (CZK): create, push notifikace, status verify, aktivace.
+ * Oficiální push: merchant + secret v těle (ne vlastní HMAC).
+ * Stav se vždy ověří přes /v1.0/status. Return URL neaktivuje.
+ * test=true nesmí aktivovat produkční propagaci při PAYMENTS_LIVE / Production.
  */
-import { createHmac, timingSafeEqual } from 'node:crypto'
+import { timingSafeEqual } from 'node:crypto'
 import { applyAdminAction, createSupabasePromotionStore } from './promotionOrders.js'
 import { authConfig } from './supabaseAuth.js'
 
 const COMGATE_CREATE_URL = 'https://payments.comgate.cz/v1.0/create'
-const COMGATE_CREATE_URL_V2 = 'https://payments.comgate.cz/v2.0/payment'
+const COMGATE_STATUS_URL = 'https://payments.comgate.cz/v1.0/status'
 
 /**
- * Comgate pro ČR (CZK). Stripe / GoPay se nezapojují paralelně.
- * Ostrý outbound vyžaduje PAYMENTS_LIVE=true + merchant + secret + webhook secret.
- * Sandbox outbound: PAYMENTS_SANDBOX_OUTBOUND=true bez LIVE (test=true u Comgate).
+ * Potřebné env: PAYMENT_PROVIDER=comgate, PAYMENT_MERCHANT_ID, PAYMENT_SECRET.
+ * PAYMENT_WEBHOOK_SECRET se u Comgate nepoužívá (secret jde v těle push).
+ * Outbound: PAYMENTS_SANDBOX_OUTBOUND=true (test) nebo PAYMENTS_LIVE=true.
  */
 export function paymentConfig(env = process.env) {
   const provider = String(env.PAYMENT_PROVIDER ?? '').trim().toLowerCase()
   const merchantId = String(env.PAYMENT_MERCHANT_ID ?? '').trim()
   const secret = String(env.PAYMENT_SECRET ?? '').trim()
-  const webhookSecret = String(env.PAYMENT_WEBHOOK_SECRET ?? '').trim()
   const live = String(env.PAYMENTS_LIVE ?? '').trim() === 'true'
   const sandboxOutbound = String(env.PAYMENTS_SANDBOX_OUTBOUND ?? '').trim() === 'true'
   const known = provider === 'comgate'
-  const credentials = Boolean(known && merchantId && secret && webhookSecret)
+  const credentials = Boolean(known && merchantId && secret)
   const enabled = credentials && (live || sandboxOutbound)
   let reason = 'gateway-not-connected'
   if (credentials && !enabled) reason = 'gateway-credentials-present-outbound-off'
@@ -35,7 +33,6 @@ export function paymentConfig(env = process.env) {
     provider: known ? provider : '',
     merchantId,
     secret,
-    webhookSecret,
     live,
     sandboxOutbound,
     credentials,
@@ -50,22 +47,53 @@ export function interpretPaymentReturn() {
     ok: true,
     paid: false,
     activated: false,
-    message: 'Návrat z platební stránky platbu nepotvrzuje.',
+    message: 'Návrat z platební stránky platbu nepotvrzuje. Stav řeší Comgate push + /status.',
   }
 }
 
-export function verifyWebhookSignature(rawBody, header, secret) {
-  if (!secret || !header) return false
-  const digest = createHmac('sha256', secret).update(rawBody).digest('hex')
-  const left = Buffer.from(digest)
-  const right = Buffer.from(String(header).trim())
-  if (left.length !== right.length) return false
-  return timingSafeEqual(left, right)
+export function secretsMatch(left, right) {
+  const a = Buffer.from(String(left || ''))
+  const b = Buffer.from(String(right || ''))
+  if (!right || a.length !== b.length) return false
+  return timingSafeEqual(a, b)
+}
+
+/** @deprecated Comgate push používá secret v těle. Zachováno jen pro starší unit testy. */
+export function verifyWebhookSignature() {
+  return false
+}
+
+export function parseComgatePush(raw, contentType = '') {
+  const text = String(raw || '')
+  if (!text.trim()) return null
+  const type = String(contentType || '').toLowerCase()
+  if (type.includes('application/json') || text.trim().startsWith('{')) {
+    try {
+      return JSON.parse(text)
+    } catch {
+      return null
+    }
+  }
+  const params = new URLSearchParams(text)
+  return Object.fromEntries(params.entries())
+}
+
+export function mapComgateStatus(value) {
+  const status = String(value || '').trim().toUpperCase()
+  if (status === 'PAID') return 'paid'
+  if (status === 'CANCELLED' || status === 'CANCELED') return 'cancelled'
+  if (status === 'PENDING') return 'pending'
+  if (status === 'AUTHORIZED') return 'authorized'
+  return ''
+}
+
+export function isComgateTestFlag(value) {
+  const raw = String(value ?? '').trim().toLowerCase()
+  return raw === 'true' || raw === '1'
 }
 
 /**
- * Tělo požadavku na Comgate create. Samo o sobě nic neodešle.
- * Cena v haléřích (99 Kč → 9900). test=true mimo LIVE.
+ * Tělo create (v1.0 POST): merchant+secret v těle, prepareOnly=true, cena v haléřích.
  */
 export function buildGatewayPayment(order, env = process.env) {
   const config = paymentConfig(env)
@@ -97,16 +125,61 @@ export function buildGatewayPayment(order, env = process.env) {
       email: String(order?.email || '').trim(),
       method: 'ALL',
       country: 'CZ',
+      prepareOnly: true,
       test: !config.live,
       renewal: 'none',
     },
   }
 }
 
-/**
- * Založí Comgate platbu a vrátí redirect URL.
- * Bez credentials / outbound flagu nic neposílá.
- */
+export async function fetchComgateStatus(transId, options = {}) {
+  const env = options.env ?? process.env
+  const fetchImpl = options.fetchImpl ?? fetch
+  const config = paymentConfig(env)
+  if (!config.credentials || !transId) {
+    return { ok: false, error: 'not-configured' }
+  }
+  const body = new URLSearchParams()
+  body.set('merchant', config.merchantId)
+  body.set('transId', String(transId))
+  body.set('secret', config.secret)
+  let response
+  try {
+    response = await fetchImpl(COMGATE_STATUS_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    })
+  } catch {
+    return { ok: false, error: 'gateway-unreachable' }
+  }
+  const text = await response.text()
+  let payload
+  try {
+    payload = JSON.parse(text)
+  } catch {
+    payload = Object.fromEntries(new URLSearchParams(text).entries())
+  }
+  const code = String(payload?.code ?? '')
+  if (!response.ok || (code && code !== '0')) {
+    return { ok: false, error: 'status-failed', payload }
+  }
+  return {
+    ok: true,
+    transId: String(payload.transId || transId),
+    status: mapComgateStatus(payload.status),
+    rawStatus: String(payload.status || ''),
+    price: Number(payload.price),
+    curr: String(payload.curr || '').toUpperCase(),
+    refId: String(payload.refId || ''),
+    test: isComgateTestFlag(payload.test),
+    payload,
+  }
+}
+
 export async function createComgatePayment(order, options = {}) {
   const env = options.env ?? process.env
   const fetchImpl = options.fetchImpl ?? fetch
@@ -115,27 +188,27 @@ export async function createComgatePayment(order, options = {}) {
   const config = paymentConfig(env)
   const body = new URLSearchParams()
   body.set('merchant', config.merchantId)
+  body.set('secret', config.secret)
   body.set('price', String(built.request.price))
   body.set('curr', built.request.curr)
   body.set('label', built.request.label)
   body.set('refId', built.request.refId)
   body.set('method', built.request.method)
   body.set('country', built.request.country)
+  body.set('prepareOnly', 'true')
   body.set('test', built.request.test ? 'true' : 'false')
   if (built.request.email) body.set('email', built.request.email)
   if (order?.returnUrl) body.set('url_paid', String(order.returnUrl))
   if (order?.cancelUrl) body.set('url_cancelled', String(order.cancelUrl))
   if (order?.pendingUrl) body.set('url_pending', String(order.pendingUrl))
 
-  const auth = Buffer.from(`${config.merchantId}:${config.secret}`).toString('base64')
   let response
   try {
     response = await fetchImpl(COMGATE_CREATE_URL, {
       method: 'POST',
       headers: {
-        Authorization: `Basic ${auth}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        Accept: 'application/json',
+        Accept: 'application/x-www-form-urlencoded',
       },
       body: body.toString(),
     })
@@ -143,17 +216,15 @@ export async function createComgatePayment(order, options = {}) {
     return { ok: false, enabled: true, paid: false, error: 'gateway-unreachable' }
   }
 
-  let payload = null
   const text = await response.text()
+  let payload
   try {
     payload = JSON.parse(text)
   } catch {
-    const params = new URLSearchParams(text)
-    payload = Object.fromEntries(params.entries())
+    payload = Object.fromEntries(new URLSearchParams(text).entries())
   }
-
-  const code = String(payload?.code ?? payload?.errorCode ?? '')
-  const redirect = String(payload?.redirect ?? payload?.paymentUrl ?? '').trim()
+  const code = String(payload?.code ?? '')
+  const redirect = String(payload?.redirect ?? '').trim()
   const transId = String(payload?.transId ?? '').trim()
   if (!response.ok || (code && code !== '0') || !redirect) {
     return {
@@ -161,7 +232,7 @@ export async function createComgatePayment(order, options = {}) {
       enabled: true,
       paid: false,
       error: 'gateway-rejected',
-      message: String(payload?.message || payload?.errorMessage || 'Comgate platbu nepřijala.'),
+      message: String(payload?.message || 'Comgate platbu nepřijala.'),
     }
   }
   return {
@@ -173,11 +244,9 @@ export async function createComgatePayment(order, options = {}) {
     transId,
     test: !config.live,
     renewal: 'none',
-    api: COMGATE_CREATE_URL_V2,
   }
 }
 
-/** Testovací simulace jen když není ostrý provoz a tajemství má aspoň 16 znaků. */
 export function paymentTestMode(env = process.env) {
   const live = String(env.PAYMENTS_LIVE ?? '').trim() === 'true'
   const requested = String(env.PAYMENTS_TEST_MODE ?? '').trim() === 'true'
@@ -190,13 +259,6 @@ export function paymentTestMode(env = process.env) {
   }
 }
 
-function secretsMatch(header, secret) {
-  const left = Buffer.from(String(header || ''))
-  const right = Buffer.from(String(secret || ''))
-  if (!secret || left.length !== right.length) return false
-  return timingSafeEqual(left, right)
-}
-
 function validPlaceId(value) {
   return /^[a-z0-9][a-z0-9-]{0,79}$/.test(String(value || ''))
 }
@@ -207,21 +269,21 @@ function placeIdForActivation(row, requested) {
   return ''
 }
 
-function amountsMatch(row, event) {
-  if (event?.amount == null || event?.amount === '') return true
-  const expected = Number(row?.amount)
-  const got = Number(event.amount)
-  if (!Number.isFinite(expected) || !Number.isFinite(got)) return false
-  return Math.round(expected) === Math.round(got)
-}
-
-function currencyMatch(event) {
-  if (event?.currency == null || event?.currency === '') return true
-  return String(event.currency).trim().toUpperCase() === 'CZK'
+function priceMatchesOrder(row, priceHalers) {
+  if (!Number.isFinite(priceHalers)) return false
+  const expected = Math.round(Number(row?.amount) * 100)
+  return Number.isFinite(expected) && expected === Math.round(priceHalers)
 }
 
 function json(body, status = 200, headers) {
   return Response.json(body, { status, headers })
+}
+
+function okPush() {
+  return new Response('OK', {
+    status: 200,
+    headers: { 'content-type': 'text/plain; charset=utf-8' },
+  })
 }
 
 function storeFor(options) {
@@ -235,6 +297,26 @@ function storeFor(options) {
   })
 }
 
+/**
+ * Testovací Comgate push nesmí zapnout ostré veřejné umístění.
+ * Aktivace jen když: paid + (sandbox režim a test) nebo (live a !test).
+ */
+export function mayActivateFromComgate(verified, env = process.env) {
+  const config = paymentConfig(env)
+  const production = String(env.VERCEL_ENV ?? '').trim() === 'production'
+  if (verified.status !== 'paid') return { ok: false, reason: 'not-paid' }
+  if (verified.test) {
+    if (config.live || production) {
+      return { ok: false, reason: 'test-payment-blocked-on-live' }
+    }
+    return { ok: true, paymentSource: 'gateway-test' }
+  }
+  if (!config.live) {
+    return { ok: false, reason: 'live-payment-while-sandbox-only' }
+  }
+  return { ok: true, paymentSource: 'gateway' }
+}
+
 async function activateAfterPaid(store, row, event, now) {
   if (!row || row.status === 'active' || event?.status !== 'paid') {
     return { row, activated: row?.status === 'active' }
@@ -246,6 +328,9 @@ async function activateAfterPaid(store, row, event, now) {
   if (!placeId) return { row, activated: false }
   const next = applyAdminAction(row, 'activate', { now, placeId })
   if (!next.ok) return { row, activated: false }
+  if (event.paymentSource) {
+    next.row.paymentSource = event.paymentSource
+  }
   const saved = await store.save(next.row)
   if (!saved.ok) return { row, activated: false }
   return { row: next.row, activated: next.row.status === 'active' }
@@ -258,75 +343,90 @@ export async function paymentReturnHttp(request) {
   return json(interpretPaymentReturn())
 }
 
+/**
+ * Comgate push (form nebo JSON). Ověří secret, zavolá /status, zapíše platbu.
+ * Odpověď 200 OK (Comgate očekává 2xx).
+ */
 export async function paymentWebhookHttp(request, options = {}) {
   if (request.method !== 'POST') {
     return json({ ok: false, paid: false, activated: false, message: 'Povolená je jen metoda POST.' }, 405)
   }
   const env = options.env ?? process.env
   const config = paymentConfig(env)
-  const raw = await request.text()
-  if (!config.webhookSecret) {
+  if (!config.credentials) {
     return json({
       ok: false,
       paid: false,
       activated: false,
       error: 'not-configured',
-      message: 'Webhook plateb není nastavený. Stav poptávky se nezměnil.',
+      message: 'Comgate není nastavený (PAYMENT_MERCHANT_ID + PAYMENT_SECRET).',
     }, 503)
   }
-  const header = request.headers.get('x-cheapeats-signature') || ''
-  if (!verifyWebhookSignature(raw, header, config.webhookSecret)) {
-    return json({ ok: false, paid: false, activated: false, error: 'bad-signature', message: 'Podpis platby nesedí.' }, 401)
+
+  const raw = await request.text()
+  const push = parseComgatePush(raw, request.headers.get('content-type') || '')
+  if (!push?.transId || !push?.refId || !push?.status) {
+    return json({ ok: false, paid: false, activated: false, error: 'invalid-event', message: 'Comgate push nemá transId/refId/status.' }, 400)
   }
-  let event
-  try {
-    event = JSON.parse(raw)
-  } catch {
-    return json({ ok: false, paid: false, activated: false, error: 'invalid-json', message: 'Webhook nemá platný JSON.' }, 400)
+  if (!secretsMatch(push.merchant, config.merchantId) || !secretsMatch(push.secret, config.secret)) {
+    return json({ ok: false, paid: false, activated: false, error: 'bad-secret', message: 'Comgate merchant/secret nesedí.' }, 401)
   }
-  if (!event?.eventId || !event?.reference || !event?.status) {
-    return json({ ok: false, paid: false, activated: false, error: 'invalid-event', message: 'Ve webhooku chybí identifikace platby.' }, 400)
+
+  const verified = await fetchComgateStatus(push.transId, {
+    env,
+    fetchImpl: options.fetchImpl ?? fetch,
+  })
+  if (!verified.ok) {
+    return json({
+      ok: false,
+      paid: false,
+      activated: false,
+      error: verified.error || 'status-failed',
+      message: 'Stav platby u Comgate se nepodařilo ověřit.',
+    }, 502)
   }
+
   const store = storeFor(options)
   if (!store) {
     return json({ ok: false, paid: false, activated: false, error: 'not-configured', message: 'Platbu není kam zapsat.' }, 503)
   }
 
-  // Nejdřív najdi objednávku kvůli kontrole částky/měny (bez zápisu).
   let existing = null
   if (typeof store.list === 'function') {
     const listed = await store.list()
-    existing = listed.rows?.find((row) => row.reference === String(event.reference)) || null
-  } else if (typeof store.readOwn === 'function' && event.accessKey) {
-    const own = await store.readOwn(String(event.reference), String(event.accessKey))
-    existing = own.ok ? own.row : null
+    existing = listed.rows?.find((row) => row.reference === verified.refId) || null
+  }
+  if (!existing) {
+    return json({
+      ok: false,
+      paid: false,
+      activated: false,
+      error: 'missing-order',
+      message: 'Objednávka k refId se nenašla.',
+    }, 404)
+  }
+  if (!priceMatchesOrder(existing, verified.price) || verified.curr !== 'CZK') {
+    return json({
+      ok: false,
+      paid: false,
+      activated: false,
+      error: 'amount-mismatch',
+      message: 'Ověřená částka/měna nesedí s objednávkou.',
+    }, 400)
   }
 
-  if (existing) {
-    if (!amountsMatch(existing, event)) {
-      return json({
-        ok: false,
-        paid: false,
-        activated: false,
-        error: 'amount-mismatch',
-        message: 'Částka ve webhooku nesedí s objednávkou.',
-      }, 400)
-    }
-    if (!currencyMatch(event)) {
-      return json({
-        ok: false,
-        paid: false,
-        activated: false,
-        error: 'currency-mismatch',
-        message: 'Měna ve webhooku musí být CZK.',
-      }, 400)
-    }
-  }
+  const mapped = verified.status === 'paid'
+    ? 'paid'
+    : verified.status === 'cancelled'
+      ? 'cancelled'
+      : verified.status === 'pending'
+        ? 'pending'
+        : 'failed'
 
   const applied = await store.applyPayment({
-    eventId: String(event.eventId),
-    reference: String(event.reference),
-    status: String(event.status),
+    eventId: `comgate:${verified.transId}`,
+    reference: verified.refId,
+    status: mapped === 'paid' ? 'paid' : mapped === 'cancelled' ? 'cancelled' : mapped,
   })
   if (!applied.ok) {
     return json({ ok: false, paid: false, activated: false, error: applied.error || 'failed', message: 'Platbu se nepodařilo zapsat.' }, 400)
@@ -334,33 +434,37 @@ export async function paymentWebhookHttp(request, options = {}) {
 
   let row = applied.row
   if (applied.duplicate) {
-    return json({
-      ok: true,
-      duplicate: true,
-      paid: row?.paymentStatus === 'paid',
-      activated: row?.status === 'active',
-      renewal: 'none',
-    })
+    return okPush()
   }
 
-  const activated = await activateAfterPaid(store, row, event, options.now ?? Date.now())
-  row = activated.row
-  return json({
-    ok: true,
-    duplicate: false,
-    paid: event.status === 'paid',
-    activated: activated.activated,
-    renewal: 'none',
-    endsAt: row?.endsAt || null,
-    live: config.live,
-  })
+  const gate = mayActivateFromComgate(verified, env)
+  let activated = row?.status === 'active'
+  if (gate.ok && mapped === 'paid') {
+    const next = await activateAfterPaid(
+      store,
+      row,
+      { status: 'paid', placeId: row.placeId, paymentSource: gate.paymentSource },
+      options.now ?? Date.now(),
+    )
+    row = next.row
+    activated = next.activated
+  }
+
+  // Comgate vyžaduje 2xx; tělo stačí OK. Detaily necháváme v JSON jen když klient není Comgate.
+  if (options.debugJson) {
+    return json({
+      ok: true,
+      paid: mapped === 'paid',
+      activated,
+      test: verified.test,
+      blockedReason: gate.ok ? '' : gate.reason,
+      renewal: 'none',
+      endsAt: row?.endsAt || null,
+    })
+  }
+  return okPush()
 }
 
-/**
- * Simulace potvrzené platby bez převodu peněz.
- * Návratová URL sem nepatří. Stejné eventId se zpracuje jen jednou
- * a už běžící období se neprodlužuje.
- */
 export async function paymentTestConfirmHttp(request, options = {}) {
   if (request.method !== 'POST') {
     return json({ ok: false, paid: false, activated: false, message: 'Povolená je jen metoda POST.' }, 405)
@@ -430,7 +534,12 @@ export async function paymentTestConfirmHttp(request, options = {}) {
       message: 'Stejná testovací událost už byla zpracovaná.',
     })
   }
-  const activated = await activateAfterPaid(store, row, event, options.now ?? Date.now())
+  const activated = await activateAfterPaid(
+    store,
+    row,
+    { ...event, paymentSource: 'gateway-test' },
+    options.now ?? Date.now(),
+  )
   row = activated.row
   return json({
     ok: true,
@@ -453,6 +562,7 @@ export async function paymentStatusHttp(request, options = {}) {
   }
   const env = options.env ?? process.env
   const config = paymentConfig(env)
+  const bypassConfigured = Boolean(String(env.VERCEL_AUTOMATION_BYPASS_SECRET ?? '').trim())
   if (!config.enabled) {
     return json({
       ok: true,
@@ -461,6 +571,8 @@ export async function paymentStatusHttp(request, options = {}) {
       renewal: 'none',
       provider: config.provider || '',
       reason: config.reason,
+      webhookPath: '/api/payments/webhook',
+      protectionBypassConfigured: bypassConfigured,
       message: 'Online platba není zapojená. Lze poslat nezávaznou poptávku a uhradit ji fakturou.',
     })
   }
@@ -472,6 +584,8 @@ export async function paymentStatusHttp(request, options = {}) {
     provider: 'comgate',
     live: config.live,
     reason: config.reason,
+    webhookPath: '/api/payments/webhook',
+    protectionBypassConfigured: bypassConfigured,
     message: config.live
       ? 'Comgate je připravený pro ostré platby.'
       : 'Comgate sandbox outbound je zapnutý (test=true). Ostré platby jsou vypnuté.',

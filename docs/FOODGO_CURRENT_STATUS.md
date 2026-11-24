@@ -1,30 +1,21 @@
 # FoodGo — Aktuální stav
 
 Datum: 2026-11-24  
-Větev: `foodgo-launch-preview`
+Větev: `foodgo-launch-preview`  
+Launch checklist: kořenový `FOODGO-LAUNCH.md`
 
-## Verdikt jednou větou
+## Verdikt
 
-Free katalog + mapa jsou technicky ready na Preview; veřejné vydání blokuje prázdný OPERATOR. Ostré platby blokuje chybějící Comgate účet / env (kód brány a auto-aktivace jsou hotové).
+Technické blokátory bez Comgate účtu a OPERATOR jsou odstraněné. Veřejné vydání blokuje prázdný OPERATOR. Ostré platby blokuje chybějící Comgate sandbox E2E.
 
-## Stack
+## Měřitelné
 
-React 19 · Vite 8 · Supabase · Vercel · Resend · Leaflet · MapLibre/OpenFreeMap · Playwright · oxlint
-
-## Stav klíčových funkcí
-
-| Oblast | Stav |
+| Položka | Stav |
 | --- | --- |
-| Mapa Brno (OpenFreeMap, clustering, filtry, GPS, mobilní panel) | Hotovo v kódu |
-| Podniky se souřadnicemi | **771 / 775** (4 bez coords: mamas-burger, cukrarna-vetrnik-lidicka, cukrarstvi-martinak, chicken-inn-svobody) |
-| Placená propagace UI | Nezávazná poptávka (ne „Zaplatit“) |
-| Comgate create + webhook auto-aktivace | Implementováno; sandbox transakce neproběhla |
-| Admin propagací | Funguje (server-side) |
-| Účet podniku `/pro-podniky/ucet` | Stav poptávky + žádost o zápis |
-| launch:check --offline | **BLOCKED** (`operator-identity`) |
+| Unit | 361 PASS |
+| Playwright | 38 PASS |
+| Souřadnice | **775/775** |
+| Comgate protokol | create + push(secret) + /status |
+| launch:check --offline | BLOCKED operator-identity |
 
-## Preview
-
-https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app
-
-Detail: `docs/FOODGO_1_0_PRODUCT_REPORT.md`, platby: `docs/FOODGO_BUSINESS_AND_PAYMENTS.md`
+Preview: https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app

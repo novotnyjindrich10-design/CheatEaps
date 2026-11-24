@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatKc } from '../constants/businessPlans'
-import { buildInvoiceDraft } from '../constants/invoiceDraft'
+import { buildInvoiceDraft, buildOrdersCsv } from '../constants/invoiceDraft'
 import { loginPath } from '../utils/authReturn'
 
 function when(value) {
@@ -152,6 +152,26 @@ export default function AdminPromotions() {
           Poptávek v evidenci: {stats.inquiries}. Aktivních umístění: {stats.activeSponsorships}.
           {' '}
           Evidovaná částka u stavu paid: {formatKc(stats.recordedRevenueCzk || 0)}. {stats.note}
+        </p>
+      ) : null}
+      {orders.length > 0 ? (
+        <p>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => {
+              const csv = buildOrdersCsv(orders)
+              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
+              const url = URL.createObjectURL(blob)
+              const link = document.createElement('a')
+              link.href = url
+              link.download = `foodgo-promotion-orders-${new Date().toISOString().slice(0, 10)}.csv`
+              link.click()
+              URL.revokeObjectURL(url)
+            }}
+          >
+            Stáhnout CSV pro účetní
+          </button>
         </p>
       ) : null}
       <label className="admin-note">

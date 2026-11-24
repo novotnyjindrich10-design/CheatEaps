@@ -2,6 +2,22 @@
  * Údaje provozovatele. Doplní je živnost, pod kterou se FoodGo má vést.
  * Prázdné hodnoty se na webu nesmí nahradit odhadem.
  * Kontaktní e-mail značky je v constants/brand.js (CONTACT_EMAIL).
+ *
+ * Po živnostenském úřadě doplň VEŘEJNÉ údaje níže (commit do gitu je OK):
+ * - legalName — jméno / název podle živnosti
+ * - ico — IČO
+ * - street, city, postalCode — sídlo
+ * - email — veřejný provozní e-mail (může být stejný jako CONTACT_EMAIL)
+ * - vatStatus — 'non-payer' | 'payer' | 'unconfirmed'
+ * - vatRatePercent — jen u payer (např. 21)
+ * - catalogPriceIncludesVat — true/false jen u payer
+ * - dic — DIČ jen pokud jsi plátce DPH
+ *
+ * NEVEŘEJNÉ (jen Vercel env / účetní software, nikdy do gitu):
+ * - Comgate merchant/secret, Resend API key, Supabase service role
+ * - bankovní účet, hesla, soukromé kontakty
+ *
+ * launch:check zůstane BLOCKED, dokud operatorIsComplete() neprojde.
  */
 
 export const OPERATOR = Object.freeze({

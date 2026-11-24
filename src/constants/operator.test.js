@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { buildInvoiceDraft } from './invoiceDraft.js'
+import { buildInvoiceDraft, buildOrdersCsv } from './invoiceDraft.js'
 import { OPERATOR, operatorIsComplete, presentPrice } from './operator.js'
 
 describe('provozovatel a DPH', () => {
@@ -65,5 +65,22 @@ describe('provozovatel a DPH', () => {
     assert.equal(draft.finalAmount, null)
     assert.match(draft.text, /není účetní ani daňový doklad/)
     assert.match(draft.text, /nejsou doplněné/)
+
+    const csv = buildOrdersCsv([
+      {
+        reference: 'CE1',
+        status: 'active',
+        paymentStatus: 'paid',
+        paymentSource: 'gateway-test',
+        planId: 'plus',
+        amount: 199,
+        currency: 'CZK',
+        companyName: 'Firma',
+        email: 'a@b.cz',
+      },
+    ])
+    assert.match(csv, /reference,status,paymentStatus/)
+    assert.match(csv, /gateway-test/)
+    assert.match(csv, /,yes\n/)
   })
 })

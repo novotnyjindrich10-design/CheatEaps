@@ -56,3 +56,66 @@ export function buildInvoiceDraft(order, source = OPERATOR) {
     vatNote: price.vatNote,
   }
 }
+
+function csvCell(value) {
+  const text = String(value ?? '')
+  if (/[",\n\r]/.test(text)) return `"${text.replace(/"/g, '""')}"`
+  return text
+}
+
+/**
+ * Export evidence pro účetní. Není hromadné vystavení faktur.
+ * gateway-test řádky označí jako test — do ostrých tržeb nepatří.
+ */
+export function buildOrdersCsv(orders = [], source = OPERATOR) {
+  const header = [
+    'reference',
+    'status',
+    'paymentStatus',
+    'paymentSource',
+    'planId',
+    'amountCzk',
+    'finalAmountCzk',
+    'currency',
+    'vatStatus',
+    'companyName',
+    'ico',
+    'dic',
+    'billingAddress',
+    'email',
+    'placeId',
+    'invoiceNumber',
+    'paidAt',
+    'startsAt',
+    'endsAt',
+    'isTestPayment',
+  ]
+  const rows = [header.join(',')]
+  for (const order of orders) {
+    const price = presentPrice(Number(order?.amount) || 0, source)
+    const isTest = String(order?.paymentSource || '') === 'gateway-test'
+    rows.push([
+      order.reference,
+      order.status,
+      order.paymentStatus,
+      order.paymentSource || '',
+      order.planId,
+      order.amount,
+      price.finalAmount == null ? '' : price.finalAmount,
+      order.currency || 'CZK',
+      price.vatStatus,
+      order.companyName,
+      order.ico || '',
+      order.dic || '',
+      order.billingAddress || '',
+      order.email || '',
+      order.placeId || '',
+      order.invoiceNumber || '',
+      order.paidAt || '',
+      order.startsAt || '',
+      order.endsAt || '',
+      isTest ? 'yes' : 'no',
+    ].map(csvCell).join(','))
+  }
+  return `${rows.join('\n')}\n`
+}

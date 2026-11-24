@@ -3854,5 +3854,25 @@ export const placeCoordinates = {
     "lat": 49.1923,
     "lon": 16.610108,
     "coordSource": "osm"
+  },
+  "cukrarna-vetrnik-lidicka": {
+    "lat": 49.2032489,
+    "lon": 16.607232,
+    "coordSource": "osm-poi"
+  },
+  "cukrarstvi-martinak": {
+    "lat": 49.1995832,
+    "lon": 16.6023833,
+    "coordSource": "osm-poi"
+  },
+  "mamas-burger": {
+    "lat": 49.2035436,
+    "lon": 16.6308415,
+    "coordSource": "osm-address"
+  },
+  "chicken-inn-svobody": {
+    "lat": 49.1955443,
+    "lon": 16.6074637,
+    "coordSource": "osm-address"
   }
 }

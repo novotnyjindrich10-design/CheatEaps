@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict'
-import { createHmac } from 'node:crypto'
 import { beforeEach, describe, it } from 'node:test'
 import { applySponsorships, showSponsoredLabel } from '../constants/monetization.js'
-import { paymentReturnHttp, paymentWebhookHttp, verifyWebhookSignature } from './payments.js'
+import { paymentReturnHttp, paymentWebhookHttp } from './payments.js'
 import {
   adminPromotionOrdersHttp,
   adminPromotionReviewHttp,
@@ -14,11 +13,18 @@ import {
 } from './promotionOrders.js'
 
 const now = Date.parse('2026-06-15T12:00:00.000Z')
+const merchant = 'merchant-1'
+const gatewaySecret = 'comgate-secret-value'
 const env = {
   RESEND_API_KEY: 'test-key',
   INQUIRY_TO_EMAIL: 'owner@example.com',
   EMAIL_FROM: 'FoodGo <mail@example.com>',
-  PAYMENT_WEBHOOK_SECRET: 'webhook-secret',
+  PAYMENT_PROVIDER: 'comgate',
+  PAYMENT_MERCHANT_ID: merchant,
+  PAYMENT_SECRET: gatewaySecret,
+  PAYMENTS_SANDBOX_OUTBOUND: 'true',
+  PAYMENTS_LIVE: 'false',
+  VERCEL_ENV: 'preview',
 }
 
 function payload(overrides = {}) {
@@ -201,7 +207,7 @@ describe('poptávky propagace', () => {
 })
 
 describe('platební stavy', () => {
-  it('návrat z brány ani špatný podpis úhradu nezapíšou a stejný webhook se vezme jednou', async () => {
+  it('návrat z brány ani špatný secret úhradu nezapíšou a stejný Comgate push se vezme jednou', async () => {
     const store = createMemoryPromotionStore()
     const created = await (await post(payload({ email: 'platba@example.com' }), store)).json()
     const back = await paymentReturnHttp(
@@ -211,42 +217,64 @@ describe('platební stavy', () => {
     assert.equal(backBody.paid, false)
     assert.equal(backBody.activated, false)
 
-    const raw = JSON.stringify({ eventId: 'evt-1', reference: created.reference, status: 'paid' })
+    const form = (secret) => new URLSearchParams({
+      merchant,
+      secret,
+      transId: 'AB12-CD34-EF56',
+      status: 'PAID',
+      price: '19900',
+      curr: 'CZK',
+      refId: created.reference,
+      test: 'true',
+    }).toString()
+
+    const statusOk = async () => ({
+      ok: true,
+      text: async () => new URLSearchParams({
+        code: '0',
+        message: 'OK',
+        transId: 'AB12-CD34-EF56',
+        status: 'PAID',
+        price: '19900',
+        curr: 'CZK',
+        refId: created.reference,
+        test: 'true',
+      }).toString(),
+    })
+
     const bad = await paymentWebhookHttp(
       new Request('https://cheapeats.local/api/payments/webhook', {
         method: 'POST',
-        headers: { 'x-cheapeats-signature': 'ne', 'content-type': 'application/json' },
-        body: raw,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: form('spatne'),
       }),
-      { env, store },
+      { env, store, now, fetchImpl: statusOk },
     )
     assert.equal(bad.status, 401)
 
-    const signature = createHmac('sha256', env.PAYMENT_WEBHOOK_SECRET).update(raw).digest('hex')
-    assert.equal(verifyWebhookSignature(raw, signature, env.PAYMENT_WEBHOOK_SECRET), true)
     const first = await paymentWebhookHttp(
       new Request('https://cheapeats.local/api/payments/webhook', {
         method: 'POST',
-        headers: { 'x-cheapeats-signature': signature, 'content-type': 'application/json' },
-        body: raw,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: form(gatewaySecret),
       }),
-      { env, store, now },
+      { env, store, now, debugJson: true, fetchImpl: statusOk },
     )
     const firstBody = await first.json()
     assert.equal(first.status, 200)
     assert.equal(firstBody.paid, true)
     assert.equal(firstBody.activated, true)
-    assert.equal(firstBody.duplicate, false)
 
     const second = await paymentWebhookHttp(
       new Request('https://cheapeats.local/api/payments/webhook', {
         method: 'POST',
-        headers: { 'x-cheapeats-signature': signature, 'content-type': 'application/json' },
-        body: raw,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: form(gatewaySecret),
       }),
-      { env, store, now },
+      { env, store, now, fetchImpl: statusOk },
     )
-    assert.equal((await second.json()).duplicate, true)
+    assert.equal(second.status, 200)
+    assert.equal(await second.text(), 'OK')
 
     const listed = await store.list()
     assert.equal(listed.rows[0].paymentStatus, 'paid')
@@ -260,8 +288,8 @@ describe('platební stavy', () => {
     const response = await paymentWebhookHttp(
       new Request('https://cheapeats.local/api/payments/webhook', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ eventId: 'evt-2', reference: 'CEX', status: 'paid' }),
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: 'merchant=x&secret=y&transId=T&refId=CEX&status=PAID',
       }),
       { env: {}, store },
     )

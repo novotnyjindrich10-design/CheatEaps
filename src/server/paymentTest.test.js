@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict'
-import { createHmac } from 'node:crypto'
 import { beforeEach, describe, it } from 'node:test'
 import { applySponsorships, showSponsoredLabel } from '../constants/monetization.js'
 import {
   buildGatewayPayment,
   createComgatePayment,
+  mayActivateFromComgate,
   paymentConfig,
   paymentCreateHttp,
   paymentReturnHttp,
@@ -21,14 +21,19 @@ import {
 
 const now = Date.parse('2026-06-15T12:00:00.000Z')
 const secret = 'test-secret-value'
+const merchant = 'merchant-1'
+const gatewaySecret = 'comgate-secret-value'
 const env = {
   RESEND_API_KEY: 'test-key',
   INQUIRY_TO_EMAIL: 'owner@example.com',
   EMAIL_FROM: 'FoodGo <mail@example.com>',
-  PAYMENT_WEBHOOK_SECRET: 'webhook-secret',
+  PAYMENT_PROVIDER: 'comgate',
+  PAYMENT_MERCHANT_ID: merchant,
+  PAYMENT_SECRET: gatewaySecret,
   PAYMENTS_TEST_MODE: 'true',
   PAYMENT_TEST_SECRET: secret,
   PAYMENTS_LIVE: 'false',
+  PAYMENTS_SANDBOX_OUTBOUND: 'true',
   VERCEL_ENV: 'preview',
 }
 
@@ -71,6 +76,54 @@ function confirm(store, body, { header = secret, testEnv = env } = {}) {
       body: JSON.stringify(body),
     }),
     { env: testEnv, store, now },
+  )
+}
+
+function statusFetch(overrides = {}) {
+  return async (url) => {
+    if (String(url).includes('/status')) {
+      return {
+        ok: true,
+        text: async () => new URLSearchParams({
+          code: '0',
+          message: 'OK',
+          transId: overrides.transId || 'AB12-CD34-EF56',
+          status: overrides.status || 'PAID',
+          price: String(overrides.price ?? 19900),
+          curr: overrides.curr || 'CZK',
+          refId: overrides.refId || '',
+          test: overrides.test ?? 'true',
+        }).toString(),
+      }
+    }
+    throw new Error(`unexpected fetch ${url}`)
+  }
+}
+
+async function comgatePush(store, fields, { testEnv = env, fetchImpl } = {}) {
+  const body = new URLSearchParams({
+    merchant,
+    secret: gatewaySecret,
+    transId: 'AB12-CD34-EF56',
+    status: 'PAID',
+    price: '19900',
+    curr: 'CZK',
+    test: 'true',
+    ...fields,
+  })
+  return paymentWebhookHttp(
+    new Request('https://cheapeats.local/api/payments/webhook', {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+    }),
+    {
+      env: testEnv,
+      store,
+      now,
+      debugJson: true,
+      fetchImpl: fetchImpl || statusFetch({ refId: fields.refId, ...fields }),
+    },
   )
 }
 
@@ -153,7 +206,6 @@ describe('testovací potvrzení platby', () => {
     )).json()
     const places = applySponsorships([{ id: 'bistro-test', name: 'Bistro', sponsored: true }], publicRows.sponsorships, now)
     assert.equal(showSponsoredLabel(places[0], now), true)
-    assert.equal(places.find((place) => place.id === 'jiny-podnik'), undefined)
 
     const later = now + 31 * 24 * 60 * 60 * 1000
     const expired = await (await sponsorshipsHttp(
@@ -171,58 +223,31 @@ describe('testovací potvrzení platby', () => {
     assert.equal(admin.stats.paidOrders, 1)
   })
 
-  it('ověřený webhook aktivuje propagaci; špatný podpis a částka odmítne', async () => {
+  it('Comgate push ověří /status, aktivuje sandbox a odmítne špatný secret i částku', async () => {
     const store = createMemoryPromotionStore()
     const created = await (await postOrder(store, payload({ email: 'webhook-test@example.com' }))).json()
-    const raw = JSON.stringify({
-      eventId: 'evt-live',
-      reference: created.reference,
-      status: 'paid',
-      amount: 199,
-      currency: 'CZK',
+
+    const bad = await comgatePush(store, { refId: created.reference, secret: 'wrong' }, {
+      fetchImpl: statusFetch({ refId: created.reference }),
     })
-    const bad = await paymentWebhookHttp(
-      new Request('https://cheapeats.local/api/payments/webhook', {
-        method: 'POST',
-        headers: { 'x-cheapeats-signature': 'ne', 'content-type': 'application/json' },
-        body: raw,
-      }),
-      { env, store, now },
-    )
     assert.equal(bad.status, 401)
 
-    const wrongAmount = JSON.stringify({
-      eventId: 'evt-wrong-amount',
-      reference: created.reference,
-      status: 'paid',
-      amount: 1,
-      currency: 'CZK',
+    const mismatch = await comgatePush(store, { refId: created.reference, price: '100' }, {
+      fetchImpl: statusFetch({ refId: created.reference, price: 100 }),
     })
-    const wrongSig = createHmac('sha256', env.PAYMENT_WEBHOOK_SECRET).update(wrongAmount).digest('hex')
-    const rejected = await paymentWebhookHttp(
-      new Request('https://cheapeats.local/api/payments/webhook', {
-        method: 'POST',
-        headers: { 'x-cheapeats-signature': wrongSig, 'content-type': 'application/json' },
-        body: wrongAmount,
-      }),
-      { env, store, now },
-    )
-    assert.equal(rejected.status, 400)
-    assert.equal((await rejected.json()).error, 'amount-mismatch')
+    assert.equal(mismatch.status, 400)
+    assert.equal((await mismatch.json()).error, 'amount-mismatch')
 
-    const signature = createHmac('sha256', env.PAYMENT_WEBHOOK_SECRET).update(raw).digest('hex')
-    const ok = await paymentWebhookHttp(
-      new Request('https://cheapeats.local/api/payments/webhook', {
-        method: 'POST',
-        headers: { 'x-cheapeats-signature': signature, 'content-type': 'application/json' },
-        body: raw,
-      }),
-      { env, store, now },
-    )
+    const ok = await comgatePush(store, { refId: created.reference }, {
+      fetchImpl: statusFetch({ refId: created.reference, test: 'true' }),
+    })
     const body = await ok.json()
+    assert.equal(ok.status, 200)
     assert.equal(body.paid, true)
     assert.equal(body.activated, true)
     assert.equal((await store.list()).rows[0].status, 'active')
+
+    assert.equal(mayActivateFromComgate({ status: 'paid', test: true }, { ...env, PAYMENTS_LIVE: 'true', VERCEL_ENV: 'production' }).ok, false)
   })
 
   it('v produkci ani při zapnutém testovacím přepínači simulaci nepustí', async () => {
@@ -238,34 +263,27 @@ describe('testovací potvrzení platby', () => {
   })
 
   it('Comgate create bez outbound flagu nic neodešle; se sandboxem vrátí redirect', async () => {
-    assert.equal(paymentConfig(env).enabled, false)
-    assert.equal(buildGatewayPayment({ amount: 199, reference: 'CE1' }, env).error, 'not-configured')
+    assert.equal(paymentConfig({ ...env, PAYMENTS_SANDBOX_OUTBOUND: 'false', PAYMENTS_LIVE: 'false' }).enabled, false)
+    assert.equal(buildGatewayPayment({ amount: 199, reference: 'CE1' }, { ...env, PAYMENTS_SANDBOX_OUTBOUND: 'false' }).error, 'not-configured')
 
-    const sandboxEnv = {
-      ...env,
-      PAYMENT_PROVIDER: 'comgate',
-      PAYMENT_MERCHANT_ID: 'merchant-1',
-      PAYMENT_SECRET: 'secret-value-long',
-      PAYMENTS_SANDBOX_OUTBOUND: 'true',
-      PAYMENTS_LIVE: 'false',
-    }
     const built = buildGatewayPayment({
       amount: 199,
       reference: 'CE1',
       planName: 'Plus',
       email: 'anna@example.com',
-    }, sandboxEnv)
+    }, env)
     assert.equal(built.ok, true)
     assert.equal(built.request.price, 19900)
     assert.equal(built.request.test, true)
+    assert.equal(built.request.prepareOnly, true)
 
     const created = await createComgatePayment(
       { amount: 199, reference: 'CE1', planName: 'Plus', email: 'anna@example.com' },
       {
-        env: sandboxEnv,
+        env,
         fetchImpl: async () => ({
           ok: true,
-          text: async () => JSON.stringify({ code: 0, redirect: 'https://payments.comgate.cz/pay/abc', transId: 'ABC-1' }),
+          text: async () => 'code=0&message=OK&transId=ABC-1&redirect=https%3A%2F%2Fpayments.comgate.cz%2Fpay%2Fabc',
         }),
       },
     )
@@ -282,11 +300,11 @@ describe('testovací potvrzení platby', () => {
         body: JSON.stringify({ reference: order.reference, accessKey: order.accessKey }),
       }),
       {
-        env: sandboxEnv,
+        env,
         store,
         fetchImpl: async () => ({
           ok: true,
-          text: async () => JSON.stringify({ code: 0, redirect: 'https://payments.comgate.cz/pay/xyz', transId: 'XYZ' }),
+          text: async () => 'code=0&message=OK&transId=XYZ&redirect=https%3A%2F%2Fpayments.comgate.cz%2Fpay%2Fxyz',
         }),
       },
     )

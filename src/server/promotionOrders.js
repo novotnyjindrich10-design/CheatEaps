@@ -380,7 +380,9 @@ export function createSupabasePromotionStore({ config, accessToken, fetchImpl })
       return { ok: true, row }
     },
     async applyPayment(event) {
-      const secret = String(process.env.PAYMENT_WEBHOOK_SECRET ?? '')
+      // Stejná hodnota jako Comgate PAYMENT_SECRET (nebo legacy PAYMENT_WEBHOOK_SECRET).
+      // Nastav v DB: alter database postgres set app.payment_webhook_secret = '<PAYMENT_SECRET>';
+      const secret = String(process.env.PAYMENT_SECRET || process.env.PAYMENT_WEBHOOK_SECRET || '')
       const serviceKey = String(config.serviceRoleKey || '').trim()
       if (!serviceKey) return { ok: false, error: 'service-role-required' }
       const result = await rest(config, serviceKey, fetchImpl, 'rpc/record_verified_payment', {

@@ -1,9 +1,16 @@
 -- FoodGo: ověření vlastníků, audit a historie propagace.
 -- NESPUSŤ bez výslovného schválení. Soubor není součást supabase/bootstrap-all.sql
 -- a tento test ani deploy ho nespouští.
+--
+-- Pořadí migrací (testovací DB → teprve produkce po schválení):
+-- 1) supabase/auth-rls.sql (+ business-applications.sql) — is_cheapeats_admin()
+-- 2) supabase/promotion-orders.sql — objednávky / RPC plateb
+-- 3) tento soubor — place_owner_claims + promotion_audit_log
+-- Rollback: drop table public.promotion_audit_log; drop table public.place_owner_claims;
+-- (promotion_orders tím nesmažeš).
 -- Nemění a nemaže public.promotion_orders, profily, restaurace ani recenze.
 -- Vyžaduje public.is_cheapeats_admin() z dříve schváleného auth SQL.
--- Aktivaci reklamy po webhooku tenhle soubor nemění. Tu dál drží promotion-orders.sql.
+-- Aktivaci reklamy po Comgate push řeší server payments.js + promotion-orders.sql.
 
 do $$
 begin

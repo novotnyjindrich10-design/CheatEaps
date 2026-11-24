@@ -7,13 +7,14 @@
 -- (nebo jednou supabase/bootstrap-all.sql): public.profiles, profiles.is_admin,
 -- funkce public.is_cheapeats_admin().
 --
--- Po schváleném spuštění, a až budeš chtít přijímat webhook plateb:
+-- Po schváleném spuštění, a až budeš chtít přijímat Comgate push:
 -- 1) Na serveru nastav SUPABASE_SERVICE_ROLE_KEY (jen backend, nikdy VITE_*).
--- 2) V SQL editoru nastav tajemství dlouhé aspoň 16 znaků. Do tohoto souboru ho nepiš:
---      alter database postgres set app.payment_webhook_secret = 'nahraď-vlastním-tajemstvím';
---    Stejnou hodnotu dej do PAYMENT_WEBHOOK_SECRET na serveru.
--- Dokud service_role nebo tajemství chybí, webhook úhradu nezapíše.
--- Webhook ani návrat z brány reklamu nezapnou — aktivaci dělá jen admin.
+-- 2) V SQL editoru nastav tajemství = Comgate PAYMENT_SECRET (≥16 znaků). Do tohoto souboru ho nepiš:
+--      alter database postgres set app.payment_webhook_secret = 'stejné-jako-PAYMENT_SECRET';
+--    Stejnou hodnotu dej do PAYMENT_SECRET na Vercelu (Comgate secret z portálu).
+-- Dokud service_role nebo tajemství chybí, RPC úhradu nezapíše.
+-- Comgate push: secret v těle + ověření /v1.0/status; return URL neaktivuje.
+-- Aktivaci po ověřené PAID platbě provádí server (payments.js), ne klient.
 -- record_verified_payment nemá EXECUTE pro anon/authenticated.
 
 do $$
