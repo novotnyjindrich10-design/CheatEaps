@@ -1,7 +1,10 @@
 # FoodGo 1.0 — zbývající ruční kroky
 
 Jen to, co nejde dokončit bez provozovatele / Comgate / schválení.  
-Technický stav: commit na `foodgo-launch-preview`, detail v `FOODGO-LAUNCH.md`.
+Technický stav: větev `foodgo-launch-preview`, detail v `FOODGO-LAUNCH.md`.
+
+**Stav Supabase (projekt `pcptzyfoojmnspumcmsi`, ověřeno po obnovení z pauzy):**
+host `pcptzyfoojmnspumcmsi.supabase.co` je dostupný; Auth GoTrue odpovídá; základní tabulky (`profiles`, `favorites`, `reviews`, `review_reports`, `business_applications`, `published_places`) existují; `is_cheapeats_admin()` existuje. Tabulky `promotion_orders` / `promotion_payment_events` / view `promotion_sponsorships_public` existují, ale **RPC** `submit_promotion_inquiry`, `read_promotion_inquiry`, `record_verified_payment` **chybí** — evidence poptávek a webhook zápis zatím neběží end-to-end. `place_owner_claims` a `promotion_audit_log` chybí. Produkční DB se bez schválení neměnila.
 
 ---
 
@@ -27,44 +30,81 @@ Neveřejné (banka, hesla, klíče) do gitu nepatří.
 
 ---
 
-## 3. Vercel Production / Preview env
+## 3. Vercel environment variables
 
-Aktuálně na projektu jsou hlavně `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `PUBLIC_SITE_URL` (Production). Doplň:
+Projekt `cheat-eaps` (team `jindrichcompany`). Aktuálně nastaveno: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (Preview + Production), `PUBLIC_SITE_URL` (jen Production). Protection Bypass pro Preview webhooky je na projektu zapnutý (`protectionBypassConfigured: true` u `/api/payments/status`).
 
-| Proměnná | Prostředí | Ověření |
-| --- | --- | --- |
-| `PUBLIC_SITE_URL` | Preview i Production (`https://…`) | Kanonické odkazy / sitemap |
-| `RESEND_API_KEY`, `EMAIL_FROM`, `INQUIRY_TO_EMAIL` | Preview + Production | `npm run check:resend` / odeslání poptávky |
-| `SUPABASE_SERVICE_ROLE_KEY` | Preview + Production (jen server) | Webhook zápis RPC; nikdy `VITE_*` |
-| `PAYMENT_PROVIDER=comgate`, `PAYMENT_MERCHANT_ID`, `PAYMENT_SECRET` | nejdřív Preview | `GET /api/payments/status` → `enabled` dle flagů |
-| `PAYMENTS_SANDBOX_OUTBOUND=true`, `PAYMENTS_LIVE=false` | Preview | sandbox create |
-| `VERCEL_AUTOMATION_BYPASS_SECRET` | Preview (+ později Production) | `protectionBypassConfigured: true` **bez** úniku hodnoty v JSON |
+| Proměnná | Kde získat | Preview | Production | Povinná katalog (zdarma) | Povinná platby | Ověření |
+| --- | --- | --- | --- | --- | --- | --- |
+| `SUPABASE_URL` | Supabase → Project Settings → API → Project URL | ano | ano | ano (účty/recenze) | ano (evidence) | `GET /api/auth/session` → `configured:true` |
+| `SUPABASE_ANON_KEY` | Supabase → API → `anon` `public` | ano | ano | ano (účty) | ano (inquiry RPC) | stejné + přihlášení |
+| `PUBLIC_SITE_URL` | kanonický https origin webu | ano (`https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app`) | ano (`https://cheat-eaps.vercel.app` nebo vlastní doména) | doporučeno | doporučeno | sitemap / e-mailové odkazy |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → API → `service_role` (**secret**) | ano | ano | ne | ano (webhook → `record_verified_payment`) | jen server; nikdy `VITE_*`, nikdy do gitu/bundle |
+| `RESEND_API_KEY` | Resend → API Keys | ano | ano | ne (poptávka se uloží i bez e-mailu) | ne | `npm run check:resend` |
+| `EMAIL_FROM` | ověřená doména Resend (trial: `… <onboarding@resend.dev>`) | ano | ano | ne | ne | doručení poptávky |
+| `INQUIRY_TO_EMAIL` | schránka provozovatele | ano | ano | ne | ne | upozornění na poptávku |
+| `PAYMENT_PROVIDER` | pevně `comgate` | sandbox | později | ne | ano | `GET /api/payments/status` |
+| `PAYMENT_MERCHANT_ID` | Comgate portál | sandbox | později | ne | ano | status → ne `gateway-not-connected` |
+| `PAYMENT_SECRET` | Comgate secret (≥16) | sandbox | později | ne | ano | create + push; stejná hodnota do DB `app.payment_webhook_secret` |
+| `PAYMENTS_SANDBOX_OUTBOUND` | `true` pro test create | ano | ne (nechat vypnuto) | ne | sandbox | outbound create v Preview |
+| `PAYMENTS_LIVE` | vždy `false`, dokud neproběhne sandbox E2E | `false` | `false` | ne | gate | test platba neaktivuje Production |
+| `VERCEL_AUTOMATION_BYPASS_SECRET` | Vercel → Deployment Protection → Protection Bypass | ano | až při live webhooku | ne | ano (push URL) | status → `protectionBypassConfigured` **bez** úniku hodnoty |
+
+**`SUPABASE_SERVICE_ROLE_KEY`:** jen Environment Variables na Vercelu (Server / Secret). Nesmí být v klientském bundle, GitHubu, logu ani veřejném API. Kód ho čte jen v `src/server/*`.
 
 **UI:** [Vercel Dashboard](https://vercel.com) → team `jindrichcompany` → project `cheat-eaps` → Settings → Environment Variables.
 
 ---
 
-## 4. Supabase Auth redirects
+## 4. Supabase Auth — Site URL a Redirect URLs
 
 | | |
 | --- | --- |
-| **Kde** | [Supabase Dashboard](https://supabase.com/dashboard) → projekt CheapEats → Authentication → URL Configuration |
-| **Co** | Site URL = produkční `PUBLIC_SITE_URL`; Redirect Allow List: `/nove-heslo` na Production i Preview (`https://*-jindrichcompany.vercel.app/nove-heslo` nebo konkrétní Preview URL) |
-| **Ověření** | Obnova hesla dorazí na `/nove-heslo` a uloží heslo |
+| **Kde** | [Supabase Dashboard](https://supabase.com/dashboard/project/pcptzyfoojmnspumcmsi/auth/url-configuration) → Authentication → URL Configuration |
+
+**Site URL (Production):**
+```
+https://cheat-eaps.vercel.app
+```
+(až bude vlastní doména, Site URL na ni přepni a starou nech v Redirect listu)
+
+**Redirect URLs — přesně tyto řádky:**
+```
+https://cheat-eaps.vercel.app/nove-heslo
+https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app/nove-heslo
+http://127.0.0.1:5173/nove-heslo
+http://localhost:5173/nove-heslo
+```
+
+Volitelně (všechny Preview větve):
+```
+https://*-jindrichcompany.vercel.app/nove-heslo
+```
+
+**Ověření:** obnova hesla dorazí na `/nove-heslo` a uloží heslo; po přihlášení zůstane uživatel na webu (RecoveryRedirect zachytí tokeny i na Site URL).
 
 ---
 
-## 5. SQL migrace (izolovaný test → produkce)
+## 5. SQL migrace (izolovaný test → produkce po schválení)
 
-| | |
-| --- | --- |
-| **Kde** | Supabase SQL Editor (nejdřív **nový test projekt** / větev, ne ostrá data) |
-| **Pořadí** | 1) `auth-rls` + `business-applications` (pokud chybí) → 2) `supabase/promotion-orders.sql` → 3) `supabase/promotion-owners.sql` → 4) `alter database postgres set app.payment_webhook_secret = '<PAYMENT_SECRET>';` |
-| **Rollback owners** | `drop table public.promotion_audit_log; drop table public.place_owner_claims;` |
-| **Ověření** | Tabulky existují; anon nemůže číst cizí objednávky; RPC `record_verified_payment` jen `service_role` |
-| **Offline kontrakt** | `node scripts/sql-migration-dry-run.mjs` (nespouští DB) |
+Kontrola: `node scripts/check-supabase-schema.mjs`  
+Offline kontrakt: `node scripts/sql-migration-dry-run.mjs` (nespouští DB)
 
-V tomto agent běhu Docker daemon / vzdálená test DB nebyly dostupné — migrace se **neaplikovaly**.
+| Soubor | Stav na `pcptzyfoojmnspumcmsi` | Akce |
+| --- | --- | --- |
+| `supabase/bootstrap-all.sql` (základ) | **hotovo** — tabulky + `is_cheapeats_admin` | nic |
+| `supabase/promotion-orders.sql` | tabulky/view **ano**, RPC **ne** | po schválení **spustit celý soubor** (idempotentní `create table if not exists` + `create or replace function`) |
+| `supabase/promotion-owners.sql` | `place_owner_claims`, `promotion_audit_log` **MISSING** | po schválení spustit (až po funkčních RPC z orders) |
+| `alter database … app.payment_webhook_secret` | neověřeno (vyžaduje service/SQL) | až bude `PAYMENT_SECRET` — stejná hodnota |
+| `supabase/loyalty.sql` | chybí (volitelné V1) | neblokuje katalog |
+| `supabase/place-reports.sql` / `place-stats.sql` | chybí (volitelné) | neblokuje katalog |
+
+**Pořadí po schválení:** 1) `promotion-orders.sql` → 2) `promotion-owners.sql` → 3) DB secret = `PAYMENT_SECRET` → 4) Vercel `SUPABASE_SERVICE_ROLE_KEY`.
+
+**Rollback owners:** `drop table public.promotion_audit_log; drop table public.place_owner_claims;`
+
+**Bezpečnost:** anon nesmí číst cizí objednávky; `record_verified_payment` jen `service_role`.  
+Izolovaná test DB / Docker v tomto běhu nebyly dostupné — migrace se **neaplikovaly** na produkci.
 
 ---
 
@@ -73,9 +113,11 @@ V tomto agent běhu Docker daemon / vzdálená test DB nebyly dostupné — migr
 | | |
 | --- | --- |
 | **Kde** | [resend.com](https://resend.com) → Domains + API Keys |
-| **Co** | Ověřit DNS domény; `EMAIL_FROM` na ověřené doméně; stejné klíče do Vercel |
+| **Co** | Ověřit DNS domény; `EMAIL_FROM` na ověřené doméně; stejné klíče do Vercel Preview + Production |
 | **Lokálně** | `npm run resend:key` → `npm run check:resend` |
-| **Ověření** | Poptávka Pro podniky / schválení žádosti dorazí (bez spamu na cizí restaurace) |
+| **Ověření** | Poptávka Pro podniky / schválení žádosti dorazí |
+
+**Důležité:** výpadek Resend **nezruší** uloženou poptávku — server nejdřív volá `submit_promotion_inquiry`, e-mail je až potom. Bez RPC (současný stav) se evidence neuloží a zbývá jen e-mailová větev → proto nejdřív migrace RPC.
 
 Trial `onboarding@resend.dev` doručí jen na e-mail Resend účtu.
 
@@ -83,12 +125,15 @@ Trial `onboarding@resend.dev` doručí jen na e-mail Resend účtu.
 
 ## 7. Comgate sandbox → později live
 
+Integrace v kódu je hotová (`create` / push / `status`). Po doplnění merchant údajů **není potřeba znovu programovat** platební systém — jen env + DB secret + Result URL.
+
 | | |
 | --- | --- |
 | **Kde** | [portal.comgate.cz](https://portal.comgate.cz) → připojení e-shopu |
-| **Result URL** | `https://<preview-host>/api/payments/webhook?x-vercel-protection-bypass=<BYPASS>` |
-| **Ověření** | Test platba → admin ukáže `paid`/`active`; `paymentSource` u testu `gateway-test`; Production bez `PAYMENTS_LIVE` test neaktivuje |
-| **Live** | Jen po sandbox E2E + explicitní `PAYMENTS_LIVE=true` |
+| **Sandbox postup** | 1) Preview env: `PAYMENT_PROVIDER=comgate`, `PAYMENT_MERCHANT_ID`, `PAYMENT_SECRET`, `PAYMENTS_SANDBOX_OUTBOUND=true`, `PAYMENTS_LIVE=false`, `SUPABASE_SERVICE_ROLE_KEY` 2) SQL `app.payment_webhook_secret` = stejný secret 3) Result/push URL: `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app/api/payments/webhook?x-vercel-protection-bypass=<BYPASS>` 4) Test platba v Comgate → admin `paid`/`active`, `paymentSource` u testu `gateway-test` |
+| **Live** | Jen po sandbox E2E + explicitní `PAYMENTS_LIVE=true` (Production bez toho test neaktivuje) |
+
+Žádné ostré platby v tomto běhu.
 
 ---
 
@@ -97,11 +142,11 @@ Trial `onboarding@resend.dev` doručí jen na e-mail Resend účtu.
 | | |
 | --- | --- |
 | **Kde** | GitHub `foodgo-launch-preview` → `main` (PR), Vercel Production |
-| **Až když** | Kroky 1–2 hotové; smoke Preview/Production; platby odděleně (7) |
+| **Až když** | Kroky 1–2 hotové; SQL RPC + Auth redirects; smoke Preview/Production; platby odděleně (7) |
 | **Rollback** | Vercel → předchozí Production → Promote |
 
 ---
 
 ## Co už není ruční technická překážka
 
-Mapa, katalog 775 souřadnic, Comgate kód (create/push/status), auto-aktivace s oddělením test/live, CSV fakturace, SQL kontrakty, Preview deploy pipeline.
+Obnova hostitele Supabase (projekt znovu běží), mapa, katalog 775 souřadnic, Comgate kód (create/push/status), auto-aktivace s oddělením test/live, CSV fakturace, SQL kontrakty, schema check včetně propagace/RPC, Preview deploy pipeline.

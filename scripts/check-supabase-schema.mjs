@@ -1,5 +1,5 @@
 /**
- * Kontrola, jestli remote Supabase už má tabulky FoodGo.
+ * Kontrola, jestli remote Supabase už má tabulky a RPC FoodGo.
  * Čte jen .env (SUPABASE_URL + SUPABASE_ANON_KEY). Žádné tajemství nevypisuje.
  * Spuštění: node scripts/check-supabase-schema.mjs
  */
@@ -17,6 +17,29 @@ function loadEnv() {
   return env
 }
 
+async function probeTable(base, headers, table) {
+  const res = await fetch(`${base}/rest/v1/${table}?select=*&limit=0`, { headers })
+  const text = await res.text()
+  const missingTable = res.status === 404 || /PGRST205|Could not find the table/i.test(text)
+  const forbidden = res.status === 401 || res.status === 403
+  if (missingTable) return 'MISSING'
+  if (forbidden) return 'EXISTS (read blocked for anon — očekávané u chráněných tabulek)'
+  if (res.ok) return 'EXISTS'
+  return `HTTP ${res.status} ${text.slice(0, 120)}`
+}
+
+async function probeRpc(base, headers, rpc) {
+  const res = await fetch(`${base}/rest/v1/rpc/${rpc}`, {
+    method: 'POST',
+    headers: { ...headers, 'Content-Type': 'application/json', Prefer: 'params=single-object' },
+    body: '{}',
+  })
+  const text = await res.text()
+  const missing = res.status === 404 || /PGRST202|Could not find the function/i.test(text)
+  if (missing) return 'MISSING'
+  return `PRESENT (HTTP ${res.status})`
+}
+
 const env = loadEnv()
 const base = String(env.SUPABASE_URL || '')
   .trim()
@@ -30,7 +53,11 @@ if (!base || !key) {
 }
 
 const headers = { apikey: key, Authorization: `Bearer ${key}`, Accept: 'application/json' }
-const tables = [
+
+console.log('host', new URL(base).host)
+console.log('key_kind', key.startsWith('sb_publishable') ? 'publishable' : key.includes('.') ? 'jwt-like' : 'other')
+
+const coreTables = [
   'profiles',
   'favorites',
   'reviews',
@@ -39,53 +66,57 @@ const tables = [
   'published_places',
 ]
 
-/** Volitelné — až po supabase/loyalty.sql. Chybějící jen hlásíme, exit code nemění. */
-const loyaltyTables = [
-  'loyalty_points',
+console.log('\nZáklad (bootstrap-all / auth + community + business):')
+let missing = 0
+for (const table of coreTables) {
+  const status = await probeTable(base, headers, table)
+  if (status === 'MISSING') missing += 1
+  console.log(`${table}: ${status}`)
+}
+
+console.log('\nPropagace (supabase/promotion-orders.sql):')
+const promoTables = ['promotion_orders', 'promotion_payment_events', 'promotion_sponsorships_public']
+let promoMissing = 0
+for (const table of promoTables) {
+  const status = await probeTable(base, headers, table)
+  if (status === 'MISSING') promoMissing += 1
+  console.log(`${table}: ${status}`)
+}
+
+const promoRpcs = ['submit_promotion_inquiry', 'read_promotion_inquiry', 'record_verified_payment']
+let promoRpcMissing = 0
+for (const rpc of promoRpcs) {
+  const status = await probeRpc(base, headers, rpc)
+  if (status === 'MISSING') promoRpcMissing += 1
+  console.log(`rpc/${rpc}: ${status}`)
+}
+
+const adminFn = await probeRpc(base, headers, 'is_cheapeats_admin')
+console.log(`rpc/is_cheapeats_admin: ${adminFn}`)
+
+console.log('\nVlastníci / audit (supabase/promotion-owners.sql):')
+const ownerTables = ['place_owner_claims', 'promotion_audit_log']
+let ownerMissing = 0
+for (const table of ownerTables) {
+  const status = await probeTable(base, headers, table)
+  if (status === 'MISSING') ownerMissing += 1
+  console.log(`${table}: ${status}`)
+}
+
+console.log('\nVolitelné (loyalty / reports / stats):')
+const optionalTables = [
   'loyalty_transactions',
   'loyalty_rewards',
   'loyalty_reward_codes',
   'loyalty_redemptions',
+  'place_reports',
+  'place_stats_daily',
 ]
-
-console.log('host', new URL(base).host)
-console.log('key_kind', key.startsWith('sb_publishable') ? 'publishable' : key.includes('.') ? 'jwt-like' : 'other')
-
-let missing = 0
-for (const table of tables) {
-  const res = await fetch(`${base}/rest/v1/${table}?select=*&limit=0`, { headers })
-  const text = await res.text()
-  const missingTable = res.status === 404 || /PGRST205|Could not find the table/i.test(text)
-  const forbidden = res.status === 401 || res.status === 403
-  if (missingTable) {
-    missing += 1
-    console.log(`${table}: MISSING`)
-  } else if (forbidden) {
-    console.log(`${table}: EXISTS (read blocked for anon — očekávané u profiles/applications)`)
-  } else if (res.ok) {
-    console.log(`${table}: EXISTS`)
-  } else {
-    console.log(`${table}: HTTP ${res.status} ${text.slice(0, 120)}`)
-  }
-}
-
-console.log('\nLoyalty (volitelné, supabase/loyalty.sql):')
-let loyaltyMissing = 0
-for (const table of loyaltyTables) {
-  const res = await fetch(`${base}/rest/v1/${table}?select=*&limit=0`, { headers })
-  const text = await res.text()
-  const missingTable = res.status === 404 || /PGRST205|Could not find the table/i.test(text)
-  const forbidden = res.status === 401 || res.status === 403
-  if (missingTable) {
-    loyaltyMissing += 1
-    console.log(`${table}: MISSING`)
-  } else if (forbidden) {
-    console.log(`${table}: EXISTS (read blocked for anon — očekávané)`)
-  } else if (res.ok) {
-    console.log(`${table}: EXISTS`)
-  } else {
-    console.log(`${table}: HTTP ${res.status} ${text.slice(0, 120)}`)
-  }
+let optionalMissing = 0
+for (const table of optionalTables) {
+  const status = await probeTable(base, headers, table)
+  if (status === 'MISSING') optionalMissing += 1
+  console.log(`${table}: ${status}`)
 }
 
 console.log(
@@ -93,9 +124,20 @@ console.log(
     ? `\nChybí ${missing} základních tabulek. V SQL Editoru spusť supabase/bootstrap-all.sql`
     : '\nZákladní tabulky jsou dostupné (nebo správně chráněné RLS).',
 )
-if (loyaltyMissing) {
-  console.log(`Loyalty: chybí ${loyaltyMissing} tabulek. Po schválení spusť supabase/loyalty.sql`)
+if (promoMissing || promoRpcMissing) {
+  console.log(
+    `Propagace: chybí ${promoMissing} tabulek a ${promoRpcMissing} RPC. Po schválení spusť supabase/promotion-orders.sql`,
+  )
 } else {
-  console.log('Loyalty tabulky jsou dostupné (nebo správně chráněné RLS).')
+  console.log('Propagace: tabulky i RPC jsou dostupné (nebo správně chráněné).')
 }
+if (ownerMissing) {
+  console.log(`Owners: chybí ${ownerMissing} tabulek. Po schválení spusť supabase/promotion-owners.sql`)
+} else {
+  console.log('Owners: tabulky jsou dostupné (nebo správně chráněné RLS).')
+}
+if (optionalMissing) {
+  console.log(`Volitelné: chybí ${optionalMissing} tabulek (loyalty.sql / place-reports.sql / place-stats.sql).`)
+}
+
 process.exit(missing ? 1 : 0)
