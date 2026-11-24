@@ -137,12 +137,13 @@ function checkResendApi(envOk) {
 }
 
 function summarize() {
-  const counts = { PASS: 0, WARNING: 0, BLOCKED: 0, FAIL: 0 }
+  const counts = { PASS: 0, WARNING: 0, BLOCKED: 0, FAIL: 0, 'NOT TESTED': 0 }
   for (const item of findings) counts[item.status] = (counts[item.status] || 0) + 1
   let overall = 'PASS'
   if (counts.FAIL > 0) overall = 'FAIL'
   else if (counts.BLOCKED > 0) overall = 'BLOCKED'
   else if (counts.WARNING > 0) overall = 'WARNING'
+  else if (counts['NOT TESTED'] > 0) overall = 'NOT TESTED'
   return { overall, counts }
 }
 
@@ -154,13 +155,53 @@ run('unit-tests', 'npm', ['test'])
 run('lint', 'npm', ['run', 'lint'])
 run('build', 'npm', ['run', 'build'])
 run('catalog-audit', 'npm', ['run', 'audit:catalog'])
-if (offline) {
-  add('WARNING', 'resend-api', 'přeskočeno (--offline / LAUNCH_CHECK_OFFLINE=1) — nevolá Resend API')
-} else if (!envOk.keyPresent || !envOk.keyShapeOk) {
-  add('WARNING', 'resend-api', 'přeskočeno — klíč není připravený (free katalog bez mailů)')
-} else {
-  checkResendApi(envOk)
-}
+  if (offline) {
+    add('NOT TESTED', 'resend-api', 'přeskočeno (--offline) — nevolá Resend API')
+  } else if (!envOk.keyPresent || !envOk.keyShapeOk) {
+    add('NOT TESTED', 'resend-api', 'klíč není připravený — odeslání se nezkoušelo')
+  } else {
+    checkResendApi(envOk)
+  }
+
+  add('NOT TESTED', 'comgate-sandbox-payment', 'ostrá ani sandbox transakce u Comgate se z tohoto příkazu nespouští')
+  add('NOT TESTED', 'sb-secret-live', 'live probe sb_secret_ jen ručně: node scripts/probe-supabase-secret-compat.mjs')
+  add('NOT TESTED', 'interactive-preview', 'chráněné Preview v prohlížeči agenta neověřuje login Vercel')
+
+  const previewSql = readFileSync(resolve(root, 'supabase/promotion-apply-missing.sql'), 'utf8')
+  if (
+    /grant execute on function public\.submit_promotion_inquiry\(jsonb, text, text\) to service_role/.test(previewSql)
+    && !/grant execute on function public\.submit_promotion_inquiry\(jsonb, text, text\) to anon/.test(previewSql)
+  ) {
+    add('PASS', 'promotion-rpc-grants', 'submit/read nejsou pro anon v SQL')
+  } else {
+    add('BLOCKED', 'promotion-rpc-grants', 'submit_promotion_inquiry je pořád veřejné')
+  }
+
+  const paymentsLive = readFileSync(resolve(root, 'src/server/payments.js'), 'utf8')
+  if (/PAYMENTS_LIVE/.test(paymentsLive) && !/PAYMENTS_LIVE\s*=\s*['"]true['"]/.test(paymentsLive)) {
+    add('PASS', 'payments-live-default', 'kód nezapíná PAYMENTS_LIVE=true')
+  } else {
+    add('BLOCKED', 'payments-live-default', 'zkontroluj výchozí stav ostrých plateb')
+  }
+
+  const env = {
+    ...loadEnvFile(resolve(root, '.env')),
+    ...loadEnvFile(resolve(root, '.env.local')),
+  }
+  const supabaseUrl = String(env.SUPABASE_URL || '')
+  if (!supabaseUrl) {
+    add('WARNING', 'preview-production-split', 'lokální SUPABASE_URL chybí')
+  } else if (supabaseUrl.includes('pcptzyfoojmnspumcmsi')) {
+    add('WARNING', 'preview-production-split', 'lokální .env míří na produkční projekt — Preview potřebuje foodgo-preview')
+  } else {
+    add('PASS', 'preview-production-split')
+  }
+
+  if (!String(env.OPERATOR_LEGAL_APPROVED || '').trim()) {
+    add('BLOCKED', 'legal-approval', 'právní texty nejsou označené jako schválené provozovatelem')
+  } else {
+    add('PASS', 'legal-approval')
+  }
 
 const summary = summarize()
 const report = {

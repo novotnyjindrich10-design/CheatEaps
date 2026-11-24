@@ -81,7 +81,7 @@ Preview je chráněné SSO. Comgate server se nepřihlásí.
 | `PAYMENTS_TEST_MODE` / `PAYMENT_TEST_SECRET` | Jen Preview interní simulace (≥16 znaků); **ne** na Production |
 | `VERCEL_AUTOMATION_BYPASS_SECRET` | Bypass pro Comgate push |
 
-`PAYMENT_WEBHOOK_SECRET` už Comgate nepoužívá. Pokud běží Supabase RPC, nastav `app.payment_webhook_secret` na **stejnou hodnotu jako `PAYMENT_SECRET`**.
+`PAYMENT_WEBHOOK_SECRET` už Comgate nepoužívá. Secret do databáze neukládej. Úhradu zapisuje jen `service_role` po ověření na serveru.
 
 ### D4. Ověření
 - `GET /api/payments/status` → `enabled: true`, `reason: sandbox`  
@@ -125,14 +125,15 @@ Případně revert merge na `main`. SQL rollback jen se zálohou.
 
 ## F. Databázové migrace
 
-**Pořadí (nejdřív izolovaný test projekt Supabase):**
+**Pořadí na prázdném preview projektu** (ne na produkci):
 
-1. `supabase/auth-rls.sql` (+ `business-applications.sql` pokud ještě neběží)  
-2. `supabase/promotion-orders.sql`  
-3. `supabase/promotion-owners.sql` (volitelné — claims + audit)
+1. `node scripts/bootstrap-preview-database.mjs` s `PREVIEW_DATABASE_URL` z projektu `foodgo-preview`.
+   Skript odmítne produkční ref `pcptzyfoojmnspumcmsi`.
+2. Ručně ve stejném pořadí, když nemáš `psql`: `bootstrap-all.sql`, `promotion-apply-missing.sql`, `place-reports.sql`, `place-stats.sql`, `preview-synthetic-seed.sql`.
 
-Pak:  
-`alter database postgres set app.payment_webhook_secret = '<PAYMENT_SECRET>';`
+Na současné produkci, až schválíš: jen `supabase/promotion-apply-missing.sql` (doplní chybějící RPC a owners, existující objednávky nemaže).
+
+Secret platební brány do databáze nepiš.
 
 **Rollback owners:**  
 `drop table if exists public.promotion_audit_log;`  

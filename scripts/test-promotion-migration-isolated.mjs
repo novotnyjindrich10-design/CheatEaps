@@ -57,9 +57,9 @@ function waitPg() {
   return false
 }
 
-function psqlFile(relOrAbs) {
+function psqlFile(relOrAbs, { singleTransaction = false, database = DB.db } = {}) {
   const abs = resolve(ROOT, relOrAbs)
-  const result = run('docker', [
+  const args = [
     'exec',
     '-i',
     NAME,
@@ -69,16 +69,14 @@ function psqlFile(relOrAbs) {
     '-U',
     DB.user,
     '-d',
-    DB.db,
-    '-f',
-    '-',
-  ], {
-    input: readFileSync(abs, 'utf8'),
-  })
-  return result
+    database,
+  ]
+  if (singleTransaction) args.push('--single-transaction')
+  args.push('-f', '-')
+  return run('docker', args, { input: readFileSync(abs, 'utf8') })
 }
 
-function psqlSql(sql) {
+function psqlSql(sql, database = DB.db) {
   return run('docker', [
     'exec',
     '-i',
@@ -89,7 +87,7 @@ function psqlSql(sql) {
     '-U',
     DB.user,
     '-d',
-    DB.db,
+    database,
     '-f',
     '-',
   ], { input: sql })
@@ -185,7 +183,7 @@ try {
   mustOk(r, 'preexisting-tables')
   steps.push('preexisting-tables')
 
-  r = psqlFile('supabase/promotion-apply-missing.sql')
+  r = psqlFile('supabase/promotion-apply-missing.sql', { singleTransaction: true })
   mustOk(r, 'apply-missing-1')
   steps.push('apply-missing-1')
 
@@ -197,7 +195,7 @@ try {
   r = psqlSql(`select count(*)::text as c from public.promotion_orders where reference = 'CETEST1';`)
   mustOk(r, 'count-before-rerun')
   const before = String(r.stdout || '')
-  r = psqlFile('supabase/promotion-apply-missing.sql')
+  r = psqlFile('supabase/promotion-apply-missing.sql', { singleTransaction: true })
   mustOk(r, 'apply-missing-2')
   steps.push('apply-missing-2-idempotent')
   r = psqlSql(`
@@ -213,6 +211,72 @@ try {
   `)
   mustOk(r, 'data-preserved')
   steps.push('data-preserved')
+
+  r = run('docker', ['exec', NAME, 'dropdb', '--if-exists', '-U', DB.user, 'foodgo_restore'])
+  r = run('docker', ['exec', NAME, 'createdb', '-U', DB.user, 'foodgo_restore'])
+  mustOk(r, 'createdb-restore')
+  r = run('docker', [
+    'exec', NAME, 'pg_dump', '-U', DB.user, '-d', DB.db, '--no-owner', '--format=custom', '-f', '/tmp/foodgo-promo.dump',
+  ])
+  mustOk(r, 'pg_dump')
+  r = run('docker', [
+    'exec', NAME, 'pg_restore', '-U', DB.user, '-d', 'foodgo_restore', '--no-owner', '--exit-on-error', '/tmp/foodgo-promo.dump',
+  ])
+  if (r.status !== 0) {
+    console.error('pg_restore', r.stderr || r.stdout)
+    process.exit(r.status || 1)
+  }
+  r = psqlSql(`
+    do $$
+    declare c int;
+    begin
+      select count(*) into c from public.promotion_orders where reference in ('CETEST1', 'CETEST-ACT');
+      if c <> 2 then raise exception 'restore count %, expected 2', c; end if;
+    end $$;
+  `, 'foodgo_restore')
+  mustOk(r, 'restore-count')
+  steps.push('dump-restore')
+
+  r = psqlSql(`
+    drop function if exists public.activate_verified_promotion(text);
+    drop function if exists public.submit_promotion_inquiry(jsonb, text, text);
+    do $$
+    declare c int;
+    begin
+      select count(*) into c from public.promotion_orders where reference = 'CETEST1';
+      if c <> 1 then raise exception 'rollback removed orders: %', c; end if;
+    end $$;
+  `)
+  mustOk(r, 'rollback-functions')
+  steps.push('rollback-functions-keep-rows')
+  r = psqlFile('supabase/promotion-apply-missing.sql', { singleTransaction: true })
+  mustOk(r, 'reapply-after-rollback')
+  steps.push('reapply-after-rollback')
+
+  r = run('docker', ['exec', NAME, 'dropdb', '--if-exists', '-U', DB.user, 'foodgo_empty'])
+  r = run('docker', ['exec', NAME, 'createdb', '-U', DB.user, 'foodgo_empty'])
+  mustOk(r, 'createdb-empty')
+  r = psqlFile('scripts/isolated-promotion-fixture.sql', { database: 'foodgo_empty' })
+  mustOk(r, 'empty-fixture')
+  r = psqlFile('supabase/bootstrap-all.sql', { singleTransaction: true, database: 'foodgo_empty' })
+  mustOk(r, 'empty-bootstrap')
+  r = psqlFile('supabase/promotion-apply-missing.sql', { singleTransaction: true, database: 'foodgo_empty' })
+  mustOk(r, 'empty-promotion')
+  r = psqlFile('supabase/preview-synthetic-seed.sql', { singleTransaction: true, database: 'foodgo_empty' })
+  mustOk(r, 'empty-seed')
+  r = psqlSql(`
+    do $$
+    declare c int;
+    begin
+      select count(*) into c from public.promotion_orders where email = 'preview-bistro@example.com';
+      if c <> 1 then raise exception 'synthetic seed missing: %', c; end if;
+      if (select count(*) from auth.users where email like '%@example.com') < 1 then
+        raise exception 'synthetic user missing';
+      end if;
+    end $$;
+  `, 'foodgo_empty')
+  mustOk(r, 'empty-seed-check')
+  steps.push('empty-database-bootstrap')
 
   console.log(JSON.stringify({
     ok: true,

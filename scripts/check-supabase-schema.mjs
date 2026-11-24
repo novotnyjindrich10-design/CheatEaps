@@ -5,6 +5,8 @@
  */
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { supabaseApiHeaders } from '../src/server/supabaseApiHeaders.js'
+import { isProductionSupabaseTarget } from './lib/production-target.mjs'
 
 function loadEnv() {
   const raw = readFileSync(resolve(process.cwd(), '.env'), 'utf8')
@@ -28,16 +30,8 @@ async function probeTable(base, headers, table) {
   return `HTTP ${res.status} ${text.slice(0, 120)}`
 }
 
-async function probeRpc(base, headers, rpc) {
-  const res = await fetch(`${base}/rest/v1/rpc/${rpc}`, {
-    method: 'POST',
-    headers: { ...headers, 'Content-Type': 'application/json', Prefer: 'params=single-object' },
-    body: '{}',
-  })
-  const text = await res.text()
-  const missing = res.status === 404 || /PGRST202|Could not find the function/i.test(text)
-  if (missing) return 'MISSING'
-  return `PRESENT (HTTP ${res.status})`
+async function probeRpc(paths, rpc) {
+  return paths.has(`/rpc/${rpc}`) ? 'PRESENT' : 'MISSING'
 }
 
 const env = loadEnv()
@@ -52,8 +46,23 @@ if (!base || !key) {
   process.exit(2)
 }
 
-const headers = { apikey: key, Authorization: `Bearer ${key}`, Accept: 'application/json' }
+const headers = {
+  ...supabaseApiHeaders({ apiKey: key }),
+  Accept: 'application/json',
+}
 
+if (isProductionSupabaseTarget(base)) {
+  console.log('target: PRODUCTION project (read-only probe, žádný zápis)')
+} else {
+  console.log('target: not the known production ref')
+}
+
+const specRes = await fetch(`${base}/rest/v1/`, { headers })
+const spec = specRes.ok ? await specRes.json().catch(() => ({})) : {}
+const rpcPaths = new Set(Object.keys(spec.paths || {}).filter((path) => path.startsWith('/rpc/')))
+if (!specRes.ok) {
+  console.log(`OpenAPI schema: HTTP ${specRes.status} — RPC přítomnost je NOT TESTED, funkce se nespouštějí.`)
+}
 console.log('host', new URL(base).host)
 console.log('key_kind', key.startsWith('sb_publishable') ? 'publishable' : key.includes('.') ? 'jwt-like' : 'other')
 
@@ -83,15 +92,21 @@ for (const table of promoTables) {
   console.log(`${table}: ${status}`)
 }
 
-const promoRpcs = ['submit_promotion_inquiry', 'read_promotion_inquiry', 'record_verified_payment']
+const promoRpcs = [
+  'submit_promotion_inquiry',
+  'read_promotion_inquiry',
+  'record_verified_payment',
+  'activate_verified_promotion',
+  'review_place_owner_claim',
+]
 let promoRpcMissing = 0
 for (const rpc of promoRpcs) {
-  const status = await probeRpc(base, headers, rpc)
+  const status = specRes.ok ? await probeRpc(rpcPaths, rpc) : 'NOT TESTED'
   if (status === 'MISSING') promoRpcMissing += 1
   console.log(`rpc/${rpc}: ${status}`)
 }
 
-const adminFn = await probeRpc(base, headers, 'is_cheapeats_admin')
+const adminFn = specRes.ok ? await probeRpc(rpcPaths, 'is_cheapeats_admin') : 'NOT TESTED'
 console.log(`rpc/is_cheapeats_admin: ${adminFn}`)
 
 console.log('\nVlastníci / audit (supabase/promotion-owners.sql):')
