@@ -30,6 +30,7 @@ const files = [
   'supabase/bootstrap-all.sql',
   'supabase/promotion-apply-missing.sql',
   'supabase/place-reports.sql',
+  'supabase/place-overrides.sql',
   'supabase/place-stats.sql',
   'supabase/preview-synthetic-seed.sql',
 ]

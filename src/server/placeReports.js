@@ -101,6 +101,12 @@ export function createMemoryPlaceReportStore() {
         reports: rows.map((row) => ({ ...row })),
       }
     },
+    async updateStatus(id, status) {
+      const row = rows.find((item) => item.id === id)
+      if (!row) return { ok: false, error: 'missing', status: 404 }
+      row.status = status
+      return { ok: true, report: { ...row } }
+    },
   }
 }
 
@@ -163,6 +169,40 @@ export function createSupabasePlaceReportStore({ config, accessToken = '', fetch
         })),
       }
     },
+    async updateStatus(id, status) {
+      const response = await fetchImpl(
+        `${config.url}/rest/v1/place_reports?id=eq.${encodeURIComponent(id)}`,
+        {
+          method: 'PATCH',
+          headers: {
+            ...supabaseApiHeaders({ apiKey: config.anonKey, accessToken }),
+            'content-type': 'application/json',
+            Prefer: 'return=representation',
+          },
+          body: JSON.stringify({ status }),
+        },
+      )
+      const body = await response.json().catch(() => ({}))
+      const msg = JSON.stringify(body)
+      if (response.status === 404 || /Could not find the table|PGRST205/i.test(msg)) {
+        return { ok: false, error: 'not-ready', status: 503 }
+      }
+      if (!response.ok) return { ok: false, error: 'failed', status: response.status }
+      const row = Array.isArray(body) ? body[0] : body
+      if (!row) return { ok: false, error: 'missing', status: 404 }
+      return {
+        ok: true,
+        report: {
+          id: row.id,
+          restaurantId: row.restaurant_id,
+          reason: row.reason,
+          details: row.details,
+          contact: row.contact,
+          status: row.status,
+          createdAt: row.created_at,
+        },
+      }
+    },
   }
 }
 
@@ -191,33 +231,68 @@ export async function placeReportsHttp(request, { placeExists, store, env, fetch
     store
     || (config.configured ? createSupabasePlaceReportStore({ config, fetchImpl: http }) : null)
 
-  if (request.method === 'GET') {
-    if (!activeStore) return storageUnavailable('Evidence hlášení není nastavená.')
+  const STATUSES = new Set(['new', 'reviewing', 'resolved', 'dismissed'])
+
+  async function requireAdminStore() {
+    if (!activeStore) return { ok: false, response: storageUnavailable('Evidence hlášení není nastavená.') }
 
     let adminOk = false
-    let listStore = activeStore
+    let adminStore = activeStore
     if (typeof isAdmin === 'function') {
       adminOk = Boolean(await isAdmin(request))
     } else if (config.configured) {
       const resolved = await resolveUser(request, config, http)
       if (!resolved.user?.id || !resolved.accessToken) {
-        return json({ ok: false, message: 'Forbidden' }, 403)
+        return { ok: false, response: json({ ok: false, message: 'Forbidden' }, 403) }
       }
       adminOk = await profileIsAdmin(config, resolved.accessToken, http, resolved.user.id)
-      listStore = createSupabasePlaceReportStore({
+      adminStore = createSupabasePlaceReportStore({
         config,
         accessToken: resolved.accessToken,
         fetchImpl: http,
       })
     }
 
-    if (!adminOk) return json({ ok: false, message: 'Forbidden' }, 403)
-    const listed = await listStore.list()
+    if (!adminOk) return { ok: false, response: json({ ok: false, message: 'Forbidden' }, 403) }
+    return { ok: true, store: adminStore }
+  }
+
+  if (request.method === 'GET') {
+    const gate = await requireAdminStore()
+    if (!gate.ok) return gate.response
+    const listed = await gate.store.list()
     if (!listed.ok) {
       if (listed.error === 'not-ready') return storageUnavailable()
       return json({ ok: false, message: 'Hlášení se nepodařilo načíst.' }, listed.status || 502)
     }
     return json({ ok: true, reports: listed.reports })
+  }
+
+  if (request.method === 'PATCH') {
+    const gate = await requireAdminStore()
+    if (!gate.ok) return gate.response
+    let body
+    try {
+      body = await request.json()
+    } catch {
+      return json({ ok: false, message: 'Neplatné JSON tělo.' }, 400)
+    }
+    const id = String(body?.id || '').trim()
+    const status = String(body?.status || '').trim()
+    if (!id) return json({ ok: false, message: 'Chybí id hlášení.' }, 400)
+    if (!STATUSES.has(status)) {
+      return json({ ok: false, message: 'Neplatný stav hlášení.' }, 400)
+    }
+    if (typeof gate.store.updateStatus !== 'function') {
+      return storageUnavailable('Aktualizace stavu hlášení není dostupná.')
+    }
+    const updated = await gate.store.updateStatus(id, status)
+    if (!updated.ok) {
+      if (updated.error === 'not-ready') return storageUnavailable()
+      if (updated.error === 'missing') return json({ ok: false, message: 'Hlášení nenalezeno.' }, 404)
+      return json({ ok: false, message: 'Stav se nepodařilo uložit.' }, updated.status || 502)
+    }
+    return json({ ok: true, report: updated.report })
   }
 
   if (request.method !== 'POST') {

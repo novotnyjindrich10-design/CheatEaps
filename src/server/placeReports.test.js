@@ -78,6 +78,18 @@ describe('placeReports HTTP', () => {
     const listed = await adminGet.json()
     assert.equal(listed.reports.length, 1)
     assert.equal(listed.reports[0].restaurantId, 'dhaba-beas-panska')
+
+    const patched = await placeReportsHttp(
+      req('/api/place-reports', {
+        method: 'PATCH',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ id: listed.reports[0].id, status: 'resolved' }),
+      }),
+      { store, isAdmin: async () => true },
+    )
+    assert.equal(patched.status, 200)
+    const updated = await patched.json()
+    assert.equal(updated.report.status, 'resolved')
   })
 
   it('odmítne honeypot a neznámý podnik', async () => {

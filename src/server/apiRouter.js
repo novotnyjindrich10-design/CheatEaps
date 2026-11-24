@@ -25,10 +25,12 @@ import {
 import { quotePromotionHttp } from './quotePromotion.js'
 import { placeReportsHttp } from './placeReports.js'
 import { placeStatsHttp } from './placeStats.js'
-import { placePixabayPhotoId } from '../data/pixabayLibrary.data.js'
+import { placeOverridesHttp } from './placeOverrides.js'
+import { healthHttp } from './health.js'
+import { restaurantExists } from './community.js'
 
 function catalogPlaceExists(id) {
-  return Object.prototype.hasOwnProperty.call(placePixabayPhotoId, id)
+  return restaurantExists(String(id || ''))
 }
 
 const AUTH_ACTIONS = {
@@ -128,8 +130,16 @@ export async function apiRouter(incoming) {
       return await placeReportsHttp(request, { placeExists: catalogPlaceExists })
     }
 
+    if (pathname === '/api/place-overrides' || pathname === '/api/admin/place-overrides') {
+      return await placeOverridesHttp(request, { placeExists: catalogPlaceExists })
+    }
+
     if (pathname === '/api/place-stats' || pathname === '/api/place-stats/event') {
       return await placeStatsHttp(request, { placeExists: catalogPlaceExists })
+    }
+
+    if (pathname === '/api/health') {
+      return await healthHttp(request)
     }
 
     return json({ ok: false, message: 'Neznámá adresa.' }, 404)
