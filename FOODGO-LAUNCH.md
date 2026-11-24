@@ -4,7 +4,8 @@ Větev: `foodgo-launch-preview`
 Preview: https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app  
 Produkce (neměnit bez schválení): https://cheat-eaps.vercel.app
 
-Tento dokument je jediný „co zbývá udělat“ checklist. Tajné hodnoty do chatu ani do gitu nepatří.
+Krátký seznam jen ručních kroků: `FINAL-STEPS.md`.  
+Tajné hodnoty do chatu ani do gitu nepatří.
 
 ---
 
