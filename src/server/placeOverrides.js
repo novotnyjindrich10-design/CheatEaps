@@ -208,6 +208,10 @@ export async function placeOverridesHttp(request, { store, env, fetchImpl, isAdm
   if (request.method === 'GET') {
     const listed = adminPath ? await activeStore.listAdmin() : await activeStore.listPublic()
     if (!listed.ok) {
+      // Veřejný katalog musí přežít chybějící SQL — stejně jako /api/sponsorships.
+      if (!adminPath && listed.error === 'not-ready') {
+        return json({ ok: true, overrides: [], configured: false })
+      }
       if (listed.error === 'not-ready') {
         return json(
           {
@@ -220,7 +224,7 @@ export async function placeOverridesHttp(request, { store, env, fetchImpl, isAdm
       }
       return json({ ok: false, message: 'Přepisy se nepodařilo načíst.' }, listed.status || 502)
     }
-    return json({ ok: true, overrides: listed.overrides })
+    return json({ ok: true, overrides: listed.overrides, configured: true })
   }
 
   if (!adminPath) {

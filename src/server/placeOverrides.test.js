@@ -18,6 +18,19 @@ describe('placeOverrides HTTP', () => {
   })
 
   it('veřejný GET vrací přepisy, zápis jen admin', async () => {
+    const emptyPublic = await placeOverridesHttp(req('/api/place-overrides'), {
+      store: {
+        kind: 'stub',
+        async listPublic() {
+          return { ok: false, error: 'not-ready', status: 503 }
+        },
+      },
+    })
+    assert.equal(emptyPublic.status, 200)
+    const emptyBody = await emptyPublic.json()
+    assert.deepEqual(emptyBody.overrides, [])
+    assert.equal(emptyBody.configured, false)
+
     const store = createMemoryPlaceOverrideStore()
     await store.upsert({
       placeId: 'dhaba-beas-panska',
