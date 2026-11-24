@@ -7,15 +7,10 @@
 -- (nebo jednou supabase/bootstrap-all.sql): public.profiles, profiles.is_admin,
 -- funkce public.is_cheapeats_admin().
 --
--- Po schváleném spuštění, a až budeš chtít přijímat Comgate push:
--- 1) Na serveru nastav SUPABASE_SERVICE_ROLE_KEY (jen backend, nikdy VITE_*).
--- 2) V SQL editoru nastav tajemství = Comgate PAYMENT_SECRET (≥16 znaků). Do tohoto souboru ho nepiš:
---      alter database postgres set app.payment_webhook_secret = 'stejné-jako-PAYMENT_SECRET';
---    Stejnou hodnotu dej do PAYMENT_SECRET na Vercelu (Comgate secret z portálu).
--- Dokud service_role nebo tajemství chybí, RPC úhradu nezapíše.
--- Comgate push: secret v těle + ověření /v1.0/status; return URL neaktivuje.
--- Aktivaci po ověřené PAID platbě provádí server (payments.js), ne klient.
--- record_verified_payment nemá EXECUTE pro anon/authenticated.
+-- Po schváleném spuštění nastav na serveru SUPABASE_SERVICE_ROLE_KEY (jen backend, nikdy VITE_*).
+-- Comgate secret do databáze nepiš. Server ho ověří a teprve pak zavolá RPC service_role.
+-- Submit a čtení poptávky taky jen service_role, aby anon neobešel rate limit.
+-- Aktivaci po ověřené PAID platbě provádí activate_verified_promotion, ne klient.
 
 do $$
 begin
@@ -189,7 +184,8 @@ begin
 
     if new.status = 'active'
        and old.status is distinct from 'active'
-       and not public.is_cheapeats_admin() then
+       and not public.is_cheapeats_admin()
+       and current_setting('app.promotion_activation_hook', true) is distinct from '1' then
       raise exception 'activation-requires-admin' using errcode = '42501';
     end if;
   end if;
@@ -344,6 +340,15 @@ begin
     chosen_vat := 'unconfirmed';
   end if;
 
+  if (
+    select count(*)
+    from public.promotion_orders
+    where lower(promotion_orders.email) = chosen_email
+      and promotion_orders.created_at > now() - interval '1 hour'
+  ) >= 3 then
+    return jsonb_build_object('ok', false, 'error', 'rate-limited');
+  end if;
+
   select id into existing_id
   from public.promotion_orders
   where lower(promotion_orders.email) = chosen_email
@@ -453,10 +458,14 @@ security definer
 set search_path = public, extensions, pg_temp
 as $$
 declare
+  jwt_role text;
   inserted integer;
+  stored_status text;
+  found_order public.promotion_orders;
 begin
-  if length(coalesce(current_setting('app.payment_webhook_secret', true), '')) < 16
-     or p_secret is distinct from current_setting('app.payment_webhook_secret', true) then
+  -- p_secret se neporovnává a neukládá. Comgate secret zůstává jen v env serveru.
+  jwt_role := coalesce(current_setting('request.jwt.claim.role', true), '');
+  if jwt_role in ('anon', 'authenticated') or (jwt_role <> '' and jwt_role <> 'service_role') then
     return jsonb_build_object('ok', false, 'error', 'forbidden');
   end if;
   if p_event_id is null or char_length(p_event_id) not between 1 and 120
@@ -470,10 +479,14 @@ begin
   on conflict (event_id) do nothing;
   get diagnostics inserted = row_count;
   if inserted = 0 then
-    return jsonb_build_object('ok', true, 'duplicate', true, 'activated', false);
+    select status into stored_status
+    from public.promotion_payment_events
+    where event_id = p_event_id;
+    if stored_status is distinct from p_status then
+      return jsonb_build_object('ok', false, 'error', 'event-conflict', 'activated', false);
+    end if;
   end if;
 
-  -- Jednorázový příznak pro trigger: úhradu smí zapsat admin nebo ověřený webhook.
   perform set_config('app.promotion_payment_hook', '1', true);
 
   if p_status = 'paid' then
@@ -493,17 +506,104 @@ begin
         and status in ('inquiry', 'accepted');
   end if;
 
-  return jsonb_build_object('ok', true, 'duplicate', false, 'activated', false);
+  select * into found_order from public.promotion_orders where reference = p_reference;
+  return jsonb_build_object(
+    'ok', true,
+    'duplicate', inserted = 0,
+    'activated', false,
+    'reference', p_reference,
+    'status', found_order.status,
+    'paymentStatus', found_order.payment_status,
+    'placeId', found_order.place_id,
+    'serviceDays', found_order.service_days,
+    'endsAt', found_order.ends_at
+  );
+end;
+$$;
+
+-- Aktivace po už zapsané úhradě. service_role, ne anon. Trigger pustí jen s příznakem níže.
+create or replace function public.activate_verified_promotion(p_reference text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  jwt_role text;
+  found_order public.promotion_orders;
+begin
+  jwt_role := coalesce(current_setting('request.jwt.claim.role', true), '');
+  if jwt_role in ('anon', 'authenticated') or (jwt_role <> '' and jwt_role <> 'service_role') then
+    return jsonb_build_object('ok', false, 'error', 'forbidden', 'activated', false);
+  end if;
+
+  select * into found_order
+  from public.promotion_orders
+  where reference = p_reference;
+  if not found then
+    return jsonb_build_object('ok', false, 'error', 'missing', 'activated', false);
+  end if;
+
+  if found_order.status = 'active' and found_order.payment_status = 'paid' then
+    return jsonb_build_object(
+      'ok', true,
+      'activated', true,
+      'duplicate', true,
+      'status', found_order.status,
+      'placeId', found_order.place_id,
+      'endsAt', found_order.ends_at
+    );
+  end if;
+
+  if found_order.payment_status is distinct from 'paid'
+     or found_order.status not in ('inquiry', 'accepted') then
+    return jsonb_build_object('ok', false, 'error', 'not-activatable', 'activated', false);
+  end if;
+
+  if found_order.place_id !~ '^[a-z0-9][a-z0-9-]{0,79}$' then
+    return jsonb_build_object('ok', false, 'error', 'place', 'activated', false);
+  end if;
+
+  perform set_config('app.promotion_activation_hook', '1', true);
+
+  update public.promotion_orders
+    set status = 'active',
+        starts_at = now(),
+        ends_at = now() + make_interval(days => found_order.service_days),
+        activated_at = now(),
+        renewal = 'none'
+    where id = found_order.id
+      and payment_status = 'paid'
+      and status in ('inquiry', 'accepted');
+
+  select * into found_order
+  from public.promotion_orders
+  where reference = p_reference;
+
+  if found_order.status is distinct from 'active' then
+    return jsonb_build_object('ok', false, 'error', 'activation-failed', 'activated', false);
+  end if;
+
+  return jsonb_build_object(
+    'ok', true,
+    'activated', true,
+    'duplicate', false,
+    'status', found_order.status,
+    'placeId', found_order.place_id,
+    'endsAt', found_order.ends_at
+  );
 end;
 $$;
 
 revoke all on function public.submit_promotion_inquiry(jsonb, text, text) from public, anon, authenticated;
 revoke all on function public.read_promotion_inquiry(text, text) from public, anon, authenticated;
 revoke all on function public.record_verified_payment(text, text, text, text) from public, anon, authenticated;
-grant execute on function public.submit_promotion_inquiry(jsonb, text, text) to anon, authenticated;
-grant execute on function public.read_promotion_inquiry(text, text) to anon, authenticated;
--- Potvrzení úhrady jen důvěryhodná serverová cesta (service_role), ne veřejné RPC.
+revoke all on function public.activate_verified_promotion(text) from public, anon, authenticated;
+-- Submit, čtení i úhrada jen service_role. Anon by obešel serverový rate limit.
+grant execute on function public.submit_promotion_inquiry(jsonb, text, text) to service_role;
+grant execute on function public.read_promotion_inquiry(text, text) to service_role;
 grant execute on function public.record_verified_payment(text, text, text, text) to service_role;
+grant execute on function public.activate_verified_promotion(text) to service_role;
 
 -- Pohled běží jako vlastník, protože anonymní role tabulku číst nesmí.
 -- Vrací jen identifikátor podniku, balíček a okno platnosti. Kontaktní údaje ne.

@@ -38,9 +38,11 @@
 --     drop table if exists public.place_owner_claims;
 --   Nikdy nedropuj public.promotion_orders kvůli rollbacku doplňku.
 --
--- PO MIGRACI (mimo tento soubor, až bude Comgate secret):
---   alter database postgres set app.payment_webhook_secret = '<PAYMENT_SECRET>';
---   Vercel: SUPABASE_SERVICE_ROLE_KEY = sb_secret_… (Preview + Production, Secret)
+-- PO MIGRACI:
+--   Vercel: SUPABASE_SERVICE_ROLE_KEY = sb_secret_… (jen server, nikdy VITE_*).
+--   Comgate secret NEukládej do databáze. Server ho ověří dřív, než zavolá RPC.
+--   psql: psql --single-transaction -f supabase/promotion-apply-missing.sql
+--   Supabase SQL Editor: jeden Run je jedna transakce. Chyba vrátí celý běh.
 -- =============================================================================
 
 do $$
@@ -122,6 +124,39 @@ create table if not exists public.promotion_payment_events (
   status text not null,
   received_at timestamptz not null default now()
 );
+
+-- Před novými omezeními: když existující řádky nesedí, migrace spadne a nic nesmaže.
+do $$
+declare
+  bad integer;
+begin
+  select count(*) into bad
+  from public.promotion_orders
+  where status not in ('inquiry', 'accepted', 'active', 'declined', 'ended')
+     or payment_status not in ('none', 'invoiced', 'paid', 'failed')
+     or plan_id not in ('start', 'plus', 'premium')
+     or period_id not in ('mesicne', 'rocne')
+     or renewal is distinct from 'none'
+     or amount <= 0
+     or service_days not in (30, 365)
+     or vat_status not in ('unconfirmed', 'non-payer', 'payer')
+     or char_length(coalesce(invoice_number, '')) > 40;
+  if bad > 0 then
+    raise exception 'promotion-apply-missing: % existujících řádků porušuje nová omezení. Migrace se nespustila, data zůstávají.', bad;
+  end if;
+
+  select count(*) into bad
+  from (
+    select 1
+    from public.promotion_orders
+    where status in ('inquiry', 'accepted', 'active')
+    group by lower(email), plan_id, period_id, place_key
+    having count(*) > 1
+  ) duplicates;
+  if bad > 0 then
+    raise exception 'promotion-apply-missing: % skupin otevřených poptávek by porušilo unique index. Migrace se nespustila.', bad;
+  end if;
+end $$;
 
 -- Constrainty jen pokud chybí (ne drop — ochrana existujících dat).
 do $$
@@ -261,7 +296,8 @@ begin
 
     if new.status = 'active'
        and old.status is distinct from 'active'
-       and not public.is_cheapeats_admin() then
+       and not public.is_cheapeats_admin()
+       and current_setting('app.promotion_activation_hook', true) is distinct from '1' then
       raise exception 'activation-requires-admin' using errcode = '42501';
     end if;
   end if;
@@ -420,6 +456,15 @@ begin
     chosen_vat := 'unconfirmed';
   end if;
 
+  if (
+    select count(*)
+    from public.promotion_orders
+    where lower(promotion_orders.email) = chosen_email
+      and promotion_orders.created_at > now() - interval '1 hour'
+  ) >= 3 then
+    return jsonb_build_object('ok', false, 'error', 'rate-limited');
+  end if;
+
   select id into existing_id
   from public.promotion_orders
   where lower(promotion_orders.email) = chosen_email
@@ -531,10 +576,14 @@ security definer
 set search_path = public, extensions, pg_temp
 as $$
 declare
+  jwt_role text;
   inserted integer;
+  stored_status text;
+  found_order public.promotion_orders;
 begin
-  if length(coalesce(current_setting('app.payment_webhook_secret', true), '')) < 16
-     or p_secret is distinct from current_setting('app.payment_webhook_secret', true) then
+  -- p_secret se neporovnává a neukládá. Comgate secret zůstává jen v env serveru.
+  jwt_role := coalesce(current_setting('request.jwt.claim.role', true), '');
+  if jwt_role in ('anon', 'authenticated') or (jwt_role <> '' and jwt_role <> 'service_role') then
     return jsonb_build_object('ok', false, 'error', 'forbidden');
   end if;
   if p_event_id is null or char_length(p_event_id) not between 1 and 120
@@ -548,7 +597,12 @@ begin
   on conflict (event_id) do nothing;
   get diagnostics inserted = row_count;
   if inserted = 0 then
-    return jsonb_build_object('ok', true, 'duplicate', true, 'activated', false);
+    select status into stored_status
+    from public.promotion_payment_events
+    where event_id = p_event_id;
+    if stored_status is distinct from p_status then
+      return jsonb_build_object('ok', false, 'error', 'event-conflict', 'activated', false);
+    end if;
   end if;
 
   perform set_config('app.promotion_payment_hook', '1', true);
@@ -570,17 +624,104 @@ begin
         and status in ('inquiry', 'accepted');
   end if;
 
-  return jsonb_build_object('ok', true, 'duplicate', false, 'activated', false);
+  select * into found_order from public.promotion_orders where reference = p_reference;
+  return jsonb_build_object(
+    'ok', true,
+    'duplicate', inserted = 0,
+    'activated', false,
+    'reference', p_reference,
+    'status', found_order.status,
+    'paymentStatus', found_order.payment_status,
+    'placeId', found_order.place_id,
+    'serviceDays', found_order.service_days,
+    'endsAt', found_order.ends_at
+  );
+end;
+$$;
+
+-- Aktivace po už zapsané úhradě. service_role, ne anon. Trigger pustí jen s příznakem níže.
+create or replace function public.activate_verified_promotion(p_reference text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  jwt_role text;
+  found_order public.promotion_orders;
+begin
+  jwt_role := coalesce(current_setting('request.jwt.claim.role', true), '');
+  if jwt_role in ('anon', 'authenticated') or (jwt_role <> '' and jwt_role <> 'service_role') then
+    return jsonb_build_object('ok', false, 'error', 'forbidden', 'activated', false);
+  end if;
+
+  select * into found_order
+  from public.promotion_orders
+  where reference = p_reference;
+  if not found then
+    return jsonb_build_object('ok', false, 'error', 'missing', 'activated', false);
+  end if;
+
+  if found_order.status = 'active' and found_order.payment_status = 'paid' then
+    return jsonb_build_object(
+      'ok', true,
+      'activated', true,
+      'duplicate', true,
+      'status', found_order.status,
+      'placeId', found_order.place_id,
+      'endsAt', found_order.ends_at
+    );
+  end if;
+
+  if found_order.payment_status is distinct from 'paid'
+     or found_order.status not in ('inquiry', 'accepted') then
+    return jsonb_build_object('ok', false, 'error', 'not-activatable', 'activated', false);
+  end if;
+
+  if found_order.place_id !~ '^[a-z0-9][a-z0-9-]{0,79}$' then
+    return jsonb_build_object('ok', false, 'error', 'place', 'activated', false);
+  end if;
+
+  perform set_config('app.promotion_activation_hook', '1', true);
+
+  update public.promotion_orders
+    set status = 'active',
+        starts_at = now(),
+        ends_at = now() + make_interval(days => found_order.service_days),
+        activated_at = now(),
+        renewal = 'none'
+    where id = found_order.id
+      and payment_status = 'paid'
+      and status in ('inquiry', 'accepted');
+
+  select * into found_order
+  from public.promotion_orders
+  where reference = p_reference;
+
+  if found_order.status is distinct from 'active' then
+    return jsonb_build_object('ok', false, 'error', 'activation-failed', 'activated', false);
+  end if;
+
+  return jsonb_build_object(
+    'ok', true,
+    'activated', true,
+    'duplicate', false,
+    'status', found_order.status,
+    'placeId', found_order.place_id,
+    'endsAt', found_order.ends_at
+  );
 end;
 $$;
 
 revoke all on function public.submit_promotion_inquiry(jsonb, text, text) from public, anon, authenticated;
 revoke all on function public.read_promotion_inquiry(text, text) from public, anon, authenticated;
 revoke all on function public.record_verified_payment(text, text, text, text) from public, anon, authenticated;
-grant execute on function public.submit_promotion_inquiry(jsonb, text, text) to anon, authenticated;
-grant execute on function public.read_promotion_inquiry(text, text) to anon, authenticated;
--- Jen service_role (legacy JWT i sb_secret_ mapuje na tuto roli). Ne anon/authenticated.
+revoke all on function public.activate_verified_promotion(text) from public, anon, authenticated;
+-- Submit, čtení i úhrada jen service_role. Anon by obešel serverový rate limit.
+grant execute on function public.submit_promotion_inquiry(jsonb, text, text) to service_role;
+grant execute on function public.read_promotion_inquiry(text, text) to service_role;
 grant execute on function public.record_verified_payment(text, text, text, text) to service_role;
+grant execute on function public.activate_verified_promotion(text) to service_role;
 
 create or replace view public.promotion_sponsorships_public
 with (security_invoker = false) as
@@ -647,12 +788,19 @@ alter table public.place_owner_claims enable row level security;
 alter table public.promotion_audit_log enable row level security;
 
 drop policy if exists place_owner_claims_admin_all on public.place_owner_claims;
-create policy place_owner_claims_admin_all
+drop policy if exists place_owner_claims_admin_select on public.place_owner_claims;
+create policy place_owner_claims_admin_select
   on public.place_owner_claims
-  for all
+  for select
   to authenticated
-  using (public.is_cheapeats_admin())
-  with check (public.is_cheapeats_admin());
+  using (public.is_cheapeats_admin());
+
+drop policy if exists place_owner_claims_select_own on public.place_owner_claims;
+create policy place_owner_claims_select_own
+  on public.place_owner_claims
+  for select
+  to authenticated
+  using (user_id = auth.uid());
 
 drop policy if exists place_owner_claims_insert_own on public.place_owner_claims;
 create policy place_owner_claims_insert_own
@@ -662,6 +810,8 @@ create policy place_owner_claims_insert_own
   with check (
     user_id = auth.uid()
     and status = 'pending'
+    and char_length(email) between 3 and 200
+    and char_length(evidence) <= 2000
   );
 
 drop policy if exists promotion_audit_admin_read on public.promotion_audit_log;
@@ -678,8 +828,101 @@ grant insert on public.place_owner_claims to authenticated;
 revoke all on public.promotion_audit_log from anon, authenticated;
 grant select on public.promotion_audit_log to authenticated;
 
+-- Schválení jen přihlášený admin a nikdy vlastní žádost. Přímý UPDATE authenticated nemá.
+create or replace function public.review_place_owner_claim(p_id uuid, p_status text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  claim public.place_owner_claims;
+begin
+  if not public.is_cheapeats_admin() then
+    return jsonb_build_object('ok', false, 'error', 'forbidden');
+  end if;
+  if p_status not in ('verified', 'rejected') then
+    return jsonb_build_object('ok', false, 'error', 'invalid');
+  end if;
+  select * into claim from public.place_owner_claims where id = p_id;
+  if not found then
+    return jsonb_build_object('ok', false, 'error', 'missing');
+  end if;
+  if claim.user_id is not distinct from auth.uid() then
+    return jsonb_build_object('ok', false, 'error', 'self-review');
+  end if;
+  update public.place_owner_claims
+    set status = p_status,
+        reviewed_at = now()
+    where id = p_id;
+  insert into public.promotion_audit_log (order_reference, action, detail)
+  values ('', 'owner-claim', left(p_status || ':' || p_id::text, 180));
+  return jsonb_build_object('ok', true, 'status', p_status);
+end;
+$$;
+
+revoke all on function public.review_place_owner_claim(uuid, text) from public, anon, authenticated;
+grant execute on function public.review_place_owner_claim(uuid, text) to authenticated;
+
 -- ---------------------------------------------------------------------------
--- 5) Self-check (žádná data se nemění)
+-- 5) Profil: klient si nesmí nastavit is_admin
+-- ---------------------------------------------------------------------------
+
+create or replace function public.protect_profiles_row()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  auth_email text;
+begin
+  if tg_op = 'INSERT' then
+    if auth.uid() is not null then
+      new.id := auth.uid();
+      new.is_admin := false;
+      select users.email into auth_email from auth.users as users where users.id = auth.uid();
+      new.email := auth_email;
+    end if;
+    return new;
+  end if;
+
+  if auth.uid() is not null then
+    new.id := old.id;
+    new.created_at := old.created_at;
+    new.is_admin := old.is_admin;
+    select users.email into auth_email from auth.users as users where users.id = old.id;
+    new.email := coalesce(auth_email, old.email);
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists protect_profiles_is_admin on public.profiles;
+drop trigger if exists protect_profiles_row on public.profiles;
+create trigger protect_profiles_row
+  before insert or update on public.profiles
+  for each row
+  execute function public.protect_profiles_row();
+
+revoke all on function public.protect_profiles_row() from public, anon, authenticated;
+
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'profiles'
+      and column_name = 'display_name'
+  ) then
+    revoke update on public.profiles from anon, authenticated;
+    grant update (display_name) on public.profiles to authenticated;
+  end if;
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- 6) Self-check (žádná data se nemění)
 -- ---------------------------------------------------------------------------
 
 do $$
@@ -687,6 +930,8 @@ begin
   if to_regprocedure('public.submit_promotion_inquiry(jsonb, text, text)') is null
      or to_regprocedure('public.read_promotion_inquiry(text, text)') is null
      or to_regprocedure('public.record_verified_payment(text, text, text, text)') is null
+     or to_regprocedure('public.activate_verified_promotion(text)') is null
+     or to_regprocedure('public.review_place_owner_claim(uuid, text)') is null
      or to_regprocedure('public.guard_promotion_order()') is null then
     raise exception 'migrace nedokončena — chybí RPC/trigger';
   end if;
@@ -694,5 +939,17 @@ begin
      or to_regclass('public.promotion_audit_log') is null then
     raise exception 'migrace nedokončena — chybí owners tabulky';
   end if;
-  raise notice 'promotion-apply-missing: OK — RPC, guard, owners připraveny';
+  if has_function_privilege('anon', 'public.submit_promotion_inquiry(jsonb, text, text)', 'execute')
+     or has_function_privilege('authenticated', 'public.submit_promotion_inquiry(jsonb, text, text)', 'execute')
+     or has_function_privilege('anon', 'public.read_promotion_inquiry(text, text)', 'execute')
+     or has_function_privilege('authenticated', 'public.read_promotion_inquiry(text, text)', 'execute')
+     or has_function_privilege('anon', 'public.record_verified_payment(text, text, text, text)', 'execute')
+     or has_function_privilege('anon', 'public.activate_verified_promotion(text)', 'execute') then
+    raise exception 'migrace nedokončena — anon/authenticated nesmí volat serverové RPC';
+  end if;
+  if has_function_privilege('service_role', 'public.submit_promotion_inquiry(jsonb, text, text)', 'execute') is not true
+     or has_function_privilege('service_role', 'public.activate_verified_promotion(text)', 'execute') is not true then
+    raise exception 'migrace nedokončena — service_role nemá execute';
+  end if;
+  raise notice 'promotion-apply-missing: OK — RPC, guard, owners, profil připraveny';
 end $$;

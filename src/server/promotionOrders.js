@@ -183,6 +183,7 @@ export function createMemoryPromotionStore() {
   const orders = []
   const events = new Set()
   const admins = new Set()
+  const claims = []
   let seq = 0
 
   return {
@@ -257,6 +258,38 @@ export function createMemoryPromotionStore() {
       }
       return { ok: true, duplicate: applied.duplicate, activated: false, row: orders.find((item) => item.id === row.id) }
     },
+    async getByReference(reference) {
+      const row = orders.find((item) => item.reference === reference)
+      if (!row) return { ok: false, error: 'missing' }
+      return { ok: true, row }
+    },
+    async activatePaid(reference, { paymentSource, now = Date.now() } = {}) {
+      const row = orders.find((item) => item.reference === reference)
+      if (!row) return { ok: false, activated: false, error: 'missing' }
+      if (row.status === 'active') return { ok: true, activated: true, duplicate: true, row }
+      const next = applyAdminAction(row, 'activate', { now, placeId: row.placeId })
+      if (!next.ok) return { ok: false, activated: false, error: next.error, row }
+      if (paymentSource) next.row.paymentSource = paymentSource
+      const index = orders.findIndex((item) => item.id === row.id)
+      orders[index] = next.row
+      return { ok: true, activated: true, row: next.row }
+    },
+    async listClaims() {
+      return { ok: true, claims: claims.map((claim) => ({ ...claim })) }
+    },
+    async reviewClaim(id, status, actorId) {
+      if (!admins.has(actorId)) return { ok: false, error: 'forbidden' }
+      const claim = claims.find((item) => item.id === id)
+      if (!claim) return { ok: false, error: 'missing' }
+      if (claim.user_id === actorId) return { ok: false, error: 'self-review' }
+      if (status !== 'verified' && status !== 'rejected') return { ok: false, error: 'invalid' }
+      claim.status = status
+      claim.reviewed_at = new Date().toISOString()
+      return { ok: true, status }
+    },
+    addClaim(claim) {
+      claims.push(claim)
+    },
     async activeSponsorships(now = Date.now()) {
       return orders
         .filter((row) => row.paymentStatus === 'paid' && row.placeId)
@@ -311,9 +344,12 @@ export function createSupabasePromotionStore({ config, accessToken, fetchImpl })
       return Boolean(result.body?.[0]?.is_admin)
     },
     async create(record) {
+      const serviceKey = String(config.serviceRoleKey || '').trim()
+      if (!serviceKey) return { ok: false, error: 'service-role-required' }
       const accessKey = randomBytes(24).toString('base64url')
-      const result = await rest(config, config.anonKey, fetchImpl, 'rpc/submit_promotion_inquiry', {
+      const result = await rest(config, serviceKey, fetchImpl, 'rpc/submit_promotion_inquiry', {
         method: 'POST',
+        apiKey: serviceKey,
         body: {
           p_record: record,
           p_access_hash: hashKey(accessKey),
@@ -329,6 +365,7 @@ export function createSupabasePromotionStore({ config, accessToken, fetchImpl })
       }
       const payload = result.body?.ok ? result.body : result.body?.[0]
       if (payload?.error === 'duplicate') return { ok: false, error: 'duplicate' }
+      if (payload?.error === 'rate-limited') return { ok: false, error: 'rate-limited' }
       if (!payload?.ok) return { ok: false, error: payload?.error || 'failed' }
       return {
         ok: true,
@@ -344,8 +381,11 @@ export function createSupabasePromotionStore({ config, accessToken, fetchImpl })
       }
     },
     async readOwn(reference, accessKey) {
-      const result = await rest(config, config.anonKey, fetchImpl, 'rpc/read_promotion_inquiry', {
+      const serviceKey = String(config.serviceRoleKey || '').trim()
+      if (!serviceKey) return { ok: false, error: 'service-role-required' }
+      const result = await rest(config, serviceKey, fetchImpl, 'rpc/read_promotion_inquiry', {
         method: 'POST',
+        apiKey: serviceKey,
         body: { p_reference: reference, p_access_key: accessKey },
       })
       if (!result.ok || result.body?.ok === false) return { ok: false, error: 'missing' }
@@ -379,10 +419,20 @@ export function createSupabasePromotionStore({ config, accessToken, fetchImpl })
       if (!result.ok) return { ok: false, error: 'failed' }
       return { ok: true, row }
     },
+    async getByReference(reference) {
+      const serviceKey = String(config.serviceRoleKey || '').trim()
+      if (!serviceKey) return { ok: false, error: 'service-role-required' }
+      const result = await rest(
+        config,
+        serviceKey,
+        fetchImpl,
+        `promotion_orders?reference=eq.${encodeURIComponent(reference)}&select=*`,
+        { apiKey: serviceKey },
+      )
+      if (!result.ok || !result.body?.[0]) return { ok: false, error: 'missing' }
+      return { ok: true, row: fromDb(result.body[0]) }
+    },
     async applyPayment(event) {
-      // Stejná hodnota jako Comgate PAYMENT_SECRET (nebo legacy PAYMENT_WEBHOOK_SECRET).
-      // Nastav v DB: alter database postgres set app.payment_webhook_secret = '<PAYMENT_SECRET>';
-      const secret = String(process.env.PAYMENT_SECRET || process.env.PAYMENT_WEBHOOK_SECRET || '')
       const serviceKey = String(config.serviceRoleKey || '').trim()
       if (!serviceKey) return { ok: false, error: 'service-role-required' }
       const result = await rest(config, serviceKey, fetchImpl, 'rpc/record_verified_payment', {
@@ -392,11 +442,78 @@ export function createSupabasePromotionStore({ config, accessToken, fetchImpl })
           p_event_id: event.eventId,
           p_reference: event.reference,
           p_status: event.status,
-          p_secret: secret,
+          p_secret: '',
         },
       })
       if (!result.ok || result.body?.ok === false) return { ok: false, error: result.body?.error || 'failed' }
-      return { ok: true, duplicate: Boolean(result.body.duplicate), activated: false }
+      const row = result.body?.reference
+        ? {
+            reference: result.body.reference,
+            status: result.body.status,
+            paymentStatus: result.body.paymentStatus,
+            placeId: result.body.placeId || '',
+            serviceDays: result.body.serviceDays,
+            endsAt: result.body.endsAt || null,
+          }
+        : null
+      if (event.paymentSource === 'gateway-test' && row?.reference) {
+        await rest(
+          config,
+          serviceKey,
+          fetchImpl,
+          `promotion_orders?reference=eq.${encodeURIComponent(row.reference)}`,
+          {
+            method: 'PATCH',
+            apiKey: serviceKey,
+            body: { payment_source: 'gateway-test' },
+          },
+        )
+      }
+      return { ok: true, duplicate: Boolean(result.body.duplicate), activated: false, row }
+    },
+    async activatePaid(reference) {
+      const serviceKey = String(config.serviceRoleKey || '').trim()
+      if (!serviceKey) return { ok: false, activated: false, error: 'service-role-required' }
+      const result = await rest(config, serviceKey, fetchImpl, 'rpc/activate_verified_promotion', {
+        method: 'POST',
+        apiKey: serviceKey,
+        body: { p_reference: reference },
+      })
+      if (!result.ok || result.body?.ok === false) {
+        return { ok: false, activated: false, error: result.body?.error || 'failed' }
+      }
+      return {
+        ok: true,
+        activated: Boolean(result.body.activated),
+        row: {
+          reference,
+          status: result.body.status,
+          paymentStatus: 'paid',
+          placeId: result.body.placeId || '',
+          endsAt: result.body.endsAt || null,
+        },
+      }
+    },
+    async listClaims() {
+      if (!accessToken) return { ok: false, error: 'auth-required' }
+      const result = await rest(
+        config,
+        accessToken,
+        fetchImpl,
+        'place_owner_claims?select=id,place_id,email,status,evidence,created_at,reviewed_at&order=created_at.desc',
+      )
+      if (!result.ok) return { ok: false, error: result.status === 404 ? 'not-ready' : 'failed' }
+      return { ok: true, claims: result.body || [] }
+    },
+    async reviewClaim(id, status) {
+      if (!accessToken) return { ok: false, error: 'auth-required' }
+      const result = await rest(config, accessToken, fetchImpl, 'rpc/review_place_owner_claim', {
+        method: 'POST',
+        body: { p_id: id, p_status: status },
+      })
+      if (!result.ok) return { ok: false, error: 'failed' }
+      if (result.body?.ok === false) return { ok: false, error: result.body.error || 'failed' }
+      return { ok: true, status: result.body.status }
     },
     async activeSponsorships() {
       const result = await rest(
@@ -518,7 +635,15 @@ export async function promotionOrdersHttp(request, options = {}) {
     if (!prepared.store) {
       return json({ ok: false, error: 'not-configured', message: 'Poptávku teď nelze načíst.' }, 503)
     }
-    const found = await prepared.store.readOwn(url.searchParams.get('reference') || '', url.searchParams.get('key') || '')
+    const accessKey = request.headers.get('x-foodgo-order-key') || ''
+    if (!accessKey) {
+      return json({
+        ok: false,
+        error: 'missing',
+        message: 'Přístupový klíč pošli v hlavičce x-foodgo-order-key, ne v adrese.',
+      }, 400)
+    }
+    const found = await prepared.store.readOwn(url.searchParams.get('reference') || '', accessKey)
     if (!found.ok) return json({ ok: false, error: 'missing', message: 'Poptávka se nenašla.' }, 404)
     return json({ ok: true, order: publicOrder(found.row) })
   }
@@ -541,7 +666,17 @@ export async function promotionOrdersHttp(request, options = {}) {
   let stored = null
   if (prepared.store) {
     stored = await prepared.store.create(assessment.record)
-    if (stored.error === 'duplicate') {
+  if (stored?.error === 'rate-limited') {
+    return json({
+      ok: false,
+      accepted: false,
+      paid: false,
+      activated: false,
+      error: 'rate-limited',
+      message: 'Z tohoto kontaktu už přišlo víc poptávek. Zkus to později.',
+    }, 429)
+  }
+  if (stored?.error === 'duplicate') {
       return json({
         ok: false,
         accepted: false,
@@ -557,7 +692,7 @@ export async function promotionOrdersHttp(request, options = {}) {
   let operatorNotified = false
   let restaurantNotified = false
   let mailError = ''
-  if (saved || stored?.error === 'not-ready' || !prepared.store) {
+  if (saved || stored?.error === 'not-ready' || stored?.error === 'service-role-required' || !prepared.store) {
     const mail = await sendPromotionInquiryMail({
       ...assessment,
       reference: saved ? stored.row.reference : '',
@@ -704,4 +839,51 @@ export async function adminPromotionReviewHttp(request, options = {}) {
     renewal: 'none',
     order: adminOrder(applied.row),
   })
+}
+
+const CLAIM_STATUS = new Set(['verified', 'rejected'])
+
+export async function adminOwnerClaimsHttp(request, options = {}) {
+  const prepared = await requireAdmin(request, options)
+  if (prepared.error) return prepared.error
+  if (typeof prepared.store.listClaims !== 'function' || typeof prepared.store.reviewClaim !== 'function') {
+    return json({ ok: false, error: 'not-ready', message: 'Žádosti o vlastnictví ještě nejsou připojené.' }, 503)
+  }
+  if (request.method === 'GET') {
+    const listed = await prepared.store.listClaims()
+    if (!listed.ok) {
+      return json({
+        ok: false,
+        error: listed.error,
+        message: listed.error === 'not-ready'
+          ? 'Tabulka žádostí o vlastnictví ještě neběží.'
+          : 'Žádosti se nepodařilo načíst.',
+      }, listed.error === 'not-ready' ? 503 : 502)
+    }
+    return json({ ok: true, claims: listed.claims })
+  }
+  if (request.method !== 'POST') {
+    return json({ ok: false, message: 'Povolená je jen metoda GET nebo POST.' }, 405)
+  }
+  let payload
+  try {
+    payload = await request.json()
+  } catch {
+    return json({ ok: false, error: 'invalid-json', message: 'Požadavek musí být JSON.' }, 400)
+  }
+  const status = String(payload.status || '')
+  if (!payload.id || !CLAIM_STATUS.has(status)) {
+    return json({ ok: false, error: 'invalid', message: 'Chybí žádost nebo stav verified/rejected.' }, 400)
+  }
+  const reviewed = await prepared.store.reviewClaim(payload.id, status, prepared.user.id)
+  if (!reviewed.ok) {
+    const message = reviewed.error === 'self-review'
+      ? 'Vlastní žádost schválit nejde. Musí ji vyřídit jiný administrátor.'
+      : reviewed.error === 'forbidden'
+        ? 'Tuhle žádost může vyřídit jen administrátor.'
+        : 'Žádost se nepodařilo uložit.'
+    const code = reviewed.error === 'forbidden' || reviewed.error === 'self-review' ? 403 : 400
+    return json({ ok: false, error: reviewed.error, message }, code)
+  }
+  return json({ ok: true, status: reviewed.status })
 }

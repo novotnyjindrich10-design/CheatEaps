@@ -16,6 +16,7 @@ import {
 } from './payments.js'
 import { promotionRequestHttp } from './promotionRequest.js'
 import {
+  adminOwnerClaimsHttp,
   adminPromotionOrdersHttp,
   adminPromotionReviewHttp,
   promotionOrdersHttp,
@@ -108,6 +109,7 @@ export async function apiRouter(incoming) {
     if (pathname === '/api/sponsorships') return await sponsorshipsHttp(request)
     if (pathname === '/api/admin/promotion-orders') return await adminPromotionOrdersHttp(request)
     if (pathname === '/api/admin/promotion-orders/review') return await adminPromotionReviewHttp(request)
+    if (pathname === '/api/admin/owner-claims') return await adminOwnerClaimsHttp(request)
     if (pathname === '/api/payments/webhook') return await paymentWebhookHttp(request)
     if (pathname === '/api/payments/test-confirm') return await paymentTestConfirmHttp(request)
     if (pathname === '/api/payments/create') return await paymentCreateHttp(request)

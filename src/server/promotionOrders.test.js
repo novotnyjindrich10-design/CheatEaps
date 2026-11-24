@@ -79,13 +79,23 @@ describe('poptávky propagace', () => {
     assert.notEqual(body.order.amount, 1)
 
     const own = await promotionOrdersHttp(
-      new Request(`https://cheapeats.local/api/promotion-orders?reference=${body.reference}&key=${body.accessKey}`),
+      new Request(`https://cheapeats.local/api/promotion-orders?reference=${body.reference}`, {
+        headers: { 'x-foodgo-order-key': body.accessKey },
+      }),
       { store },
     )
     assert.equal((await own.json()).order.businessName, 'Bistro Test')
 
+    const leaked = await promotionOrdersHttp(
+      new Request(`https://cheapeats.local/api/promotion-orders?reference=${body.reference}&key=${body.accessKey}`),
+      { store },
+    )
+    assert.equal(leaked.status, 400)
+
     const stranger = await promotionOrdersHttp(
-      new Request(`https://cheapeats.local/api/promotion-orders?reference=${body.reference}&key=jiny-klic`),
+      new Request(`https://cheapeats.local/api/promotion-orders?reference=${body.reference}`, {
+        headers: { 'x-foodgo-order-key': 'jiny-klic' },
+      }),
       { store },
     )
     assert.equal(stranger.status, 404)
@@ -304,11 +314,17 @@ describe('platební stavy', () => {
       config: {
         url: 'https://example.supabase.co',
         anonKey: 'anon-test',
-        serviceRoleKey: '',
+        serviceRoleKey: 'sb_secret_inquiry_test',
         configured: true,
       },
       fetchImpl: async (url, init) => {
-        calls.push({ url, method: init.method, body: init.body ? JSON.parse(init.body) : null })
+        calls.push({
+          url,
+          method: init.method,
+          body: init.body ? JSON.parse(init.body) : null,
+          apiKey: init.headers.apikey,
+          auth: init.headers.Authorization,
+        })
         if (String(url).includes('submit_promotion_inquiry')) {
           return {
             ok: true,
@@ -372,6 +388,8 @@ describe('platební stavy', () => {
     assert.equal(created.row.reference, 'CEABC12345')
     assert.match(calls[0].url, /rpc\/submit_promotion_inquiry$/)
     assert.equal(calls[0].method, 'POST')
+    assert.equal(calls[0].apiKey, 'sb_secret_inquiry_test')
+    assert.equal(calls[0].auth, undefined)
     assert.equal(calls[0].body.p_record.planId, 'plus')
     assert.equal(calls[0].body.p_record.termsAck, true)
     assert.match(calls[0].body.p_access_hash, /^[a-f0-9]{64}$/)
@@ -381,6 +399,7 @@ describe('platební stavy', () => {
     assert.equal(own.ok, true)
     assert.equal(own.row.businessName, 'Bistro Test')
     assert.match(calls[1].url, /rpc\/read_promotion_inquiry$/)
+    assert.equal(calls[1].apiKey, 'sb_secret_inquiry_test')
     assert.equal(calls[1].body.p_reference, 'CEABC12345')
     assert.equal(calls[1].body.p_access_key, created.accessKey)
 

@@ -14,6 +14,13 @@ const applyMissing = readFileSync(
 )
 const bootstrap = readFileSync(new URL('../../supabase/bootstrap-all.sql', import.meta.url), 'utf8')
 
+function functionSource(source, name) {
+  const start = source.indexOf(`function public.${name}`)
+  if (start < 0) return ''
+  const end = source.indexOf('\n$$;', start)
+  return source.slice(start, end < 0 ? source.length : end)
+}
+
 function stripSqlCommentsAndStrings(source) {
   return source
     .replace(/\/\*[\s\S]*?\*\//g, ' ')
@@ -78,13 +85,16 @@ describe('SQL poptávek propagace', () => {
     assert.match(sql, /payment-requires-admin-or-webhook/)
     assert.match(sql, /promotion-fields-locked/)
     assert.match(sql, /app\.promotion_payment_hook/)
+    assert.match(sql, /app\.promotion_activation_hook/)
     assert.match(sql, /old\.payment_status is distinct from 'paid'/)
     assert.match(sql, /check \(renewal = 'none'\)/)
     assert.match(sql, /promotion_orders_one_open/)
     assert.match(sql, /when unique_violation then/)
-    assert.match(sql, /length\(coalesce\(current_setting\('app\.payment_webhook_secret', true\), ''\)\) < 16/)
-    assert.match(sql, /'activated', false/)
-    assert.doesNotMatch(sql, /set status = 'active'/)
+    assert.match(sql, /rate-limited/)
+    assert.doesNotMatch(sql, /app\.payment_webhook_secret/)
+    assert.match(functionSource(sql, 'record_verified_payment'), /'activated', false/)
+    assert.doesNotMatch(functionSource(sql, 'record_verified_payment'), /status = 'active'/)
+    assert.match(functionSource(sql, 'activate_verified_promotion'), /status = 'active'/)
     assert.match(sql, /create extension if not exists pgcrypto with schema extensions/)
     assert.match(
       sql,
@@ -129,8 +139,17 @@ describe('SQL poptávek propagace', () => {
     assert.match(applyMissing, /activation-requires-admin/)
     assert.match(applyMissing, /payment-requires-admin-or-webhook/)
     assert.match(applyMissing, /grant execute on function public\.record_verified_payment\(text, text, text, text\) to service_role/)
+    assert.match(applyMissing, /grant execute on function public\.submit_promotion_inquiry\(jsonb, text, text\) to service_role/)
+    assert.match(applyMissing, /grant execute on function public\.read_promotion_inquiry\(text, text\) to service_role/)
+    assert.match(applyMissing, /activate_verified_promotion/)
+    assert.match(applyMissing, /review_place_owner_claim/)
+    assert.match(applyMissing, /self-review/)
+    assert.match(applyMissing, /protect_profiles_row/)
+    assert.match(applyMissing, /rate-limited/)
     assert.doesNotMatch(applyMissing, /grant execute on function public\.record_verified_payment\(text, text, text, text\) to anon/)
-    assert.doesNotMatch(applyMissing, /set status = 'active'/)
+    assert.doesNotMatch(applyMissing, /grant execute on function public\.submit_promotion_inquiry\(jsonb, text, text\) to anon/)
+    assert.doesNotMatch(functionSource(applyMissing, 'record_verified_payment'), /status = 'active'/)
+    assert.match(functionSource(applyMissing, 'activate_verified_promotion'), /status = 'active'/)
     const strippedApply = stripSqlCommentsAndStrings(applyMissing)
     assert.doesNotMatch(strippedApply, /\bdrop\s+table\b/i)
     assert.doesNotMatch(strippedApply, /\btruncate\b/i)

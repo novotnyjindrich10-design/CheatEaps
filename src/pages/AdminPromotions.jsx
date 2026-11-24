@@ -41,6 +41,8 @@ export default function AdminPromotions() {
   const [placeIds, setPlaceIds] = useState({})
   const [busyId, setBusyId] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [claims, setClaims] = useState([])
+  const [claimsNote, setClaimsNote] = useState('')
 
   const loadMe = useCallback(async () => {
     const response = await fetch('/api/admin/me', { credentials: 'same-origin' })
@@ -68,13 +70,28 @@ export default function AdminPromotions() {
     setStats(body.stats || null)
   }, [])
 
+  const loadClaims = useCallback(async () => {
+    const response = await fetch('/api/admin/owner-claims', { credentials: 'same-origin' })
+    const body = await response.json().catch(() => ({}))
+    if (!response.ok || !body.ok) {
+      setClaims([])
+      setClaimsNote(body.message || 'Žádosti o vlastnictví teď nelze načíst.')
+      return
+    }
+    setClaims(body.claims || [])
+    setClaimsNote(body.claims?.length ? '' : 'Žádné žádosti o vlastnictví.')
+  }, [])
+
   useEffect(() => {
     loadMe()
   }, [loadMe])
 
   useEffect(() => {
-    if (me.admin) loadOrders()
-  }, [me.admin, loadOrders])
+    if (me.admin) {
+      loadOrders()
+      loadClaims()
+    }
+  }, [me.admin, loadOrders, loadClaims])
 
   const review = async (id, action, placeId, invoiceNumber) => {
     if (CONFIRM_ACTIONS.has(action)) {
@@ -254,6 +271,80 @@ export default function AdminPromotions() {
             </article>
           )
         })}
+      </div>
+      <h2 className="section-title">Žádosti o vlastnictví</h2>
+      <p className="section-desc">
+        Schválit nebo zamítnout může jen administrátor a nikdy vlastní žádost. Běžný účet stav verified nezapíše.
+      </p>
+      {claimsNote ? <p>{claimsNote}</p> : null}
+      <div className="admin-list">
+        {claims.map((claim) => (
+          <article key={claim.id} className="admin-card">
+            <h3>{claim.place_id}</h3>
+            <p>
+              {claim.status} · {claim.email}
+            </p>
+            {claim.evidence ? <p className="admin-private">{claim.evidence}</p> : null}
+            {claim.status === 'pending' ? (
+              <div className="admin-actions">
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={busyId === `claim-${claim.id}`}
+                  onClick={async () => {
+                    setBusyId(`claim-${claim.id}`)
+                    setError('')
+                    try {
+                      const response = await fetch('/api/admin/owner-claims', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'content-type': 'application/json' },
+                        body: JSON.stringify({ id: claim.id, status: 'verified' }),
+                      })
+                      const body = await response.json().catch(() => ({}))
+                      if (!response.ok || !body.ok) {
+                        setError(body.message || 'Žádost se nepodařilo schválit.')
+                        return
+                      }
+                      await loadClaims()
+                    } finally {
+                      setBusyId('')
+                    }
+                  }}
+                >
+                  Schválit vlastnictví
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={busyId === `claim-${claim.id}`}
+                  onClick={async () => {
+                    setBusyId(`claim-${claim.id}`)
+                    setError('')
+                    try {
+                      const response = await fetch('/api/admin/owner-claims', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'content-type': 'application/json' },
+                        body: JSON.stringify({ id: claim.id, status: 'rejected' }),
+                      })
+                      const body = await response.json().catch(() => ({}))
+                      if (!response.ok || !body.ok) {
+                        setError(body.message || 'Žádost se nepodařilo zamítnout.')
+                        return
+                      }
+                      await loadClaims()
+                    } finally {
+                      setBusyId('')
+                    }
+                  }}
+                >
+                  Zamítnout
+                </button>
+              </div>
+            ) : null}
+          </article>
+        ))}
       </div>
     </main>
   )

@@ -27,6 +27,7 @@ const ROUTES = [
   { path: '/api/sponsorships', method: 'GET', expectStatus: 200 },
   { path: '/api/admin/promotion-orders', method: 'GET' },
   { path: '/api/admin/promotion-orders/review', method: 'POST' },
+  { path: '/api/admin/owner-claims', method: 'GET' },
   { path: '/api/payments/status', method: 'GET', expectStatus: 200 },
   { path: '/api/payments/return', method: 'GET', expectStatus: 200 },
   { path: '/api/payments/webhook', method: 'GET', expectStatus: 405 },

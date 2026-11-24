@@ -121,13 +121,15 @@ begin
       end if;
   end;
 
-  pay := public.record_verified_payment('evt-1', ref, 'paid', 'wrong-secret');
+  perform set_config('request.jwt.claim.sub', '', true);
+  perform set_config('request.jwt.claim.role', 'anon', true);
+  pay := public.record_verified_payment('evt-1', ref, 'paid', '');
   if coalesce(pay->>'error', '') <> 'forbidden' then
-    raise exception 'expected forbidden payment, got %', pay;
+    raise exception 'anon role must be forbidden, got %', pay;
   end if;
 
-  perform set_config('app.payment_webhook_secret', 'isolated-test-secret-16', false);
-  pay := public.record_verified_payment('evt-paid-1', ref, 'paid', 'isolated-test-secret-16');
+  perform set_config('request.jwt.claim.role', '', true);
+  pay := public.record_verified_payment('evt-paid-1', ref, 'paid', '');
   if coalesce(pay->>'ok', '') <> 'true' then
     raise exception 'paid record failed: %', pay;
   end if;
@@ -143,7 +145,7 @@ begin
     raise exception 'status must stay inquiry after payment RPC';
   end if;
 
-  pay := public.record_verified_payment('evt-paid-1', ref, 'paid', 'isolated-test-secret-16');
+  pay := public.record_verified_payment('evt-paid-1', ref, 'paid', '');
   if coalesce(pay->>'duplicate', 'false') <> 'true' then
     raise exception 'expected duplicate webhook %', pay;
   end if;
@@ -168,14 +170,94 @@ begin
     raise exception 'order missing after activation';
   end if;
 
-  if has_function_privilege('anon', 'public.submit_promotion_inquiry(jsonb,text,text)', 'execute') is not true then
-    raise exception 'anon missing submit execute';
+  if has_function_privilege('anon', 'public.submit_promotion_inquiry(jsonb,text,text)', 'execute') then
+    raise exception 'anon must not execute submit';
+  end if;
+  if has_function_privilege('authenticated', 'public.read_promotion_inquiry(text,text)', 'execute') then
+    raise exception 'authenticated must not execute read';
   end if;
   if has_function_privilege('anon', 'public.record_verified_payment(text,text,text,text)', 'execute') then
     raise exception 'anon must not execute record_verified_payment';
   end if;
   if has_function_privilege('service_role', 'public.record_verified_payment(text,text,text,text)', 'execute') is not true then
     raise exception 'service_role missing payment execute';
+  end if;
+  if has_function_privilege('service_role', 'public.submit_promotion_inquiry(jsonb,text,text)', 'execute') is not true then
+    raise exception 'service_role missing submit execute';
+  end if;
+  if has_function_privilege('service_role', 'public.activate_verified_promotion(text)', 'execute') is not true then
+    raise exception 'service_role missing activate execute';
+  end if;
+
+  perform set_config('request.jwt.claim.sub', user_id::text, true);
+  update public.profiles set is_admin = true where id = user_id;
+  if (select is_admin from public.profiles where id = user_id) then
+    raise exception 'user escalated is_admin';
+  end if;
+
+  perform set_config('request.jwt.claim.role', 'anon', true);
+  pay := public.activate_verified_promotion('CETEST-ACT');
+  if coalesce(pay->>'error', '') <> 'forbidden' then
+    raise exception 'anon activate must be forbidden, got %', pay;
+  end if;
+  perform set_config('request.jwt.claim.role', '', true);
+  perform set_config('request.jwt.claim.sub', '', true);
+
+  submit := public.submit_promotion_inquiry(
+    jsonb_build_object(
+      'termsAck', 'true',
+      'planId', 'plus',
+      'periodId', 'mesicne',
+      'planName', 'Plus',
+      'serviceLabel', '30 dní',
+      'businessName', 'Aktivace Test',
+      'companyName', 'Aktivace s.r.o.',
+      'contactName', 'Eva Test',
+      'email', 'activate@example.com',
+      'phone', '+420777123457',
+      'billingAddress', 'Ulice 2, Brno',
+      'placeId', 'aktivace-test',
+      'vatStatus', 'non-payer'
+    ),
+    access_hash,
+    'CETEST-ACT'
+  );
+  if coalesce(submit->>'ok', '') <> 'true' then
+    raise exception 'activate fixture submit failed: %', submit;
+  end if;
+  pay := public.record_verified_payment('evt-act-1', 'CETEST-ACT', 'paid', '');
+  if coalesce(pay->>'ok', '') <> 'true' or coalesce(pay->>'paymentStatus', '') <> 'paid' then
+    raise exception 'activate fixture payment failed: %', pay;
+  end if;
+  pay := public.activate_verified_promotion('CETEST-ACT');
+  if coalesce(pay->>'activated', '') <> 'true' then
+    raise exception 'service activation failed: %', pay;
+  end if;
+
+  perform set_config('request.jwt.claim.sub', user_id::text, true);
+  execute 'set local role authenticated';
+  insert into public.place_owner_claims (user_id, place_id, email, status, evidence)
+  values ('22222222-2222-2222-2222-222222222222'::uuid, 'izolovana-pizza', 'user@example.com', 'pending', 'doklad');
+  select count(*) into cnt from public.place_owner_claims;
+  if cnt <> 1 then
+    raise exception 'user should see only own claim, saw %', cnt;
+  end if;
+  pay := public.review_place_owner_claim((select id from public.place_owner_claims where place_owner_claims.user_id = '22222222-2222-2222-2222-222222222222'::uuid), 'verified');
+  if coalesce(pay->>'error', '') <> 'forbidden' then
+    raise exception 'user must not review claim, got %', pay;
+  end if;
+  execute 'reset role';
+
+  insert into public.place_owner_claims (user_id, place_id, email, status)
+  values ('11111111-1111-1111-1111-111111111111'::uuid, 'aktivace-test', 'admin@example.com', 'pending');
+  perform set_config('request.jwt.claim.sub', admin_id::text, true);
+  pay := public.review_place_owner_claim((select id from public.place_owner_claims where place_owner_claims.user_id = '11111111-1111-1111-1111-111111111111'::uuid), 'verified');
+  if coalesce(pay->>'error', '') <> 'self-review' then
+    raise exception 'admin must not review own claim, got %', pay;
+  end if;
+  pay := public.review_place_owner_claim((select id from public.place_owner_claims where place_owner_claims.user_id = '22222222-2222-2222-2222-222222222222'::uuid), 'verified');
+  if coalesce(pay->>'ok', '') <> 'true' then
+    raise exception 'admin review of other claim failed: %', pay;
   end if;
 
   if to_regclass('public.place_owner_claims') is null or to_regclass('public.promotion_audit_log') is null then

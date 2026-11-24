@@ -392,7 +392,11 @@ export async function paymentWebhookHttp(request, options = {}) {
   }
 
   let existing = null
-  if (typeof store.list === 'function') {
+  if (typeof store.getByReference === 'function') {
+    const found = await store.getByReference(verified.refId)
+    existing = found?.row || null
+  }
+  if (!existing && typeof store.list === 'function') {
     const listed = await store.list()
     existing = listed.rows?.find((row) => row.reference === verified.refId) || null
   }
@@ -423,31 +427,48 @@ export async function paymentWebhookHttp(request, options = {}) {
         ? 'pending'
         : 'failed'
 
+  const gate = mayActivateFromComgate(verified, env)
   const applied = await store.applyPayment({
     eventId: `comgate:${verified.transId}`,
     reference: verified.refId,
     status: mapped === 'paid' ? 'paid' : mapped === 'cancelled' ? 'cancelled' : mapped,
+    paymentSource: gate.ok ? gate.paymentSource : '',
   })
   if (!applied.ok) {
     return json({ ok: false, paid: false, activated: false, error: applied.error || 'failed', message: 'Platbu se nepodařilo zapsat.' }, 400)
   }
 
-  let row = applied.row
-  if (applied.duplicate) {
-    return okPush()
+  let row = applied.row || existing
+  if (mapped === 'paid' && row?.paymentStatus !== 'paid' && typeof store.getByReference === 'function') {
+    const again = await store.getByReference(verified.refId)
+    if (again?.row) row = again.row
   }
 
-  const gate = mayActivateFromComgate(verified, env)
   let activated = row?.status === 'active'
-  if (gate.ok && mapped === 'paid') {
-    const next = await activateAfterPaid(
-      store,
-      row,
-      { status: 'paid', placeId: row.placeId, paymentSource: gate.paymentSource },
-      options.now ?? Date.now(),
-    )
-    row = next.row
-    activated = next.activated
+  if (gate.ok && mapped === 'paid' && row && row.status !== 'active') {
+    const act = typeof store.activatePaid === 'function'
+      ? await store.activatePaid(verified.refId, {
+          paymentSource: gate.paymentSource,
+          now: options.now ?? Date.now(),
+        })
+      : await activateAfterPaid(
+          store,
+          { ...row, paymentStatus: 'paid' },
+          { status: 'paid', placeId: row.placeId, paymentSource: gate.paymentSource },
+          options.now ?? Date.now(),
+        )
+    if (act?.row) row = act.row
+    activated = Boolean(act?.activated)
+    if (!activated && row?.placeId) {
+      return json({
+        ok: false,
+        paid: true,
+        activated: false,
+        duplicate: Boolean(applied.duplicate),
+        error: 'activation-failed',
+        message: 'Platba je zapsaná, propagace se neaktivovala. Stejný webhook lze bezpečně zopakovat.',
+      }, 503)
+    }
   }
 
   // Comgate vyžaduje 2xx; tělo stačí OK. Detaily necháváme v JSON jen když klient není Comgate.
@@ -523,7 +544,7 @@ export async function paymentTestConfirmHttp(request, options = {}) {
     }, 400)
   }
   let row = applied.row
-  if (applied.duplicate) {
+  if (applied.duplicate && (row?.status === 'active' || event.status !== 'paid')) {
     return json({
       ok: true,
       test: true,
@@ -534,17 +555,33 @@ export async function paymentTestConfirmHttp(request, options = {}) {
       message: 'Stejná testovací událost už byla zpracovaná.',
     })
   }
-  const activated = await activateAfterPaid(
-    store,
-    row,
-    { ...event, paymentSource: 'gateway-test' },
-    options.now ?? Date.now(),
-  )
+  const activated = typeof store.activatePaid === 'function' && event.status === 'paid'
+    ? await store.activatePaid(String(event.reference), {
+        paymentSource: 'gateway-test',
+        now: options.now ?? Date.now(),
+      })
+    : await activateAfterPaid(
+        store,
+        row,
+        { ...event, paymentSource: 'gateway-test' },
+        options.now ?? Date.now(),
+      )
   row = activated.row
+  if (event.status === 'paid' && row?.placeId && !activated.activated) {
+    return json({
+      ok: false,
+      test: true,
+      paid: true,
+      activated: false,
+      duplicate: Boolean(applied.duplicate),
+      error: 'activation-failed',
+      message: 'Testovací platba je zapsaná, propagace se neaktivovala. Stejný požadavek lze zopakovat.',
+    }, 503)
+  }
   return json({
     ok: true,
     test: true,
-    duplicate: false,
+    duplicate: Boolean(applied.duplicate),
     paid: row?.paymentStatus === 'paid',
     activated: activated.activated,
     renewal: 'none',

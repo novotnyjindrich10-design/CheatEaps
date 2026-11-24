@@ -32,11 +32,9 @@ export default function BusinessAccount() {
     setMessage('')
     setOrder(null)
     try {
-      const params = new URLSearchParams({
-        reference: reference.trim(),
-        key: accessKey.trim(),
+      const response = await fetch(`/api/promotion-orders?reference=${encodeURIComponent(reference.trim())}`, {
+        headers: { 'x-foodgo-order-key': accessKey.trim() },
       })
-      const response = await fetch(`/api/promotion-orders?${params}`)
       const body = await response.json().catch(() => ({}))
       if (!response.ok || !body.ok) {
         setMessage(body.message || 'Poptávka se nenašla. Zkontroluj kód a přístupový klíč z potvrzení.')
