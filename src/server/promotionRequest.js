@@ -6,6 +6,7 @@
 import { findBusinessPlan, formatKc, normalizeWebAddress } from '../constants/businessPlans.js'
 import { presentPrice } from '../constants/operator.js'
 import { quoteTrustedPrice } from '../constants/promotionPrice.js'
+import { inquiryOperatorEmail, inquiryRestaurantEmail } from './emailTemplates.js'
 
 const LIMITS = {
   businessName: 100,
@@ -321,28 +322,19 @@ export function assessPromotionRequest(payload, now = Date.now()) {
 
 export function buildRestaurantConfirmation(assessment) {
   const record = assessment.record
-  const reference = assessment.reference
-    ? `Číslo poptávky: ${assessment.reference}`
-    : 'Číslo poptávky se doplní, až bude evidence zapnutá.'
+  const letter = inquiryRestaurantEmail({
+    reference: assessment.reference || '',
+    businessName: record.businessName,
+    planName: record.planName,
+    serviceLabel: record.serviceLabel,
+    amountLabel: formatKc(record.amount),
+    vatNote: record.vatNote,
+  })
   return {
     to: assessment.replyTo,
     subject: 'Poptávka propagace na FoodGo je přijatá',
-    text: [
-      'Dobrý den,',
-      '',
-      'přijali jsme nezávaznou poptávku placené propagace na FoodGo Brno.',
-      reference,
-      `Podnik: ${record.businessName}`,
-      `Balíček: ${record.planName}`,
-      `Délka: ${record.serviceLabel}`,
-      `Ceníková částka: ${formatKc(record.amount)}`,
-      record.vatNote,
-      '',
-      'Nic se nezaplatilo. Reklama se nezapnula. Platba se sama nestrhává.',
-      'Ozveme se na tento e-mail po kontrole.',
-      '',
-      'FoodGo Brno',
-    ].join('\n'),
+    text: letter.text,
+    html: letter.html,
   }
 }
 
@@ -360,6 +352,7 @@ async function postOne(mail, letter, fetchImpl) {
         ...(letter.replyTo ? { reply_to: letter.replyTo } : {}),
         subject: letter.subject,
         text: letter.text,
+        ...(letter.html ? { html: letter.html } : {}),
       }),
     })
     if (!response.ok) return { ok: false, error: 'email-failed' }
@@ -377,11 +370,15 @@ export async function sendPromotionInquiryMail(assessment, env, fetchImpl) {
   const operatorText = assessment.reference
     ? `${assessment.text}\n\nČíslo evidence: ${assessment.reference}`
     : assessment.text
+  const operatorHtml = inquiryOperatorEmail({
+    subjectLines: operatorText.split('\n'),
+  }).html
   const operatorSent = await postOne(mail, {
     to: mail.to,
     replyTo: assessment.replyTo,
     subject: assessment.subject,
     text: operatorText,
+    html: operatorHtml,
   }, fetchImpl)
   if (!operatorSent.ok) {
     return { ok: false, operator: false, restaurant: false, error: operatorSent.error }

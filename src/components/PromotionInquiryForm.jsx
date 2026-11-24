@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { BUSINESS_PLANS, findBusinessPlan, formatKc, quotePlan } from '../constants/businessPlans'
 import { presentPrice } from '../constants/operator'
 import { useCatalog } from '../context/CatalogContext'
+import { trackProductEvent } from '../utils/productEvents'
 
 const EMPTY = {
   periodId: 'mesicne',
@@ -86,6 +87,10 @@ export default function PromotionInquiryForm({ planId, onClose }) {
         setErrors({ form: body.message || 'Poptávku se nepodařilo odeslat.' })
         return
       }
+      trackProductEvent(body.stored ? 'promotion_order_created' : 'promotion_inquiry_submitted', {
+        planId: plan,
+        stored: Boolean(body.stored),
+      })
       setResult(body)
     } catch {
       setErrors({ form: 'Poptávku se nepodařilo odeslat. Nic se nezaplatilo.' })

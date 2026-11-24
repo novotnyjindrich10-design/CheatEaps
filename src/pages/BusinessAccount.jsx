@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { CONTACT_EMAIL } from '../constants/brand'
 import { useAuth } from '../context/authSession'
 import { loginPath } from '../utils/authReturn'
 
@@ -106,12 +107,21 @@ export default function BusinessAccount() {
               {order.planName} · {order.serviceLabel} · {order.amount} {order.currency || 'Kč'}
             </p>
             <p>Platba: {order.paid ? 'v evidenci označeno jako uhrazeno' : 'není uhrazeno'}.</p>
-            <p>Obnovení: samo se neobnovuje.</p>
+            <p>Obnovení: samo se neobnovuje (jednorázové období, ne předplatné).</p>
+            {order.startsAt ? <p>Začátek propagace: {when(order.startsAt)}</p> : null}
             {order.endsAt ? <p>Konec propagace: {when(order.endsAt)}</p> : <p>Datum konce se nastaví až po zapnutí propagace.</p>}
             <p>
-              <Link to="/pro-podniky#balicky">Požádat o jiný balíček</Link>
+              <Link to="/pro-podniky#balicky">Požádat o další propagaci</Link>
               {' '}
               založí novou nezávaznou poptávku. Běžící období to samo nezmění.
+            </p>
+            <p className="section-desc">
+              Problém s poptávkou? Napiš na{' '}
+              <a href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Poptávka ${order.reference || ''}`)}`}>
+                {CONTACT_EMAIL}
+              </a>
+              {' · '}
+              <Link to="/reklamni-zvyrazneni">Jak funguje reklama</Link>
             </p>
           </article>
         ) : null}

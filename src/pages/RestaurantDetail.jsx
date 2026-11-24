@@ -30,6 +30,7 @@ import { useCatalog } from '../context/CatalogContext'
 import { similarRestaurants } from '../utils/similarPlaces'
 import { formatSponsorshipRange, partitionPlacements, showSponsoredLabel, SPONSORED_LABEL } from '../constants/monetization'
 import { sharePlaceLink } from '../utils/sharePlace'
+import { trackProductEvent } from '../utils/productEvents'
 import RestaurantCard from '../components/RestaurantCard'
 
 export default function RestaurantDetail() {
@@ -44,12 +45,15 @@ export default function RestaurantDetail() {
 
   useEffect(() => {
     if (!restaurant?.id) return
+    const restaurantId = restaurant.id
+    const sponsored = Boolean(restaurant.sponsored)
+    trackProductEvent('restaurant_detail_open', { restaurantId, sponsored })
     fetchWithTimeout('/api/place-stats/event', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ restaurantId: restaurant.id, event: 'profile_view' }),
+      body: JSON.stringify({ restaurantId, event: 'profile_view' }),
     }).catch(() => {})
-  }, [restaurant?.id])
+  }, [restaurant?.id, restaurant?.sponsored])
 
   const similar = useMemo(
     () =>
