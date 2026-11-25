@@ -11,13 +11,14 @@ Tajné hodnoty sem nepatří.
 
 | Kontrola | Výsledek |
 | --- | --- |
-| Nový projekt foodgo-preview | URL `https://jnyxjyyvzxriuyvyiuxe.supabase.co` existuje (potvrzeno tebou) |
-| Runtime Preview `/api/auth/session` | **Stále** `supabaseHost=pcptzyfoojmnspumcmsi.supabase.co` |
-| Vercel env (CLI) | Preview má `SUPABASE_URL` / `SUPABASE_ANON_KEY` (záznamy staré 24 dní). `SUPABASE_SERVICE_ROLE_KEY` a `PUBLIC_SITE_URL` jsou vidět jen u **Production** |
+| Nový projekt foodgo-preview | `https://jnyxjyyvzxriuyvyiuxe.supabase.co` |
+| Runtime Preview `/api/auth/session` | **`supabaseHost=jnyxjyyvzxriuyvyiuxe.supabase.co`** (propojeno) |
+| Schema Preview | **Ještě prázdná** — `/api/published-places` hlásí chybějící tabulku; `/api/place-overrides` → `configured: false` |
+| `PUBLIC_SITE_URL` na Preview | Runtime `publicSiteUrl: false` — doplň Preview env a redeploy |
 | Ostré platby | Vypnuté (`paymentsLive: false`) |
 | Produkční DB | Nedotčená |
 
-**Závěr:** Projekt foodgo-preview je založený, ale nasazený Preview web **ještě neběží proti němu**. Nejdřív oprav env + bootstrap SQL + redeploy (kroky A1–A4 níže).
+**Závěr:** Preview už míří na foodgo-preview. Zbývá spustit `supabase/preview-bootstrap-all.sql` v SQL Editoru **jen** u `jnyxjyyvzxriuyvyiuxe` (krok A2) a doplnit Auth redirects + případně `PUBLIC_SITE_URL`.
 
 Jeden SQL soubor pro prázdnou Preview DB:
 
@@ -46,28 +47,20 @@ Izolovaný Docker Postgres 16: `node scripts/test-promotion-migration-isolated.m
 
 ## A. Ruční kroky teď (Preview DB) — přesné pořadí
 
-### A1. Opravit Vercel Preview env
+### A1. Vercel Preview env (SUPABASE_URL už sedí)
 
-Otevři [Environment Variables](https://vercel.com/jindrichcompany/cheat-eaps/settings/environment-variables).
+Ověřeno: Preview session vrací `jnyxjyyvzxriuyvyiuxe`. Doplň ještě, pokud chybí:
 
-U každé položky musí být zaškrtnuté **jen Preview** (ne Production):
+| Proměnná | Hodnota | Tajné | Stav |
+| --- | --- | --- | --- |
+| `SUPABASE_URL` | `https://jnyxjyyvzxriuyvyiuxe.supabase.co` | ne | OK v runtime |
+| `SUPABASE_ANON_KEY` | klíč z foodgo-preview | ano | OK (configured) |
+| `SUPABASE_SERVICE_ROLE_KEY` | `sb_secret_…` **jen foodgo-preview** | ano | zkontroluj, že je na Preview |
+| `PUBLIC_SITE_URL` | `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app` | ne | zatím `publicSiteUrl: false` |
 
-| Proměnná | Hodnota | Tajné |
-| --- | --- | --- |
-| `SUPABASE_URL` | `https://jnyxjyyvzxriuyvyiuxe.supabase.co` | ne |
-| `SUPABASE_ANON_KEY` | publishable nebo anon klíč z foodgo-preview | ano |
-| `SUPABASE_SERVICE_ROLE_KEY` | `sb_secret_…` (nebo legacy service) **jen z foodgo-preview** | ano |
-| `PUBLIC_SITE_URL` | `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app` | ne |
+[Environment Variables](https://vercel.com/jindrichcompany/cheat-eaps/settings/environment-variables) → Preview → případně Edit + Redeploy.
 
-Production nech na `pcptzyfoojmnspumcmsi`.  
-Pokud Preview `SUPABASE_URL` pořád ukazuje starý projekt, **přepiš** hodnotu (Edit), ne jen „přidej další“.
-
-Pak: Deployments → poslední Preview → **Redeploy** (nebo push prázdný commit).
-
-Ověření po redeployi:  
-`GET /api/auth/session` na Preview alias → `supabaseHost` musí být **`jnyxjyyvzxriuyvyiuxe.supabase.co`**.
-
-### A2. Bootstrap prázdné Preview databáze
+### A2. Bootstrap prázdné Preview databáze (teď nejdůležitější)
 
 **Bez connection stringu (doporučeno):**
 
