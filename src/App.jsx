@@ -11,6 +11,7 @@ import RecoveryRedirect from './components/RecoveryRedirect'
 import PageMeta from './components/PageMeta'
 import { CompareProvider } from './context/CompareContext'
 import { CONTACT_EMAIL } from './constants/brand'
+import Logo from './components/Logo'
 
 const MobileTabBar = lazy(() => import('./components/MobileTabBar'))
 const CompareBar = lazy(() => import('./components/CompareBar'))
@@ -112,7 +113,9 @@ function App() {
             <MobileTabBar />
           </Suspense>
           <footer className="site-footer">
-            <p className="footer-brand">FOODGO Brno</p>
+            <p className="footer-brand">
+              <Logo height={40} showCity className="footer-logo" />
+            </p>
             <p className="footer-tagline">Katalog jídla v Brně. Ověřené údaje oddělujeme od odhadů.</p>
             <p className="footer-support">
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

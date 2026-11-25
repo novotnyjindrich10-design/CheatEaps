@@ -209,39 +209,32 @@ a {
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0;
   min-width: 0;
+  max-width: min(62vw, 220px);
+  line-height: 0;
 }
 
 .foodgo-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex: 0 0 auto;
-}
-
-.foodgo-logo-mark {
   display: block;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  line-height: 0;
 }
 
-.foodgo-logo-word {
+.foodgo-logo img {
   display: block;
   width: auto;
-  max-width: min(42vw, 148px);
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
 }
 
-.brand-text {
-  font-size: clamp(1.05rem, 2.2vw, 1.28rem);
-  font-weight: 750;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  white-space: nowrap;
-}
-
-.brand-text em {
-  font-style: normal;
-  color: #12b37a;
+.footer-brand .foodgo-logo,
+.footer-logo {
+  max-width: min(62vw, 200px);
 }
 
 .logo-bg {
@@ -3395,10 +3388,6 @@ button.category-card {
 
   .header-nav {
     display: none;
-  }
-
-  .brand-text {
-    font-size: 1.22rem;
   }
 
   .header-menu-drawer {
