@@ -208,7 +208,9 @@ test.describe('final polish — mobil 390', () => {
     await page.getByRole('button', { name: 'Otevřít menu' }).click()
     await expect(page.getByRole('navigation', { name: 'Mobilní menu' })).toBeVisible()
     await expect(page.getByRole('navigation', { name: 'Mobilní menu' }).getByRole('link', { name: 'Nevím, co jíst' })).toHaveCount(0)
-    await page.getByRole('navigation', { name: 'Mobilní menu' }).getByRole('link', { name: 'Oblíbené' }).click()
+    await expect(page.getByRole('navigation', { name: 'Mobilní menu' }).getByRole('link', { name: 'Oblíbené' })).toHaveCount(0)
+    await page.keyboard.press('Escape')
+    await page.getByRole('navigation', { name: 'Hlavní mobilní navigace' }).getByRole('link', { name: 'Oblíbené' }).click()
     await expect(page).toHaveURL(/oblibene/)
 
     await openAsGuest(page, { allowMapTiles: true })

@@ -14,7 +14,7 @@ function placeExists(id) {
 }
 
 export default function Favorites() {
-  const { session } = useAuth()
+  const { session, logout } = useAuth()
   const { attachDistances } = useLocationState()
   const [ids, setIds] = useState([])
   const [missing, setMissing] = useState(0)
@@ -81,6 +81,17 @@ export default function Favorites() {
             : 'Restaurace uložené v tomto prohlížeči. Po přihlášení je můžeš synchronizovat s účtem.'}
         </p>
       </div>
+
+      {session.ready && session.authenticated ? (
+        <div className="favorite-account" id="ucet">
+          <p className="favorite-account-email" title={session.email}>
+            {session.email}
+          </p>
+          <button type="button" className="btn btn-secondary" onClick={logout}>
+            Odhlásit
+          </button>
+        </div>
+      ) : null}
 
       {!session.ready || (session.authenticated && loading) ? (
         <p className="page-subtitle">Načítám oblíbené…</p>

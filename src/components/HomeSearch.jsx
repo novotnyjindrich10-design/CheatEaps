@@ -4,6 +4,12 @@ import { useCatalog } from '../context/CatalogContext'
 import { buildSearchSuggestions } from '../utils/smartSearch'
 import SearchSuggest from './SearchSuggest'
 import { suggestKeyAction } from '../utils/searchSuggest'
+import {
+  clearRecentSearches,
+  listRecentSearches,
+  rememberRecentSearch,
+  removeRecentSearch,
+} from '../utils/recentSearches'
 
 export default function HomeSearch({ id = 'home-search' }) {
   const navigate = useNavigate()
@@ -11,16 +17,20 @@ export default function HomeSearch({ id = 'home-search' }) {
   const [value, setValue] = useState('')
   const [open, setOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
+  const [recent, setRecent] = useState(() => listRecentSearches())
   const suggestions = useMemo(
-    () => (open ? buildSearchSuggestions(restaurants, value) : []),
+    () => (open && value.trim().length >= 2 ? buildSearchSuggestions(restaurants, value) : []),
     [open, restaurants, value],
   )
   const listId = `${id}-suggest`
+  const showRecent = open && value.trim().length < 2 && recent.length > 0
 
   function goToQuery(query) {
+    const trimmed = String(query || '').trim()
+    if (trimmed) setRecent(rememberRecentSearch(trimmed))
     const params = new URLSearchParams()
-    if (query) {
-      params.set('q', query)
+    if (trimmed) {
+      params.set('q', trimmed)
       params.set('sort', 'relevance')
     }
     const search = params.toString()
@@ -77,7 +87,7 @@ export default function HomeSearch({ id = 'home-search' }) {
           placeholder="Název, kuchyně nebo ulice"
           value={value}
           role="combobox"
-          aria-expanded={open && suggestions.length > 0}
+          aria-expanded={open && (suggestions.length > 0 || showRecent)}
           aria-controls={listId}
           aria-autocomplete="list"
           aria-activedescendant={activeIndex >= 0 ? `${listId}-opt-${activeIndex}` : undefined}
@@ -86,20 +96,69 @@ export default function HomeSearch({ id = 'home-search' }) {
             setOpen(true)
             setActiveIndex(-1)
           }}
-          onFocus={() => setOpen(true)}
+          onFocus={() => {
+            setRecent(listRecentSearches())
+            setOpen(true)
+          }}
           onKeyDown={onKeyDown}
           onBlur={() => {
-            setOpen(false)
-            setActiveIndex(-1)
+            window.setTimeout(() => {
+              setOpen(false)
+              setActiveIndex(-1)
+            }, 120)
           }}
           autoComplete="off"
           enterKeyHint="search"
+          inputMode="search"
+          spellCheck={false}
         />
         <button type="submit" className="btn btn-primary home-search-submit">
           Hledat
         </button>
       </div>
-      {open ? (
+      {showRecent ? (
+        <div className="search-recent" id={listId}>
+          <div className="search-recent-head">
+            <p className="search-recent-title">Nedávná hledání</p>
+            <button
+              type="button"
+              className="search-recent-clear"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => setRecent(clearRecentSearches())}
+            >
+              Smazat
+            </button>
+          </div>
+          <ul className="search-recent-list" role="listbox">
+            {recent.map((item) => (
+              <li key={item} role="presentation">
+                <button
+                  type="button"
+                  className="search-recent-item"
+                  role="option"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    setValue(item)
+                    goToQuery(item)
+                    setOpen(false)
+                  }}
+                >
+                  {item}
+                </button>
+                <button
+                  type="button"
+                  className="search-recent-remove"
+                  aria-label={`Odebrat ${item}`}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => setRecent(removeRecentSearch(item))}
+                >
+                  ×
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : open ? (
         <SearchSuggest id={listId} suggestions={suggestions} activeIndex={activeIndex} onPick={pick} />
       ) : null}
     </form>

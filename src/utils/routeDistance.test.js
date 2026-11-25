@@ -8,6 +8,7 @@ import {
   distancesFromTable,
   formatRouteDistance,
   isFootRoutingEnabled,
+  estimateWalkMinutes,
   presentRouteDistance,
   resolveFootRouteTableUrl,
 } from './routeDistance.js'
@@ -132,9 +133,13 @@ describe('vzdálenost po trase', () => {
     assert.match(formatRouteDistance(byId.wait.distanceKm, byId.wait.distanceState), /m|km/)
     assert.deepEqual(presentRouteDistance(byId.known.distanceKm, byId.known.distanceState), {
       value: '1,2 km',
-      caption: 'pěšky',
+      caption: 'pěšky · ≈15 min chůze',
+      walkMinutes: 15,
     })
-    assert.equal(presentRouteDistance(byId.wait.distanceKm, byId.wait.distanceState).caption, 'vzdušnou čarou · počítám trasu')
+    assert.match(
+      presentRouteDistance(byId.wait.distanceKm, byId.wait.distanceState).caption,
+      /vzdušnou čarou · počítám trasu · ≈\d+ min \(odhad\)/,
+    )
   })
 
   it('po výpadku trasy zůstane vzdušná vzdálenost', () => {
@@ -145,10 +150,10 @@ describe('vzdálenost po trase', () => {
     )
     assert.equal(place.distanceState, 'air')
     assert.ok(place.distanceKm > 0)
-    assert.deepEqual(presentRouteDistance(place.distanceKm, place.distanceState), {
-      value: formatRouteDistance(place.distanceKm, 'air'),
-      caption: 'vzdušnou čarou',
-    })
+    const presented = presentRouteDistance(place.distanceKm, place.distanceState)
+    assert.equal(presented.value, formatRouteDistance(place.distanceKm, 'air'))
+    assert.match(presented.caption, /vzdušnou čarou · ≈\d+ min \(odhad\)/)
+    assert.equal(presented.walkMinutes, estimateWalkMinutes(place.distanceKm))
   })
 
   it('platné souřadnice předá dál a spočítá z nich pěší vzdálenost', () => {
@@ -162,8 +167,15 @@ describe('vzdálenost po trase', () => {
     assert.equal(place.locationVerified, true)
     assert.deepEqual(presentRouteDistance(place.distanceKm, place.distanceState), {
       value: '350 m',
-      caption: 'pěšky',
+      caption: 'pěšky · ≈4 min chůze',
+      walkMinutes: 4,
     })
+  })
+
+  it('odhadne minuty chůze jen u použitelné vzdálenosti', () => {
+    assert.equal(estimateWalkMinutes(0), 1)
+    assert.equal(estimateWalkMinutes(0.48), 6)
+    assert.equal(estimateWalkMinutes(null), null)
   })
 
   it('chybějící a neplatné souřadnice nezobrazí smyšlenou vzdálenost', () => {
@@ -213,14 +225,17 @@ describe('vzdálenost po trase', () => {
     assert.deepEqual(presentRouteDistance(denied.distanceKm, denied.distanceState), {
       value: '—',
       caption: 'poloha nepovolena',
+      walkMinutes: null,
     })
     assert.deepEqual(presentRouteDistance(idle.distanceKm, idle.distanceState), {
       value: '—',
       caption: 'zapni polohu',
+      walkMinutes: null,
     })
     assert.deepEqual(presentRouteDistance(failed.distanceKm, failed.distanceState), {
       value: '—',
       caption: 'poloha není dostupná',
+      walkMinutes: null,
     })
   })
 })

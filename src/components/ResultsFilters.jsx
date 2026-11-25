@@ -47,6 +47,7 @@ function hiddenActiveCount(filters) {
     filters.verifiedPricesOnly,
     filters.dealsOnly,
     filters.hoursOnly,
+    filters.openNowOnly,
   ].filter(Boolean).length
 }
 
@@ -258,10 +259,21 @@ export default function ResultsFilters({
                 checked={Boolean(filters.hoursOnly)}
                 onChange={(e) => onChange({ ...filters, hoursOnly: e.target.checked })}
               />
+              <FilterToggle
+                id="filter-open-now"
+                label="Právě otevřeno"
+                checked={Boolean(filters.openNowOnly)}
+                onChange={(e) => onChange({ ...filters, openNowOnly: e.target.checked })}
+              />
             </div>
             {filters.hoursOnly ? (
               <p className="location-bar-caption filters-note">
                 Bereme jen čitelnou otevírací dobu z OpenStreetMap. Stav Otevřeno/Zavřeno ukazujeme jen u jednoduchých zápisů.
+              </p>
+            ) : null}
+            {filters.openNowOnly ? (
+              <p className="location-bar-caption filters-note">
+                Jen podniky s čitelnou otevírací dobou, u kterých teď spolehlivě víme, že mají otevřeno. Nejasné zápisy vynecháme.
               </p>
             ) : null}
             {filters.dealsOnly ? (

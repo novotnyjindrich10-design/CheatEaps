@@ -12,6 +12,11 @@ import { compareByRecordQuality } from '../utils/recordQuality'
 import { suppressCatalogDuplicates } from '../utils/catalogDuplicates'
 import { filterAndSortRestaurants } from '../utils/filterRestaurants'
 import { varyPixabayOnPage } from '../utils/pageIllustrations'
+import { mealPeriodForHour } from '../utils/mealPeriod'
+import { listRecentViews } from '../utils/recentViews'
+import { getRestaurantById } from '../data/restaurants'
+import { presentOsmContact } from '../utils/osmContact'
+import { isOpenNowReliable } from '../utils/openingStatus'
 
 const FEATURED_COUNT = 12
 
@@ -59,16 +64,50 @@ function pickNearest(places, limit = FEATURED_COUNT) {
   }).slice(0, limit)
 }
 
+function preferOpenPlaces(places) {
+  const open = []
+  const rest = []
+  for (const place of places) {
+    const hoursRaw = presentOsmContact(place).hoursRaw
+    if (hoursRaw && isOpenNowReliable(hoursRaw)) open.push(place)
+    else rest.push(place)
+  }
+  return [...open, ...rest]
+}
+
 export default function Home() {
   const { restaurants } = useCatalog()
   const { attachDistances, origin } = useLocationState()
   const hasOrigin = Boolean(origin)
+  const period = useMemo(() => mealPeriodForHour(new Date().getHours()), [])
   const organic = useMemo(() => partitionPlacements(restaurants).organic, [restaurants])
   const located = useMemo(() => attachDistances(organic), [attachDistances, organic])
   const featured = useMemo(() => {
-    const picked = hasOrigin ? pickNearest(located) : pickRecommended(located)
+    let pool = located
+    if (period.category) {
+      const narrowed = filterAndSortRestaurants(located, {
+        cuisineType: period.category,
+        hasOrigin,
+        sortBy: hasOrigin ? 'distance' : 'quality',
+      })
+      if (narrowed.length >= 4) pool = narrowed
+    }
+    let picked = hasOrigin ? pickNearest(pool) : pickRecommended(pool)
+    if (period.preferOpen) picked = preferOpenPlaces(picked).slice(0, FEATURED_COUNT)
     return varyPixabayOnPage(picked)
-  }, [hasOrigin, located])
+  }, [hasOrigin, located, period])
+
+  const recentPlaces = useMemo(() => {
+    return listRecentViews()
+      .map((id) => getRestaurantById(id))
+      .filter(Boolean)
+      .slice(0, 4)
+  }, [])
+
+  const sectionTitle = hasOrigin ? 'Nejbližší podniky' : period.title
+  const sectionDesc = hasOrigin
+    ? 'Seřazeno od nejbližšího podle tvé polohy. Vzdálenost ukazujeme jen u podniků se souřadnicemi.'
+    : period.hint
 
   return (
     <main className="page home-page">
@@ -83,6 +122,20 @@ export default function Home() {
           </p>
           <HomeSearch />
           <LocationBar places={restaurants} variant="hero" />
+          <div className="home-quick-filters" aria-label="Rychlé filtry">
+            <Link to="/results?open=1" className="home-quick-chip">
+              Právě otevřeno
+            </Link>
+            <Link to="/results?budget=150" className="home-quick-chip">
+              Do 150 Kč
+            </Link>
+            <Link
+              to={hasOrigin ? '/results?sort=distance' : '/results'}
+              className="home-quick-chip"
+            >
+              Nejblíže
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -99,13 +152,9 @@ export default function Home() {
         <div className="section-heading section-heading--split">
           <div>
             <h2 id="featured-title" className="section-title">
-              {hasOrigin ? 'Nejbližší podniky' : 'Doporučené podniky'}
+              {sectionTitle}
             </h2>
-            <p className="section-desc">
-              {hasOrigin
-                ? 'Seřazeno od nejbližšího podle tvé polohy. Vzdálenost ukazujeme jen u podniků se souřadnicemi.'
-                : 'Nejlíp zdokumentované podniky z různých kuchyní. Zapni polohu výše a uvidíš nejbližší první.'}
-            </p>
+            <p className="section-desc">{sectionDesc}</p>
           </div>
           <Link to="/results" className="btn btn-secondary">
             Celý seznam
@@ -120,6 +169,26 @@ export default function Home() {
           ))}
         </ul>
       </section>
+
+      {recentPlaces.length > 0 ? (
+        <section className="home-recent" aria-labelledby="recent-title">
+          <div className="section-heading section-heading--split">
+            <div>
+              <h2 id="recent-title" className="section-title">
+                Nedávno prohlížené
+              </h2>
+              <p className="section-desc">Jen v tomto zařízení. Nic se neodesílá.</p>
+            </div>
+          </div>
+          <ul className="restaurant-list restaurant-list--compact">
+            {recentPlaces.map((restaurant, index) => (
+              <li key={restaurant.id}>
+                <RestaurantCard restaurant={restaurant} index={index} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="budget-quick" aria-labelledby="budget-quick-title">
         <div className="budget-quick-panel">

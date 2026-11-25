@@ -16,6 +16,7 @@ import { presentOsmContact } from '../utils/osmContact'
 import CuisineIllustration from './CuisineIllustration'
 import { useCompare } from '../context/CompareContext'
 import { showSponsoredLabel, SPONSORED_LABEL } from '../constants/monetization'
+import { saveScrollPosition } from '../utils/scrollRestore'
 
 export default function RestaurantCard({ restaurant, index = 0, variant = 'default' }) {
   const from = currentInternalPath(useLocation())
@@ -28,6 +29,7 @@ export default function RestaurantCard({ restaurant, index = 0, variant = 'defau
   const isDeal = isDealCardVariant(variant)
   const { id, name, type, address, distanceKm, distanceState } = restaurant
   const distance = presentRouteDistance(distanceKm, distanceState)
+  const rememberScroll = () => saveScrollPosition(from)
   const tags = getRestaurantTags(restaurant)
   const category = getRestaurantCategory(restaurant)
   const priceDisplay = formatCardPrice(restaurant)
@@ -60,6 +62,7 @@ export default function RestaurantCard({ restaurant, index = 0, variant = 'defau
         state={detailState}
         className="restaurant-card-media-link"
         aria-label={isDeal ? `${name}: ${highlight}` : name}
+        onClick={rememberScroll}
       >
         <div
           className="restaurant-card-media"
@@ -128,7 +131,12 @@ export default function RestaurantCard({ restaurant, index = 0, variant = 'defau
             ) : null}
           </>
         ) : (
-          <Link to={`/restaurant/${id}`} state={detailState} className="restaurant-card-link">
+          <Link
+            to={`/restaurant/${id}`}
+            state={detailState}
+            className="restaurant-card-link"
+            onClick={rememberScroll}
+          >
             <div className="restaurant-card-top">
               <p className="restaurant-card-type">{type}</p>
               {showSponsoredLabel(restaurant) ? (
@@ -186,7 +194,12 @@ export default function RestaurantCard({ restaurant, index = 0, variant = 'defau
             </Link>
           ) : (
             <>
-              <Link to={`/restaurant/${id}`} state={detailState} className="btn btn-card btn-card--primary">
+              <Link
+                to={`/restaurant/${id}`}
+                state={detailState}
+                className="btn btn-card btn-card--primary"
+                onClick={rememberScroll}
+              >
                 Detail
                 <span className="btn-card-arrow" aria-hidden="true">
                   →

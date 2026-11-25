@@ -40,9 +40,14 @@ test.describe('mobilní navigace 390', () => {
     )
 
     await page.getByRole('button', { name: 'Otevřít menu' }).click()
-    await menu.getByRole('link', { name: 'Najít podnik' }).click()
-    await expect(page).toHaveURL(/\/results/)
+    await menu.getByRole('link', { name: 'Pro podniky' }).click()
+    await expect(page).toHaveURL(/\/pro-podniky/)
     await expect(page.getByRole('navigation', { name: 'Mobilní menu' })).toBeHidden()
+
+    const tabs = page.getByRole('navigation', { name: 'Hlavní mobilní navigace' })
+    await expect(tabs).toBeVisible()
+    await tabs.getByRole('link', { name: 'Hledat' }).click()
+    await expect(page).toHaveURL(/\/results/)
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)
     expect(overflow).toBe(false)

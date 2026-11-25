@@ -212,6 +212,8 @@ export default function RestaurantMap({
   onForget,
   focusToken = 0,
   onReady,
+  onAreaSearch,
+  areaFilterActive = false,
 }) {
   const mapId = useId().replace(/:/g, '')
   const containerRef = useRef(null)
@@ -236,6 +238,7 @@ export default function RestaurantMap({
   const [pickedId, setPickedId] = useState(selectedId || '')
   const [trackedSelected, setTrackedSelected] = useState(selectedId || '')
   const [panToken, setPanToken] = useState(0)
+  const [showAreaSearch, setShowAreaSearch] = useState(false)
   if (selectedId !== trackedSelected) {
     setTrackedSelected(selectedId || '')
     setPickedId(selectedId || '')
@@ -313,10 +316,12 @@ export default function RestaurantMap({
     L.control.zoom({ position: 'bottomright' }).addTo(map)
 
     const markUserAdjust = () => {
-      if (!programmaticMoveRef.current) userAdjustedRef.current = true
+      if (programmaticMoveRef.current) return
+      userAdjustedRef.current = true
+      setShowAreaSearch(true)
     }
-    map.on('dragstart', markUserAdjust)
-    map.on('zoomstart', markUserAdjust)
+    map.on('dragend', markUserAdjust)
+    map.on('zoomend', markUserAdjust)
 
     const cluster = L.markerClusterGroup({
       showCoverageOnHover: false,
@@ -357,8 +362,8 @@ export default function RestaurantMap({
       cancelled = true
       window.removeEventListener('resize', onResize)
       ro?.disconnect()
-      map.off('dragstart', markUserAdjust)
-      map.off('zoomstart', markUserAdjust)
+      map.off('dragend', markUserAdjust)
+      map.off('zoomend', markUserAdjust)
       map.remove()
       mapRef.current = null
       clusterRef.current = null
@@ -620,6 +625,38 @@ export default function RestaurantMap({
           {hasOrigin && onForget ? (
             <button type="button" className="btn btn-secondary" onClick={onForget}>
               Zapomenout polohu
+            </button>
+          ) : null}
+          {showAreaSearch && onAreaSearch ? (
+            <button
+              type="button"
+              className="btn btn-secondary restaurant-map-area"
+              onClick={() => {
+                const map = mapRef.current
+                if (!map) return
+                const bounds = map.getBounds()
+                onAreaSearch({
+                  south: bounds.getSouth(),
+                  north: bounds.getNorth(),
+                  west: bounds.getWest(),
+                  east: bounds.getEast(),
+                })
+                setShowAreaSearch(false)
+              }}
+            >
+              Hledat v této oblasti
+            </button>
+          ) : null}
+          {areaFilterActive ? (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => {
+                onAreaSearch?.(null)
+                setShowAreaSearch(false)
+              }}
+            >
+              Zrušit oblast
             </button>
           ) : null}
         </div>

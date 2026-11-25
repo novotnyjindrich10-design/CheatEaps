@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import RestaurantCard from '../components/RestaurantCard'
 import SearchBar from '../components/SearchBar'
@@ -35,6 +35,10 @@ import { parsePageParam, slicePage } from '../utils/pagination'
 import { DEALS_RESULTS_PATH, loginPath } from '../utils/authReturn'
 import { PUBLIC_V1 } from '../constants/publicV1'
 import { smoothScrollTo } from '../utils/smoothScroll'
+import { clearScrollPosition, readScrollPosition } from '../utils/scrollRestore'
+import { currentInternalPath } from '../utils/internalPath'
+import { readFilterPrefs, writeFilterPrefs } from '../utils/filterPrefs'
+import { rememberRecentSearch } from '../utils/recentSearches'
 
 function formatPlaceCount(n) {
   if (n === 1) return '1 místo'
@@ -60,13 +64,16 @@ export default function Results() {
   const mapSectionRef = useRef(null)
   const mapVisitRef = useRef(0)
   const scrolledMapVisitRef = useRef(0)
+  const prefsRestoredRef = useRef(false)
   const [filtersExpanded, setFiltersExpanded] = useState(false)
   const [mapReady, setMapReady] = useState(false)
   const [mapSelectedId, setMapSelectedId] = useState('')
+  const [mapBounds, setMapBounds] = useState(null)
   const dealsGate = filters.dealsOnly
   const dealsLogin = loginPath(DEALS_RESULTS_PATH)
 
   const updateFilters = (next, { resetPage = true, history = 'push' } = {}) => {
+    writeFilterPrefs(next)
     const params = buildResultsSearchParams(next)
     if (!resetPage) {
       const page = parsePageParam(searchParams.get('page'))
@@ -74,6 +81,21 @@ export default function Results() {
     }
     setSearchParams(params, { replace: history === 'replace' })
   }
+
+  const clearAllFilters = () => {
+    writeFilterPrefs({})
+    setMapBounds(null)
+    setSearchParams({})
+  }
+
+  useEffect(() => {
+    if (prefsRestoredRef.current) return
+    prefsRestoredRef.current = true
+    if ([...searchParams.keys()].length > 0) return
+    const prefs = readFilterPrefs()
+    if (!prefs) return
+    setSearchParams(buildResultsSearchParams(prefs), { replace: true })
+  }, [searchParams, setSearchParams])
 
   useEffect(() => {
     if (!rawType || isDealsCategory(rawType)) return
@@ -95,14 +117,16 @@ export default function Results() {
     forgetOrigin,
   } = useLocationState()
   const [mapFocusToken, setMapFocusToken] = useState(0)
+  const viewMode = filters.view === 'map' ? 'map' : 'list'
   const located = useMemo(() => attachDistances(restaurants), [attachDistances, restaurants])
   const matched = useMemo(
     () =>
       filterAndSortRestaurants(located, {
         ...parseResultsSearchParams(searchParams),
         hasOrigin: Boolean(origin),
+        mapBounds: viewMode === 'map' ? mapBounds : null,
       }),
-    [located, searchParams, origin],
+    [located, searchParams, origin, mapBounds, viewMode],
   )
   const placement = useMemo(() => partitionPlacements(matched), [matched])
   const filtered = placement.organic
@@ -124,7 +148,6 @@ export default function Results() {
   const distanceUnavailable =
     Boolean(origin) && filters.maxDistance !== '' && routeStatus === 'error' && filtered.length === 0
   const mapPlaces = useMemo(() => [...sponsored, ...filtered], [sponsored, filtered])
-  const viewMode = filters.view === 'map' ? 'map' : 'list'
 
   const handleMapReady = useCallback(() => {
     setMapReady(true)
@@ -134,6 +157,7 @@ export default function Results() {
     if (viewMode !== 'map') {
       setMapReady(false)
       setMapSelectedId('')
+      setMapBounds(null)
       return
     }
     mapVisitRef.current += 1
@@ -145,6 +169,15 @@ export default function Results() {
     scrolledMapVisitRef.current = mapVisitRef.current
     return smoothScrollTo(mapSectionRef.current, { offset: 96, duration: 620 })
   }, [viewMode, mapReady])
+
+  useLayoutEffect(() => {
+    if (viewMode === 'map') return
+    const key = currentInternalPath({ pathname: '/results', search: `?${searchParams.toString()}` })
+    const y = readScrollPosition(key)
+    if (y == null) return
+    clearScrollPosition(key)
+    window.scrollTo(0, y)
+  }, [searchParams, viewMode])
 
   let emptyMessage = 'Žádný podnik neodpovídá filtrům. Zkus uvolnit rozpočet, vzdálenost nebo hledání.'
   if (waitingForDistance) {
@@ -226,6 +259,7 @@ export default function Results() {
   if (filters.verifiedPricesOnly) chips.push({ key: 'verified', label: 'Jen ověřené ceny', clear: { verifiedPricesOnly: false } })
   if (filters.dealsOnly) chips.push({ key: 'deals', label: 'Ověřená sleva', clear: { dealsOnly: false } })
   if (filters.hoursOnly) chips.push({ key: 'hours', label: 'S otevírací dobou', clear: { hoursOnly: false } })
+  if (filters.openNowOnly) chips.push({ key: 'open', label: 'Právě otevřeno', clear: { openNowOnly: false } })
   if (filters.sortBy) {
     chips.push({
       key: 'sort',
@@ -319,16 +353,20 @@ export default function Results() {
               }}
               onPick={(suggestion) => {
                 if (suggestion.kind === 'restaurant') {
+                  rememberRecentSearch(suggestion.label || suggestion.name || '')
                   navigate(`/restaurant/${suggestion.id}`)
                   return
                 }
                 if (suggestion.kind === 'category') {
+                  rememberRecentSearch(suggestion.label || suggestion.id)
                   updateFilters({ ...filters, cuisineType: suggestion.id, search: '' })
                   return
                 }
+                const query = suggestion.query || suggestion.label
+                rememberRecentSearch(query)
                 updateFilters({
                   ...filters,
-                  search: suggestion.query || suggestion.label,
+                  search: query,
                   sortBy: 'relevance',
                 })
               }}
@@ -373,7 +411,7 @@ export default function Results() {
                     </li>
                   ))}
                 </ul>
-                <button type="button" className="btn btn-secondary" onClick={() => setSearchParams({})}>
+                <button type="button" className="btn btn-secondary" onClick={clearAllFilters}>
                   Resetovat vše
                 </button>
                 {intentNotes.some((note) => note.includes('Kč')) ? (
@@ -433,6 +471,8 @@ export default function Results() {
                     locationError={locationError}
                     focusToken={mapFocusToken}
                     onReady={handleMapReady}
+                    areaFilterActive={Boolean(mapBounds)}
+                    onAreaSearch={setMapBounds}
                     onLocate={() => {
                       setMapFocusToken((token) => token + 1)
                       locate({ forceRefresh: Boolean(origin), highAccuracy: Boolean(origin) })
@@ -467,7 +507,7 @@ export default function Results() {
                     <button
                       type="button"
                       className="btn btn-secondary"
-                      onClick={() => setSearchParams({})}
+                      onClick={clearAllFilters}
                     >
                       Resetovat filtry
                     </button>

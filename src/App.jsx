@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Link, Navigate, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
+import MobileTabBar from './components/MobileTabBar'
 import ErrorBoundary from './components/ErrorBoundary'
 import LocationPrompt from './components/LocationPrompt'
 import Home from './pages/Home'
@@ -107,6 +108,7 @@ function App() {
           </Suspense>
           </ErrorBoundary>
           </div>
+          <MobileTabBar />
           <footer className="site-footer">
             <p className="footer-brand">FoodGo Brno</p>
             <p className="footer-tagline">Katalog jídla v Brně. Ověřené údaje oddělujeme od odhadů.</p>

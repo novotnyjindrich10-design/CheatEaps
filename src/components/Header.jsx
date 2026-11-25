@@ -260,22 +260,15 @@ export default function Header() {
 
           <ul className="header-menu-list">
             <li className="header-menu-group" aria-hidden="true">
-              Hlavní
+              Další
             </li>
-            <NavLinks
-              links={PRIMARY_LINKS}
-              pathname={pathname}
-              search={search}
-              onNavigate={close}
-              linkClass="header-menu-link"
-              firstItemRef={firstItemRef}
-            />
             <NavLinks
               links={moreLinks}
               pathname={pathname}
               search={search}
               onNavigate={close}
               linkClass="header-menu-link"
+              firstItemRef={firstItemRef}
             />
 
             {session.authenticated ? (

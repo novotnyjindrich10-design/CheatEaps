@@ -168,10 +168,25 @@ export function routeDistanceCaption(state) {
   }
 }
 
+/** Odhad minut chůze (~4.8 km/h). null, když číslo není spolehlivé. */
+export function estimateWalkMinutes(km) {
+  if (typeof km !== 'number' || !Number.isFinite(km) || km < 0) return null
+  if (km === 0) return 1
+  return Math.max(1, Math.round((km / 4.8) * 60))
+}
+
 export function presentRouteDistance(km, state) {
+  const walkMinutes =
+    state === 'route' || state === 'air' || state === 'air-pending' ? estimateWalkMinutes(km) : null
+  let caption = routeDistanceCaption(state)
+  if (walkMinutes != null && (state === 'route' || state === 'air' || state === 'air-pending')) {
+    const walk = state === 'route' ? `≈${walkMinutes} min chůze` : `≈${walkMinutes} min (odhad)`
+    caption = caption ? `${caption} · ${walk}` : walk
+  }
   return {
     value: formatRouteDistance(km, state),
-    caption: routeDistanceCaption(state),
+    caption,
+    walkMinutes,
   }
 }
 

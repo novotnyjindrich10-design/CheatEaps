@@ -365,6 +365,26 @@ describe('filtry dohromady', () => {
     const withDeals = parseResultsSearchParams(buildResultsSearchParams({ ...active, dealsOnly: true }))
     assert.equal(withDeals.dealsOnly, true)
     assert.equal(buildResultsSearchParams({ ...defaults, dealsOnly: false }).toString(), '')
+    const withOpen = parseResultsSearchParams(buildResultsSearchParams({ openNowOnly: true }))
+    assert.equal(withOpen.openNowOnly, true)
+    assert.equal(buildResultsSearchParams({ openNowOnly: true }).get('open'), '1')
+  })
+
+  it('filtr mapBounds nechá jen body uvnitř výřezu', () => {
+    const matched = filterAndSortRestaurants(
+      [
+        place('in', { lat: 49.2, lon: 16.6 }),
+        place('out', { lat: 49.3, lon: 16.7 }),
+        place('nocoords'),
+      ],
+      {
+        mapBounds: { south: 49.15, north: 49.25, west: 16.55, east: 16.65 },
+      },
+    )
+    assert.deepEqual(
+      matched.map((item) => item.id),
+      ['in'],
+    )
   })
 
   it('bez čísla vzdálenosti limit nesplní', () => {

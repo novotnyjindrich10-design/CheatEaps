@@ -4663,3 +4663,236 @@ body:has(#root .app) #seo-snapshot {
     justify-content: center;
   }
 }
+
+/* Mobile tab bar + premium mobile helpers */
+
+.mobile-tabbar {
+  display: none;
+}
+
+.home-quick-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.home-quick-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-quick-chip:hover,
+.home-quick-chip:focus-visible {
+  border-color: color-mix(in srgb, var(--green) 45%, var(--border));
+  color: #0f6b42;
+}
+
+.search-recent {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.search-recent-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.search-recent-title {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.search-recent-clear,
+.search-recent-remove {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.search-recent-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.search-recent-list li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.search-recent-item {
+  flex: 1;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 650;
+  padding: 8px 6px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.search-recent-item:hover,
+.search-recent-item:focus-visible {
+  background: var(--surface-soft);
+}
+
+.favorite-account {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-soft);
+  scroll-margin-top: calc(92px + env(safe-area-inset-top, 0px));
+}
+
+.favorite-account-email {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.restaurant-map-area {
+  font-weight: 750;
+}
+
+@media (max-width: 860px) {
+  .mobile-tabbar {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    padding: 0;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .mobile-tabbar-list {
+    list-style: none;
+    margin: 0;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+  }
+
+  .mobile-tabbar-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 52px;
+    padding: 6px 2px;
+    border-radius: 14px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.68rem;
+    font-weight: 750;
+    letter-spacing: 0.01em;
+  }
+
+  .mobile-tabbar-link svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .mobile-tabbar-link.is-active {
+    color: #0f6b42;
+    background: color-mix(in srgb, var(--green) 12%, transparent);
+  }
+
+  .mobile-tabbar-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .app {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .page {
+    padding-bottom: 28px;
+  }
+
+  .site-footer {
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .header-menu-drawer {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .map-place-sheet-host {
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .restaurant-map.is-expanded .map-place-sheet-host {
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .compare-bar {
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  }
+
+  html:has(.location-prompt) .mobile-tabbar,
+  html:has(.restaurant-map.is-expanded) .mobile-tabbar,
+  html.nav-drawer-open .mobile-tabbar {
+    display: none;
+  }
+
+  html:has(.location-prompt) .app,
+  html:has(.restaurant-map.is-expanded) .app,
+  html.nav-drawer-open .app {
+    padding-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page,
+  .results-page,
+  .detail-page {
+    animation: none;
+  }
+}

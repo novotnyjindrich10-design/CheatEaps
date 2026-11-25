@@ -65,6 +65,9 @@ export default function SearchBar({
             setActiveIndex(-1)
           }}
           autoComplete="off"
+          enterKeyHint="search"
+          inputMode="search"
+          spellCheck={false}
         />
       </div>
       {open ? (

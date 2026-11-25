@@ -187,7 +187,11 @@ test.describe('geolokace a vzdálenosti', () => {
 
     await page.goto('/')
     await ready(page)
-    await expect(page.getByRole('heading', { name: 'Doporučené podniky' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', {
+        name: /Doporučené podniky|Ráno kolem tebe|Oběd v okolí|Odpolední tipy|Večerní tipy|Noční tipy/,
+      }),
+    ).toBeVisible()
     await expect(page.getByText(/\d+\s*m pěšky|\d+,\d+\s*km pěšky/)).toHaveCount(0)
     const cleared = await page.evaluate(() => localStorage.getItem('cheapeats.geo.origin'))
     expect(cleared).toBeNull()

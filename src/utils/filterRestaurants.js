@@ -7,12 +7,26 @@ import { compareByPrice, getBudgetComparePrice, hasVerifiedPrice } from './price
 import { compareByRecordQuality } from './recordQuality.js'
 import { suppressCatalogDuplicates } from './catalogDuplicates.js'
 import { presentOsmContact } from './osmContact.js'
+import { isOpenNowReliable } from './openingStatus.js'
 import {
   CATEGORY_SEARCH_ALIASES,
   foldSearchText,
   interpretSearchQuery,
   matchRestaurantQuery,
 } from './smartSearch.js'
+
+function inMapBounds(place, bounds) {
+  if (!bounds) return true
+  const lat = Number(place?.lat)
+  const lon = Number(place?.lon)
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return false
+  const south = Number(bounds.south)
+  const north = Number(bounds.north)
+  const west = Number(bounds.west)
+  const east = Number(bounds.east)
+  if (![south, north, west, east].every(Number.isFinite)) return true
+  return lat >= south && lat <= north && lon >= west && lon <= east
+}
 
 export { CATEGORY_SEARCH_ALIASES, foldSearchText }
 
@@ -106,6 +120,8 @@ export function filterAndSortRestaurants(restaurants, options) {
     verifiedPricesOnly = false,
     dealsOnly = false,
     hoursOnly = false,
+    openNowOnly = false,
+    mapBounds = null,
     hasOrigin = false,
     suppressDuplicates = true,
   } = options
@@ -120,6 +136,11 @@ export function filterAndSortRestaurants(restaurants, options) {
     if (verifiedPricesOnly && !hasVerifiedPrice(r)) return false
     if (dealsOnly && !restaurantHasPublicDeal(r.id)) return false
     if (hoursOnly && !presentOsmContact(r).hasHours) return false
+    if (openNowOnly) {
+      const hoursRaw = presentOsmContact(r).hoursRaw
+      if (!hoursRaw || !isOpenNowReliable(hoursRaw)) return false
+    }
+    if (mapBounds && !inMapBounds(r, mapBounds)) return false
 
     if (budget !== '') {
       const comparePrice = getBudgetComparePrice(r)
@@ -207,6 +228,7 @@ export function parseResultsSearchParams(searchParams) {
     verifiedPricesOnly: searchParams.get('verified') === '1',
     dealsOnly: searchParams.get('deals') === '1',
     hoursOnly: searchParams.get('hours') === '1',
+    openNowOnly: searchParams.get('open') === '1',
     view,
   }
 }
@@ -226,6 +248,7 @@ export function buildResultsSearchParams(filters) {
   if (filters.verifiedPricesOnly) params.set('verified', '1')
   if (filters.dealsOnly) params.set('deals', '1')
   if (filters.hoursOnly) params.set('hours', '1')
+  if (filters.openNowOnly) params.set('open', '1')
   if (filters.view === 'map') params.set('view', 'map')
   return params
 }

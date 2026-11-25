@@ -31,6 +31,7 @@ import { similarRestaurants } from '../utils/similarPlaces'
 import { formatSponsorshipRange, partitionPlacements, showSponsoredLabel, SPONSORED_LABEL } from '../constants/monetization'
 import { sharePlaceLink } from '../utils/sharePlace'
 import { trackProductEvent } from '../utils/productEvents'
+import { rememberRecentView } from '../utils/recentViews'
 import RestaurantCard from '../components/RestaurantCard'
 
 export default function RestaurantDetail() {
@@ -47,6 +48,7 @@ export default function RestaurantDetail() {
     if (!restaurant?.id) return
     const restaurantId = restaurant.id
     const sponsored = Boolean(restaurant.sponsored)
+    rememberRecentView(restaurantId)
     trackProductEvent('restaurant_detail_open', { restaurantId, sponsored })
     fetchWithTimeout('/api/place-stats/event', {
       method: 'POST',
