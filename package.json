@@ -14,6 +14,7 @@
     "check:ready": "node scripts/launch-check.mjs",
     "resend:key": "powershell -NoProfile -STA -ExecutionPolicy Bypass -File scripts/write-resend-env.ps1",
     "resend:emails": "node scripts/set-resend-emails.mjs",
+    "preview:auth-smtp": "node scripts/configure-preview-auth-smtp.mjs",
     "test": "node --test \"src/**/*.test.js\"",
     "data:openverse-food-pilot": "node scripts/pilot-openverse-food.mjs",
     "data:openverse-food-bulk": "node scripts/assign-openverse-food-bulk.mjs",

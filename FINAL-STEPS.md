@@ -1,120 +1,127 @@
 # FoodGo 1.0 — postup vydání
 
 Jediný hlavní návod. Větev: `foodgo-launch-preview`.  
-**Vývojová fáze je ukončená.** Teď jde o konfiguraci Preview DB a vydání.
+**Vývojová fáze je ukončená.** Zbývá provozní konfigurace (e-mail, platby, doména) a schválení vydání.
 
 Tajné hodnoty sem nepatří.
 
 ---
 
-## Stav oddělení Preview (2026-11-25)
+## Stav Preview (2026-11-25)
 
 | Kontrola | Výsledek |
 | --- | --- |
-| Nový projekt foodgo-preview | `https://jnyxjyyvzxriuyvyiuxe.supabase.co` |
-| Runtime Preview `/api/auth/session` | **`supabaseHost=jnyxjyyvzxriuyvyiuxe.supabase.co`** (propojeno) |
-| Schema Preview | **Ještě prázdná** — `/api/published-places` hlásí chybějící tabulku; `/api/place-overrides` → `configured: false` |
-| `PUBLIC_SITE_URL` na Preview | Runtime `publicSiteUrl: false` — doplň Preview env a redeploy |
-| Ostré platby | Vypnuté (`paymentsLive: false`) |
-| Produkční DB | Nedotčená |
+| Větev / alias | `foodgo-launch-preview` → `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app` |
+| Supabase Preview | `jnyxjyyvzxriuyvyiuxe` (foodgo-preview) |
+| Runtime session | `supabaseHost=jnyxjyyvzxriuyvyiuxe.supabase.co` |
+| Schema bootstrap | **Hotovo** — `published_places`, `place_overrides` (`configured: true`), poptávky RPC OK |
+| `PUBLIC_SITE_URL` | Preview větev nastavená → runtime `publicSiteUrl: true` |
+| `EMAIL_FROM` / `INQUIRY_TO_EMAIL` | Preview větev nastavené (`FoodGo <onboarding@resend.dev>`, `foodgocz@gmail.com`) |
+| `RESEND_API_KEY` | **Chybí** na Preview → `emailConfigured: false` |
+| Auth SMTP (Resend) | **Nenastaveno** — výchozí Supabase SMTP (jen team + 2/h) |
+| Ostré platby | Vypnuté (`paymentsLive: false`, `gateway-not-connected`) |
+| Protection bypass | `protectionBypassConfigured: true` (Comgate push připravený až budou credentials) |
+| Produkční DB `pcptzyfoojmnspumcmsi` | Nedotčená |
+| `main` | Nemergováno |
 
-**Závěr:** Preview už míří na foodgo-preview. Zbývá spustit `supabase/preview-bootstrap-all.sql` v SQL Editoru **jen** u `jnyxjyyvzxriuyvyiuxe` (krok A2) a doplnit Auth redirects + případně `PUBLIC_SITE_URL`.
-
-Jeden SQL soubor pro prázdnou Preview DB:
-
-`supabase/preview-bootstrap-all.sql`  
-(generuj znovu: `node scripts/build-preview-bootstrap-sql.mjs`)
-
-Obsahuje v pořadí: bootstrap-all → business-applications-form-v2 → loyalty → promotion-apply-missing → place-reports → place-overrides → place-stats → preview-synthetic-seed.
-
-Izolovaný Docker Postgres 16: `node scripts/test-promotion-migration-isolated.mjs` — včetně combined bootstrapu — **OK**. Produkce nedotčena.
+Kód recovery: `email_address_not_authorized` se tváří jako úspěch (bez enumerace účtů). Dokumentace: `docs/FOODGO_RESEND_SETUP.md`.
 
 ---
 
-## HOTOVO (kód)
+## HOTOVO (automaticky / agent)
 
-- Katalog, mapa, účty, admin, poptávky, Comgate logika (ostré vypnuté), security RPC, `/api/health`.
-- Preview bootstrap skript odmítne produkční ref a vyžaduje `jnyxjyyvzxriuyvyiuxe`.
-- Syntetický seed nevkládá hesla; na skutečném Supabase Auth nepřepisuje `auth.users`.
-
----
-
-## ZBÝVÁ NAPROGRAMOVAT
-
-**Nic kritického** pro oddělení Preview.
+- Preview DB bootstrap SQL spuštěný uživatelem, ověřený přes API.
+- `PUBLIC_SITE_URL` jen Preview / `foodgo-launch-preview`.
+- `EMAIL_FROM` + `INQUIRY_TO_EMAIL` jen Preview / `foodgo-launch-preview`.
+- Redeploy Preview s opravou recovery anti-enumerace.
+- Skript: `npm run preview:auth-smtp` (= `scripts/configure-preview-auth-smtp.mjs`) nastaví Auth SMTP + Site/Redirect URL **jen** na `jnyxjyyvzxriuyvyiuxe`.
+- Ověřeno bez tajemství: health, session host, place-overrides, published-places, payments status (inquiry), admin vyžaduje login, uložení testovací poptávky.
 
 ---
 
-## A. Ruční kroky teď (Preview DB) — přesné pořadí
+## Ty osobně (minimum)
 
-### A1. Vercel Preview env (SUPABASE_URL už sedí)
+### 1) Resend API klíč (blokuje Auth i transakční maily)
 
-Ověřeno: Preview session vrací `jnyxjyyvzxriuyvyiuxe`. Doplň ještě, pokud chybí:
-
-| Proměnná | Hodnota | Tajné | Stav |
-| --- | --- | --- | --- |
-| `SUPABASE_URL` | `https://jnyxjyyvzxriuyvyiuxe.supabase.co` | ne | OK v runtime |
-| `SUPABASE_ANON_KEY` | klíč z foodgo-preview | ano | OK (configured) |
-| `SUPABASE_SERVICE_ROLE_KEY` | `sb_secret_…` **jen foodgo-preview** | ano | zkontroluj, že je na Preview |
-| `PUBLIC_SITE_URL` | `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app` | ne | zatím `publicSiteUrl: false` |
-
-[Environment Variables](https://vercel.com/jindrichcompany/cheat-eaps/settings/environment-variables) → Preview → případně Edit + Redeploy.
-
-### A2. Bootstrap prázdné Preview databáze (teď nejdůležitější)
-
-**Bez connection stringu (doporučeno):**
-
-1. Otevři výhradně [SQL Editor foodgo-preview](https://supabase.com/dashboard/project/jnyxjyyvzxriuyvyiuxe/sql/new).  
-2. V záhlaví Dashboardu ověř project ref **`jnyxjyyvzxriuyvyiuxe`** (ne `pcptzyfoojmnspumcmsi`).  
-3. Vlož celý soubor `supabase/preview-bootstrap-all.sql` → **Run**.  
-4. Ověření v SQL Editoru:  
-   `select count(*) from public.promotion_orders where reference = 'CEPREVIEW1';` → 1.  
-   `select to_regclass('public.place_overrides');` → ne null.
-
-**S `psql` (volitelné):** URI z Project Settings → Database musí obsahovat `jnyxjyyvzxriuyvyiuxe`.
+1. Přihlas se na [resend.com/api-keys](https://resend.com/api-keys) (nebo založ účet — agent nemůže dokončit login).
+2. Vytvoř Sending API key.
+3. Lokálně: `npm run resend:key` (uloží do `.env`, hodnota se nevypisuje).
+4. Na Vercel Preview (větev `foodgo-launch-preview`):
 
 ```text
-PREVIEW_DATABASE_URL=<URI> node scripts/bootstrap-preview-database.mjs
+npx vercel env add RESEND_API_KEY --environment preview --git-branch foodgo-launch-preview --type secret --scope jindrichcompany
 ```
 
-Skript při produkčním refu nebo chybějícím `jnyxjyyvzxriuyvyiuxe` skončí chybou.
+(vlož klíč na výzvu; necommitovat)
 
-Agent **nemá** DB heslo — inicializaci na živém preview projektu musíš spustit ty (A2).
+### 2) Auth SMTP + redirects na foodgo-preview (jeden příkaz)
 
-### A3. Auth redirects — foodgo-preview
+1. [Supabase Access Tokens](https://supabase.com/dashboard/account/tokens) → vytvoř token → do `.env` jako `SUPABASE_ACCESS_TOKEN=…`
+2. Ověř, že `.env` má `RESEND_API_KEY` (krok 1).
+3. Spusť:
 
-[URL Configuration preview](https://supabase.com/dashboard/project/jnyxjyyvzxriuyvyiuxe/auth/url-configuration)
+```text
+npm run preview:auth-smtp
+```
 
-- **Site URL:** `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app`
-- **Redirect URLs:**
-  - `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app/nove-heslo`
-  - `http://127.0.0.1:5173/nove-heslo`
-  - `http://localhost:5173/nove-heslo`
+Skript nastaví jen `jnyxjyyvzxriuyvyiuxe`: custom SMTP Resend + Site URL Preview + Redirect `/nove-heslo` (+ localhost). Produkci odmítne.
 
-Produkční projekt ([pcptzyfoojmnspumcmsi](https://supabase.com/dashboard/project/pcptzyfoojmnspumcmsi/auth/url-configuration)) nech s produkčním originem.
+### 3) Redeploy Preview po `RESEND_API_KEY`
 
-### A4. Po A1+A2 ověř Preview
+```text
+npx vercel redeploy https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app --scope jindrichcompany --environment preview
+```
 
-1. `GET …/api/auth/session` → host `jnyxjyyvzxriuyvyiuxe`.  
-2. `GET …/api/health` → `supabaseConfigured: true`, `paymentsLive: false`.  
-3. Registrace testovacího účtu `@example.com` na Preview.  
-4. Admin: v SQL `update public.profiles set is_admin = true where email = '<tvůj test>';` (jen preview).  
-5. Poptávka z `/pro-podniky` → v preview DB nový řádek `promotion_orders`.  
-6. Live probe tajného klíče **jen z preview**: do lokálního `.env` dej preview `SUPABASE_SERVICE_ROLE_KEY`, spusť `node scripts/probe-supabase-secret-compat.mjs`. Nevypisuj klíč.
+Očekávané: `/api/health` → `emailConfigured: true`.
+
+### 4) Ruční smoke Auth + admin (5 min)
+
+1. Registrace na Preview s **e-mailem Resend účtu** (trial `onboarding@resend.dev` doručí typicky jen sem).
+2. Potvrď e-mail → přihlas se.
+3. V SQL Editoru **jen** foodgo-preview:
+
+```sql
+update public.profiles set is_admin = true where email = '<tvůj test>';
+```
+
+4. `/admin` — žádosti / poptávky / reporty.
+5. Zapomenuté heslo → odkaz v mailu → `/nove-heslo`.
+6. `/pro-podniky` — podnikatelský účet / poptávka (už ověřeno API; UI smoke stačí jednou).
 
 ---
 
-## B. Až později (produkce / vydání)
+## Připraveno na později (zatím nespouštěj)
 
-1. Záloha produkce → `promotion-apply-missing.sql` → `place-overrides.sql` (jen po schválení).  
-2. Resend, Comgate sandbox, provozovatel + právní texty.  
+### Comgate (sandbox, ne LIVE)
+
+| Proměnná | Poznámka |
+| --- | --- |
+| `PAYMENT_PROVIDER=comgate` | Preview |
+| `PAYMENT_MERCHANT_ID` / `PAYMENT_SECRET` | z [portal.comgate.cz](https://portal.comgate.cz) po KYC |
+| `PAYMENTS_SANDBOX_OUTBOUND=true` | Preview |
+| `PAYMENTS_LIVE=false` | **nechat** |
+| Result URL | `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app/api/payments/webhook?x-vercel-protection-bypass=<VERCEL_AUTOMATION_BYPASS_SECRET>` |
+
+Detail: `FOODGO-LAUNCH.md` sekce D. Bypass secret už runtime hlásí jako nakonfigurovaný.
+
+### Vlastní doména
+
+1. Vercel → Domains → Add → DNS dle Vercelu.  
+2. Production `PUBLIC_SITE_URL=https://tvoje-domena.cz`.  
+3. Supabase **produkční** Auth redirects na stejný origin + `/nove-heslo`.  
+4. Resend: ověř doménu → `EMAIL_FROM=FoodGo <noreply@tvoje-domena.cz>`.
+
+### Produkční vydání (až po schválení)
+
+1. Záloha produkční DB → migrace jen se souhlasem.  
+2. Production env (Supabase prod, Resend, Comgate).  
 3. `npm run launch:check -- --offline`.  
-4. Merge do `main` jen po výslovném schválení. `PAYMENTS_LIVE=true` až potom.
+4. Merge `foodgo-launch-preview` → `main` **jen na výslovný pokyn**.  
+5. `PAYMENTS_LIVE=true` až po sandbox E2E.
 
 ---
 
 ## Návrat
 
 **Web:** Vercel → předchozí deployment → Promote.  
-**SQL preview:** můžeš projekt foodgo-preview smazat/znovu vytvořit — produkce zůstane.  
-**Produkční SQL rollback:** viz starší sekce G v gitu před tímto souborem / drop funkcí v `promotion-apply-missing` dokumentaci.
+**SQL preview:** foodgo-preview lze smazat/znovu vytvořit — produkce zůstane.
