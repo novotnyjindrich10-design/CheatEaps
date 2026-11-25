@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState }
 import { Link } from 'react-router-dom'
 import HomeSearch from '../components/HomeSearch'
 import { IconMagnet } from '../components/navIcons'
+import { useMagnetScroller } from '../hooks/useMagnetScroller'
 
 const CategoryStrip = lazy(() => import('../components/CategoryStrip'))
 const RestaurantCard = lazy(() => import('../components/RestaurantCard'))
@@ -93,6 +94,7 @@ export default function Home() {
   const [magnetOn, setMagnetOn] = useState(() => readMagnetPreference())
   const [listVaried, setListVaried] = useState(null)
   const sentinelRef = useRef(null)
+  const magnetScrollerRef = useRef(null)
   const restoreDoneRef = useRef(false)
   const orderKeyRef = useRef('')
 
@@ -114,12 +116,16 @@ export default function Home() {
     restoreDoneRef.current = false
   }
 
+  const magnetActive = magnetOn && !prefersReducedMotion()
+  useMagnetScroller(magnetScrollerRef, magnetActive)
+
   useEffect(() => {
     const onReselect = (event) => {
       if (event.detail?.tab !== 'home') return
       setVisibleCount(INITIAL_BATCH)
       clearScrollPosition('/')
       restoreDoneRef.current = true
+      if (magnetScrollerRef.current) magnetScrollerRef.current.scrollTop = 0
     }
     window.addEventListener(TAB_RESELECT_EVENT, onReselect)
     return () => window.removeEventListener(TAB_RESELECT_EVENT, onReselect)
@@ -163,21 +169,31 @@ export default function Home() {
   const visible = listVaried ?? visibleBase
   const hasMore = visibleCount < ordered.length
   const listTitle = hasOrigin ? 'Nejbližší podniky' : 'Objev podniky v Brně'
-  const magnetActive = magnetOn && !prefersReducedMotion()
 
   useEffect(() => {
     if (!hasMore || !sentinelRef.current) return undefined
     const node = sentinelRef.current
+    const root = magnetActive ? magnetScrollerRef.current : null
     const observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return
         setVisibleCount((count) => Math.min(ordered.length, count + LOAD_BATCH))
       },
-      { root: null, rootMargin: '480px 0px', threshold: 0 },
+      { root, rootMargin: '480px 0px', threshold: 0 },
     )
     observer.observe(node)
     return () => observer.disconnect()
-  }, [hasMore, ordered.length, visibleCount])
+  }, [hasMore, ordered.length, visibleCount, magnetActive])
+
+  useEffect(() => {
+    if (!magnetActive || !magnetScrollerRef.current) return
+    // Po zapnutí dorovnej viewport na seznam, ale nescrolluj pryč z hero, pokud je uživatel nahoře.
+    const scroller = magnetScrollerRef.current
+    const rect = scroller.getBoundingClientRect()
+    if (rect.top > window.innerHeight * 0.55) {
+      scroller.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [magnetActive])
 
   const toggleMagnet = () => {
     if (prefersReducedMotion()) {
@@ -192,8 +208,37 @@ export default function Home() {
     })
   }
 
+  const list = (
+    <>
+      <ul
+        className={`restaurant-list home-restaurant-list${magnetActive ? ' restaurant-list--magnet' : ''}`}
+      >
+        {visible.map((restaurant, index) => (
+          <li
+            key={restaurant.id}
+            className={magnetActive ? 'home-magnet-slide' : undefined}
+            data-magnet-item={magnetActive ? '' : undefined}
+          >
+            <RestaurantCard restaurant={restaurant} index={index} />
+          </li>
+        ))}
+      </ul>
+      {hasMore ? (
+        <div ref={sentinelRef} className="home-list-sentinel" aria-hidden="true">
+          <p className="section-desc home-list-loading" role="status">
+            Načítám další podniky…
+          </p>
+        </div>
+      ) : ordered.length > 0 ? (
+        <p className="section-desc home-list-end" role="status">
+          To je celý katalog ({ordered.length} podniků).
+        </p>
+      ) : null}
+    </>
+  )
+
   return (
-    <main className="page home-page home-page--compact">
+    <main className={`page home-page home-page--compact${magnetActive ? ' home-page--magnet' : ''}`}>
       <section className="home-hero home-hero--compact">
         <div className="home-hero-panel">
           <h1 className="visually-hidden">Najdi jídlo v Brně</h1>
@@ -250,24 +295,18 @@ export default function Home() {
           </p>
         ) : (
           <Suspense fallback={<p className="section-desc">Načítám karty…</p>}>
-            <ul className={`restaurant-list home-restaurant-list${magnetActive ? ' restaurant-list--magnet' : ''}`}>
-              {visible.map((restaurant, index) => (
-                <li key={restaurant.id} className={magnetActive ? 'restaurant-list-snap' : undefined}>
-                  <RestaurantCard restaurant={restaurant} index={index} />
-                </li>
-              ))}
-            </ul>
-            {hasMore ? (
-              <div ref={sentinelRef} className="home-list-sentinel" aria-hidden="true">
-                <p className="section-desc home-list-loading" role="status">
-                  Načítám další podniky…
-                </p>
+            {magnetActive ? (
+              <div
+                ref={magnetScrollerRef}
+                className="home-magnet-scroller"
+                data-magnet-scroller=""
+                tabIndex={-1}
+              >
+                {list}
               </div>
-            ) : ordered.length > 0 ? (
-              <p className="section-desc home-list-end" role="status">
-                To je celý katalog ({ordered.length} podniků).
-              </p>
-            ) : null}
+            ) : (
+              list
+            )}
           </Suspense>
         )}
       </section>

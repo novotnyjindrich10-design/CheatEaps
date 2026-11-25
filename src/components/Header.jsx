@@ -104,7 +104,6 @@ export default function Header() {
   const [moreOpen, setMoreOpen] = useState(false)
   const [menuPath, setMenuPath] = useState(pathKey)
   const [adminFlag, setAdminFlag] = useState(false)
-  const [headerAway, setHeaderAway] = useState(false)
   const menuId = useId()
   const moreId = useId()
   const rootRef = useRef(null)
@@ -197,122 +196,94 @@ export default function Header() {
     }
   }, [moreOpen])
 
-  useEffect(() => {
-    let ticking = false
-    const update = () => {
-      ticking = false
-      const y = window.scrollY || 0
-      setHeaderAway(y > 64)
-    }
-    const onScroll = () => {
-      if (ticking) return
-      ticking = true
-      window.requestAnimationFrame(update)
-    }
-    update()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('header-away', headerAway && !open)
-    return () => document.documentElement.classList.remove('header-away')
-  }, [headerAway, open])
-
   const close = () => setOpen(false)
 
   return (
-    <header className={`site-header${headerAway && !open ? ' is-away' : ''}${open ? ' is-drawer-open' : ''}`}>
-      <div className="site-header-bar">
-        <div className="site-header-inner" ref={rootRef}>
-          <span className="header-side-spacer" aria-hidden="true" />
-          <Link to="/" className="brand" onClick={close} aria-label="FOODGO Brno — Domů">
-            <Logo showCity />
-          </Link>
+    <>
+      {/*
+        Mobil: hlavička v běžném toku — logo odjíždí se scrollem.
+        Hamburger/drawer jsou mimo <header>, aby backdrop-filter
+        nevytvářel containing block pro position:fixed.
+      */}
+      <header className={`site-header${open ? ' is-drawer-open' : ''}`}>
+        <div className="site-header-bar">
+          <div className="site-header-inner" ref={rootRef}>
+            <span className="header-side-spacer" aria-hidden="true" />
+            <Link to="/" className="brand" onClick={close} aria-label="FOODGO Brno — Domů">
+              <Logo showCity />
+            </Link>
 
-          <nav className="header-desktop-nav" aria-label="Hlavní menu">
-            <ul className="header-desktop-list">
-              <NavLinks
-                links={PRIMARY_LINKS}
-                pathname={pathname}
-                search={search}
-                linkClass="header-desktop-link"
-              />
-              <li className="header-more" ref={moreRef}>
-                <button
-                  type="button"
-                  className={`header-desktop-link header-more-toggle${moreOpen || moreActive ? ' is-active' : ''}`}
-                  aria-expanded={moreOpen}
-                  aria-controls={moreId}
-                  aria-haspopup="true"
-                  onClick={() => setMoreOpen((value) => !value)}
-                >
-                  Více
-                  <span className="header-more-caret" aria-hidden="true" />
-                </button>
-                <div
-                  id={moreId}
-                  className={`header-more-panel${moreOpen ? ' is-open' : ''}`}
-                  hidden={!moreOpen}
-                >
-                  <ul className="header-more-list">
-                    <NavLinks
-                      links={moreLinks}
-                      pathname={pathname}
-                      search={search}
-                      onNavigate={() => setMoreOpen(false)}
-                      linkClass="header-more-link"
-                    />
-                  </ul>
-                </div>
-              </li>
-            </ul>
-            <div className="header-desktop-account">
-              {session.authenticated ? (
-                <>
-                  <span className="header-account" title={session.email}>
-                    {session.email}
-                  </span>
-                  <button type="button" className="header-link header-logout" onClick={logout}>
-                    Odhlásit
+            <nav className="header-desktop-nav" aria-label="Hlavní menu">
+              <ul className="header-desktop-list">
+                <NavLinks
+                  links={PRIMARY_LINKS}
+                  pathname={pathname}
+                  search={search}
+                  linkClass="header-desktop-link"
+                />
+                <li className="header-more" ref={moreRef}>
+                  <button
+                    type="button"
+                    className={`header-desktop-link header-more-toggle${moreOpen || moreActive ? ' is-active' : ''}`}
+                    aria-expanded={moreOpen}
+                    aria-controls={moreId}
+                    aria-haspopup="true"
+                    onClick={() => setMoreOpen((value) => !value)}
+                  >
+                    Více
+                    <span className="header-more-caret" aria-hidden="true" />
                   </button>
-                </>
-              ) : (
-                <Link
-                  to={loginPath(returnTo)}
-                  className={`header-desktop-link header-desktop-link--cta${
-                    pathname.startsWith('/prihlaseni') || pathname.startsWith('/registrace')
-                      ? ' is-active'
-                      : ''
-                  }`}
-                >
-                  Přihlášení
-                </Link>
-              )}
-            </div>
-          </nav>
+                  <div
+                    id={moreId}
+                    className={`header-more-panel${moreOpen ? ' is-open' : ''}`}
+                    hidden={!moreOpen}
+                  >
+                    <ul className="header-more-list">
+                      <NavLinks
+                        links={moreLinks}
+                        pathname={pathname}
+                        search={search}
+                        onNavigate={() => setMoreOpen(false)}
+                        linkClass="header-more-link"
+                      />
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+              <div className="header-desktop-account">
+                {session.authenticated ? (
+                  <>
+                    <span className="header-account" title={session.email}>
+                      {session.email}
+                    </span>
+                    <button type="button" className="header-link header-logout" onClick={logout}>
+                      Odhlásit
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    to={loginPath(returnTo)}
+                    className={`header-desktop-link header-desktop-link--cta${
+                      pathname.startsWith('/prihlaseni') || pathname.startsWith('/registrace')
+                        ? ' is-active'
+                        : ''
+                    }`}
+                  >
+                    Přihlášení
+                  </Link>
+                )}
+              </div>
+            </nav>
 
-          <div className="header-menu header-menu--inline">
-            <button
-              type="button"
-              className="header-menu-toggle"
-              aria-label="Otevřít menu"
-              aria-expanded={open}
-              aria-controls={menuId}
-              hidden={open || headerAway || undefined}
-              onClick={() => setOpen(true)}
-            >
-              <span className="header-menu-bars" aria-hidden="true">
-                <span />
-                <span />
-                <span />
-              </span>
-            </button>
+            {/* Placeholder šířky hamburgeru — skutečné tlačítko je fixed mimo header. */}
+            <div className="header-menu header-menu--inline" aria-hidden="true">
+              <span className="header-menu-toggle header-menu-toggle--ghost" />
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className={`header-menu header-menu--float${headerAway && !open ? ' is-visible' : ''}`}>
+      <div className="header-menu header-menu--float is-visible">
         <button
           type="button"
           ref={toggleRef}
@@ -320,7 +291,7 @@ export default function Header() {
           aria-label="Otevřít menu"
           aria-expanded={open}
           aria-controls={menuId}
-          hidden={open || !headerAway || undefined}
+          hidden={open || undefined}
           onClick={() => setOpen(true)}
         >
           <span className="header-menu-bars" aria-hidden="true">
@@ -441,6 +412,6 @@ export default function Header() {
           </ul>
         </div>
       </nav>
-    </header>
+    </>
   )
 }

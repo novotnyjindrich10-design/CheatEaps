@@ -187,6 +187,7 @@ a {
 /* HEADER */
 
 .site-header {
+  /* Desktop: sticky. Mobil: běžný tok — logo odjíždí se stránkou (viz media query). */
   position: sticky;
   top: 0;
   z-index: 40;
@@ -196,8 +197,7 @@ a {
 }
 
 .site-header-bar {
-  transition: transform 0.28s ease, opacity 0.22s ease;
-  will-change: transform;
+  position: relative;
 }
 
 .site-header-inner,
@@ -426,7 +426,25 @@ a {
   display: none;
 }
 
+.header-menu-toggle--ghost {
+  visibility: hidden;
+  pointer-events: none;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
 @media (max-width: 979px) {
+  .site-header {
+    /* Logo jede se scrollem — bez sticky a bez skokového is-away. */
+    position: relative;
+    z-index: 30;
+    /* Bez blur: filter/backdrop-filter by uvěznil fixed potomky (hamburger). */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(246, 244, 239, 0.96);
+  }
+
   .site-header-inner,
   .header-inner {
     justify-content: center;
@@ -453,35 +471,7 @@ a {
     right: max(12px, env(safe-area-inset-right, 0px));
     z-index: 55;
     margin: 0;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-6px) scale(0.96);
-    transition: opacity 0.22s ease, transform 0.22s ease;
-  }
-
-  .header-menu--float.is-visible {
     opacity: 1;
-    pointer-events: auto;
-    transform: none;
-  }
-
-  .site-header.is-away .site-header-bar {
-    transform: translateY(-110%);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .site-header.is-away {
-    height: 0;
-    min-height: 0;
-    border-bottom-color: transparent;
-    background: transparent;
-    backdrop-filter: none;
-    pointer-events: none;
-    overflow: visible;
-  }
-
-  .site-header.is-away .header-menu--float {
     pointer-events: auto;
   }
 
@@ -502,12 +492,6 @@ a {
   .header-menu-drawer,
   .header-side-spacer {
     display: none !important;
-  }
-
-  .site-header.is-away .site-header-bar {
-    transform: none;
-    opacity: 1;
-    pointer-events: auto;
   }
 }
 
@@ -1091,25 +1075,61 @@ html.nav-drawer-open .site-header {
   opacity: 0.72;
 }
 
-.restaurant-list--magnet {
-  scroll-snap-type: y proximity;
-  scroll-padding-top: calc(12px + env(safe-area-inset-top, 0px));
-  scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+/*
+  Magnet: vlastní scroll container (ne window).
+  Předchozí proximity na <ul> nefungovalo — scrolluje dokument, ne seznam.
+  Sticky drží scroller ve viewportu mezi hero a tabbarem, aby WebKit
+  dostával gesta do overflow kontejneru (ne do document scrollu).
+*/
+.home-magnet-scroller {
+  --home-magnet-top: calc(8px + env(safe-area-inset-top, 0px));
+  --home-magnet-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  --home-magnet-view: calc(100dvh - var(--home-magnet-top) - var(--home-magnet-bottom));
+  position: sticky;
+  top: var(--home-magnet-top);
+  height: var(--home-magnet-view);
+  max-height: calc(100svh - var(--home-magnet-top) - var(--home-magnet-bottom));
+  margin: 0 -2px;
+  padding: 0 2px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: y mandatory;
+  scroll-padding: 0;
+  border-radius: 16px;
+  touch-action: pan-y;
 }
 
-.restaurant-list-snap {
+.home-magnet-scroller .restaurant-list--magnet {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  grid-template-columns: none;
+  min-height: 100%;
+}
+
+.home-magnet-slide {
   scroll-snap-align: start;
-  scroll-snap-stop: normal;
+  scroll-snap-stop: always;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  /* Krátké karty vyplní snap viewport; delší karty můžou přesáhnout a jdou dočíst. */
+  min-height: calc(var(--home-magnet-view) - 4px);
+  padding: 6px 0 10px;
+}
+
+.home-magnet-slide .restaurant-card {
+  content-visibility: visible;
+}
+
+.home-page--magnet .home-listings--compact {
+  scroll-margin-top: calc(8px + env(safe-area-inset-top, 0px));
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .restaurant-list--magnet {
+  .home-magnet-scroller {
     scroll-snap-type: none;
-  }
-
-  .site-header-bar,
-  .header-menu--float {
-    transition: none;
   }
 }
 
