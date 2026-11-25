@@ -1,0 +1,1521 @@
+{
+  "generatedAt": "2026-11-25T22:02:49.913Z",
+  "primaryCountsBefore": {
+    "pizza": 72,
+    "burger": 25,
+    "asijske": 93,
+    "ceske": 123,
+    "vegetarianske": 2,
+    "veganske": 2,
+    "kebab": 21,
+    "cina": 12,
+    "mexiko": 11,
+    "kava": 190,
+    "fastfood": 37,
+    "sladke": 32,
+    "zdrave": 10,
+    "neuvedeno": 144
+  },
+  "primaryCountsAfter": {
+    "pizza": 72,
+    "burger": 25,
+    "asijske": 93,
+    "ceske": 123,
+    "vegetarianske": 2,
+    "veganske": 2,
+    "kebab": 21,
+    "cina": 12,
+    "mexiko": 11,
+    "kava": 190,
+    "fastfood": 37,
+    "sladke": 32,
+    "zdrave": 10,
+    "neuvedeno": 144
+  },
+  "reachableViaFilter": {
+    "pizza": 72,
+    "burger": 27,
+    "asijske": 93,
+    "ceske": 120,
+    "vegetarianske": 2,
+    "veganske": 3,
+    "kebab": 20,
+    "cina": 12,
+    "mexiko": 10,
+    "kava": 189,
+    "fastfood": 37,
+    "sladke": 32,
+    "zdrave": 13
+  },
+  "newAssignments": 25,
+  "secondaryCategoryLinks": 10,
+  "productLinks": 44,
+  "assignments": [
+    {
+      "id": "amici-pizza-burgers-palackeho-trida-82",
+      "secondary": [
+        "burger"
+      ],
+      "products": [
+        "burger",
+        "pizza"
+      ],
+      "confidence": "high",
+      "evidence": "Název Amici Pizza & Burgers; OSM cuisine=pizza;burger; oficiální web amici.cz.",
+      "sourceUrl": "https://www.amici.cz/"
+    },
+    {
+      "id": "don-antonio-pizza-burger-taborska-3216-78",
+      "secondary": [
+        "burger"
+      ],
+      "products": [
+        "burger",
+        "pizza"
+      ],
+      "confidence": "high",
+      "evidence": "Název Don Antonio Pizza & Burger; OSM cuisine=pizza;burger; web donantonio.cz.",
+      "sourceUrl": "https://www.donantonio.cz"
+    },
+    {
+      "id": "forkys-vankovka",
+      "secondary": [
+        "burger"
+      ],
+      "products": [
+        "burger",
+        "wrap",
+        "bowl"
+      ],
+      "confidence": "high",
+      "evidence": "Oficiální popis/menu Forky’s: veganské burgery, wrapy a bowl (burger od 169 Kč).",
+      "sourceUrl": "https://www.forkys.cz/pobocka/oc-vankovka/"
+    },
+    {
+      "id": "vegan-af-ramen-maresova-14",
+      "secondary": [
+        "veganske"
+      ],
+      "products": [
+        "ramen"
+      ],
+      "confidence": "high",
+      "evidence": "Oficiální web: první 100% veganská ramen restaurace v Brně; celé menu vegan.",
+      "sourceUrl": "https://veganaframen.cz/"
+    },
+    {
+      "id": "new-era-restaurace",
+      "secondary": [
+        "asijske"
+      ],
+      "products": [
+        "sushi",
+        "pho"
+      ],
+      "confidence": "high",
+      "evidence": "Web newerafood.cz + OSM cuisine=sushi;chinese;asian — knedlíčky, kari, pho a sushi.",
+      "sourceUrl": "https://newerafood.cz/"
+    },
+    {
+      "id": "lokofu",
+      "secondary": [
+        "asijske"
+      ],
+      "products": [],
+      "confidence": "high",
+      "evidence": "OSM cuisine=asian;chinese;thai; oficiální web lokofu.cz — širší asijská nabídka vedle čínské.",
+      "sourceUrl": "https://www.lokofu.cz/cs/"
+    },
+    {
+      "id": "aida-cafe-restaurant-josefska-21",
+      "secondary": [
+        "kava"
+      ],
+      "products": [
+        "espresso",
+        "kava"
+      ],
+      "confidence": "medium",
+      "evidence": "Název AIDA Cafe & Restaurant; cukrárenská kavárna La Dolce Vita AIDA.",
+      "sourceUrl": "https://www.ladolcevita-aida.cz/"
+    },
+    {
+      "id": "brana-ke-zdravi-orli-17",
+      "secondary": [
+        "zdrave"
+      ],
+      "products": [],
+      "confidence": "high",
+      "evidence": "Název Brána ke zdraví; oficiální web branakezdravi.cz — zdravé stravování / kavárna.",
+      "sourceUrl": "https://branakezdravi.cz/"
+    },
+    {
+      "id": "fresh-fitpeople-videnska-132-100",
+      "secondary": [
+        "zdrave"
+      ],
+      "products": [
+        "bowl",
+        "salad"
+      ],
+      "confidence": "high",
+      "evidence": "Fresh FitPeople — fitness / fresh stravování (freshfitpeople.cz).",
+      "sourceUrl": "https://freshfitpeople.cz/"
+    },
+    {
+      "id": "ugo-cimburkova-4",
+      "secondary": [
+        "zdrave"
+      ],
+      "products": [
+        "juice",
+        "salad"
+      ],
+      "confidence": "medium",
+      "evidence": "UGO freshbar — džusy a saláty (ugo.cz); primárně fastfood, vedlejší zdravé.",
+      "sourceUrl": "https://www.ugo.cz/kde-koupim-ugo/75-ugo-freshbar-oc-kralovo-pole-brno"
+    },
+    {
+      "id": "pokecz-basty-414",
+      "secondary": [],
+      "products": [
+        "poke",
+        "bowl"
+      ],
+      "confidence": "high",
+      "evidence": "Poké bistro — menu poke bowls včetně vegan variant (pokecz.cz). Není veganský podnik ani plošně „zdravé“.",
+      "sourceUrl": "https://www.pokecz.cz/menu?menu=dinner-menu"
+    },
+    {
+      "id": "yakitori-sushi-poke-bar-netroufalky-770",
+      "secondary": [],
+      "products": [
+        "poke",
+        "sushi"
+      ],
+      "confidence": "high",
+      "evidence": "Yakitori Sushi Poke Bar — poke + sushi (ykf.cz / OSM sushi;poke).",
+      "sourceUrl": "https://www.ykf.cz/poke-bar-oc-campus-square/poke-bar-campus-square-poke"
+    },
+    {
+      "id": "break-feast-dvorakova-43-12",
+      "secondary": [],
+      "products": [
+        "brunch",
+        "snidane"
+      ],
+      "confidence": "high",
+      "evidence": "OSM cuisine=brunch; web eggofoodtruck.cz (Break Feast).",
+      "sourceUrl": "https://www.eggofoodtruck.cz/"
+    },
+    {
+      "id": "coffee-bar-story-lidicka-15",
+      "secondary": [],
+      "products": [
+        "brunch",
+        "espresso",
+        "kava"
+      ],
+      "confidence": "high",
+      "evidence": "OSM cuisine=coffee_shop;brunch; web cbstory.cz.",
+      "sourceUrl": "https://cbstory.cz"
+    },
+    {
+      "id": "omni-cafe-brunch-pekarska-56",
+      "secondary": [],
+      "products": [
+        "brunch",
+        "snidane",
+        "kava"
+      ],
+      "confidence": "medium",
+      "evidence": "Název omni café brunch — kavárna se zaměřením na brunch.",
+      "sourceUrl": ""
+    },
+    {
+      "id": "le-brunch-smetanova-284-13",
+      "secondary": [],
+      "products": [
+        "brunch",
+        "snidane"
+      ],
+      "confidence": "medium",
+      "evidence": "Název Le Brunch; primárně kavárna s brunch nabídkou.",
+      "sourceUrl": ""
+    },
+    {
+      "id": "brunche-s-vodova-63",
+      "secondary": [],
+      "products": [
+        "brunch",
+        "snidane"
+      ],
+      "confidence": "medium",
+      "evidence": "Název Brunche’s; kavárna zaměřená na brunch.",
+      "sourceUrl": ""
+    },
+    {
+      "id": "monogram-espresso-bar",
+      "secondary": [],
+      "products": [
+        "espresso",
+        "kava"
+      ],
+      "confidence": "high",
+      "evidence": "Název Monogram Espresso Bar; oficiální web monogramespressobar.cz.",
+      "sourceUrl": "https://www.monogramespressobar.cz/kontakt"
+    },
+    {
+      "id": "monogram-espresso-bar-kapucinske-namesti-12",
+      "secondary": [],
+      "products": [
+        "espresso",
+        "kava"
+      ],
+      "confidence": "high",
+      "evidence": "Monogram Espresso Bar Kapucínské — espresso bar (monogramespressobar.cz).",
+      "sourceUrl": "https://www.monogramespressobar.cz/"
+    },
+    {
+      "id": "au-lait-espresso-bar-gorkeho-96-54",
+      "secondary": [],
+      "products": [
+        "espresso",
+        "kava"
+      ],
+      "confidence": "medium",
+      "evidence": "Název Au Lait espresso bar.",
+      "sourceUrl": "https://www.instagram.com/aulait_espressobar/"
+    },
+    {
+      "id": "gill-s-espresso-bar-veveri-9",
+      "secondary": [],
+      "products": [
+        "espresso",
+        "kava"
+      ],
+      "confidence": "medium",
+      "evidence": "Název Gill’s Espresso Bar.",
+      "sourceUrl": ""
+    },
+    {
+      "id": "pho-43-trida-kpt-jarose-20",
+      "secondary": [],
+      "products": [
+        "pho"
+      ],
+      "confidence": "high",
+      "evidence": "Název PHO 43; OSM asian;vietnamese.",
+      "sourceUrl": ""
+    },
+    {
+      "id": "pho-ha-noi-jakubske-namesti-1",
+      "secondary": [],
+      "products": [
+        "pho"
+      ],
+      "confidence": "high",
+      "evidence": "Název Pho Ha Noi; OSM vietnamese.",
+      "sourceUrl": ""
+    },
+    {
+      "id": "pho-viet-nam-divadelni-6",
+      "secondary": [],
+      "products": [
+        "pho"
+      ],
+      "confidence": "high",
+      "evidence": "Název Pho Viet nam; asijské vietnamské bistro.",
+      "sourceUrl": ""
+    },
+    {
+      "id": "toppu-ramen-behounska-129-13",
+      "secondary": [],
+      "products": [
+        "ramen"
+      ],
+      "confidence": "high",
+      "evidence": "Název TOPPU RAMEN; web toppuramen.cz.",
+      "sourceUrl": "https://www.toppuramen.cz/"
+    }
+  ],
+  "searchSamples": {
+    "káva": [
+      {
+        "id": "monogram-espresso-bar",
+        "name": "Monogram Espresso Bar",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "espresso",
+          "kava"
+        ]
+      },
+      {
+        "id": "skog-urban-hub",
+        "name": "SKØG",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "atelier-cocktail-bar-bistro-koblizna-71-2",
+        "name": "Atelier Cocktail Bar & Bistro",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "bistro-franz-veveri-461-14",
+        "name": "Bistro Franz",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "cafe-mezzanine-udolni-15",
+        "name": "Café Mezzanine",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "cafe-placzek-minoritska-4",
+        "name": "Café Placzek",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "costa-josefska-14",
+        "name": "Costa",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "cukrarna-bali-minska-52",
+        "name": "Cukrárna Bali",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "cajovna-za-zrcadlem-jaselska-16",
+        "name": "Čajovna za zrcadlem",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "deca-bulla-kopecna-21",
+        "name": "Deca bulla",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kafe-friedrich-smetanova-45",
+        "name": "Kafe Friedrich",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kocici-kavarna-pelisek-trida-kpt-jarose-37a",
+        "name": "Kočičí kavárna Pelíšek",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pub-pred-zrcadlem-jaselska-17",
+        "name": "Pub Před Zrcadlem",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "starbucks-namesti-svobody-5",
+        "name": "Starbucks",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "tivoli-konecneho-namesti-539-6",
+        "name": "Tivoli",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      }
+    ],
+    "kavárna": [
+      {
+        "id": "kocici-kavarna-pelisek-trida-kpt-jarose-37a",
+        "name": "Kočičí kavárna Pelíšek",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kavarna-nevyprahnu-plovdivska-2560-7",
+        "name": "kavárna nevyPRAHnu",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "zemanova-kavarna-josefska-493-4",
+        "name": "Zemanova kavárna",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "detska-kavarna-u-bedrunky-komarovska-3",
+        "name": "Dětská kavárna - U Bedrunky",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kavarna-bemovka-vsetinska-527-20",
+        "name": "Kavárna Bémovka",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kavarna-cyro-anenska-9",
+        "name": "Kavárna Cyro",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kavarna-dallmayr-hradecka-408-40",
+        "name": "Kavárna Dallmayr",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kavarna-spolek-orli-22",
+        "name": "Kavárna Spolek",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kavarna-u-zambocha-kollarova-9",
+        "name": "Kavárna U Žambocha",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "svedska-kavarna-skandinavska-4",
+        "name": "Švédská kavárna",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kavarna-cukrarna-smile-s-r-o-namesti-28-dubna-10-40",
+        "name": "Kavárna - cukrárna Smile s.r.o.",
+        "category": "sladke",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kavarna-u-kapucinu-kapucinske-namesti-7",
+        "name": "Kavárna u Kapucínů",
+        "category": "sladke",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "zmrzlinova-kavarna-kotlanova-2521-1b",
+        "name": "Zmrzlinová kavárna",
+        "category": "sladke",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "monogram-espresso-bar",
+        "name": "Monogram Espresso Bar",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "espresso",
+          "kava"
+        ]
+      },
+      {
+        "id": "skog-urban-hub",
+        "name": "SKØG",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      }
+    ],
+    "espresso": [
+      {
+        "id": "monogram-espresso-bar",
+        "name": "Monogram Espresso Bar",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "espresso",
+          "kava"
+        ]
+      },
+      {
+        "id": "au-lait-espresso-bar-gorkeho-96-54",
+        "name": "Au Lait espresso bar",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "espresso",
+          "kava"
+        ]
+      },
+      {
+        "id": "gill-s-espresso-bar-veveri-9",
+        "name": "Gill’s Espresso Bar",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "espresso",
+          "kava"
+        ]
+      },
+      {
+        "id": "aida-cafe-restaurant-josefska-21",
+        "name": "AIDA Cafe & Restaurant",
+        "category": "sladke",
+        "secondary": [
+          "kava"
+        ],
+        "products": [
+          "espresso",
+          "kava"
+        ]
+      },
+      {
+        "id": "coffee-bar-story-lidicka-15",
+        "name": "Coffee Bar Story",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "espresso",
+          "kava"
+        ]
+      }
+    ],
+    "pizza": [
+      {
+        "id": "prova-bistro-pizza",
+        "name": "Prova Bistro & Pizza",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "caruso-pizza-bayerova-6",
+        "name": "Caruso Pizza",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "don-antonio-pizza-burger-taborska-3216-78",
+        "name": "Don Antonio Pizza & Burger",
+        "category": "pizza",
+        "secondary": [
+          "burger"
+        ],
+        "products": [
+          "burger",
+          "pizza"
+        ]
+      },
+      {
+        "id": "amici-pizza-burgers-palackeho-trida-82",
+        "name": "Amici Pizza & Burgers",
+        "category": "pizza",
+        "secondary": [
+          "burger"
+        ],
+        "products": [
+          "burger",
+          "pizza"
+        ]
+      },
+      {
+        "id": "bella-pizza-videnska-132-100",
+        "name": "Bella pizza",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "bella-pizza-palackeho-trida-175-54",
+        "name": "Bella Pizza",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "ortica-pizza-palackeho-trida-110",
+        "name": "Ortica pizza",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pizza-bombastica-hybesova-307-59",
+        "name": "Pizza Bombastica",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pizza-bombastica-jilkova-2301-165",
+        "name": "Pizza Bombastica",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pizza-bombastica-palackeho-namesti-820-20a",
+        "name": "Pizza Bombastica",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pizza-bombastica-teyschlova-38a",
+        "name": "Pizza Bombastica",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pizza-bombastica-vychodilova-2565-17",
+        "name": "Pizza Bombastica",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "risto-pizza-pub-tusto-titanium-nove-sady-25",
+        "name": "Risto Pizza Pub Tusto Titanium",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "rud-s-pizza-cimburkova-593-4",
+        "name": "Rud's Pizza",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "omega-pizza-husitska-9",
+        "name": "Omega Pizza",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      }
+    ],
+    "burger": [
+      {
+        "id": "mamas-burger",
+        "name": "Mama's Burger",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "uvozna-burger",
+        "name": "Úvozna burger & beer",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "burger-king-nadrazni-10",
+        "name": "Burger King",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "burger-king-netroufalky-770",
+        "name": "Burger King",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "burger-king-u-dalnice-777",
+        "name": "Burger King",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "burger-king-videnska-132-100",
+        "name": "Burger King",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "burger-inn-beethovenova-7",
+        "name": "Burger Inn",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "faust-burger-pub-jiraskova-34",
+        "name": "Faust Burger Pub",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "burger-king-ceska-142-29",
+        "name": "Burger King",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "point-burger-namesti-svobody-8",
+        "name": "Point Burger",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "don-antonio-pizza-burger-taborska-3216-78",
+        "name": "Don Antonio Pizza & Burger",
+        "category": "pizza",
+        "secondary": [
+          "burger"
+        ],
+        "products": [
+          "burger",
+          "pizza"
+        ]
+      },
+      {
+        "id": "smash-burgers-moravske",
+        "name": "Smash burgers Moravské náměstí",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "bistro-provaz-provaznikova-15",
+        "name": "Bistro Provaz",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "east-village-jaselska-2",
+        "name": "East Village",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "mcdonald-s-namesti-svobody-19",
+        "name": "McDonald's",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      }
+    ],
+    "asie": [
+      {
+        "id": "annapurna-brno",
+        "name": "Indická restaurace Annapurna",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "oh-pho",
+        "name": "Oh! Phở",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "buddha-namesti-svobody-92-21",
+        "name": "Buddha",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "diandi-namesti-svobody-91-20",
+        "name": "Diandi",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "han-food-netroufalky-770",
+        "name": "Han Food",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "chef-viet-kounicova-292-59",
+        "name": "CHEF-VIET",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "chilli-garden-purkynova-3049-35g",
+        "name": "Chilli Garden",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "india-thali-trida-kpt-jarose-13",
+        "name": "India Thali",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "jomsom-belohorska-61",
+        "name": "Jomsom",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "klub-cestovatelu-veleslavinova-14",
+        "name": "Klub cestovatelů",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "light-of-india-stefanikova-35",
+        "name": "Light of India",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "mulgogi-veveri-51",
+        "name": "Mulgogi",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "nepal-tyrsova-2",
+        "name": "Nepal",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "padagali-kotlarska-51a",
+        "name": "Padagali",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pokecz-basty-414",
+        "name": "Pokecz",
+        "category": "asijske",
+        "secondary": [],
+        "products": [
+          "poke",
+          "bowl"
+        ]
+      }
+    ],
+    "sushi": [
+      {
+        "id": "yakitori-sushi-poke-bar-netroufalky-770",
+        "name": "Yakitori Sushi Poke Bar",
+        "category": "asijske",
+        "secondary": [],
+        "products": [
+          "poke",
+          "sushi"
+        ]
+      },
+      {
+        "id": "lotus-restaurant-grill-sushi-bar-silingrovo-namesti-257-3",
+        "name": "Lotus Restaurant - Grill & Sushi bar",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "sushi-mix-veveri-2218-131",
+        "name": "Sushi Mix",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "tao-viet-nam-home-cooking-sushi-bar-hrncirska-5",
+        "name": "Táo Viet Nam Home Cooking & Sushi Bar",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "tao-viet-nam-home-cooking-sushi-bar-horova-35",
+        "name": "Táo Viet Nam Home Cooking & Sushi Bar",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "wang-running-sushi-janska-9",
+        "name": "Wang Running Sushi",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "fansipan-asian-cuisine-sushi-kolarikova-1497",
+        "name": "FANSIPAN asian cuisine & sushi",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "fresh-point-sushi-express-hradecka-408-40",
+        "name": "Fresh Point Sushi Express",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "new-era-restaurace",
+        "name": "New Era Restaurace",
+        "category": "cina",
+        "secondary": [
+          "asijske"
+        ],
+        "products": [
+          "sushi",
+          "pho"
+        ]
+      },
+      {
+        "id": "suchi-gorkeho-15",
+        "name": "Suchi",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      }
+    ],
+    "pho": [
+      {
+        "id": "pho-viet-nam-divadelni-6",
+        "name": "Pho Viet nam",
+        "category": "asijske",
+        "secondary": [],
+        "products": [
+          "pho"
+        ]
+      },
+      {
+        "id": "pho-43-trida-kpt-jarose-20",
+        "name": "PHO 43",
+        "category": "asijske",
+        "secondary": [],
+        "products": [
+          "pho"
+        ]
+      },
+      {
+        "id": "pho-ha-noi-jakubske-namesti-1",
+        "name": "Pho Ha Noi",
+        "category": "asijske",
+        "secondary": [],
+        "products": [
+          "pho"
+        ]
+      },
+      {
+        "id": "oh-pho",
+        "name": "Oh! Phở",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pho-viet-palackeho-trida-31",
+        "name": "Phở Việt",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "new-era-restaurace",
+        "name": "New Era Restaurace",
+        "category": "cina",
+        "secondary": [
+          "asijske"
+        ],
+        "products": [
+          "sushi",
+          "pho"
+        ]
+      }
+    ],
+    "zdravé": [
+      {
+        "id": "bistro-franz",
+        "name": "Bistro FRANZ",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "rebio-orli",
+        "name": "Rebio Orlí",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "rebio-velky-spalicek",
+        "name": "Rebio Velký Špalíček",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "oaza-slovakova-2",
+        "name": "Oaza",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "rebio-holandska-1",
+        "name": "Rebio",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "ugo-netroufalky-770-14",
+        "name": "UGO",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "zdravy-zivot-jaselska-11",
+        "name": "Zdravý Život",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "naber-si-rosickeho-namesti-196-9",
+        "name": "Naber si",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "no-gluten-no-problem-zamecnicka-181-3",
+        "name": "No Gluten No Problem!",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "arny-s-food-josefska-5",
+        "name": "Arny's Food",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "brana-ke-zdravi-orli-17",
+        "name": "Brána ke zdraví",
+        "category": "kava",
+        "secondary": [
+          "zdrave"
+        ],
+        "products": []
+      },
+      {
+        "id": "fresh-fitpeople-videnska-132-100",
+        "name": "Fresh FitPeople",
+        "category": "fastfood",
+        "secondary": [
+          "zdrave"
+        ],
+        "products": [
+          "bowl",
+          "salad"
+        ]
+      },
+      {
+        "id": "ugo-cimburkova-4",
+        "name": "UGO",
+        "category": "fastfood",
+        "secondary": [
+          "zdrave"
+        ],
+        "products": [
+          "juice",
+          "salad"
+        ]
+      }
+    ],
+    "snídaně": [
+      {
+        "id": "break-feast-dvorakova-43-12",
+        "name": "Break Feast",
+        "category": "neuvedeno",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "snidane"
+        ]
+      },
+      {
+        "id": "brunche-s-vodova-63",
+        "name": "Brunche's",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "snidane"
+        ]
+      },
+      {
+        "id": "le-brunch-smetanova-284-13",
+        "name": "Le Brunch",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "snidane"
+        ]
+      },
+      {
+        "id": "omni-cafe-brunch-pekarska-56",
+        "name": "omni café brunch",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "snidane",
+          "kava"
+        ]
+      }
+    ],
+    "brunch": [
+      {
+        "id": "le-brunch-smetanova-284-13",
+        "name": "Le Brunch",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "snidane"
+        ]
+      },
+      {
+        "id": "omni-cafe-brunch-pekarska-56",
+        "name": "omni café brunch",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "snidane",
+          "kava"
+        ]
+      },
+      {
+        "id": "brunche-s-vodova-63",
+        "name": "Brunche's",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "snidane"
+        ]
+      },
+      {
+        "id": "coffee-bar-story-lidicka-15",
+        "name": "Coffee Bar Story",
+        "category": "kava",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "espresso",
+          "kava"
+        ]
+      },
+      {
+        "id": "break-feast-dvorakova-43-12",
+        "name": "Break Feast",
+        "category": "neuvedeno",
+        "secondary": [],
+        "products": [
+          "brunch",
+          "snidane"
+        ]
+      }
+    ],
+    "veganské": [
+      {
+        "id": "bistro-franz",
+        "name": "Bistro FRANZ",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "dhaba-beas-panska",
+        "name": "Dhaba Beas Panská",
+        "category": "vegetarianske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "forkys-vankovka",
+        "name": "Forky's Galerie Vaňkovka",
+        "category": "veganske",
+        "secondary": [
+          "burger"
+        ],
+        "products": [
+          "burger",
+          "wrap",
+          "bowl"
+        ]
+      },
+      {
+        "id": "cajovna-za-zrcadlem-jaselska-16",
+        "name": "Čajovna za zrcadlem",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "east-village-jaselska-2",
+        "name": "East Village",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "falafelo-pekarska-19",
+        "name": "Falafelo",
+        "category": "fastfood",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "han-food-netroufalky-770",
+        "name": "Han Food",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "haribol-luzanecka-4",
+        "name": "Haribol",
+        "category": "veganske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kafe-friedrich-smetanova-45",
+        "name": "Kafe Friedrich",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "klub-cestovatelu-veleslavinova-14",
+        "name": "Klub cestovatelů",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kocici-kavarna-pelisek-trida-kpt-jarose-37a",
+        "name": "Kočičí kavárna Pelíšek",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "la-famiglia-udolni-4",
+        "name": "La Famiglia",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "oaza-slovakova-2",
+        "name": "Oaza",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "padagali-kotlarska-51a",
+        "name": "Padagali",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pizzerie-u-montyho-provaznikova-40",
+        "name": "Pizzerie U Montyho",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      }
+    ],
+    "vegetariánské": [
+      {
+        "id": "bistro-franz",
+        "name": "Bistro FRANZ",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "dhaba-beas-panska",
+        "name": "Dhaba Beas Panská",
+        "category": "vegetarianske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "forkys-vankovka",
+        "name": "Forky's Galerie Vaňkovka",
+        "category": "veganske",
+        "secondary": [
+          "burger"
+        ],
+        "products": [
+          "burger",
+          "wrap",
+          "bowl"
+        ]
+      },
+      {
+        "id": "cajovna-za-zrcadlem-jaselska-16",
+        "name": "Čajovna za zrcadlem",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "east-village-jaselska-2",
+        "name": "East Village",
+        "category": "burger",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "falafelo-pekarska-19",
+        "name": "Falafelo",
+        "category": "fastfood",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "han-food-netroufalky-770",
+        "name": "Han Food",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "haribol-luzanecka-4",
+        "name": "Haribol",
+        "category": "veganske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kafe-friedrich-smetanova-45",
+        "name": "Kafe Friedrich",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "klub-cestovatelu-veleslavinova-14",
+        "name": "Klub cestovatelů",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "kocici-kavarna-pelisek-trida-kpt-jarose-37a",
+        "name": "Kočičí kavárna Pelíšek",
+        "category": "kava",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "la-famiglia-udolni-4",
+        "name": "La Famiglia",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "oaza-slovakova-2",
+        "name": "Oaza",
+        "category": "zdrave",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "padagali-kotlarska-51a",
+        "name": "Padagali",
+        "category": "asijske",
+        "secondary": [],
+        "products": []
+      },
+      {
+        "id": "pizzerie-u-montyho-provaznikova-40",
+        "name": "Pizzerie U Montyho",
+        "category": "pizza",
+        "secondary": [],
+        "products": []
+      }
+    ]
+  }
+}

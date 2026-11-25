@@ -2,7 +2,7 @@ import { normalizeCategoryParam } from '../constants/filters.js'
 import { restaurantHasPublicDeal } from '../data/restaurantDeals.js'
 
 const SORTS = new Set(['quality', 'relevance', 'rating', 'price-asc', 'price-desc', 'distance', 'name'])
-import { getRestaurantCategory } from './restaurantTags.js'
+import { categoryMatchTier, restaurantMatchesCategory } from './restaurantTags.js'
 import { compareByPrice, getBudgetComparePrice, hasVerifiedPrice } from './price.js'
 import { compareByRecordQuality } from './recordQuality.js'
 import { suppressCatalogDuplicates } from './catalogDuplicates.js'
@@ -31,13 +31,18 @@ function inMapBounds(place, bounds) {
 export { CATEGORY_SEARCH_ALIASES, foldSearchText }
 
 /**
- * Prázdné řazení = výchozí „Nejblíž ke mně“.
- * S polohou řadíme podle vzdálenosti; bez polohy neslibujeme vzdálenost a držíme abecedu.
- * Explicitní „distance“ bez polohy se chová stejně (bez falešných km).
+ * Prázdné řazení:
+ * - s aktivním hledáním / kategorií → relevance (přesné shody dřív; vzdálenost jako tie-break)
+ * - jinak s polohou → vzdálenost; bez polohy → abeceda
+ * Explicitní „distance“ respektujeme, ale filtr relevance zůstává.
  */
-export function resolveEffectiveSort(sortBy, { hasOrigin = false } = {}) {
+export function resolveEffectiveSort(sortBy, { hasOrigin = false, preferRelevance = false } = {}) {
   const requested = sortBy && SORTS.has(sortBy) ? sortBy : ''
-  if (!requested || requested === 'distance') {
+  if (!requested) {
+    if (preferRelevance) return 'relevance'
+    return hasOrigin ? 'distance' : 'name'
+  }
+  if (requested === 'distance') {
     return hasOrigin ? 'distance' : 'name'
   }
   return requested
@@ -83,21 +88,27 @@ function missingLast(a, b, pick, direction = 'asc') {
 }
 
 function matchesVeganIntent(restaurant) {
-  return Boolean(restaurant?.veganFriendly) || getRestaurantCategory(restaurant) === 'veganske'
+  return (
+    Boolean(restaurant?.veganFriendly) ||
+    restaurantMatchesCategory(restaurant, 'veganske')
+  )
 }
 
 function matchesVegetarianIntent(restaurant) {
   return (
     Boolean(restaurant?.vegetarianFriendly || restaurant?.veganFriendly) ||
-    getRestaurantCategory(restaurant) === 'vegetarianske' ||
-    getRestaurantCategory(restaurant) === 'veganske'
+    restaurantMatchesCategory(restaurant, 'vegetarianske') ||
+    restaurantMatchesCategory(restaurant, 'veganske')
   )
 }
 
 /** „bez masa“ = podniky bez masa, ne každá restaurace s jednou vegetariánskou položkou. */
 function matchesMeatFreeSearch(restaurant) {
-  const category = getRestaurantCategory(restaurant)
-  return category === 'vegetarianske' || category === 'veganske' || Boolean(restaurant?.veganFriendly)
+  return (
+    restaurantMatchesCategory(restaurant, 'vegetarianske') ||
+    restaurantMatchesCategory(restaurant, 'veganske') ||
+    Boolean(restaurant?.veganFriendly)
+  )
 }
 
 /**
@@ -130,7 +141,10 @@ export function filterAndSortRestaurants(restaurants, options) {
   const budget = tighterBudget(maxBudget, intent.maxBudget)
   const categoryFilter = normalizeCategoryParam(cuisineType)
   const scores = new Map()
-  const effectiveSort = resolveEffectiveSort(sortBy, { hasOrigin })
+  const preferRelevance = Boolean(
+    String(search || '').trim() || categoryFilter || intent.cuisineType || intent.veganOnly || intent.vegetarianOnly,
+  )
+  const effectiveSort = resolveEffectiveSort(sortBy, { hasOrigin, preferRelevance })
 
   let list = restaurants.filter((r) => {
     if (verifiedPricesOnly && !hasVerifiedPrice(r)) return false
@@ -147,9 +161,11 @@ export function filterAndSortRestaurants(restaurants, options) {
       if (comparePrice == null || comparePrice > Number(budget)) return false
     }
 
+    let categoryBoost = 0
     if (categoryFilter !== '') {
-      const cat = getRestaurantCategory(r)
-      if (cat !== categoryFilter) return false
+      const tier = categoryMatchTier(r, categoryFilter)
+      if (!tier) return false
+      categoryBoost = tier === 'primary' ? 10 : 5
     }
 
     if (maxDistance !== '' && hasOrigin) {
@@ -161,7 +177,7 @@ export function filterAndSortRestaurants(restaurants, options) {
 
     if (veganOnly || intent.veganOnly) {
       if (veganOnly && !intent.veganOnly) {
-        if (!r.veganFriendly) return false
+        if (!r.veganFriendly && !restaurantMatchesCategory(r, 'veganske')) return false
       } else if (!matchesVeganIntent(r)) return false
     } else if (intent.vegetarianOnly) {
       if (!matchesMeatFreeSearch(r)) return false
@@ -173,7 +189,7 @@ export function filterAndSortRestaurants(restaurants, options) {
 
     const score = matchRestaurantQuery(r, intent)
     if (score == null) return false
-    scores.set(r.id, score)
+    scores.set(r.id, score + categoryBoost)
     return true
   })
 
@@ -187,10 +203,19 @@ export function filterAndSortRestaurants(restaurants, options) {
         return compareByPrice(a, b, 'asc') || compareByNameThenId(a, b)
       case 'price-desc':
         return compareByPrice(a, b, 'desc') || compareByNameThenId(a, b)
-      case 'distance':
-        return missingLast(a, b, (r) => r.distanceKm, 'asc') || compareByNameThenId(a, b)
-      case 'name':
+      case 'distance': {
+        // Explicitní vzdálenost: pořád jen relevantní podniky; při shodě km dřív přesnější match.
+        const byDistance = missingLast(a, b, (r) => r.distanceKm, 'asc')
+        if (byDistance !== 0) return byDistance
+        const byScore = (scores.get(b.id) || 0) - (scores.get(a.id) || 0)
+        if (byScore !== 0) return byScore
         return compareByNameThenId(a, b)
+      }
+      case 'name': {
+        const byScore = (scores.get(b.id) || 0) - (scores.get(a.id) || 0)
+        if (byScore !== 0) return byScore
+        return compareByNameThenId(a, b)
+      }
       case 'rating':
         return (
           missingLast(

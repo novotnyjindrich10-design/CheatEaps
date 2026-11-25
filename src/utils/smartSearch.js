@@ -1,6 +1,10 @@
 import { FOOD_CATEGORIES, getCategoryMeta } from '../constants/filters.js'
 import { publicDealSearchText } from '../data/restaurantDeals.js'
-import { getRestaurantCategory } from './restaurantTags.js'
+import {
+  categoryMatchTier,
+  getRestaurantCategory,
+  getSecondaryCategories,
+} from './restaurantTags.js'
 
 const OSM_CUISINE_WORDS = {
   sushi: 'sushi',
@@ -49,7 +53,7 @@ export function foldSearchText(value) {
     .trim()
 }
 
-/** Synonyma typu kuchyně. Konkrétní jídlo (sushi, taco) sem nepatří. */
+/** Synonyma typu kuchyně. Konkrétní jídlo (sushi, taco, espresso) sem nepatří. */
 export const CATEGORY_SEARCH_ALIASES = {
   pizza: ['pizza', 'pizzerie', 'pizzeria'],
   burger: ['burger', 'burgery', 'hamburger'],
@@ -64,6 +68,38 @@ export const CATEGORY_SEARCH_ALIASES = {
   veganske: ['veganske'],
   zdrave: ['zdrave', 'zdrava', 'zdravy'],
   fastfood: ['fastfood'],
+}
+
+/**
+ * Konkrétní produkty / služby. Samy o sobě nedělají kategorii,
+ * ale zvyšují relevanci u ověřených `verifiedProducts`.
+ */
+export const PRODUCT_SEARCH_ALIASES = {
+  espresso: ['espresso'],
+  brunch: ['brunch', 'brunche'],
+  snidane: ['snidane', 'snidaně', 'breakfast'],
+  pho: ['pho'],
+  ramen: ['ramen'],
+  poke: ['poke', 'poké'],
+  sushi: ['sushi'],
+  bowl: ['bowl', 'bowls'],
+  salad: ['salat', 'salad'],
+  juice: ['dzus', 'juice', 'fresh'],
+  burger: ['burger', 'burgery', 'hamburger'],
+  pizza: ['pizza'],
+  wrap: ['wrap', 'wrapy'],
+  kava: ['kava', 'kavarna'],
+}
+
+function productTokenAliases(token) {
+  const needle = foldSearchText(token)
+  const hits = []
+  for (const [product, aliases] of Object.entries(PRODUCT_SEARCH_ALIASES)) {
+    if (product === needle || aliases.some((alias) => foldSearchText(alias) === needle)) {
+      hits.push(product)
+    }
+  }
+  return hits
 }
 
 const SKIP_TOKENS = new Set([
@@ -278,6 +314,7 @@ function curatedLead(restaurant) {
 }
 
 export function documentedSearchBlob(restaurant) {
+  const products = Array.isArray(restaurant?.verifiedProducts) ? restaurant.verifiedProducts : []
   return foldSearchText(
     [
       restaurant?.name,
@@ -287,6 +324,7 @@ export function documentedSearchBlob(restaurant) {
       documentedCuisine(restaurant),
       curatedLead(restaurant),
       publicDealSearchText(restaurant?.id),
+      ...products,
     ]
       .filter(Boolean)
       .join(' '),
@@ -294,25 +332,50 @@ export function documentedSearchBlob(restaurant) {
 }
 
 export function categorySearchBlob(restaurant) {
-  const cat = getRestaurantCategory(restaurant) || ''
-  const meta = getCategoryMeta(cat)
-  const aliases = CATEGORY_SEARCH_ALIASES[cat] || []
-  return foldSearchText([meta?.label, cat, ...aliases].filter(Boolean).join(' '))
+  const cats = [getRestaurantCategory(restaurant), ...getSecondaryCategories(restaurant)].filter(Boolean)
+  const parts = []
+  for (const cat of cats) {
+    const meta = getCategoryMeta(cat)
+    const aliases = CATEGORY_SEARCH_ALIASES[cat] || []
+    parts.push(meta?.label, cat, ...aliases)
+  }
+  return foldSearchText(parts.filter(Boolean).join(' '))
 }
 
-/** null = neshoda. Jinak skóre relevance, vyšší je lepší. */
+function verifiedProductHit(restaurant, token) {
+  const products = Array.isArray(restaurant?.verifiedProducts) ? restaurant.verifiedProducts : []
+  if (products.length === 0) return ''
+  const wanted = new Set(productTokenAliases(token))
+  if (wanted.size === 0) wanted.add(foldSearchText(token))
+  const blob = foldSearchText(products.join(' '))
+  for (const product of wanted) {
+    const hit = tokenHits(product, blob)
+    if (hit) return hit
+  }
+  return ''
+}
+
+/**
+ * null = neshoda. Jinak skóre relevance, vyšší je lepší.
+ * Kategorie: primary (+10) > secondary (+5) > ověřený produkt/token v datech (+2–3).
+ * Náhodná zmínka v popisu nestačí na kategorii; slabé textové shody mají nižší skóre.
+ */
 export function matchRestaurantQuery(restaurant, intent) {
   let score = 0
   if (intent.cuisineType) {
-    if (getRestaurantCategory(restaurant) === intent.cuisineType) score += 6
+    const tier = categoryMatchTier(restaurant, intent.cuisineType)
+    if (tier === 'primary') score += 10
+    else if (tier === 'secondary') score += 5
     else {
-      const hit = intent.consumedCategoryToken
-        ? tokenHits(intent.consumedCategoryToken, documentedSearchBlob(restaurant))
+      // Bez ověřené kategorie: jen silný token v názvu / doloženém produktu, ne volný popis.
+      const nameHit = intent.consumedCategoryToken
+        ? tokenHits(intent.consumedCategoryToken, restaurant?.name)
         : ''
-      const aliases = CATEGORY_SEARCH_ALIASES[intent.cuisineType] || []
-      const typedExactly =
-        intent.consumedCategoryToken === intent.cuisineType || aliases.includes(intent.consumedCategoryToken)
-      if (hit === 'exact' || (hit === 'fuzzy' && !typedExactly)) score += 3
+      const productHit = intent.consumedCategoryToken
+        ? verifiedProductHit(restaurant, intent.consumedCategoryToken)
+        : ''
+      if (nameHit === 'exact') score += 3
+      else if (productHit === 'exact') score += 2
       else return null
     }
     if (
@@ -327,16 +390,26 @@ export function matchRestaurantQuery(restaurant, intent) {
     const name = tokenHits(token, restaurant?.name)
     const address = tokenHits(token, restaurant?.address)
     const category = tokenHits(token, categorySearchBlob(restaurant))
+    const product = verifiedProductHit(restaurant, token)
     const documented = tokenHits(token, documentedSearchBlob(restaurant))
-    if (!name && !address && !category && !documented) return null
+    const productLike = productTokenAliases(token).length > 0
+    // Konkrétní produkt (espresso, pho, brunch…): nestačí náhodná zmínka v popisu.
+    if (productLike) {
+      if (!name && !product && !(category === 'exact')) return null
+    } else if (!name && !address && !category && !product && !documented) {
+      return null
+    }
     if (name === 'exact') score += 8
     else if (name === 'fuzzy') score += 4
     if (address === 'exact') score += 4
     else if (address === 'fuzzy') score += 2
     if (category === 'exact') score += 5
     else if (category === 'fuzzy') score += 2
-    if (!name && !category && documented === 'exact') score += 2
-    else if (!name && !category && documented === 'fuzzy') score += 1
+    if (product === 'exact') score += 6
+    else if (product === 'fuzzy') score += 3
+    // Volný popis jen jako slabý doplněk u neproduktových tokenů.
+    if (!productLike && !name && !category && !product && documented === 'exact') score += 2
+    else if (!productLike && !name && !category && !product && documented === 'fuzzy') score += 1
   }
 
   return score

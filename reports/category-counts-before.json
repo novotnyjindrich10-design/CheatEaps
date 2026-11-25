@@ -1,0 +1,395 @@
+{
+  "total": 774,
+  "counts": {
+    "pizza": 72,
+    "burger": 25,
+    "asijske": 93,
+    "ceske": 123,
+    "vegetarianske": 2,
+    "veganske": 2,
+    "kebab": 21,
+    "cina": 12,
+    "mexiko": 11,
+    "kava": 190,
+    "fastfood": 37,
+    "sladke": 32,
+    "zdrave": 10,
+    "neuvedeno": 144
+  },
+  "sparse": [
+    [
+      "vegetarianske",
+      2
+    ],
+    [
+      "veganske",
+      2
+    ],
+    [
+      "zdrave",
+      10
+    ],
+    [
+      "mexiko",
+      11
+    ],
+    [
+      "cina",
+      12
+    ],
+    [
+      "kebab",
+      21
+    ],
+    [
+      "burger",
+      25
+    ],
+    [
+      "sladke",
+      32
+    ],
+    [
+      "fastfood",
+      37
+    ],
+    [
+      "pizza",
+      72
+    ],
+    [
+      "asijske",
+      93
+    ],
+    [
+      "ceske",
+      123
+    ],
+    [
+      "kava",
+      190
+    ]
+  ],
+  "candidateCount": 34,
+  "candidatesByMaybe": {
+    "kava": 3,
+    "zdrave": 10,
+    "vegetarianske": 0,
+    "veganske": 1,
+    "pizza": 1,
+    "burger": 9,
+    "sladke": 1,
+    "asijske": 6,
+    "cina": 2,
+    "mexiko": 0,
+    "kebab": 1
+  },
+  "sample": [
+    {
+      "id": "forkys-vankovka",
+      "name": "Forky's Galerie Vaňkovka",
+      "primary": "veganske",
+      "maybe": "zdrave",
+      "website": "https://www.forkys.cz/pobocka/oc-vankovka/",
+      "osmCuisine": "",
+      "blob": "Forky's Galerie Vaňkovka | Veganské | Veganské bistro s burgery, wrapy, bowl a seitanovým kebabem. Burger na oficiálním menu od 169 Kč."
+    },
+    {
+      "id": "forkys-vankovka",
+      "name": "Forky's Galerie Vaňkovka",
+      "primary": "veganske",
+      "maybe": "burger",
+      "website": "https://www.forkys.cz/pobocka/oc-vankovka/",
+      "osmCuisine": "",
+      "blob": "Forky's Galerie Vaňkovka | Veganské | Veganské bistro s burgery, wrapy, bowl a seitanovým kebabem. Burger na oficiálním menu od 169 Kč."
+    },
+    {
+      "id": "lokofu",
+      "name": "Lokofu",
+      "primary": "cina",
+      "maybe": "asijske",
+      "website": "https://www.lokofu.cz/cs/",
+      "osmCuisine": "asian;chinese;thai",
+      "blob": "Lokofu | Čína | Čínská restaurace. V oficiálním menu jsou i tofu se zeleninou (139 Kč) a míchaná vařená zelenina (119 Kč). | asian;chinese;thai"
+    },
+    {
+      "id": "new-era-restaurace",
+      "name": "New Era Restaurace",
+      "primary": "cina",
+      "maybe": "asijske",
+      "website": "https://newerafood.cz/",
+      "osmCuisine": "sushi;chinese;asian",
+      "blob": "New Era Restaurace | Čína | Asijská restaurace v centru Brna. Podle webu knedlíčky, kari, pho a sushi. | sushi;chinese;asian"
+    },
+    {
+      "id": "chicken-inn-svobody",
+      "name": "Chicken Inn nám. Svobody",
+      "primary": "fastfood",
+      "maybe": "burger",
+      "website": "https://burger-inn.cz/",
+      "osmCuisine": "",
+      "blob": "Chicken Inn nám. Svobody | Fast food | Kuřecí rychlé občerstvení ze sítě Burger Inn."
+    },
+    {
+      "id": "aida-cafe-restaurant-josefska-21",
+      "name": "AIDA Cafe & Restaurant",
+      "primary": "sladke",
+      "maybe": "kava",
+      "website": "https://www.ladolcevita-aida.cz/",
+      "osmCuisine": "",
+      "blob": "AIDA Cafe & Restaurant | Sladké | Záznam z OpenStreetMap (restaurace)."
+    },
+    {
+      "id": "amici-pizza-burgers-palackeho-trida-82",
+      "name": "Amici Pizza & Burgers",
+      "primary": "pizza",
+      "maybe": "burger",
+      "website": "https://www.amici.cz/",
+      "osmCuisine": "pizza;burger",
+      "blob": "Amici Pizza & Burgers | Pizza | Záznam z OpenStreetMap (pizzerie). Kuchyně dle OSM: pizza;burger. | pizza;burger"
+    },
+    {
+      "id": "brana-ke-zdravi-orli-17",
+      "name": "Brána ke zdraví",
+      "primary": "kava",
+      "maybe": "zdrave",
+      "website": "https://branakezdravi.cz/",
+      "osmCuisine": "",
+      "blob": "Brána ke zdraví | Kavárna | Záznam z OpenStreetMap (kavárna)."
+    },
+    {
+      "id": "break-feast-dvorakova-43-12",
+      "name": "Break Feast",
+      "primary": "neuvedeno",
+      "maybe": "kava",
+      "website": "https://www.eggofoodtruck.cz/",
+      "osmCuisine": "brunch",
+      "blob": "Break Feast | Restaurace | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: brunch. | brunch"
+    },
+    {
+      "id": "coffee4all-chironova-8",
+      "name": "Coffee4all",
+      "primary": "kava",
+      "maybe": "pizza",
+      "website": "https://coffee4all.cz",
+      "osmCuisine": "pizza;coffee_shop;regional;ice_cream;cake;juice;pivo",
+      "blob": "Coffee4all | Kavárna | Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: pizza;coffee_shop;regional;ice_cream;cake;juice;pivo. | pizza;coffee_shop;regional;ice_cream;cake;juice;pi"
+    },
+    {
+      "id": "don-antonio-pizza-burger-taborska-3216-78",
+      "name": "Don Antonio Pizza & Burger",
+      "primary": "pizza",
+      "maybe": "burger",
+      "website": "https://www.donantonio.cz",
+      "osmCuisine": "pizza;burger",
+      "blob": "Don Antonio Pizza & Burger | Pizza | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: pizza;burger. | pizza;burger"
+    },
+    {
+      "id": "fresh-bar-bistro-narohu-videnska-132-100",
+      "name": "Fresh bar & bistro NaRohu",
+      "primary": "sladke",
+      "maybe": "zdrave",
+      "website": "",
+      "osmCuisine": "sandwich;ice_cream;juice;bistro;coffee_shop",
+      "blob": "Fresh bar & bistro NaRohu | Sladké | Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: sandwich;ice_cream;juice;bistro;coffee_shop. | sandwich;ice_cream;juice;bistro;coffee_shop"
+    },
+    {
+      "id": "fresh-cafe-medispol-makovskeho-namesti-2",
+      "name": "Fresh Café Medispol",
+      "primary": "kava",
+      "maybe": "zdrave",
+      "website": "https://bitperia.cz/board/fresh-cafe",
+      "osmCuisine": "cafe",
+      "blob": "Fresh Café Medispol | Kavárna | Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: cafe. | cafe"
+    },
+    {
+      "id": "fresh-fitpeople-videnska-132-100",
+      "name": "Fresh FitPeople",
+      "primary": "fastfood",
+      "maybe": "zdrave",
+      "website": "https://freshfitpeople.cz/",
+      "osmCuisine": "",
+      "blob": "Fresh FitPeople | Fast food | Záznam z OpenStreetMap (rychlé občerstvení)."
+    },
+    {
+      "id": "fresh-pasta-pekarska-18",
+      "name": "Fresh Pasta",
+      "primary": "pizza",
+      "maybe": "zdrave",
+      "website": "",
+      "osmCuisine": "italian_pizza",
+      "blob": "Fresh Pasta | Pizza | Záznam z OpenStreetMap (rychlé občerstvení). Kuchyně dle OSM: italian_pizza. | italian_pizza"
+    },
+    {
+      "id": "fresh-point-sushi-express-hradecka-408-40",
+      "name": "Fresh Point Sushi Express",
+      "primary": "asijske",
+      "maybe": "zdrave",
+      "website": "",
+      "osmCuisine": "sushi",
+      "blob": "Fresh Point Sushi Express | Asijské | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: sushi. | sushi"
+    },
+    {
+      "id": "guty-skandinavska-128-2",
+      "name": "Guty",
+      "primary": "cina",
+      "maybe": "asijske",
+      "website": "https://gutydelivery.com/",
+      "osmCuisine": "asian;chinese;vietnamese",
+      "blob": "Guty | Čína | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: asian;chinese;vietnamese. | asian;chinese;vietnamese"
+    },
+    {
+      "id": "cha-do-zelny-trh-10",
+      "name": "Cha Dō",
+      "primary": "kava",
+      "maybe": "asijske",
+      "website": "https://www.facebook.com/chadobrno/",
+      "osmCuisine": "tea;chinese;japanese;asian;korean",
+      "blob": "Cha Dō | Kavárna | Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: tea;chinese;japanese;asian;korean. | tea;chinese;japanese;asian;korean"
+    },
+    {
+      "id": "cha-do-zelny-trh-10",
+      "name": "Cha Dō",
+      "primary": "kava",
+      "maybe": "cina",
+      "website": "https://www.facebook.com/chadobrno/",
+      "osmCuisine": "tea;chinese;japanese;asian;korean",
+      "blob": "Cha Dō | Kavárna | Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: tea;chinese;japanese;asian;korean. | tea;chinese;japanese;asian;korean"
+    },
+    {
+      "id": "kimono-bayerova-572-2",
+      "name": "KIMONO",
+      "primary": "asijske",
+      "maybe": "sladke",
+      "website": "https://europeancoffeetrip.com/cafe/kimono-brno/",
+      "osmCuisine": "japanese;regional;donut;dessert",
+      "blob": "KIMONO | Asijské | Záznam z OpenStreetMap (kavárna). Kuchyně dle OSM: japanese;regional;donut;dessert. | japanese;regional;donut;dessert"
+    },
+    {
+      "id": "la-famiglia-udolni-4",
+      "name": "La Famiglia",
+      "primary": "pizza",
+      "maybe": "burger",
+      "website": "https://www.lafamigliabrno.cz",
+      "osmCuisine": "pizza;burger;italian",
+      "blob": "La Famiglia | Pizza | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: pizza;burger;italian. | pizza;burger;italian"
+    },
+    {
+      "id": "na-trati-libusina-trida-880-25",
+      "name": "Na Trati",
+      "primary": "pizza",
+      "maybe": "burger",
+      "website": "https://www.restauracenatrati.cz/",
+      "osmCuisine": "regional;pizza;burger",
+      "blob": "Na Trati | Pizza | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: regional;pizza;burger. | regional;pizza;burger"
+    },
+    {
+      "id": "nihao-stefanikova-15",
+      "name": "Nihao",
+      "primary": "cina",
+      "maybe": "asijske",
+      "website": "",
+      "osmCuisine": "asian",
+      "blob": "Nihao | Čína | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: asian. | asian"
+    },
+    {
+      "id": "obelix-stefanikova-26",
+      "name": "Obelix",
+      "primary": "pizza",
+      "maybe": "burger",
+      "website": "",
+      "osmCuisine": "burger;pizza;kebab",
+      "blob": "Obelix | Pizza | Záznam z OpenStreetMap (rychlé občerstvení). Kuchyně dle OSM: burger;pizza;kebab. | burger;pizza;kebab"
+    },
+    {
+      "id": "obelix-stefanikova-26",
+      "name": "Obelix",
+      "primary": "pizza",
+      "maybe": "kebab",
+      "website": "",
+      "osmCuisine": "burger;pizza;kebab",
+      "blob": "Obelix | Pizza | Záznam z OpenStreetMap (rychlé občerstvení). Kuchyně dle OSM: burger;pizza;kebab. | burger;pizza;kebab"
+    },
+    {
+      "id": "panda-netroufalky-770",
+      "name": "Panda",
+      "primary": "asijske",
+      "maybe": "cina",
+      "website": "",
+      "osmCuisine": "asian;chinese",
+      "blob": "Panda | Asijské | Záznam z OpenStreetMap (rychlé občerstvení). Kuchyně dle OSM: asian;chinese. | asian;chinese"
+    },
+    {
+      "id": "pizza-bombastica-teyschlova-38a",
+      "name": "Pizza Bombastica",
+      "primary": "pizza",
+      "maybe": "zdrave",
+      "website": "https://bystrc.pizzabombastica.cz/",
+      "osmCuisine": "pizza;burger;salad",
+      "blob": "Pizza Bombastica | Pizza | Záznam z OpenStreetMap (rychlé občerstvení). Kuchyně dle OSM: pizza;burger;salad. | pizza;burger;salad"
+    },
+    {
+      "id": "pizza-bombastica-teyschlova-38a",
+      "name": "Pizza Bombastica",
+      "primary": "pizza",
+      "maybe": "burger",
+      "website": "https://bystrc.pizzabombastica.cz/",
+      "osmCuisine": "pizza;burger;salad",
+      "blob": "Pizza Bombastica | Pizza | Záznam z OpenStreetMap (rychlé občerstvení). Kuchyně dle OSM: pizza;burger;salad. | pizza;burger;salad"
+    },
+    {
+      "id": "restaurace-ctyrlistek-novolisenska-2474-5",
+      "name": "Restaurace Čtyřlístek",
+      "primary": "pizza",
+      "maybe": "burger",
+      "website": "https://www.restauracectyrlistek.cz/",
+      "osmCuisine": "burger;grill;local;pasta;italian_pizza",
+      "blob": "Restaurace Čtyřlístek | Pizza | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: burger;grill;local;pasta;italian_pizza. | burger;grill;local;pasta;italian_pizza"
+    },
+    {
+      "id": "restaurace-globus-hradecka-40",
+      "name": "Restaurace Globus",
+      "primary": "pizza",
+      "maybe": "zdrave",
+      "website": "https://www.globus.cz/brno/sluzby-a-produkty/restaurace",
+      "osmCuisine": "pizza;regional;chicken;salad;pasta",
+      "blob": "Restaurace Globus | Pizza | Záznam z OpenStreetMap (rychlé občerstvení). Kuchyně dle OSM: pizza;regional;chicken;salad;pasta. | pizza;regional;chicken;salad;pasta"
+    },
+    {
+      "id": "trdlo-cafe-koblizna-24",
+      "name": "Trdlo cafe",
+      "primary": "fastfood",
+      "maybe": "kava",
+      "website": "",
+      "osmCuisine": "",
+      "blob": "Trdlo cafe | Fast food | Záznam z OpenStreetMap (rychlé občerstvení)."
+    },
+    {
+      "id": "vegan-af-ramen-maresova-14",
+      "name": "Vegan AF Ramen",
+      "primary": "asijske",
+      "maybe": "veganske",
+      "website": "https://www.veganaframen.cz/",
+      "osmCuisine": "ramen",
+      "blob": "Vegan AF Ramen | Asijské | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: ramen. | ramen"
+    },
+    {
+      "id": "yakitori-sushi-poke-bar-netroufalky-770",
+      "name": "Yakitori Sushi Poke Bar",
+      "primary": "asijske",
+      "maybe": "zdrave",
+      "website": "https://www.ykf.cz/poke-bar-oc-campus-square/poke-bar-campus-square-poke",
+      "osmCuisine": "sushi;poke",
+      "blob": "Yakitori Sushi Poke Bar | Asijské | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: sushi;poke. | sushi;poke"
+    },
+    {
+      "id": "zlata-miska-maresova-14",
+      "name": "Zlatá miska",
+      "primary": "cina",
+      "maybe": "asijske",
+      "website": "",
+      "osmCuisine": "asian;chinese",
+      "blob": "Zlatá miska | Čína | Záznam z OpenStreetMap (restaurace). Kuchyně dle OSM: asian;chinese. | asian;chinese"
+    }
+  ]
+}

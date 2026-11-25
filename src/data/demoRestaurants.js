@@ -11,12 +11,14 @@ import { placePhotos } from './placePhotos'
 import { getPlaceFoodIllustration } from './placeFoodIllustrations'
 import { getPlacePixabayIllustration } from './pixabayLibrary'
 import { getCategoryOverride } from './categoryOverrides'
+import { getSecondaryCategoryInfo } from './secondaryCategories'
 import { isCatalogExcluded } from './catalogExclusions'
 import { hasVerifiedCoordinates } from '../utils/geo'
 export { DATA_SOURCE_NOTES, DEMO_DATA_NOTICE } from './sourceNotes.js'
 
 function place(entry) {
   const override = getCategoryOverride(entry.id)
+  const secondaryInfo = getSecondaryCategoryInfo(entry.id)
   const category = override?.category || entry.category || ''
   const estimate = estimatedPrices[entry.id] || {}
   const verified = verifiedPrices[entry.id] || {}
@@ -29,9 +31,14 @@ function place(entry) {
   }
   const photo = placePhotos[entry.id] || {}
   // removeIllustration platí pro celý stock (Pixabay i Openverse), ne jen Openverse.
+  // Vedlejší kategorie NESMÍ přepisovat hlavní fotografii / dish theme.
   const foodIllustration = override?.removeIllustration
     ? {}
     : getPlacePixabayIllustration(entry.id) || getPlaceFoodIllustration(entry.id) || {}
+  const secondaryCategories = Array.isArray(secondaryInfo?.secondary)
+    ? secondaryInfo.secondary.filter((value) => value && value !== category)
+    : []
+  const verifiedProducts = Array.isArray(secondaryInfo?.products) ? secondaryInfo.products : []
   const restaurant = {
     isDemo: false,
     vegetarianFriendly: false,
@@ -49,6 +56,8 @@ function place(entry) {
     type: override?.type || entry.type,
     description: override?.description || entry.description,
     cuisineType: category,
+    secondaryCategories,
+    verifiedProducts,
   }
   restaurant.locationVerified = hasVerifiedCoordinates(restaurant)
   return restaurant

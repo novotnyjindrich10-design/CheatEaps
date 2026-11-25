@@ -53,3 +53,26 @@ export function getRestaurantTags(restaurant) {
 export function getRestaurantCategory(restaurant) {
   return restaurant.category ?? restaurant.cuisineType
 }
+
+/** Ověřené vedlejší kategorie (bez duplicity primární). */
+export function getSecondaryCategories(restaurant) {
+  const primary = getRestaurantCategory(restaurant)
+  const list = Array.isArray(restaurant?.secondaryCategories) ? restaurant.secondaryCategories : []
+  return [...new Set(list.map(String).filter((value) => value && value !== primary))]
+}
+
+/**
+ * primary = hlavní zaměření
+ * secondary = ověřená vedlejší kategorie
+ * null = žádná shoda kategorie
+ */
+export function categoryMatchTier(restaurant, category) {
+  if (!category) return null
+  if (getRestaurantCategory(restaurant) === category) return 'primary'
+  if (getSecondaryCategories(restaurant).includes(category)) return 'secondary'
+  return null
+}
+
+export function restaurantMatchesCategory(restaurant, category) {
+  return categoryMatchTier(restaurant, category) != null
+}

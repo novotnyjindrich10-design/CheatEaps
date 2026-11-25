@@ -234,11 +234,15 @@ describe('filtry dohromady', () => {
       description: 'Veganské bistro s burgery, wrapy a seitanovým kebabem v centru Brna.',
     })
     assert.deepEqual(
-      filterAndSortRestaurants([thin, rich], { cuisineType: 'pizza' }).map((item) => item.id),
+      filterAndSortRestaurants([thin, rich], { cuisineType: 'pizza', sortBy: 'name' }).map(
+        (item) => item.id,
+      ),
       ['thin', 'rich'],
     )
     assert.deepEqual(
-      filterAndSortRestaurants([veganThin, veganRich], { veganOnly: true }).map((item) => item.id),
+      filterAndSortRestaurants([veganThin, veganRich], { veganOnly: true, sortBy: 'name' }).map(
+        (item) => item.id,
+      ),
       ['vegan-thin', 'vegan-rich'],
     )
     assert.deepEqual(
@@ -259,7 +263,9 @@ describe('filtry dohromady', () => {
       ['stars', 'rich'],
     )
     assert.deepEqual(
-      filterAndSortRestaurants([stars, rich], { cuisineType: 'pizza' }).map((item) => item.id),
+      filterAndSortRestaurants([stars, rich], { cuisineType: 'pizza', sortBy: 'name' }).map(
+        (item) => item.id,
+      ),
       ['stars', 'rich'],
     )
   })
