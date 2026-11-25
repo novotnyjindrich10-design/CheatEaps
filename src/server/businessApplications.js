@@ -3,7 +3,7 @@
  * Admin oprávnění jen z profiles.is_admin (RLS / store), ne z klientského JS.
  */
 
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { curatedPlaces } from '../data/curatedPlaces.js'
 import { osmPlaces } from '../data/osmPlaces.js'
 import {
@@ -313,14 +313,24 @@ export function createSupabaseBusinessStore({ config, accessToken, fetchImpl }) 
       return { ok: true, keys, ids }
     },
     async createApplication(payload, meta) {
+      // Předgenerované id + return=minimal: anon má jen INSERT (bez SELECT/RETURNING).
+      const id = randomUUID()
+      const fields = applicationRowFields(payload, meta)
       const result = await rest(config, token, fetchImpl, 'business_applications', {
         method: 'POST',
-        prefer: 'return=representation',
-        body: applicationRowFields(payload, meta),
+        prefer: 'return=minimal',
+        body: { id, ...fields },
       })
       if (!result.ok) return result
-      const row = Array.isArray(result.body) ? result.body[0] : result.body
-      return { ok: true, row: mapAppRow(row) }
+      return {
+        ok: true,
+        row: mapAppRow({
+          id,
+          ...fields,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }),
+      }
     },
     async listApplications(status) {
       if (!accessToken) return { ok: false, status: 401, error: 'auth' }
