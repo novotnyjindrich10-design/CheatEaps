@@ -461,18 +461,42 @@ export function mapRecoveryError(body) {
 }
 
 export function mapAuthError(body) {
-  const code = String(body?.error_code || body?.error || body?.msg || body?.message || '').toLowerCase()
-  if (code.includes('email_not_confirmed') || code.includes('not confirmed')) {
+  const code = String(body?.error_code || body?.error || body?.code || body?.msg || body?.message || '').toLowerCase()
+  const detail = String(body?.msg || body?.message || body?.error_description || '').toLowerCase()
+  const blob = `${code} ${detail}`
+  if (blob.includes('email_not_confirmed') || blob.includes('not confirmed')) {
     return { error: 'email-not-confirmed', message: 'Nejdřív potvrď e-mail, potom se přihlas.' }
   }
-  if (code.includes('already') || code.includes('registered') || code.includes('exists')) {
+  if (blob.includes('already') || blob.includes('registered') || blob.includes('exists') || blob.includes('user_already')) {
     return { error: 'account-exists', message: 'Účet s tímto e-mailem už existuje. Přihlas se.' }
   }
-  if (code.includes('weak') || code.includes('password')) {
+  if (blob.includes('weak') || (blob.includes('password') && blob.includes('character'))) {
     return { error: 'weak-password', message: 'Heslo musí mít aspoň 8 znaků.' }
   }
-  if (code.includes('rate') || code.includes('too many')) {
+  if (blob.includes('rate') || blob.includes('too many') || blob.includes('over_email_send_rate_limit')) {
     return { error: 'rate-limited', message: 'Moc pokusů. Zkus to za chvíli.' }
+  }
+  // Po custom SMTP / Resend trial: chyba doručení potvrzovacího mailu nemá vypadat jako špatné heslo.
+  if (
+    blob.includes('error sending') ||
+    blob.includes('confirmation email') ||
+    blob.includes('email_address_not_authorized') ||
+    blob.includes('not authorized') ||
+    blob.includes('smtp') ||
+    blob.includes('mailer') ||
+    blob.includes('unable to send')
+  ) {
+    return {
+      error: 'email-delivery-failed',
+      message:
+        'Účet se nepodařilo dokončit kvůli odeslání e-mailu. U trial Resendu použij e-mail Resend účtu, nebo ověř odesílací doménu.',
+    }
+  }
+  if (blob.includes('email') && (blob.includes('invalid') || blob.includes('validate'))) {
+    return { error: 'invalid-email', message: 'Zadej platný e-mail.' }
+  }
+  if (blob.includes('signup') && blob.includes('disabled')) {
+    return { error: 'signup-disabled', message: 'Registrace je teď vypnutá.' }
   }
   return { error: 'invalid-credentials', message: 'E-mail nebo heslo nesedí.' }
 }
