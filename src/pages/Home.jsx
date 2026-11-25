@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import HomeSearch from '../components/HomeSearch'
+import { IconMagnet } from '../components/navIcons'
 
 const CategoryStrip = lazy(() => import('../components/CategoryStrip'))
 const RestaurantCard = lazy(() => import('../components/RestaurantCard'))
@@ -12,8 +13,16 @@ import { suppressCatalogDuplicates } from '../utils/catalogDuplicates'
 import { filterAndSortRestaurants } from '../utils/filterRestaurants'
 import { presentOsmContact } from '../utils/osmContact'
 import { isOpenNowReliable } from '../utils/openingStatus'
+import {
+  prefersReducedMotion,
+  readMagnetPreference,
+  writeMagnetPreference,
+} from '../utils/magnetScroll'
+import { TAB_RESELECT_EVENT } from '../utils/navReselect'
+import { clearScrollPosition, readScrollPosition } from '../utils/scrollRestore'
 
-const FEATURED_COUNT = 12
+const INITIAL_BATCH = 12
+const LOAD_BATCH = 12
 
 function isWeakRecommendation(place) {
   const name = String(place?.name || '')
@@ -24,10 +33,11 @@ function isWeakRecommendation(place) {
   return false
 }
 
-/** Bez polohy: různé kategorie, v každé nejlíp zdokumentovaný podnik. */
-function pickRecommended(places, limit = FEATURED_COUNT) {
+/** Bez polohy: různé kategorie, v každé nejlíp zdokumentovaný podnik, pak zbytek katalogu. */
+function orderWithoutGps(places) {
+  const clean = suppressCatalogDuplicates(places)
   const byCategory = new Map()
-  for (const place of suppressCatalogDuplicates(places)) {
+  for (const place of clean) {
     const key = place.category || 'neuvedeno'
     if (!byCategory.has(key)) byCategory.set(key, [])
     byCategory.get(key).push(place)
@@ -40,8 +50,8 @@ function pickRecommended(places, limit = FEATURED_COUNT) {
   const picked = []
   const seen = new Set()
 
-  while (picked.length < limit && categories.length > 0) {
-    for (let i = 0; i < categories.length && picked.length < limit; ) {
+  while (categories.length > 0) {
+    for (let i = 0; i < categories.length; ) {
       const key = categories[i]
       const list = byCategory.get(key)
       const next = list.shift()
@@ -58,20 +68,9 @@ function pickRecommended(places, limit = FEATURED_COUNT) {
     }
   }
 
-  return picked.sort(compareByRecordQuality)
-}
-
-function pickNearest(places, limit = FEATURED_COUNT) {
-  return filterAndSortRestaurants(places, {
-    hasOrigin: true,
-    sortBy: 'distance',
-  }).slice(0, limit)
-}
-
-function preferOpenPlaces(places) {
   const open = []
   const rest = []
-  for (const place of places) {
+  for (const place of picked) {
     const hoursRaw = presentOsmContact(place).hoursRaw
     if (hoursRaw && isOpenNowReliable(hoursRaw)) open.push(place)
     else rest.push(place)
@@ -79,42 +78,119 @@ function preferOpenPlaces(places) {
   return [...open, ...rest]
 }
 
+function orderNearest(places) {
+  return filterAndSortRestaurants(suppressCatalogDuplicates(places), {
+    hasOrigin: true,
+    sortBy: 'distance',
+  })
+}
+
 export default function Home() {
   const { restaurants, catalogReady } = useCatalog()
   const { attachDistances, origin, needsLocateGesture, locate, status: locationStatus } = useLocationState()
   const hasOrigin = Boolean(origin)
-  const [featuredVaried, setFeaturedVaried] = useState(null)
+  const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH)
+  const [magnetOn, setMagnetOn] = useState(() => readMagnetPreference())
+  const [listVaried, setListVaried] = useState(null)
+  const sentinelRef = useRef(null)
+  const restoreDoneRef = useRef(false)
+  const orderKeyRef = useRef('')
 
   const organic = useMemo(() => partitionPlacements(restaurants).organic, [restaurants])
   const located = useMemo(() => attachDistances(organic), [attachDistances, organic])
 
-  const featuredBase = useMemo(() => {
+  const ordered = useMemo(() => {
     if (!located.length) return []
     const usable = located.filter((place) => !isWeakRecommendation(place))
     const source = usable.length >= 6 ? usable : located
-    let picked = hasOrigin ? pickNearest(source) : pickRecommended(source)
-    if (!hasOrigin) picked = preferOpenPlaces(picked).slice(0, FEATURED_COUNT)
-    return picked
+    return hasOrigin ? orderNearest(source) : orderWithoutGps(source)
   }, [hasOrigin, located])
 
+  const orderKey = `${hasOrigin ? 'gps' : 'rank'}:${ordered.length}`
+  if (orderKeyRef.current !== orderKey) {
+    orderKeyRef.current = orderKey
+    if (visibleCount !== INITIAL_BATCH) setVisibleCount(INITIAL_BATCH)
+    if (listVaried !== null) setListVaried(null)
+    restoreDoneRef.current = false
+  }
+
   useEffect(() => {
-    if (featuredBase.length < 2) {
-      setFeaturedVaried(null)
+    const onReselect = (event) => {
+      if (event.detail?.tab !== 'home') return
+      setVisibleCount(INITIAL_BATCH)
+      clearScrollPosition('/')
+      restoreDoneRef.current = true
+    }
+    window.addEventListener(TAB_RESELECT_EVENT, onReselect)
+    return () => window.removeEventListener(TAB_RESELECT_EVENT, onReselect)
+  }, [])
+
+  useLayoutEffect(() => {
+    if (restoreDoneRef.current || !catalogReady || ordered.length === 0) return
+    const y = readScrollPosition('/')
+    if (y == null) {
+      restoreDoneRef.current = true
+      return
+    }
+    const needed = Math.min(ordered.length, Math.max(INITIAL_BATCH, Math.ceil(y / 280) + 4))
+    if (visibleCount < needed) {
+      setVisibleCount(needed)
+      return
+    }
+    clearScrollPosition('/')
+    window.scrollTo(0, y)
+    restoreDoneRef.current = true
+  }, [catalogReady, ordered.length, visibleCount])
+
+  const visibleBase = useMemo(() => ordered.slice(0, visibleCount), [ordered, visibleCount])
+
+  useEffect(() => {
+    if (visibleBase.length < 1) {
+      setListVaried(null)
       return undefined
     }
     let cancelled = false
     import('../utils/pageIllustrations')
       .then(({ varyPixabayOnPage: vary }) => {
-        if (!cancelled) setFeaturedVaried(vary(featuredBase))
+        if (!cancelled) setListVaried(vary(visibleBase))
       })
       .catch(() => {})
     return () => {
       cancelled = true
     }
-  }, [featuredBase])
+  }, [visibleBase])
 
-  const featured = featuredVaried ?? featuredBase
-  const featuredTitle = hasOrigin ? 'Nejbližší podniky' : 'Objev podniky v Brně'
+  const visible = listVaried ?? visibleBase
+  const hasMore = visibleCount < ordered.length
+  const listTitle = hasOrigin ? 'Nejbližší podniky' : 'Objev podniky v Brně'
+  const magnetActive = magnetOn && !prefersReducedMotion()
+
+  useEffect(() => {
+    if (!hasMore || !sentinelRef.current) return undefined
+    const node = sentinelRef.current
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+        setVisibleCount((count) => Math.min(ordered.length, count + LOAD_BATCH))
+      },
+      { root: null, rootMargin: '480px 0px', threshold: 0 },
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [hasMore, ordered.length, visibleCount])
+
+  const toggleMagnet = () => {
+    if (prefersReducedMotion()) {
+      setMagnetOn(false)
+      writeMagnetPreference(false)
+      return
+    }
+    setMagnetOn((prev) => {
+      const next = !prev
+      writeMagnetPreference(next)
+      return next
+    })
+  }
 
   return (
     <main className="page home-page home-page--compact">
@@ -136,33 +212,62 @@ export default function Home() {
       </section>
 
       <section className="home-discover home-discover--compact" aria-label="Kategorie">
-        <Suspense fallback={<div className="category-grid-wrap" style={{ minHeight: 140 }} aria-hidden="true" />}>
+        <Suspense fallback={<div className="category-grid-wrap" style={{ minHeight: 120 }} aria-hidden="true" />}>
           <CategoryStrip asLinks variant="grid" />
         </Suspense>
-        <div className="home-all-places">
-          <Link to="/results" className="btn btn-secondary home-all-places-btn">
+        <div className="home-explore-row">
+          <Link to="/results" className="btn btn-primary home-all-places-btn">
             Prozkoumat nabídku
+            <span className="home-explore-arrow" aria-hidden="true">
+              →
+            </span>
           </Link>
+          <button
+            type="button"
+            className={`home-magnet-toggle${magnetActive ? ' is-on' : ''}`}
+            aria-pressed={magnetActive}
+            onClick={toggleMagnet}
+            title={magnetActive ? 'Vypnout magnetické scrollování' : 'Zapnout magnetické scrollování'}
+          >
+            <IconMagnet />
+            <span>Magnet</span>
+          </button>
         </div>
       </section>
 
       <section className="home-listings home-listings--compact" aria-labelledby="featured-title">
         <h2 id="featured-title" className="section-title">
-          {featuredTitle}
+          {listTitle}
         </h2>
+        {!hasOrigin ? (
+          <p className="section-desc home-sort-note">
+            Bez polohy řadíme podle kategorií a úplnosti údajů — ne podle skutečné vzdálenosti.
+          </p>
+        ) : null}
         {!catalogReady ? (
           <p className="section-desc" role="status">
             Načítám tipy z katalogu…
           </p>
         ) : (
           <Suspense fallback={<p className="section-desc">Načítám karty…</p>}>
-            <ul className="restaurant-list">
-              {featured.map((restaurant, index) => (
-                <li key={restaurant.id}>
+            <ul className={`restaurant-list home-restaurant-list${magnetActive ? ' restaurant-list--magnet' : ''}`}>
+              {visible.map((restaurant, index) => (
+                <li key={restaurant.id} className={magnetActive ? 'restaurant-list-snap' : undefined}>
                   <RestaurantCard restaurant={restaurant} index={index} />
                 </li>
               ))}
             </ul>
+            {hasMore ? (
+              <div ref={sentinelRef} className="home-list-sentinel" aria-hidden="true">
+                <p className="section-desc home-list-loading" role="status">
+                  Načítám další podniky…
+                </p>
+              </div>
+            ) : ordered.length > 0 ? (
+              <p className="section-desc home-list-end" role="status">
+                To je celý katalog ({ordered.length} podniků).
+              </p>
+            ) : null}
           </Suspense>
         )}
       </section>

@@ -262,6 +262,13 @@ export async function authActionHttp(action, request, deps = {}) {
     const tokens = result.ok ? tokensFromBody(result.body) : null
     if (!tokens) {
       const mapped = mapAuthError(result.body)
+      if (mapped.error === 'email-delivery-failed') {
+        console.error('[auth] email-delivery-failed', {
+          email: credentials.email,
+          status: result.status,
+          provider: result.body,
+        })
+      }
       return json({ ok: false, ...mapped }, 401)
     }
     return json(
@@ -274,6 +281,13 @@ export async function authActionHttp(action, request, deps = {}) {
   const created = await signUpWithPassword(config, credentials.email, credentials.password, fetchImpl)
   if (!created.ok) {
     const mapped = mapAuthError(created.body)
+    if (mapped.error === 'email-delivery-failed') {
+      console.error('[auth] email-delivery-failed', {
+        email: credentials.email,
+        status: created.status,
+        provider: created.body,
+      })
+    }
     return json({ ok: false, ...mapped }, 400)
   }
   const tokens = tokensFromBody(created.body)

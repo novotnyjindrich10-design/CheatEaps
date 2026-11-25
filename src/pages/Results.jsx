@@ -37,6 +37,7 @@ import { DEALS_RESULTS_PATH, loginPath } from '../utils/authReturn'
 import { PUBLIC_V1 } from '../constants/publicV1'
 import { smoothScrollTo } from '../utils/smoothScroll'
 import { clearScrollPosition, readScrollPosition } from '../utils/scrollRestore'
+import { TAB_RESELECT_EVENT, scrollViewportToTop } from '../utils/navReselect'
 import { currentInternalPath } from '../utils/internalPath'
 import { readFilterPrefs, writeFilterPrefs } from '../utils/filterPrefs'
 import { rememberRecentSearch } from '../utils/recentSearches'
@@ -164,6 +165,27 @@ export default function Results() {
     }
     mapVisitRef.current += 1
   }, [viewMode])
+
+  useEffect(() => {
+    const onReselect = (event) => {
+      const tab = event.detail?.tab
+      if (tab === 'map' && viewMode === 'map') {
+        setMapSelectedId('')
+        setMapBounds(null)
+        setMapFocusToken((token) => token + 1)
+        locate({ forceRefresh: Boolean(origin), highAccuracy: Boolean(origin) })
+        scrollViewportToTop()
+        return
+      }
+      if (tab === 'search' && viewMode !== 'map') {
+        clearScrollPosition(currentInternalPath({ pathname: '/results', search: `?${searchParams.toString()}` }))
+        listTopRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
+        scrollViewportToTop()
+      }
+    }
+    window.addEventListener(TAB_RESELECT_EVENT, onReselect)
+    return () => window.removeEventListener(TAB_RESELECT_EVENT, onReselect)
+  }, [viewMode, locate, origin, searchParams])
 
   useEffect(() => {
     if (viewMode !== 'map' || !mapReady || !mapSectionRef.current) return undefined

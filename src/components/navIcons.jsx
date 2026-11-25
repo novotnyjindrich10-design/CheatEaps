@@ -154,3 +154,19 @@ export function IconAdmin() {
     </svg>
   )
 }
+
+export function IconMagnet() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M7 4v8.5a5 5 0 0 0 10 0V4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path d="M7 4h3.2v5H7zM13.8 4H17v5h-3.2z" fill="currentColor" opacity="0.35" />
+      <path d="M7 4h3.2M13.8 4H17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}

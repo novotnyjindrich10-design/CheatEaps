@@ -112,10 +112,15 @@ export default function Favorites() {
       ) : null}
 
       {session.ready && !session.authenticated ? (
-        <p className="page-subtitle">
-          <Link to={login}>Přihlas se</Link> nebo <Link to={signup}>vytvoř účet</Link> — oblíbené se pak
-          uloží k účtu.
-        </p>
+        <div className="favorite-auth-cta" aria-label="Přihlášení a registrace">
+          <Link to={login} className="btn btn-primary favorite-auth-login">
+            Přihlásit se
+          </Link>
+          <Link to={signup} className="btn btn-secondary favorite-auth-register">
+            Registrace
+          </Link>
+          <p className="favorite-auth-note">Po přihlášení se oblíbené uloží k účtu.</p>
+        </div>
       ) : null}
 
       {error ? (

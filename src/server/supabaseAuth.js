@@ -489,7 +489,7 @@ export function mapAuthError(body) {
     return {
       error: 'email-delivery-failed',
       message:
-        'Účet se nepodařilo dokončit kvůli odeslání e-mailu. U trial Resendu použij e-mail Resend účtu, nebo ověř odesílací doménu.',
+        'Potvrzovací e-mail se teď nepodařilo odeslat. Zkus to znovu za chvíli, nebo nám napiš na foodgocz@gmail.com.',
     }
   }
   if (blob.includes('email') && (blob.includes('invalid') || blob.includes('validate'))) {

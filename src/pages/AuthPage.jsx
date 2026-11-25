@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/authSession'
+import { CONTACT_EMAIL } from '../constants/brand'
 import { authGateCopy, rememberResetNext, postLoginTarget } from '../utils/authReturn'
 
 export default function AuthPage({ mode = 'login' }) {
@@ -12,10 +13,12 @@ export default function AuthPage({ mode = 'login' }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [errorCode, setErrorCode] = useState('')
   const [notice, setNotice] = useState('')
   const [pending, setPending] = useState(false)
   const signup = mode === 'signup'
   const recover = !signup && params.get('obnova') === '1'
+  const contactMailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('FOODGO — problém s registrací')}`
 
   useEffect(() => {
     if (!session.ready || !session.authenticated || recover) return
@@ -25,6 +28,7 @@ export default function AuthPage({ mode = 'login' }) {
   const onRecover = async (event) => {
     event.preventDefault()
     setError('')
+    setErrorCode('')
     setNotice('')
     setPending(true)
     try {
@@ -37,6 +41,7 @@ export default function AuthPage({ mode = 'login' }) {
       const body = await response.json().catch(() => ({}))
       if (!response.ok || body.ok !== true || body.sent !== true) {
         setNotice('')
+        setErrorCode(body.error || '')
         if (body.error === 'redirect-not-allowed') {
           setError(body.message || 'Odkaz pro nové heslo se teď nepodařilo připravit. Obnov stránku a zkus to znovu.')
         } else {
@@ -46,9 +51,11 @@ export default function AuthPage({ mode = 'login' }) {
       }
       rememberResetNext(next, window.sessionStorage)
       setError('')
+      setErrorCode('')
       setNotice(body.message)
     } catch {
       setNotice('')
+      setErrorCode('')
       setError('Služba přihlášení teď neodpovídá.')
     } finally {
       setPending(false)
@@ -58,6 +65,7 @@ export default function AuthPage({ mode = 'login' }) {
   const onSubmit = async (event) => {
     event.preventDefault()
     setError('')
+    setErrorCode('')
     setNotice('')
     setPending(true)
     try {
@@ -67,11 +75,13 @@ export default function AuthPage({ mode = 'login' }) {
         return
       }
       if (!result.ok || !result.body?.authenticated) {
+        setErrorCode(result.body?.error || '')
         setError(result.body?.message || 'Přihlášení se nepovedlo.')
         return
       }
       navigate(next, { replace: true })
     } catch {
+      setErrorCode('')
       setError('Služba přihlášení teď neodpovídá.')
     } finally {
       setPending(false)
@@ -115,9 +125,17 @@ export default function AuthPage({ mode = 'login' }) {
             />
           </label>
           {error ? (
-            <p className="deal-warning" role="alert">
-              {error}
-            </p>
+            <div className="auth-error" role="alert">
+              <p className="deal-warning">{error}</p>
+              <div className="auth-error-actions">
+                <button type="submit" className="btn btn-secondary" disabled={pending}>
+                  Zkusit znovu
+                </button>
+                <a className="btn btn-secondary" href={contactMailto}>
+                  Napsat na {CONTACT_EMAIL}
+                </a>
+              </div>
+            </div>
           ) : null}
           {notice ? <p role="status">{notice}</p> : null}
           {notice ? (
@@ -126,7 +144,7 @@ export default function AuthPage({ mode = 'login' }) {
               adresou. Pak můžeš poslat odkaz znovu.
             </p>
           ) : null}
-          <button type="submit" className="btn btn-primary" disabled={pending}>
+          <button type="submit" className="btn btn-primary btn-block auth-submit" disabled={pending}>
             {pending ? 'Posílám…' : notice ? 'Poslat odkaz znovu' : 'Poslat odkaz'}
           </button>
         </form>
@@ -156,12 +174,22 @@ export default function AuthPage({ mode = 'login' }) {
             />
           </label>
           {error ? (
-            <p className="deal-warning" role="alert">
-              {error}
-            </p>
+            <div className="auth-error" role="alert">
+              <p className="deal-warning">{error}</p>
+              {errorCode === 'email-delivery-failed' || errorCode === 'email-not-confirmed' ? (
+                <div className="auth-error-actions">
+                  <button type="submit" className="btn btn-secondary" disabled={pending}>
+                    Zkusit znovu
+                  </button>
+                  <a className="btn btn-secondary" href={contactMailto}>
+                    Napsat na {CONTACT_EMAIL}
+                  </a>
+                </div>
+              ) : null}
+            </div>
           ) : null}
           {notice ? <p role="status">{notice}</p> : null}
-          <button type="submit" className="btn btn-primary" disabled={pending}>
+          <button type="submit" className="btn btn-primary btn-block auth-submit" disabled={pending}>
             {pending ? 'Posílám…' : signup ? 'Vytvořit účet' : 'Přihlásit se'}
           </button>
           {signup ? null : (
@@ -172,15 +200,30 @@ export default function AuthPage({ mode = 'login' }) {
         </form>
       ) : null}
 
-      <p className="page-subtitle">
-        {recover ? (
+      {!recover && !signup ? (
+        <div className="auth-alt">
+          <p className="auth-alt-label">Ještě nemáš účet?</p>
+          <Link
+            to={`/registrace?next=${encodeURIComponent(next)}`}
+            className="btn btn-secondary btn-block auth-register-cta"
+          >
+            Registrace
+          </Link>
+        </div>
+      ) : null}
+
+      {!recover && signup ? (
+        <p className="page-subtitle auth-switch">
+          <Link to={`/prihlaseni?next=${encodeURIComponent(next)}`}>Už účet mám — přihlásit se</Link>
+        </p>
+      ) : null}
+
+      {recover ? (
+        <p className="page-subtitle auth-switch">
           <Link to={`/prihlaseni?next=${encodeURIComponent(next)}`}>Zpět na přihlášení</Link>
-        ) : signup ? (
-          <Link to={`/prihlaseni?next=${encodeURIComponent(next)}`}>Už účet mám</Link>
-        ) : (
-          <Link to={`/registrace?next=${encodeURIComponent(next)}`}>Nemám účet</Link>
-        )}
-      </p>
+        </p>
+      ) : null}
+
       <p className="page-subtitle">
         <Link to="/ochrana-osobnich-udaju">Ochrana osobních údajů</Link>
         {' · '}

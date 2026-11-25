@@ -1,6 +1,8 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/authSession'
 import { loginPath } from '../utils/authReturn'
+import { clearScrollPosition } from '../utils/scrollRestore'
+import { emitTabReselect, scrollViewportToTop } from '../utils/navReselect'
 import { IconHeart, IconHome, IconMap, IconSearch, IconUser } from './navIcons'
 
 function isTabActive(pathname, search, to) {
@@ -19,6 +21,14 @@ function isTabActive(pathname, search, to) {
   return true
 }
 
+function tabIdFor(to) {
+  if (to === '/') return 'home'
+  if (to === '/results?view=map') return 'map'
+  if (to === '/results') return 'search'
+  if (to === '/oblibene') return 'favorites'
+  return 'profile'
+}
+
 const TABS = [
   { to: '/', label: 'Domů', Icon: IconHome },
   { to: '/results', label: 'Hledat', Icon: IconSearch },
@@ -28,6 +38,7 @@ const TABS = [
 
 export default function MobileTabBar() {
   const location = useLocation()
+  const navigate = useNavigate()
   const { session } = useAuth()
   const returnTo = `${location.pathname}${location.search || ''}`
   const profileTo = session.authenticated ? '/oblibene#ucet' : loginPath(returnTo)
@@ -39,6 +50,16 @@ export default function MobileTabBar() {
 
   if (location.pathname.startsWith('/admin')) return null
 
+  const handleActiveTap = (event, tab, pathKey) => {
+    event.preventDefault()
+    clearScrollPosition(pathKey)
+    emitTabReselect(tab)
+    scrollViewportToTop()
+    if (tab === 'profile' && location.hash !== '#ucet' && session.authenticated) {
+      navigate('/oblibene#ucet', { replace: true })
+    }
+  }
+
   return (
     <nav className="mobile-tabbar" aria-label="Hlavní mobilní navigace">
       <ul className="mobile-tabbar-list">
@@ -47,12 +68,15 @@ export default function MobileTabBar() {
             to === '/oblibene'
               ? location.pathname === '/oblibene' && location.hash !== '#ucet'
               : isTabActive(location.pathname, location.search, to)
+          const tab = tabIdFor(to)
+          const pathKey = to.includes('?') || to.includes('#') ? to : `${to}${location.search || ''}`
           return (
             <li key={to}>
               <Link
                 to={to}
                 className={`mobile-tabbar-link${active ? ' is-active' : ''}`}
                 aria-current={active ? 'page' : undefined}
+                onClick={active ? (event) => handleActiveTap(event, tab, pathKey === '/' ? '/' : to) : undefined}
               >
                 <Icon />
                 <span>{label}</span>
@@ -65,6 +89,11 @@ export default function MobileTabBar() {
             to={profileTo}
             className={`mobile-tabbar-link${profileActive ? ' is-active' : ''}`}
             aria-current={profileActive ? 'page' : undefined}
+            onClick={
+              profileActive
+                ? (event) => handleActiveTap(event, 'profile', profileTo)
+                : undefined
+            }
           >
             <IconUser />
             <span>{profileLabel}</span>
