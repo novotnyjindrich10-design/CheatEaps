@@ -7,6 +7,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { describeResendKey, normalizeResendKey } from './lib/resend-key-shape.mjs'
 
 function load(path) {
   if (!existsSync(path)) return {}
@@ -19,26 +20,24 @@ function load(path) {
   return out
 }
 
-/** Oficiální tvar Resend klíče: re_ + 8 + _ + 24 (base58), celkem 36. */
-const RESEND_KEY_SHAPE = /^re_[1-9A-HJ-NP-Za-km-z]{8}_[1-9A-HJ-NP-Za-km-z]{24}$/
-
 const env = { ...load(resolve('.env')), ...load(resolve('.env.local')), ...process.env }
-const apiKey = String(env.RESEND_API_KEY ?? '').trim()
+const apiKey = normalizeResendKey(env.RESEND_API_KEY)
 
 if (!apiKey) {
   console.log(JSON.stringify({ ok: false, reason: 'missing-key', sentEmail: false }, null, 2))
   process.exit(2)
 }
 
-const shapeOk = RESEND_KEY_SHAPE.test(apiKey)
-if (!shapeOk) {
+const shape = describeResendKey(apiKey)
+if (!shape.accepted) {
   console.log(JSON.stringify({
     ok: false,
     reason: 'unexpected-shape',
-    length: apiKey.length,
-    prefixOk: apiKey.startsWith('re_'),
+    length: shape.length,
+    prefixOk: shape.prefixOk,
+    officialShape: shape.official,
     sentEmail: false,
-    note: 'Ocekavaný tvar Resend klíče je re_ + 8 + _ + 24 znaků (celkem 36).',
+    note: 'Ocekavano re_ + 8 + _ + 16-64 znaku (oficialne 36 base58).',
   }, null, 2))
   process.exit(2)
 }

@@ -12,9 +12,11 @@
     "check:resend": "node scripts/check-resend-config.mjs",
     "check:resend-api": "node scripts/check-resend-api.mjs",
     "check:ready": "node scripts/launch-check.mjs",
-    "resend:key": "powershell -NoProfile -STA -ExecutionPolicy Bypass -File scripts/write-resend-env.ps1",
+    "resend:key": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/write-resend-env.ps1 -Clipboard",
     "resend:emails": "node scripts/set-resend-emails.mjs",
     "preview:auth-smtp": "node scripts/configure-preview-auth-smtp.mjs",
+    "preview:email-stack": "node scripts/apply-preview-email-stack.mjs --redeploy",
+    "preview:email-wait": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/wait-clipboard-resend-and-apply.ps1",
     "test": "node --test \"src/**/*.test.js\"",
     "data:openverse-food-pilot": "node scripts/pilot-openverse-food.mjs",
     "data:openverse-food-bulk": "node scripts/assign-openverse-food-bulk.mjs",
@@ -34,7 +36,8 @@
     "data:food-photo-pilot": "node scripts/pilot-food-photos.mjs",
     "data:pixabay-illustrations": "node scripts/fetch-pixabay-illustrations.mjs",
     "launch:check": "node scripts/launch-check.mjs",
-    "test:promotion-sql": "node scripts/test-promotion-migration-isolated.mjs"
+    "test:promotion-sql": "node scripts/test-promotion-migration-isolated.mjs",
+    "preview:email-stack": "node scripts/apply-preview-email-stack.mjs --redeploy"
   },
   "dependencies": {
     "@maplibre/maplibre-gl-leaflet": "^0.1.4",

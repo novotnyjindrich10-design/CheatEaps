@@ -4,6 +4,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { describeResendKey, normalizeResendKey } from './lib/resend-key-shape.mjs'
 
 function load(path) {
   if (!existsSync(path)) return {}
@@ -29,10 +30,11 @@ function describeKey(name) {
     length: value.length,
   }
   if (name === 'RESEND_API_KEY') {
-    info.prefixOk = value.startsWith('re_')
-    // Oficiální tvar: re_ + 8 + _ + 24 (base58) = 36 znaků.
-    info.shapeOk = /^re_[1-9A-HJ-NP-Za-km-z]{8}_[1-9A-HJ-NP-Za-km-z]{24}$/.test(value)
-    info.lengthOk = value.length === 36
+    const shape = describeResendKey(value)
+    info.prefixOk = shape.prefixOk
+    info.shapeOk = shape.accepted
+    info.officialShape = shape.official
+    info.lengthOk = shape.length >= 28 && shape.length <= 80
   }
   if (name === 'INQUIRY_TO_EMAIL') {
     info.looksLikeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
@@ -51,7 +53,7 @@ const report = {
     const value = String(env[name] ?? '').trim()
     if (!value) return false
     if (name === 'RESEND_API_KEY') {
-      return /^re_[1-9A-HJ-NP-Za-km-z]{8}_[1-9A-HJ-NP-Za-km-z]{24}$/.test(value)
+      return describeResendKey(normalizeResendKey(value)).accepted
     }
     return true
   }),
@@ -60,7 +62,7 @@ const report = {
     'INQUIRY_TO_EMAIL musí být e-mail přihlášený v Resend účtu (jinak Resend doručení odmítne).',
     'Ostré doručení na libovolné adresy vyžaduje ověřenou doménu v Resend.',
     'Klíče patří jen do .env / Vercel Environment Variables, nikdy do Gitu ani VITE_*.',
-    'Chybí-li klíč: npm run resend:key (lokální Windows dialog, ne Chat).',
+    'Chybí-li klíč: npm run resend:key (maskovaný terminálový vstup, ne Chat).',
     'readyForTrialSend=true znamená jen lokálně kompletní env, ne ověřené doručení.',
   ],
 }

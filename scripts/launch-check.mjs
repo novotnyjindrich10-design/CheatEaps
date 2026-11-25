@@ -7,6 +7,7 @@
 import { spawnSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { describeResendKey, normalizeResendKey } from './lib/resend-key-shape.mjs'
 
 const root = process.cwd()
 const findings = []
@@ -46,8 +47,6 @@ function loadEnvFile(path) {
   return out
 }
 
-const RESEND_KEY_SHAPE = /^re_[1-9A-HJ-NP-Za-km-z]{8}_[1-9A-HJ-NP-Za-km-z]{24}$/
-
 function checkOperator() {
   try {
     const raw = readFileSync(resolve(root, 'src/constants/operator.js'), 'utf8')
@@ -71,7 +70,8 @@ function checkEnv() {
     ...loadEnvFile(resolve(root, '.env')),
     ...loadEnvFile(resolve(root, '.env.local')),
   }
-  const key = String(env.RESEND_API_KEY || '').trim()
+  const key = normalizeResendKey(env.RESEND_API_KEY)
+  const keyShape = describeResendKey(key)
   const to = String(env.INQUIRY_TO_EMAIL || '').trim()
   const from = String(env.EMAIL_FROM || '').trim()
   const site = String(env.PUBLIC_SITE_URL || '').trim()
@@ -86,8 +86,8 @@ function checkEnv() {
 
   // Free katalog v1 nesmí záviset na e-mailech — chybějící Resend = WARNING, ne BLOCKED.
   if (!key) add('WARNING', 'resend-key', 'RESEND_API_KEY chybí — free katalog bez transakčních mailů OK')
-  else if (!RESEND_KEY_SHAPE.test(key)) add('WARNING', 'resend-key', `neočekávaný tvar (délka ${key.length})`)
-  else add('PASS', 'resend-key', `present, length ${key.length}`)
+  else if (!keyShape.accepted) add('WARNING', 'resend-key', `neočekávaný tvar (délka ${keyShape.length})`)
+  else add('PASS', 'resend-key', `present, length ${keyShape.length}${keyShape.official ? '' : ', soft-shape'}`)
 
   if (!to) add('WARNING', 'resend-to', 'INQUIRY_TO_EMAIL chybí — B2B poptávky/mail vypnuté')
   else add('PASS', 'resend-to')
@@ -105,7 +105,7 @@ function checkEnv() {
     add('WARNING', 'supabase-env', 'SUPABASE_URL / SUPABASE_ANON_KEY chybí lokálně — auth/recenze jen na Vercelu')
   } else add('PASS', 'supabase-env')
 
-  return { keyPresent: Boolean(key), keyShapeOk: RESEND_KEY_SHAPE.test(key) }
+  return { keyPresent: Boolean(key), keyShapeOk: keyShape.accepted }
 }
 
 function checkResendApi(envOk) {

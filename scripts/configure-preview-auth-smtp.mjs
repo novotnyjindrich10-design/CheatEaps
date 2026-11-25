@@ -12,6 +12,7 @@
  */
 import { readFileSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { describeResendKey, normalizeResendKey } from './lib/resend-key-shape.mjs'
 
 const PREVIEW_REF = 'jnyxjyyvzxriuyvyiuxe'
 const PRODUCTION_REF = 'pcptzyfoojmnspumcmsi'
@@ -55,10 +56,14 @@ if (!token) {
   }, null, 2))
   process.exit(2)
 }
-if (!resendKey || !resendKey.startsWith('re_')) {
+const normalizedResend = normalizeResendKey(resendKey)
+const resendShape = describeResendKey(normalizedResend)
+if (!resendShape.accepted) {
   console.log(JSON.stringify({
     ok: false,
     error: 'missing-or-invalid-RESEND_API_KEY',
+    length: resendShape.length,
+    prefixOk: resendShape.prefixOk,
     note: 'Doplň RESEND_API_KEY (re_…) do .env — npm run resend:key — nebo env.',
   }, null, 2))
   process.exit(2)
@@ -82,7 +87,7 @@ const body = {
   smtp_host: 'smtp.resend.com',
   smtp_port: '465',
   smtp_user: 'resend',
-  smtp_pass: resendKey,
+  smtp_pass: normalizedResend,
   smtp_sender_name: senderName,
 }
 

@@ -41,38 +41,27 @@ Kód recovery: `email_address_not_authorized` se tváří jako úspěch (bez enu
 
 ## Ty osobně (minimum)
 
-### 1) Resend API klíč (blokuje Auth i transakční maily)
+### 1) Resend (jediný nutný zásah do Resendu)
 
-1. Přihlas se na [resend.com/api-keys](https://resend.com/api-keys) (nebo založ účet — agent nemůže dokončit login).
-2. Vytvoř Sending API key.
-3. Lokálně: `npm run resend:key` (uloží do `.env`, hodnota se nevypisuje).
-4. Na Vercel Preview (větev `foodgo-launch-preview`):
+Agent **nemůže** dokončit GitHub/Google login do Resendu ani vytvořit/zrušit klíč bez tvého přihlášení.
 
-```text
-npx vercel env add RESEND_API_KEY --environment preview --git-branch foodgo-launch-preview --type secret --scope jindrichcompany
-```
+1. Dokonči přihlášení do Resendu (prohlížeč může mít otevřený GitHub OAuth).
+2. API Keys → **revoke** starý klíč (mohl uniknout do terminálové historie).
+3. Vytvoř nový **Sending** key → **Ctrl+C** (jen zkopíruj).
+4. Pokud běží waiter `npm run preview:email-wait`, nic dalšího nespouštěj — sám zapíše `.env`, Vercel Preview secret, SMTP (když je token) a redeploy.
+   Jinak po zkopírování: `npm run resend:key` a pak `npm run preview:email-stack`.
 
-(vlož klíč na výzvu; necommitovat)
+### 2) Supabase Access Token (jen pro Auth SMTP API)
 
-### 2) Auth SMTP + redirects na foodgo-preview (jeden příkaz)
+1. [Access Tokens](https://supabase.com/dashboard/account/tokens) → vytvoř token.
+2. Do lokálního `.env` (gitignore): `SUPABASE_ACCESS_TOKEN=…`
+3. Pak stačí `npm run preview:auth-smtp` nebo znovu `npm run preview:email-stack`.
 
-1. [Supabase Access Tokens](https://supabase.com/dashboard/account/tokens) → vytvoř token → do `.env` jako `SUPABASE_ACCESS_TOKEN=…`
-2. Ověř, že `.env` má `RESEND_API_KEY` (krok 1).
-3. Spusť:
+Skript nastaví **jen** `jnyxjyyvzxriuyvyiuxe` (SMTP Resend + Site URL + `/nove-heslo`). Produkci odmítne.
 
-```text
-npm run preview:auth-smtp
-```
+### 3) Ověření po stacku
 
-Skript nastaví jen `jnyxjyyvzxriuyvyiuxe`: custom SMTP Resend + Site URL Preview + Redirect `/nove-heslo` (+ localhost). Produkci odmítne.
-
-### 3) Redeploy Preview po `RESEND_API_KEY`
-
-```text
-npx vercel redeploy https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app --scope jindrichcompany --environment preview
-```
-
-Očekávané: `/api/health` → `emailConfigured: true`.
+`/api/health` → `emailConfigured: true`. Pak Auth smoke níže.
 
 ### 4) Ruční smoke Auth + admin (5 min)
 
