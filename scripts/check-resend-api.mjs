@@ -58,30 +58,30 @@ const domains = await fetch('https://api.resend.com/domains', {
 const domainsBody = await readSafeJson(domains)
 const restricted = domains.status === 401 && domainsBody?.name === 'restricted_api_key'
 
-let sendingProbe = null
-if (restricted || domains.ok) {
-  // Neodesílá mail: prázdné tělo má spadnout na validaci, ne na auth.
-  const probe = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: '{}',
-  })
-  const probeBody = await readSafeJson(probe)
-  sendingProbe = {
-    httpStatus: probe.status,
-    canAuthenticateForSending: probe.status !== 401 && probe.status !== 403,
-    validationRejectedEmptyBody: probe.status === 422 || probeBody?.name === 'validation_error' || probe.status === 400,
-  }
+// Neodesílá mail: prázdné tělo má spadnout na validaci (422/400), ne na auth (401/403).
+const probe = await fetch('https://api.resend.com/emails', {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${apiKey}`,
+    'Content-Type': 'application/json',
+  },
+  body: '{}',
+})
+const probeBody = await readSafeJson(probe)
+const sendingProbe = {
+  httpStatus: probe.status,
+  canAuthenticateForSending: probe.status !== 401 && probe.status !== 403,
+  validationRejectedEmptyBody: probe.status === 422 || probeBody?.name === 'validation_error' || probe.status === 400,
 }
 
-const authLooksValid = domains.ok || restricted || sendingProbe?.canAuthenticateForSending === true
-const permission = domains.ok ? 'full_access' : restricted ? 'sending_access' : 'unknown'
+const authLooksValid =
+  domains.ok ||
+  restricted ||
+  (sendingProbe.canAuthenticateForSending && sendingProbe.validationRejectedEmptyBody)
+const permission = domains.ok ? 'full_access' : restricted ? 'sending_access' : authLooksValid ? 'sending_access' : 'unknown'
 
 const report = {
-  ok: authLooksValid && (sendingProbe?.canAuthenticateForSending !== false || domains.ok),
+  ok: Boolean(authLooksValid),
   httpStatus: domains.status,
   permission,
   shapeOk: true,
@@ -90,12 +90,12 @@ const report = {
   sentEmail: false,
   note: domains.ok
     ? 'API klíč má plný přístup. E-mail se neodesílal.'
-    : restricted
-      ? 'API klíč je platný, ale restricted na odesílání e-mailů. Pro FoodGo poptávky to stačí. E-mail se neodesílal.'
-      : domains.status === 401 || domains.status === 403
-        ? 'API klíč Resend odmítl.'
+    : restricted || authLooksValid
+      ? 'API klíč je platný pro odesílání. Pro FoodGo poptávky to stačí. E-mail se neodesílal.'
+      : domains.status === 401 || domains.status === 403 || probe.status === 401 || probe.status === 403
+        ? 'API klíč Resend odmítl (neplatný nebo zrušený).'
         : 'Resend odpověděl neočekávaně; e-mail se neodesílal.',
 }
 
 console.log(JSON.stringify(report, null, 2))
-process.exit(report.ok && report.authLooksValid ? 0 : 1)
+process.exit(report.ok ? 0 : 1)
