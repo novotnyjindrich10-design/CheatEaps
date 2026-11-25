@@ -25,6 +25,11 @@ export const pixabayManualPhotoByPlaceId = {
   'oaza-slovakova-2': 1640777,
   'fatfuck-smash-burgers-brno-hybesova-45': 1251198,
   'radegast-sportbar-namesti-svobody-96-2': 2983098,
+  // Deep photo audit 2026-11-25: theme mismatches vs name/override (IDs z lokální knihovny)
+  'oh-pho': 6729005, // pho
+  'pho-viet-nam-divadelni-6': 5250765, // pho
+  'toppu-ramen-behounska-129-13': 2828274, // ramen
+  'vietpalace-olomoucka-63': 4908531, // vietnamese (ne bageta)
 }
 
 export const pixabayManualPhotos = {
@@ -381,5 +386,61 @@ export const pixabayManualPhotos = {
     license: "pexels",
     licenseUrl: "https://www.pexels.com/license/",
     note: "Nahrazeno 2026-11-13: původní Pixabay 494706; reálná fotografie Pexels (3219483, Canon EOS R).",
+  },
+  6729005: {
+    id: 6729005,
+    width: 1280,
+    height: 853,
+    user: "Vu_Pham",
+    userId: 23678517,
+    pageUrl: "https://pixabay.com/photos/pho-ga-chicken-pho-soup-6729005/",
+    profileUrl: "https://pixabay.com/users/Vu_Pham-23678517/",
+    cardUrl: "/food-illustrations/pixabay/6729005.jpg",
+    detailUrl: "/food-illustrations/pixabay/6729005.jpg",
+    theme: "pho",
+    dish: "pho",
+    note: "Deep audit 2026-11-25: Oh! Phở — name-specific pho.",
+  },
+  5250765: {
+    id: 5250765,
+    width: 1280,
+    height: 960,
+    user: "viarami",
+    userId: 13458823,
+    pageUrl: "https://pixabay.com/photos/soup-pho-soup-vietnam-vietnamese-5250765/",
+    profileUrl: "https://pixabay.com/users/viarami-13458823/",
+    cardUrl: "/food-illustrations/pixabay/5250765.jpg",
+    detailUrl: "/food-illustrations/pixabay/5250765.jpg",
+    theme: "pho",
+    dish: "pho",
+    note: "Deep audit 2026-11-25: Pho Viet nam — name-specific pho.",
+  },
+  2828274: {
+    id: 2828274,
+    width: 1280,
+    height: 851,
+    user: "padrinan",
+    userId: 1694659,
+    pageUrl: "https://pixabay.com/photos/soup-noodles-instant-table-2828274/",
+    profileUrl: "https://pixabay.com/users/padrinan-1694659/",
+    cardUrl: "/food-illustrations/pixabay/2828274.jpg",
+    detailUrl: "/food-illustrations/pixabay/2828274.jpg",
+    theme: "ramen",
+    dish: "ramen",
+    note: "Deep audit 2026-11-25: TOPPU RAMEN — name-specific ramen.",
+  },
+  4908531: {
+    id: 4908531,
+    width: 1280,
+    height: 987,
+    user: "phuonghoangthuy",
+    userId: 15430339,
+    pageUrl: "https://pixabay.com/photos/bread-soup-soup-english-food-4908531/",
+    profileUrl: "https://pixabay.com/users/phuonghoangthuy-15430339/",
+    cardUrl: "/food-illustrations/pixabay/4908531.jpg",
+    detailUrl: "/food-illustrations/pixabay/4908531.jpg",
+    theme: "vietnamese",
+    dish: "vietnamské jídlo",
+    note: "Deep audit 2026-11-25: VietPalace — vietnamese (dříve bageta).",
   },
 }

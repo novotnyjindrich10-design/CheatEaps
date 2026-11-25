@@ -1,0 +1,87 @@
+{
+  "verifiedAt": "2026-11-25T21:38:09.736Z",
+  "pixabayLibraryGeneratedAt": "2026-11-25T21:34:03.096Z",
+  "placesAudited": 774,
+  "officialKept": 93,
+  "illustrations": 681,
+  "missingPhoto": 0,
+  "themeMismatches": 0,
+  "manualPicks": 22,
+  "uniqueIllustrationAssets": 358,
+  "maxIllustrationReuse": 4,
+  "assetsUsedMoreThan3": 5,
+  "missingLocalFiles": 0,
+  "licenseUnverified": 93,
+  "poolSizes": {
+    "burger": 22,
+    "ceske": 50,
+    "kava": 70,
+    "pizza": 40,
+    "asijske": 29,
+    "cina": 8,
+    "fried_chicken": 5,
+    "kebab": 10,
+    "mexiko": 8,
+    "pasta": 5,
+    "pho": 4,
+    "ramen": 3,
+    "sladke": 16,
+    "sushi": 9,
+    "veganske": 4,
+    "vietnamese": 5,
+    "zdrave": 8,
+    "fastfood": 14,
+    "neuvedeno": 44,
+    "bubble_tea": 4,
+    "indian": 6,
+    "poke": 4,
+    "baguette": 4,
+    "vegetarianske": 4
+  },
+  "librarySize": 400,
+  "mismatchSamples": [],
+  "topOverused": [
+    {
+      "id": 623465,
+      "uses": 4,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/beef-grill-fries-tasty-gravy-623465/"
+    },
+    {
+      "id": 660748,
+      "uses": 4,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/spaghetti-pasta-noodles-food-meal-660748/"
+    },
+    {
+      "id": 727973,
+      "uses": 4,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/turn-back-brussels-sprouts-727973/"
+    },
+    {
+      "id": 756917,
+      "uses": 4,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/beef-rydberg-steak-rydberg-food-756917/"
+    },
+    {
+      "id": 759942,
+      "uses": 4,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/chicken-breast-potato-roast-food-759942/"
+    }
+  ],
+  "methodNotes": [
+    "Každý veřejný podnik má řádek v ledgeru (ID, očekávané téma, přiřazená fotka, licence).",
+    "Relevance: dishSpecForPlace (override / name_specific / category / name / fallback) vs foodIllustrationTheme.",
+    "Licence: Pixabay/Pexels/Unsplash dle pageUrl nebo explicitního pole; oficiální dle heroImageRights.",
+    "Individuální vizuální kontrola každého z 774 snímků člověkem nebyla v tomto běhu provedena; contact sheet slouží k manuální kontrole.",
+    "Ilustrace zůstávají označené jako „Ilustrační fotografie“ v UI."
+  ]
+}

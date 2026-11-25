@@ -1,0 +1,221 @@
+{
+  "verifiedAt": "2026-11-25T21:32:46.697Z",
+  "pixabayLibraryGeneratedAt": "2026-11-03T17:33:54.614Z",
+  "placesAudited": 774,
+  "officialKept": 93,
+  "illustrations": 681,
+  "missingPhoto": 0,
+  "themeMismatches": 4,
+  "manualPicks": 22,
+  "uniqueIllustrationAssets": 144,
+  "maxIllustrationReuse": 16,
+  "assetsUsedMoreThan3": 65,
+  "missingLocalFiles": 0,
+  "licenseUnverified": 93,
+  "poolSizes": {
+    "pizza": 8,
+    "burger": 4,
+    "kebab": 3,
+    "pho": 6,
+    "vietnamese": 6,
+    "sushi": 8,
+    "ramen": 6,
+    "cina": 6,
+    "asijske": 10,
+    "indian": 6,
+    "mexiko": 6,
+    "pasta": 6,
+    "ceske": 10,
+    "kava": 12,
+    "sladke": 8,
+    "zdrave": 6,
+    "vegetarianske": 4,
+    "veganske": 3,
+    "fastfood": 6,
+    "fried_chicken": 6,
+    "bubble_tea": 4,
+    "poke": 4,
+    "baguette": 4,
+    "neuvedeno": 12
+  },
+  "librarySize": 179,
+  "mismatchSamples": [
+    {
+      "placeId": "oh-pho",
+      "name": "Oh! Phở",
+      "expected": "pho",
+      "actual": "vietnamese",
+      "photoId": 6729006
+    },
+    {
+      "placeId": "pho-viet-nam-divadelni-6",
+      "name": "Pho Viet nam",
+      "expected": "pho",
+      "actual": "asijske",
+      "photoId": 8021417
+    },
+    {
+      "placeId": "toppu-ramen-behounska-129-13",
+      "name": "TOPPU RAMEN",
+      "expected": "ramen",
+      "actual": "asijske",
+      "photoId": 1216048
+    },
+    {
+      "placeId": "vietpalace-olomoucka-63",
+      "name": "VietPalace",
+      "expected": "vietnamese",
+      "actual": "baguette",
+      "photoId": 10478968
+    }
+  ],
+  "topOverused": [
+    {
+      "id": 1869598,
+      "uses": 16,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/beverage-cappuccino-coffee-cup-mug-1869598/"
+    },
+    {
+      "id": 2242231,
+      "uses": 15,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/coffee-cafe-table-food-drink-work-2242231/"
+    },
+    {
+      "id": 2242218,
+      "uses": 15,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/coffee-cafe-table-food-drink-work-2242218/"
+    },
+    {
+      "id": 756490,
+      "uses": 15,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/cappuccino-drink-cup-coffee-756490/"
+    },
+    {
+      "id": 1839134,
+      "uses": 14,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/drink-coffee-cafe-cake-cappuccino-1839134/"
+    },
+    {
+      "id": 1866758,
+      "uses": 14,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/caffeine-coffee-cup-coffee-cup-1866758/"
+    },
+    {
+      "id": 2446645,
+      "uses": 14,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/coffee-drink-cup-coffee-cup-2446645/"
+    },
+    {
+      "id": 2151200,
+      "uses": 14,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/coffee-cappuccino-caf%C3%A9-closeup-2151200/"
+    },
+    {
+      "id": 6154681,
+      "uses": 14,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/coffee-cappuccino-latte-art-6154681/"
+    },
+    {
+      "id": 1572739,
+      "uses": 14,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/coffee-cup-and-saucer-black-coffee-1572739/"
+    },
+    {
+      "id": 2560260,
+      "uses": 13,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/coffee-beans-seed-powder-wooden-2560260/"
+    },
+    {
+      "id": 5037804,
+      "uses": 13,
+      "theme": "kava",
+      "dish": "káva",
+      "pageUrl": "https://pixabay.com/photos/coffee-caffeine-cafe-food-drink-5037804/"
+    },
+    {
+      "id": 4029441,
+      "uses": 12,
+      "theme": "ceske",
+      "dish": "české jídlo",
+      "pageUrl": "https://pixabay.com/photos/goulash-dumplings-meal-mushrooms-4029441/"
+    },
+    {
+      "id": 3676796,
+      "uses": 12,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/food-steak-meat-soup-beef-bbq-3676796/"
+    },
+    {
+      "id": 4014661,
+      "uses": 12,
+      "theme": "ceske",
+      "dish": "české jídlo",
+      "pageUrl": "https://pixabay.com/photos/goulash-soup-lunch-rich-snack-4014661/"
+    },
+    {
+      "id": 2169305,
+      "uses": 11,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/asparagus-steak-veal-steak-veal-2169305/"
+    },
+    {
+      "id": 1064406,
+      "uses": 11,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/goose-goose-breast-grill-food-1064406/"
+    },
+    {
+      "id": 6054131,
+      "uses": 11,
+      "theme": "ceske",
+      "dish": "české jídlo",
+      "pageUrl": "https://pixabay.com/photos/goulash-soup-dish-food-6054131/"
+    },
+    {
+      "id": 2802332,
+      "uses": 11,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/plate-pizza-dish-meal-italian-2802332/"
+    },
+    {
+      "id": 3640560,
+      "uses": 11,
+      "theme": "neuvedeno",
+      "dish": "jídlo",
+      "pageUrl": "https://pixabay.com/photos/steak-meat-beef-steak-food-beef-3640560/"
+    }
+  ],
+  "methodNotes": [
+    "Každý veřejný podnik má řádek v ledgeru (ID, očekávané téma, přiřazená fotka, licence).",
+    "Relevance: dishSpecForPlace (override / name_specific / category / name / fallback) vs foodIllustrationTheme.",
+    "Licence: Pixabay/Pexels/Unsplash dle pageUrl nebo explicitního pole; oficiální dle heroImageRights.",
+    "Individuální vizuální kontrola každého z 774 snímků člověkem nebyla v tomto běhu provedena; contact sheet slouží k manuální kontrole.",
+    "Ilustrace zůstávají označené jako „Ilustrační fotografie“ v UI."
+  ]
+}
