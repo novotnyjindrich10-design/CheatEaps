@@ -18,9 +18,9 @@ function LocationPin() {
 
 function locationStatusText({ status, activeGps, activeManual, origin, originFresh }) {
   if (status === 'locating') return 'Zjišťuji polohu…'
-  if (status === 'updated') return 'Poloha načtena'
+  if (status === 'updated') return 'Poloha aktualizována'
   if (status === 'current') return 'Poloha je aktuální'
-  if (status === 'denied') return 'Poloha je v prohlížeči zakázaná'
+  if (status === 'denied') return 'Poloha je v prohlížeči zakázaná — změň oprávnění, nebo pokračuj bez GPS'
   if (
     status === 'timeout' ||
     status === 'unavailable' ||

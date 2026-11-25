@@ -31,6 +31,7 @@ import { partitionPlacements, SPONSORED_LABEL } from '../constants/monetization'
 import { varyPixabayOnPage } from '../utils/pageIllustrations'
 import { useLocationState } from '../context/LocationContext'
 import LocationBar from '../components/LocationBar'
+import LocationPrompt from '../components/LocationPrompt'
 import { parsePageParam, slicePage } from '../utils/pagination'
 import { DEALS_RESULTS_PATH, loginPath } from '../utils/authReturn'
 import { PUBLIC_V1 } from '../constants/publicV1'
@@ -403,6 +404,7 @@ export default function Results() {
             ) : null}
 
             <LocationBar places={located} />
+            {viewMode === 'map' && !origin ? <LocationPrompt /> : null}
 
             <ResultsFilters
               filters={filters}

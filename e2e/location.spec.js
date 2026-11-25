@@ -36,7 +36,7 @@ function installGeoMocks(page, { lat, lon, permission = 'prompt' }) {
 test.describe('geolokace a vzdálenosti', () => {
   test.use({ viewport: { width: 1280, height: 800 } })
 
-  test('první návštěva ukáže výzvu a po povolení vzdálenosti i řazení', async ({ page }) => {
+  test('první návštěva požádá nativně a po povolení ukáže vzdálenosti', async ({ page }) => {
     await openAsGuest(page, { locationPrompt: true })
     await installGeoMocks(page, { lat: 49.1951, lon: 16.6068, permission: 'prompt' })
     await page.route('**/routed-foot/table/v1/foot**', async (route) => {
@@ -55,15 +55,13 @@ test.describe('geolokace a vzdálenosti', () => {
     await page.reload()
     await ready(page)
 
-    const prompt = page.locator('.location-prompt')
-    await expect(prompt).toBeVisible()
-    await expect(prompt.getByRole('heading', { name: 'Co dobrého je kolem tebe?' })).toBeVisible()
-    await prompt.getByRole('button', { name: 'Povolit polohu' }).click()
-
-    await expect(page.getByText(/Poloha načtena|Poloha je aktivní|Zjišťuji polohu/i).first()).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Nejbližší podniky' })).toBeVisible({ timeout: 15_000 })
-    await expect(page.locator('.restaurant-card-meta--distance .meta-value').first()).not.toHaveText('—')
     await expect(page.locator('.location-prompt')).toHaveCount(0)
+    await expect(page.locator('.location-hint')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Všechny podniky' })).toBeVisible()
+    await page.getByRole('button', { name: 'Všechny podniky' }).click()
+    await expect(page.locator('.restaurant-card-meta--distance .meta-value').first()).not.toHaveText('—', {
+      timeout: 15_000,
+    })
 
     await page.goto('/results')
     await ready(page)
@@ -72,23 +70,22 @@ test.describe('geolokace a vzdálenosti', () => {
     await expect(page.locator('.restaurant-card-meta--distance .meta-value').first()).not.toHaveText('—')
   })
 
-  test('Pokračovat bez polohy skryje výzvu a neptá se na každé stránce', async ({ page }) => {
+  test('odmítnutá poloha neshodí web a neopakuje fullscreen výzvu', async ({ page }) => {
     await openAsGuest(page, { locationPrompt: true })
     await page.addInitScript(() => {
+      localStorage.removeItem('cheapeats.geo.origin')
+      localStorage.removeItem('cheapeats.geo.prompt')
+      const error = { code: 1, PERMISSION_DENIED: 1, message: 'denied' }
+      navigator.geolocation.getCurrentPosition = (_ok, fail) => fail?.(error)
       if (navigator.permissions) {
         navigator.permissions.query = async () => ({ state: 'prompt', onchange: null })
       }
     })
 
     await page.goto('/')
-    await page.evaluate(() => {
-      localStorage.removeItem('cheapeats.geo.origin')
-      localStorage.removeItem('cheapeats.geo.prompt')
-    })
-    await page.reload()
     await ready(page)
-    await page.locator('.location-prompt').getByRole('button', { name: 'Pokračovat bez polohy' }).click()
     await expect(page.locator('.location-prompt')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Všechny podniky' })).toBeVisible()
 
     await page.goto('/results')
     await ready(page)
@@ -137,11 +134,13 @@ test.describe('geolokace a vzdálenosti', () => {
 
     const firstBefore = await page.locator('.restaurant-card-title').first().textContent()
     await page.getByRole('button', { name: 'Aktualizovat polohu' }).click()
-    await expect(page.getByText(/Poloha načtena|Poloha je aktuální|Zjišťuji polohu/i).first()).toBeVisible()
+    await expect(page.getByText(/Poloha aktualizována|Poloha je aktuální|Zjišťuji polohu/i).first()).toBeVisible()
     await expect(page.locator('.restaurant-card-meta--distance .meta-value').first()).not.toHaveText('—')
 
     await page.getByRole('button', { name: 'Aktualizovat polohu' }).click()
-    await expect(page.getByText(/Poloha načtena|Poloha je aktuální/i).first()).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText(/Poloha aktualizována|Poloha je aktuální/i).first()).toBeVisible({
+      timeout: 10_000,
+    })
     const firstAfter = await page.locator('.restaurant-card-title').first().textContent()
     expect((firstBefore || '').trim().length).toBeGreaterThan(0)
     expect((firstAfter || '').trim().length).toBeGreaterThan(0)
@@ -187,11 +186,7 @@ test.describe('geolokace a vzdálenosti', () => {
 
     await page.goto('/')
     await ready(page)
-    await expect(
-      page.getByRole('heading', {
-        name: /Doporučené podniky|Ráno kolem tebe|Oběd v okolí|Odpolední tipy|Večerní tipy|Noční tipy/,
-      }),
-    ).toBeVisible()
+    await expect(page.getByRole('searchbox').or(page.getByRole('combobox')).first()).toBeVisible()
     await expect(page.getByText(/\d+\s*m pěšky|\d+,\d+\s*km pěšky/)).toHaveCount(0)
     const cleared = await page.evaluate(() => localStorage.getItem('cheapeats.geo.origin'))
     expect(cleared).toBeNull()
@@ -215,7 +210,7 @@ test.describe('geolokace a vzdálenosti', () => {
     })
     await page.route('**/routed-foot/**', (route) => route.abort())
 
-    await page.goto('/')
+    await page.goto('/results')
     await ready(page)
     await page.getByRole('button', { name: 'Zapomenout moji polohu' }).click()
     await expect(page.getByRole('button', { name: 'Použít moji polohu' })).toBeVisible()

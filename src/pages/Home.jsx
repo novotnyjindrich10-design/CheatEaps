@@ -1,7 +1,7 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { QUICK_BUDGETS } from '../constants/filters'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import HomeSearch from '../components/HomeSearch'
+import ResultsFilters from '../components/ResultsFilters'
+import ResultsPager from '../components/ResultsPager'
 import LocationBar from '../components/LocationBar'
 
 const CategoryStrip = lazy(() => import('../components/CategoryStrip'))
@@ -9,277 +9,160 @@ const RestaurantCard = lazy(() => import('../components/RestaurantCard'))
 import { useCatalog } from '../context/CatalogContext'
 import { useLocationState } from '../context/LocationContext'
 import { partitionPlacements } from '../constants/monetization'
-import { compareByRecordQuality } from '../utils/recordQuality'
-import { suppressCatalogDuplicates } from '../utils/catalogDuplicates'
+import { applyCategorySelection } from '../constants/filters'
 import { filterAndSortRestaurants } from '../utils/filterRestaurants'
-import { mealPeriodForHour } from '../utils/mealPeriod'
-import { listRecentViews } from '../utils/recentViews'
-import { getRestaurantById } from '../data/restaurants'
-import { presentOsmContact } from '../utils/osmContact'
-import { isOpenNowReliable } from '../utils/openingStatus'
+import { varyPixabayOnPage } from '../utils/pageIllustrations'
+import { slicePage } from '../utils/pagination'
+import { smoothScrollTo } from '../utils/smoothScroll'
 
-const FEATURED_COUNT = 12
-
-/** Bez polohy: různé kategorie, v každé nejlíp zdokumentovaný podnik. */
-function pickRecommended(places, limit = FEATURED_COUNT) {
-  const byCategory = new Map()
-  for (const place of suppressCatalogDuplicates(places)) {
-    const key = place.category || 'neuvedeno'
-    if (!byCategory.has(key)) byCategory.set(key, [])
-    byCategory.get(key).push(place)
-  }
-  for (const list of byCategory.values()) {
-    list.sort(compareByRecordQuality)
-  }
-
-  const categories = [...byCategory.keys()]
-  const picked = []
-  const seen = new Set()
-
-  while (picked.length < limit && categories.length > 0) {
-    for (let i = 0; i < categories.length && picked.length < limit; ) {
-      const key = categories[i]
-      const list = byCategory.get(key)
-      const next = list.shift()
-      if (!next) {
-        categories.splice(i, 1)
-        continue
-      }
-      if (!seen.has(next.id)) {
-        seen.add(next.id)
-        picked.push(next)
-      }
-      if (list.length === 0) categories.splice(i, 1)
-      else i += 1
-    }
-  }
-
-  return picked.sort(compareByRecordQuality)
-}
-
-function pickNearest(places, limit = FEATURED_COUNT) {
-  return filterAndSortRestaurants(places, {
-    hasOrigin: true,
-    sortBy: 'distance',
-  }).slice(0, limit)
-}
-
-function preferOpenPlaces(places) {
-  const open = []
-  const rest = []
-  for (const place of places) {
-    const hoursRaw = presentOsmContact(place).hoursRaw
-    if (hoursRaw && isOpenNowReliable(hoursRaw)) open.push(place)
-    else rest.push(place)
-  }
-  return [...open, ...rest]
-}
-
-/** Nekvalitní / chybně zařazené tipy nepatří do první vlny doporučení. */
-function isWeakRecommendation(place) {
-  const name = String(place?.name || '')
-  if (/barber|holič|kadern|kadeřnict/i.test(name)) return true
-  if (!place?.category || place.category === 'neuvedeno') {
-    if (!presentOsmContact(place).hasHours && !place.officialWebsite && !place.website) return true
-  }
-  return false
+const EMPTY_FILTERS = {
+  search: '',
+  cuisineType: '',
+  maxBudget: '',
+  maxDistance: '',
+  sortBy: '',
+  vegetarianOnly: false,
+  veganOnly: false,
+  verifiedPricesOnly: false,
+  dealsOnly: false,
+  hoursOnly: false,
+  openNowOnly: false,
+  view: 'list',
 }
 
 export default function Home() {
   const { restaurants, catalogReady } = useCatalog()
-  const { attachDistances, origin } = useLocationState()
+  const { attachDistances, origin, needsLocateGesture, locate, status: locationStatus } = useLocationState()
   const hasOrigin = Boolean(origin)
-  const period = useMemo(() => mealPeriodForHour(new Date().getHours()), [])
+  const browseRef = useRef(null)
+  const [browseOpen, setBrowseOpen] = useState(false)
+  const [filtersExpanded, setFiltersExpanded] = useState(true)
+  const [filters, setFilters] = useState(EMPTY_FILTERS)
+  const [page, setPage] = useState(1)
+
   const organic = useMemo(() => partitionPlacements(restaurants).organic, [restaurants])
   const located = useMemo(() => attachDistances(organic), [attachDistances, organic])
-  const featuredBase = useMemo(() => {
-    if (!located.length) return []
-    const usable = located.filter((place) => !isWeakRecommendation(place))
-    const source = usable.length >= 6 ? usable : located
-    let pool = source
-    if (period.category) {
-      const narrowed = filterAndSortRestaurants(source, {
-        cuisineType: period.category,
+  const filtered = useMemo(
+    () =>
+      filterAndSortRestaurants(located, {
+        ...filters,
         hasOrigin,
-        sortBy: hasOrigin ? 'distance' : 'quality',
-      })
-      if (narrowed.length >= 4) pool = narrowed
-    }
-    let picked = hasOrigin ? pickNearest(pool) : pickRecommended(pool)
-    if (period.preferOpen) picked = preferOpenPlaces(picked).slice(0, FEATURED_COUNT)
-    return picked
-  }, [hasOrigin, located, period])
+      }),
+    [located, filters, hasOrigin],
+  )
+  const paged = useMemo(() => slicePage(filtered, page), [filtered, page])
 
-  // Pixabay knihovna je velká — apply after paint, mimo kritickou cestu.
-  const [featuredVaried, setFeaturedVaried] = useState(null)
   useEffect(() => {
-    if (featuredBase.length < 2) {
-      setFeaturedVaried(null)
-      return undefined
-    }
-    let cancelled = false
-    import('../utils/pageIllustrations')
-      .then(({ varyPixabayOnPage }) => {
-        if (!cancelled) setFeaturedVaried(varyPixabayOnPage(featuredBase))
-      })
-      .catch(() => {})
-    return () => {
-      cancelled = true
-    }
-  }, [featuredBase])
-  const featured = featuredVaried ?? featuredBase
+    setPage(1)
+  }, [filters])
 
-  const recentPlaces = useMemo(() => {
-    if (!catalogReady) return []
-    return listRecentViews()
-      .map((id) => getRestaurantById(id))
-      .filter(Boolean)
-      .slice(0, 4)
-  }, [catalogReady])
+  useEffect(() => {
+    if (paged.page === page) return
+    setPage(paged.page)
+  }, [paged.page, page])
 
-  const sectionTitle = hasOrigin ? 'Nejbližší podniky' : period.title
-  const sectionDesc = hasOrigin
-    ? 'Seřazeno od nejbližšího podle tvé polohy. Vzdálenost ukazujeme jen u podniků se souřadnicemi.'
-    : period.hint
+  const scrollToBrowse = () => {
+    window.requestAnimationFrame(() => {
+      if (browseRef.current) smoothScrollTo(browseRef.current, { offset: 72, duration: 480 })
+    })
+  }
+
+  const openAllPlaces = () => {
+    setFilters((prev) => ({ ...prev, cuisineType: '' }))
+    setBrowseOpen(true)
+    setFiltersExpanded(true)
+    scrollToBrowse()
+  }
+
+  const onCategorySelect = (type) => {
+    setFilters((prev) => applyCategorySelection(prev, type === prev.cuisineType ? '' : type))
+    setBrowseOpen(true)
+    setFiltersExpanded(true)
+    scrollToBrowse()
+  }
+
+  const cards = useMemo(
+    () => (browseOpen && catalogReady ? varyPixabayOnPage(paged.items) : []),
+    [browseOpen, catalogReady, paged.items],
+  )
 
   return (
-    <main className="page home-page">
-      <section className="home-hero">
+    <main className="page home-page home-page--compact">
+      <section className="home-hero home-hero--compact">
         <div className="home-hero-panel">
-          <h1 className="home-hero-title">
-            <span className="home-hero-line">Najdi jídlo</span>{' '}
-            <span className="home-hero-line home-hero-accent">v Brně</span>
-          </h1>
-          <p className="home-hero-lead">
-            Hledej podle chuti, rozpočtu a vzdálenosti. FoodGo odděluje ověřené údaje od odhadů.
-          </p>
+          <h1 className="visually-hidden">Najdi jídlo v Brně</h1>
           <HomeSearch />
-          <LocationBar places={restaurants} variant="hero" />
-          <div className="home-quick-filters" aria-label="Rychlé filtry">
-            <Link to="/results?open=1" className="home-quick-chip">
-              Právě otevřeno
-            </Link>
-            <Link to="/results?budget=150" className="home-quick-chip">
-              Do 150 Kč
-            </Link>
-            <Link
-              to={hasOrigin ? '/results?sort=distance' : '/results'}
-              className="home-quick-chip"
+          {needsLocateGesture ? (
+            <button
+              type="button"
+              className="home-locate-fallback"
+              onClick={() => locate({ forceRefresh: false })}
+              disabled={locationStatus === 'locating'}
             >
-              Nejblíže
-            </Link>
-          </div>
+              {locationStatus === 'locating' ? 'Zjišťuji polohu…' : 'Použít moji polohu'}
+            </button>
+          ) : null}
         </div>
       </section>
 
-      <section className="home-discover" aria-labelledby="discover-title">
-        <div className="section-heading">
-          <h2 id="discover-title" className="section-title">
-            Objevuj podle chuti
-          </h2>
-        </div>
-        <Suspense fallback={<div className="category-grid-wrap" style={{ minHeight: 200 }} aria-hidden="true" />}>
-          <CategoryStrip asLinks variant="grid" />
+      <section className="home-discover home-discover--compact" aria-label="Kategorie">
+        <Suspense fallback={<div className="category-grid-wrap" style={{ minHeight: 140 }} aria-hidden="true" />}>
+          <CategoryStrip
+            asLinks={false}
+            variant="grid"
+            activeType={filters.cuisineType}
+            onSelect={onCategorySelect}
+          />
         </Suspense>
-      </section>
-
-      <section className="home-listings" aria-labelledby="featured-title">
-        <div className="section-heading section-heading--split">
-          <div>
-            <h2 id="featured-title" className="section-title">
-              {sectionTitle}
-            </h2>
-            <p className="section-desc">{sectionDesc}</p>
-          </div>
-          <Link to="/results" className="btn btn-secondary">
-            Celý seznam
-          </Link>
+        <div className="home-all-places">
+          <button type="button" className="btn btn-secondary home-all-places-btn" onClick={openAllPlaces}>
+            Všechny podniky
+          </button>
         </div>
-
-        {!catalogReady ? (
-          <p className="section-desc" role="status">
-            Načítám tipy z katalogu…
-          </p>
-        ) : (
-          <Suspense fallback={<p className="section-desc">Načítám karty…</p>}>
-            <ul className="restaurant-list">
-              {featured.map((restaurant, index) => (
-                <li key={restaurant.id}>
-                  <RestaurantCard restaurant={restaurant} index={index} />
-                </li>
-              ))}
-            </ul>
-          </Suspense>
-        )}
       </section>
 
-      {recentPlaces.length > 0 ? (
-        <section className="home-recent" aria-labelledby="recent-title">
-          <div className="section-heading section-heading--split">
-            <div>
-              <h2 id="recent-title" className="section-title">
-                Nedávno prohlížené
-              </h2>
-              <p className="section-desc">Jen v tomto zařízení. Nic se neodesílá.</p>
+      {browseOpen ? (
+        <section className="home-browse" ref={browseRef} aria-label="Podniky a filtry">
+          <LocationBar places={restaurants} />
+          <ResultsFilters
+            filters={filters}
+            onChange={setFilters}
+            hasOrigin={hasOrigin}
+            expanded={filtersExpanded}
+            onExpandedChange={setFiltersExpanded}
+          />
+          {!catalogReady ? (
+            <p className="section-desc" role="status">
+              Načítám katalog…
+            </p>
+          ) : filtered.length === 0 ? (
+            <div className="empty-state">
+              <p>Žádný podnik neodpovídá filtrům.</p>
+              <button type="button" className="btn btn-secondary" onClick={() => setFilters(EMPTY_FILTERS)}>
+                Resetovat filtry
+              </button>
             </div>
-          </div>
-          <Suspense fallback={null}>
-            <ul className="restaurant-list restaurant-list--compact">
-              {recentPlaces.map((restaurant, index) => (
-                <li key={restaurant.id}>
-                  <RestaurantCard restaurant={restaurant} index={index} />
-                </li>
-              ))}
-            </ul>
-          </Suspense>
+          ) : (
+            <>
+              <div className="results-summary">
+                <p>
+                  Zobrazuji {paged.startIndex}–{paged.endIndex} z {paged.total}
+                </p>
+              </div>
+              <Suspense fallback={<p className="section-desc">Načítám karty…</p>}>
+                <ul className="restaurant-list">
+                  {cards.map((restaurant, index) => (
+                    <li key={restaurant.id}>
+                      <RestaurantCard restaurant={restaurant} index={index} />
+                    </li>
+                  ))}
+                </ul>
+              </Suspense>
+              <ResultsPager page={paged.page} totalPages={paged.totalPages} onChange={setPage} />
+            </>
+          )}
         </section>
       ) : null}
-
-      <section className="budget-quick" aria-labelledby="budget-quick-title">
-        <div className="budget-quick-panel">
-          <h2 id="budget-quick-title" className="section-title">
-            Podle rozpočtu
-          </h2>
-          <p className="section-desc">
-            Filtr bere jen ověřenou cenu z menu — ne odhad. U rozpětí musí do limitu vejít i horní mez.
-            Ověřenou cenu má zatím menší část katalogu; ostatní podniky uvidíš bez cenového limitu.
-          </p>
-          <div className="budget-chips">
-            {QUICK_BUDGETS.map((amount) => (
-              <Link key={amount} to={`/results?budget=${amount}`} className="budget-chip">
-                Do {amount} Kč
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="home-paths" aria-labelledby="paths-title">
-        <div className="section-heading">
-          <h2 id="paths-title" className="section-title">
-            Kam dál
-          </h2>
-          <p className="section-desc">Rychlé cesty k tomu, co FoodGo umí hned teď.</p>
-        </div>
-        <div className="home-path-grid">
-          <Link to="/results?view=map" className="home-path-card">
-            <h3>Mapa Brna</h3>
-            <p>Body restaurací podle filtrů. Klikni na bod a otevři detail.</p>
-          </Link>
-          <Link to="/nevim-co-jist" className="home-path-card">
-            <h3>Nevím, co jíst</h3>
-            <p>Náhodný podnik podle ceny, kategorie a volitelně okolí.</p>
-          </Link>
-          <Link to="/results?verified=1" className="home-path-card">
-            <h3>Ověřené ceny</h3>
-            <p>Jen podniky s doloženou cenou z menu.</p>
-          </Link>
-          <Link to="/oblibene" className="home-path-card">
-            <h3>Oblíbené</h3>
-            <p>Ulož podniky v prohlížeči — bez účtu i po přihlášení.</p>
-          </Link>
-        </div>
-      </section>
     </main>
   )
 }

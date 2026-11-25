@@ -96,6 +96,10 @@ export function LocationProvider({ children }) {
   const locateCancelRef = useRef(null)
   const updatedFlashTimer = useRef(null)
   const autoLocateAttempted = useRef(false)
+  const [autoLocateSettled, setAutoLocateSettled] = useState(() => {
+    if (readStoredOrigin() || readPromptChoice() != null) return true
+    return false
+  })
   const originRef = useRef(origin)
   originRef.current = origin
 
@@ -125,7 +129,7 @@ export function LocationProvider({ children }) {
   )
 
   const locate = useCallback(
-    ({ highAccuracy = false, forceRefresh = false } = {}) => {
+    ({ highAccuracy = false, forceRefresh = false, silent = false } = {}) => {
       clearUpdatedFlash()
       setErrorMessage('')
 
@@ -152,6 +156,7 @@ export function LocationProvider({ children }) {
           if (!hasFiniteLatLon(lat, lon)) {
             setStatus('invalid')
             setErrorMessage(geolocationErrorMessage('invalid'))
+            setAutoLocateSettled(true)
             return
           }
           const accuracyRaw = pos?.coords?.accuracy
@@ -171,15 +176,21 @@ export function LocationProvider({ children }) {
           writePromptChoice('accepted')
           setPromptChoice('accepted')
           setErrorMessage('')
-          if (forceRefresh && sameCoordinates(previous, next)) {
+          setAutoLocateSettled(true)
+          if (silent && !forceRefresh) {
+            setStatus('ready')
+          } else if (forceRefresh && sameCoordinates(previous, next)) {
             flashStatus('current', generation)
-          } else {
+          } else if (forceRefresh) {
             flashStatus('updated', generation)
+          } else {
+            setStatus('ready')
           }
         },
         onError({ reason }) {
           setStatus(reason)
           setErrorMessage(geolocationErrorMessage(reason))
+          setAutoLocateSettled(true)
           if (reason === 'denied') {
             writePromptChoice('dismissed')
             setPromptChoice('dismissed')
@@ -201,12 +212,6 @@ export function LocationProvider({ children }) {
     writePromptChoice('dismissed')
     setPromptChoice('dismissed')
   }, [])
-
-  const acceptPrompt = useCallback(() => {
-    writePromptChoice('accepted')
-    setPromptChoice('accepted')
-    locate({ forceRefresh: false, highAccuracy: false })
-  }, [locate])
 
   useEffect(() => {
     return () => {
@@ -235,12 +240,24 @@ export function LocationProvider({ children }) {
     clearOrigin()
     writePromptChoice(null)
     setPromptChoice(null)
+    setAutoLocateSettled(true)
   }, [clearOrigin])
 
-  // Automaticky: granted → načti GPS. Denied → smaž uloženou GPS (nesmí se tvářit jako aktuální).
+  // Automaticky: granted → načti GPS. prompt → nativní dialog. Denied → smaž uloženou GPS.
   useEffect(() => {
-    if (typeof navigator === 'undefined' || !navigator.permissions?.query) {
+    const tryFirstNativeLocate = () => {
+      if (autoLocateAttempted.current) return
+      if (originRef.current || readPromptChoice() != null) {
+        autoLocateAttempted.current = true
+        setAutoLocateSettled(true)
+        return
+      }
       autoLocateAttempted.current = true
+      locate({ forceRefresh: false, silent: true })
+    }
+
+    if (typeof navigator === 'undefined' || !navigator.permissions?.query) {
+      tryFirstNativeLocate()
       setGeoGateReady(true)
       return undefined
     }
@@ -250,10 +267,15 @@ export function LocationProvider({ children }) {
     let onChange = null
 
     const dropDeniedGps = () => {
-      if (originRef.current?.type !== 'gps') return
-      clearOrigin()
       writePromptChoice('dismissed')
       setPromptChoice('dismissed')
+      setAutoLocateSettled(true)
+      if (originRef.current?.type !== 'gps') {
+        setStatus('denied')
+        setErrorMessage(geolocationErrorMessage('denied'))
+        return
+      }
+      clearOrigin()
       setStatus('denied')
       setErrorMessage(geolocationErrorMessage('denied'))
     }
@@ -261,7 +283,7 @@ export function LocationProvider({ children }) {
     const refreshIfGranted = () => {
       writePromptChoice('accepted')
       setPromptChoice('accepted')
-      locate({ forceRefresh: false })
+      locate({ forceRefresh: false, silent: true })
     }
 
     navigator.permissions
@@ -271,12 +293,20 @@ export function LocationProvider({ children }) {
         permissionStatus = result
 
         if (result.state === 'denied') {
+          autoLocateAttempted.current = true
           dropDeniedGps()
-        } else if (result.state === 'granted' && !autoLocateAttempted.current) {
-          refreshIfGranted()
+        } else if (result.state === 'granted') {
+          if (!autoLocateAttempted.current) {
+            autoLocateAttempted.current = true
+            refreshIfGranted()
+          }
+        } else if (result.state === 'prompt') {
+          tryFirstNativeLocate()
+        } else {
+          autoLocateAttempted.current = true
+          setAutoLocateSettled(true)
         }
 
-        autoLocateAttempted.current = true
         setGeoGateReady(true)
 
         onChange = () => {
@@ -287,7 +317,7 @@ export function LocationProvider({ children }) {
         result.addEventListener?.('change', onChange)
       })
       .catch(() => {
-        autoLocateAttempted.current = true
+        tryFirstNativeLocate()
         setGeoGateReady(true)
       })
 
@@ -318,6 +348,7 @@ export function LocationProvider({ children }) {
       })
       writePromptChoice('accepted')
       setPromptChoice('accepted')
+      setAutoLocateSettled(true)
       setStatus('ready')
       setErrorMessage('')
     },
@@ -416,13 +447,17 @@ export function LocationProvider({ children }) {
   )
 
   const originFresh = Boolean(origin) && isStoredOriginFresh(origin)
-  // Počkej na Permissions API, ať se při granted neblikne modal před auto-locate.
-  const showLocationPrompt =
+  // Nativní dialog místo fullscreen modalu. Fallback tlačítko jen když auto-locate
+  // nedokončil oprávnění (typicky požadavek na gesto) a uživatel ještě nerozhodl.
+  const needsLocateGesture =
     geoGateReady &&
+    autoLocateSettled &&
     !origin &&
     promptChoice == null &&
     status !== 'denied' &&
-    status !== 'locating'
+    status !== 'locating' &&
+    status !== 'ready'
+  const permissionBlocked = status === 'denied' || promptChoice === 'dismissed'
 
   const value = useMemo(
     () => ({
@@ -438,9 +473,10 @@ export function LocationProvider({ children }) {
       routeStatus,
       routeMessage,
       promptChoice,
-      showLocationPrompt,
-      acceptPrompt,
+      needsLocateGesture,
+      permissionBlocked,
       dismissPrompt,
+      showLocationPrompt: false,
     }),
     [
       origin,
@@ -455,8 +491,8 @@ export function LocationProvider({ children }) {
       routeStatus,
       routeMessage,
       promptChoice,
-      showLocationPrompt,
-      acceptPrompt,
+      needsLocateGesture,
+      permissionBlocked,
       dismissPrompt,
     ],
   )

@@ -31,7 +31,8 @@ test.describe('veřejné stránky, desktop 1280', () => {
     await page.goto('/')
     await ready(page)
     await expect(page).toHaveTitle(/FoodGo Brno.*Brně|FoodGo Brno/)
-    await expect(page.getByRole('heading', { level: 1, name: 'Najdi jídlo v Brně' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Najdi jídlo v Brně' })).toBeAttached()
+    await expect(page.getByRole('button', { name: 'Všechny podniky' })).toBeVisible()
     await expect(page.getByRole('combobox', { name: 'Hledat restauraci v Brně' })).toBeVisible()
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /127\.0\.0\.1:5173\/$/)
     await expect(page.getByRole('link', { name: 'Přeskočit na obsah' })).toHaveAttribute('href', '#main-content')
@@ -51,9 +52,9 @@ test.describe('veřejné stránky, desktop 1280', () => {
   test('kategorie Pizza a rozpočet do 150 Kč', async ({ page }) => {
     await page.goto('/')
     await ready(page)
-    await page.locator('a[href="/results?type=pizza"]:not([data-clone])').first().click()
-    await expect(page).toHaveURL(/type=pizza/)
+    await page.locator('button.category-card--pizza:not([data-clone])').first().click()
     await expect(page.locator('button.category-card--pizza[aria-pressed="true"]')).toBeVisible()
+    await expect(page.getByRole('region', { name: 'Podniky a filtry' })).toBeVisible()
     await page.goto('/results?budget=150')
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(page).toHaveURL(/budget=150/)
@@ -99,7 +100,7 @@ test.describe('veřejné stránky, desktop 1280', () => {
     await page.unroute('**/api/**')
     await page.route('**/api/**', (route) => route.abort())
     await page.goto('/')
-    await expect(page.getByRole('heading', { name: 'Najdi jídlo v Brně' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Najdi jídlo v Brně' })).toBeAttached()
     await page.goto('/results?deals=1')
     await expect(page.getByRole('heading', { name: /Slevy zatím nejsou ve veřejné verzi/i })).toBeVisible()
     await page.goto('/odmeny')
@@ -118,7 +119,7 @@ test.describe('veřejné stránky, desktop 1280', () => {
         return 1
       }
     })
-    await page.goto('/')
+    await page.goto('/results')
     await ready(page)
     await page.getByRole('button', { name: 'Použít moji polohu' }).click()
     await expect(page.getByText(/Poloha je aktivní|Poloha aktualizována/)).toBeVisible()
@@ -133,7 +134,7 @@ test.describe('veřejné stránky, desktop 1280', () => {
         return 1
       }
     })
-    await page.goto('/')
+    await page.goto('/results')
     await ready(page)
     await page.getByRole('button', { name: 'Použít moji polohu' }).click()
     await expect(page.getByText(/Poloha je v prohlížeči zakázaná/i).first()).toBeVisible()

@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Link, Navigate, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import ErrorBoundary from './components/ErrorBoundary'
-import LocationPrompt from './components/LocationPrompt'
 import Home from './pages/Home'
 import { LocationProvider } from './context/LocationContext'
 import { AuthProvider } from './context/AuthContext'
@@ -71,7 +70,6 @@ function App() {
           <RecoveryRedirect />
           <PageMeta />
           <Header />
-          <LocationPrompt />
           <Suspense fallback={null}>
             <CompareBar />
           </Suspense>
