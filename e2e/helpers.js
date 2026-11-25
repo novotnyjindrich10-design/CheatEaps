@@ -77,6 +77,16 @@ export async function blockOutside(page, { allowMapTiles = false } = {}) {
 export async function mockApi(page, decide, options = {}) {
   // Nejdřív obecný blocker, pak API handler (LIFO — API má přednost).
   await blockOutside(page, options)
+  // Celá obrazovka GPS modalu by zablokovala běžné E2E. Location spec si výzvu zapne sám.
+  if (options.locationPrompt !== true) {
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem('cheapeats.geo.prompt', 'dismissed')
+      } catch {
+        /* ignore */
+      }
+    })
+  }
   await page.route(
     (url) => isLocal(url.href) && isApiUrl(url.href),
     async (route) => {

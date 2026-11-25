@@ -37,7 +37,7 @@ test.describe('geolokace a vzdálenosti', () => {
   test.use({ viewport: { width: 1280, height: 800 } })
 
   test('první návštěva ukáže výzvu a po povolení vzdálenosti i řazení', async ({ page }) => {
-    await openAsGuest(page)
+    await openAsGuest(page, { locationPrompt: true })
     await installGeoMocks(page, { lat: 49.1951, lon: 16.6068, permission: 'prompt' })
     await page.route('**/routed-foot/table/v1/foot**', async (route) => {
       await route.fulfill({
@@ -57,7 +57,7 @@ test.describe('geolokace a vzdálenosti', () => {
 
     const prompt = page.locator('.location-prompt')
     await expect(prompt).toBeVisible()
-    await expect(prompt.getByText(/Povol polohu a najdeme ti nejbližší/i)).toBeVisible()
+    await expect(prompt.getByRole('heading', { name: 'Co dobrého je kolem tebe?' })).toBeVisible()
     await prompt.getByRole('button', { name: 'Povolit polohu' }).click()
 
     await expect(page.getByText(/Poloha načtena|Poloha je aktivní|Zjišťuji polohu/i).first()).toBeVisible()
@@ -72,8 +72,8 @@ test.describe('geolokace a vzdálenosti', () => {
     await expect(page.locator('.restaurant-card-meta--distance .meta-value').first()).not.toHaveText('—')
   })
 
-  test('Teď ne skryje výzvu a neptá se na každé stránce', async ({ page }) => {
-    await openAsGuest(page)
+  test('Pokračovat bez polohy skryje výzvu a neptá se na každé stránce', async ({ page }) => {
+    await openAsGuest(page, { locationPrompt: true })
     await page.addInitScript(() => {
       if (navigator.permissions) {
         navigator.permissions.query = async () => ({ state: 'prompt', onchange: null })
@@ -87,7 +87,7 @@ test.describe('geolokace a vzdálenosti', () => {
     })
     await page.reload()
     await ready(page)
-    await page.locator('.location-prompt').getByRole('button', { name: 'Teď ne' }).click()
+    await page.locator('.location-prompt').getByRole('button', { name: 'Pokračovat bez polohy' }).click()
     await expect(page.locator('.location-prompt')).toHaveCount(0)
 
     await page.goto('/results')

@@ -1477,49 +1477,109 @@ button.category-card {
 }
 
 .location-prompt {
-  width: min(1440px, calc(100% - 56px));
-  margin: 12px auto 0;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 18px max(16px, env(safe-area-inset-bottom));
+}
+
+.location-prompt-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 28, 24, 0.52);
+  animation: location-prompt-fade 0.28s ease;
 }
 
 .location-prompt-card {
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: 10px;
-  padding: 16px 18px;
-  border: 1px solid rgba(12, 107, 88, 0.18);
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(140, 255, 74, 0.22), rgba(255, 255, 255, 0.94));
-  box-shadow: 0 10px 28px rgba(18, 28, 24, 0.08);
+  justify-items: center;
+  gap: 14px;
+  width: min(100%, 400px);
+  padding: 28px 22px 22px;
+  border: 1px solid rgba(12, 107, 88, 0.16);
+  border-radius: 24px;
+  background: linear-gradient(165deg, rgba(140, 255, 74, 0.18), #fffdf9 42%, #fff);
+  box-shadow: 0 24px 60px rgba(18, 28, 24, 0.28);
+  text-align: center;
+  animation: location-prompt-rise 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.location-prompt-icon {
+  width: 72px;
+  height: 72px;
 }
 
 .location-prompt-title {
   margin: 0;
   color: var(--text);
-  font-size: 1.05rem;
-  font-weight: 800;
-  line-height: 1.35;
+  font-family: var(--font-display, var(--font));
+  font-size: clamp(1.35rem, 4.6vw, 1.7rem);
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .location-prompt-text {
   margin: 0;
+  max-width: 32ch;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1.45;
 }
 
 .location-prompt-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 10px;
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.location-prompt-actions .btn {
+  width: 100%;
+  min-height: 48px;
+  justify-content: center;
+}
+
+.location-prompt-allow {
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+@keyframes location-prompt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes location-prompt-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .location-prompt-backdrop,
+  .location-prompt-card {
+    animation: none;
+  }
 }
 
 @media (max-width: 640px) {
-  .location-prompt {
-    width: min(1440px, calc(100% - 28px));
-  }
-
-  .location-prompt-actions .btn {
-    flex: 1 1 auto;
-    justify-content: center;
+  .location-prompt-card {
+    width: min(100%, 420px);
+    padding: 26px 18px 18px;
   }
 }
 

@@ -12,7 +12,6 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import { SPONSORED_LABEL } from '../constants/monetization'
 import { hasFiniteLatLon } from '../utils/geo'
 import {
-  boundsAroundPoint,
   boundsFromPlaces,
   BRNO_MAP_CENTER,
   BRNO_MAP_DEFAULT_ZOOM,
@@ -21,6 +20,10 @@ import {
   placesForMap,
   pickVisibleLabels,
   MAP_LABEL_MIN_ZOOM,
+  MAP_CLUSTER_DISABLE_ZOOM,
+  MAP_FOCUS_WIDTH_M,
+  MAP_FOCUS_ZOOM,
+  zoomForMapWidth,
   escapeMapLabel,
 } from '../utils/mapPlaces'
 import { resolveMapTileConfig } from '../utils/mapTiles'
@@ -81,8 +84,6 @@ const MARKER_GLYPH = Object.freeze({
   default: '•',
 })
 
-/** Poloměr výchozího viewportu kolem polohy — průměr cca 2 km. */
-const AREA_RADIUS_M = 1000
 const GPS_DOT = '#2563eb'
 const GPS_RING = '#3b82f6'
 
@@ -264,16 +265,17 @@ export default function RestaurantMap({
   }
 
   const flyToArea = (lat, lon) => {
-    const bounds = boundsAroundPoint(lat, lon, AREA_RADIUS_M)
-    if (!bounds) return
-    runProgrammatic((map) => {
-      map.fitBounds(bounds, {
-        padding: [28, 28],
-        maxZoom: 16,
-        animate: true,
-        duration: 0.55,
+    const map = mapRef.current
+    if (!map) return
+    const apply = () => {
+      map.invalidateSize()
+      const zoom = zoomForMapWidth(map, lat, MAP_FOCUS_WIDTH_M)
+      runProgrammatic((m) => {
+        m.setView([lat, lon], zoom, { animate: true, duration: 0.55 })
       })
-    })
+    }
+    // Dvojité rAF — po mountu / scrollu k mapě už známe skutečnou šířku canvasu.
+    requestAnimationFrame(() => requestAnimationFrame(apply))
   }
 
   const fitAllPlaces = () => {
@@ -320,7 +322,7 @@ export default function RestaurantMap({
       showCoverageOnHover: false,
       maxClusterRadius: 48,
       spiderfyOnMaxZoom: true,
-      disableClusteringAtZoom: 17,
+      disableClusteringAtZoom: MAP_CLUSTER_DISABLE_ZOOM,
     })
     map.addLayer(cluster)
     clusterRef.current = cluster
@@ -511,7 +513,7 @@ export default function RestaurantMap({
     if (!marker || !mapRef.current) return
     const latLng = marker.getLatLng()
     runProgrammatic((map) => {
-      map.setView(latLng, Math.max(map.getZoom(), 15), { animate: true })
+      map.setView(latLng, Math.max(map.getZoom(), MAP_FOCUS_ZOOM), { animate: true })
     })
   }, [panToken, visibleId, ready])
 
@@ -590,7 +592,7 @@ export default function RestaurantMap({
             : `${places.length} ${places.length === 1 ? 'bod' : places.length < 5 ? 'body' : 'bodů'} na mapě`}
         </p>
         <p className="restaurant-map-hint">
-          Klikni na bod pro kartu. Při přiblížení se ukážou názvy, které se vejdou vedle sebe.
+          Klikni na bod pro kartu. U blízkých podniků ukazujeme názvy, které se vejdou vedle sebe.
         </p>
         <div className="restaurant-map-actions">
           <button

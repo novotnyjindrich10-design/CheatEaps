@@ -82,6 +82,11 @@ export function LocationProvider({ children }) {
   const [status, setStatus] = useState(() => (readStoredOrigin() ? 'ready' : 'idle'))
   const [errorMessage, setErrorMessage] = useState('')
   const [promptChoice, setPromptChoice] = useState(readPromptChoice)
+  const [geoGateReady, setGeoGateReady] = useState(() => {
+    if (readStoredOrigin() || readPromptChoice() != null) return true
+    if (typeof navigator === 'undefined' || !navigator.permissions?.query) return true
+    return false
+  })
   const [routeState, setRouteState] = useState({
     key: '',
     distances: new Map(),
@@ -237,6 +242,7 @@ export function LocationProvider({ children }) {
   useEffect(() => {
     if (typeof navigator === 'undefined' || !navigator.permissions?.query) {
       autoLocateAttempted.current = true
+      setGeoGateReady(true)
       return undefined
     }
 
@@ -272,6 +278,7 @@ export function LocationProvider({ children }) {
         }
 
         autoLocateAttempted.current = true
+        setGeoGateReady(true)
 
         onChange = () => {
           if (cancelled) return
@@ -282,6 +289,7 @@ export function LocationProvider({ children }) {
       })
       .catch(() => {
         autoLocateAttempted.current = true
+        setGeoGateReady(true)
       })
 
     return () => {
@@ -401,8 +409,13 @@ export function LocationProvider({ children }) {
   )
 
   const originFresh = Boolean(origin) && isStoredOriginFresh(origin)
+  // Počkej na Permissions API, ať se při granted neblikne modal před auto-locate.
   const showLocationPrompt =
-    !origin && promptChoice == null && status !== 'denied' && status !== 'locating'
+    geoGateReady &&
+    !origin &&
+    promptChoice == null &&
+    status !== 'denied' &&
+    status !== 'locating'
 
   const value = useMemo(
     () => ({

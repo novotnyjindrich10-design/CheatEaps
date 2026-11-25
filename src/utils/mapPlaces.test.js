@@ -8,6 +8,8 @@ import {
   placesForMap,
   pickVisibleLabels,
   escapeMapLabel,
+  zoomForMapWidth,
+  MAP_FOCUS_ZOOM,
 } from './mapPlaces.js'
 
 describe('mapPlaces', () => {
@@ -112,13 +114,20 @@ describe('mapPlaces', () => {
     assert.ok(boundsFromPlaces([{ id: 'a', lat: 49.2, lon: 16.6 }]))
   })
 
-  it('boundsAroundPoint pokrývá cca 2 km průměr', () => {
-    const box = boundsAroundPoint(49.1951, 16.6068, 1000)
+  it('boundsAroundPoint pokrývá okolí bodu', () => {
+    const box = boundsAroundPoint(49.1951, 16.6068, 350)
     assert.ok(box)
-    const [[minLat, minLon], [maxLat, maxLon]] = box
-    assert.ok(maxLat - minLat > 0.015 && maxLat - minLat < 0.025)
-    assert.ok(maxLon - minLon > 0.02 && maxLon - minLon < 0.04)
-    assert.equal(boundsAroundPoint(NaN, 16, 1000), null)
+    const [[minLat], [maxLat]] = box
+    assert.ok(maxLat - minLat > 0.005 && maxLat - minLat < 0.01)
+    assert.equal(boundsAroundPoint(NaN, 16, 350), null)
+  })
+
+  it('zoomForMapWidth míří na blízký viewport', () => {
+    const map = { getSize: () => ({ x: 390, y: 520 }) }
+    const zoom = zoomForMapWidth(map, 49.1951, 650)
+    assert.ok(zoom >= 16 && zoom <= 17)
+    assert.equal(zoomForMapWidth({ getSize: () => ({ x: 0, y: 0 }) }, 49.1951, 650), MAP_FOCUS_ZOOM)
+    assert.equal(zoomForMapWidth(null, 49.1951), MAP_FOCUS_ZOOM)
   })
 
   it('popisky blízko sebe schová a vybraný bod nechá', () => {

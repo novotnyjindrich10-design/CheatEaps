@@ -115,10 +115,10 @@ export function boundsFromPlaces(places) {
 }
 
 /**
- * Čtverec kolem bodu — výchozí poloměr 1000 m = průměr cca 2 km.
+ * Čtverec kolem bodu (poloměr v metrech).
  * @returns {[[number, number], [number, number]] | null}
  */
-export function boundsAroundPoint(lat, lon, radiusMeters = 1000) {
+export function boundsAroundPoint(lat, lon, radiusMeters = 350) {
   if (!Number.isFinite(lat) || !Number.isFinite(lon) || !Number.isFinite(radiusMeters) || radiusMeters <= 0) {
     return null
   }
@@ -132,14 +132,36 @@ export function boundsAroundPoint(lat, lon, radiusMeters = 1000) {
   ]
 }
 
-/** Popisky na mapě od tohoto zoomu, aby se při oddálení nepřekrývaly. */
-export const MAP_LABEL_MIN_ZOOM = 16
+/** Cílová šířka výchozího viewportu mapy (mobil ~500–800 m). */
+export const MAP_FOCUS_WIDTH_M = 650
+export const MAP_FOCUS_ZOOM = 16
+/** Popisky od tohoto zoomu — výchozí přiblížení je ≥ 16. */
+export const MAP_LABEL_MIN_ZOOM = 15
+/** Od tohoto zoomu jednotlivé značky místo clusterů. */
+export const MAP_CLUSTER_DISABLE_ZOOM = 15
+
+/**
+ * Zoom tak, aby šířka mapy odpovídala cca `widthMeters` kolem `lat`.
+ */
+export function zoomForMapWidth(map, lat, widthMeters = MAP_FOCUS_WIDTH_M) {
+  if (!map || !Number.isFinite(lat) || !Number.isFinite(widthMeters) || widthMeters <= 0) {
+    return MAP_FOCUS_ZOOM
+  }
+  const size = typeof map.getSize === 'function' ? map.getSize() : null
+  // Dokud Leaflet nezná šířku (0), počítej s typickým mobile canvasem — jinak zoom padne moc daleko.
+  const widthPx = Math.max(Number(size?.x) || 0, 360)
+  const metersPerPixel = widthMeters / widthPx
+  const cos = Math.max(0.01, Math.cos((lat * Math.PI) / 180))
+  const zoom = Math.log2((156543.03392 * cos) / metersPerPixel)
+  if (!Number.isFinite(zoom)) return MAP_FOCUS_ZOOM
+  return Math.min(17, Math.max(MAP_FOCUS_ZOOM, Math.round(zoom * 2) / 2))
+}
 
 /**
  * Vybere body, jejichž popisek se vejde. Vyšší priority vyhraje blízký konflikt.
  * @param {{ id: string, x: number, y: number, priority?: number }[]} points
  */
-export function pickVisibleLabels(points, minDistancePx = 78) {
+export function pickVisibleLabels(points, minDistancePx = 64) {
   const ranked = [...(points || [])].sort((a, b) => {
     const priority = (b.priority || 0) - (a.priority || 0)
     if (priority !== 0) return priority
