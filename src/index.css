@@ -214,9 +214,9 @@ a {
   align-self: center;
   gap: 0;
   min-width: 0;
-  /* Mobil: ~145–165 CSS px; desktop níže v media query */
-  width: clamp(148px, 48vw, 165px);
-  max-width: min(54vw, 165px);
+  /* Čitelné graffiti logo, bez zásahu do zbytku hlavičky */
+  width: clamp(150px, 48vw, 168px);
+  max-width: min(55vw, 168px);
   line-height: 0;
   flex: 0 1 auto;
 }
@@ -251,8 +251,8 @@ a {
   }
 
   .brand {
-    width: 195px;
-    max-width: 200px;
+    width: 200px;
+    max-width: 210px;
   }
 }
 
