@@ -7,7 +7,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createServer } from 'vite'
 import { loadEnv } from 'vite'
-import { publicSiteOrigin, sitemapOrigin } from '../src/utils/sitemap.js'
+import { publicSiteOrigin, sitemapOrigin, isSearchPreviewBuild } from '../src/utils/sitemap.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outDir = path.join(root, 'dist')
@@ -42,8 +42,9 @@ async function main() {
     const { renderPublicPage, renderRestaurantPage } = await server.ssrLoadModule('/src/utils/publicHtml.js')
     const { demoRestaurants } = await server.ssrLoadModule('/src/data/demoRestaurants.js')
 
+    const indexable = !isSearchPreviewBuild(process.env)
     for (const pathname of PUBLIC_PATHS) {
-      const html = renderPublicPage(template, pathname, origin)
+      const html = renderPublicPage(template, pathname, origin, { indexable })
       if (pathname === '/') {
         writeFileSync(templatePath, html)
       } else {
@@ -56,7 +57,7 @@ async function main() {
     let written = 0
     for (const place of demoRestaurants) {
       if (!place?.id) continue
-      const html = renderRestaurantPage(template, place, origin)
+      const html = renderRestaurantPage(template, place, origin, { indexable })
       const dir = path.join(outDir, 'restaurant', place.id)
       mkdirSync(dir, { recursive: true })
       writeFileSync(path.join(dir, 'index.html'), html)

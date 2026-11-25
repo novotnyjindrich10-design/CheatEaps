@@ -6,6 +6,7 @@ import {
   PRICE_KIND_RANGE,
   compareByPrice,
   formatCardPrice,
+  formatVerifiedDate,
   getBudgetComparePrice,
   getVerifiedPriceCeiling,
   getVerifiedPriceFloor,
@@ -82,6 +83,8 @@ describe('getBudgetComparePrice', () => {
     assert.equal(formatCardPrice(estimate(80, 120)).status, 'Odhad')
     assert.match(formatCardPrice(estimate(80, 120)).primary, /^~/)
     assert.equal(formatCardPrice({ name: 'Bez ceny' }).status, 'Neověřeno')
+    assert.equal(formatCardPrice(menu(149)).updatedLabel, formatVerifiedDate('2026-10-10'))
+    assert.equal(formatCardPrice(estimate(80, 120)).updatedLabel, '')
   })
 })
 

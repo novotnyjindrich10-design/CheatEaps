@@ -78,7 +78,7 @@ test.describe('final polish — mapa s mock dlaždicemi', () => {
     await openAsGuest(page)
     await page.goto('/pro-podniky')
     await ready(page)
-    await expect(page.getByRole('heading', { name: 'Propagujte svůj podnik' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Buďte vidět, když lidé hledají, kde se najíst' })).toBeVisible()
     await expect(page.getByRole('table')).toContainText('99 Kč')
     await expect(page.getByRole('button', { name: 'Nezávazná poptávka' }).first()).toBeVisible()
     await expect(page.getByRole('button', { name: /Zaplatit|Koupit/ })).toHaveCount(0)

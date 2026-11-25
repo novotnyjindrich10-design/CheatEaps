@@ -33,10 +33,10 @@ const PUBLIC_COPY = {
     ],
   },
   '/pro-podniky': {
-    heading: 'Propagujte svůj podnik',
+    heading: 'Buďte vidět, když lidé hledají, kde se najíst',
     paragraphs: [
-      'Dostaň svou restauraci mezi lidi, kteří hledají, kde se dobře najíst.',
-      'Balíčky propagace Start, Plus a Premium. Online platba není zapojená, jde poslat nezávaznou poptávku.',
+      'FoodGo je katalog restaurací v Brně. Placené zvýraznění nese označení Sponzorováno.',
+      'Balíčky propagace Start, Plus a Premium. Online platba není zapnutá, jde poslat nezávaznou poptávku.',
     ],
   },
   '/podpor-me': {
@@ -49,13 +49,13 @@ const PUBLIC_COPY = {
   '/ochrana-osobnich-udaju': {
     heading: 'Zásady ochrany osobních údajů',
     paragraphs: [
-      'Tohle není platný právní text. Je to kostra stránky. Než se na ni odkáže jako na informace o zpracování údajů, musí provozovatel doplnit označené části a nechat si text zkontrolovat.',
+      'Tohle není platný právní text. Než se na něj odkáže jako na informace o zpracování údajů, musí provozovatel doplnit označené části a nechat si text zkontrolovat.',
     ],
   },
   '/obchodni-podminky': {
     heading: 'Obchodní podmínky',
     paragraphs: [
-      'Tohle nejsou platné obchodní podmínky. Je to kostra stránky. Než podle nich někdo jedná, musí provozovatel doplnit označené části a nechat si text zkontrolovat.',
+      'Tohle nejsou platné obchodní podmínky. Než podle nich někdo jedná, musí provozovatel doplnit označené části a nechat si text zkontrolovat.',
     ],
   },
   '/o-foodgo': {
@@ -246,30 +246,32 @@ export function renderHtmlDocument(template, page) {
   return html
 }
 
-export function renderPublicPage(template, pathname, origin = CANONICAL_ORIGIN) {
+export function renderPublicPage(template, pathname, origin = CANONICAL_ORIGIN, options = {}) {
   const meta = metaForPath(pathname)
   const canonical = `${origin}${pathname === '/' ? '/' : pathname}`
+  const indexable = options.indexable !== false
   return renderHtmlDocument(template, {
     title: meta.title,
     description: meta.description,
     canonical,
-    robots: 'index,follow',
+    robots: indexable ? 'index,follow' : 'noindex, nofollow',
     image: `${origin}/logo-mark.png`,
     snapshotHtml: publicSnapshot(pathname),
-    jsonLd: websiteJsonLd(origin),
+    jsonLd: indexable ? websiteJsonLd(origin) : null,
   })
 }
 
-export function renderRestaurantPage(template, place, origin = CANONICAL_ORIGIN) {
+export function renderRestaurantPage(template, place, origin = CANONICAL_ORIGIN, options = {}) {
   const model = restaurantPageModel(place, origin)
+  const indexable = options.indexable !== false
   return renderHtmlDocument(template, {
     title: model.title,
     description: model.description,
     canonical: model.canonical,
-    robots: 'index,follow',
+    robots: indexable ? 'index,follow' : 'noindex, nofollow',
     image: shareImageUrl(place, origin),
     snapshotHtml: restaurantSnapshot(model),
-    jsonLd: restaurantJsonLd(model),
+    jsonLd: indexable ? restaurantJsonLd(model) : null,
   })
 }
 

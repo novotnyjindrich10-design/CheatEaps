@@ -75,15 +75,35 @@ function amountText(restaurant) {
   return '—'
 }
 
+/** Datum ověření ceny ve tvaru RRRR-MM-DD. Jiný zápis se nehádá. */
+export function formatVerifiedDate(value) {
+  const raw = String(value || '').trim()
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw)
+  if (!match) return raw
+  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])))
+  if (Number.isNaN(date.getTime())) return raw
+  return new Intl.DateTimeFormat('cs-CZ', {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date)
+}
+
 /** Krátká cena na kartě. Ověření a odhad mají vlastní popisek. */
 export function formatCardPrice(restaurant) {
   if (hasVerifiedPrice(restaurant)) {
-    return { primary: amountText(restaurant), tone: 'verified', status: 'Ověřeno' }
+    return {
+      primary: amountText(restaurant),
+      tone: 'verified',
+      status: 'Ověřeno',
+      updatedLabel: formatVerifiedDate(restaurant.priceVerifiedAt),
+    }
   }
   if (hasEstimatePrice(restaurant)) {
-    return { primary: `~${amountText(restaurant)}`, tone: 'estimate', status: 'Odhad' }
+    return { primary: `~${amountText(restaurant)}`, tone: 'estimate', status: 'Odhad', updatedLabel: '' }
   }
-  return { primary: '—', tone: 'missing', status: 'Neověřeno' }
+  return { primary: '—', tone: 'missing', status: 'Neověřeno', updatedLabel: '' }
 }
 
 /** Plný popis ceny v detailu podniku. */

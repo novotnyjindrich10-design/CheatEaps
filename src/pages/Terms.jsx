@@ -24,8 +24,7 @@ export default function Terms() {
         ) : (
           <p>
             Provozovatelem má být živnost, pod kterou se projekt vede. Jméno, IČO, sídlo, DIČ a
-            kontaktní e-mail v konfiguraci nejsou. Aplikace je nedoplňuje. Dokud tam nejsou, nejde
-            podle tohoto textu uzavřít smlouvu.
+            kontaktní e-mail tu nejsou. Dokud chybí, nejde podle tohoto textu uzavřít smlouvu.
           </p>
         )}
       </OperatorSlot>

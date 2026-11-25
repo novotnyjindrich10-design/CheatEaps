@@ -30,9 +30,9 @@ const PAGES = {
     robots: 'noindex, nofollow',
   },
   '/pro-podniky': {
-    title: 'Propagujte svůj podnik | FoodGo Brno',
+    title: 'Pro podniky v Brně | FoodGo Brno',
     description:
-      'Balíčky propagace Start, Plus a Premium. Online platba není zapojená, jde poslat nezávaznou poptávku.',
+      'Nezávazná poptávka propagace Start, Plus a Premium v katalogu FoodGo Brno. Hledání pro návštěvníky zůstává zdarma.',
   },
   '/pro-podniky/ucet': {
     title: 'Správa podniku | FoodGo Brno',

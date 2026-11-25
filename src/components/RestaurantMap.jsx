@@ -97,14 +97,15 @@ async function addBasemap(map, tiles) {
   if (tiles.mode === 'vector-style') {
     ensureMaplibreWorker()
     const { maplibreGL } = await import('@maplibre/maplibre-gl-leaflet')
-    if (tiles.attribution) {
-      map.attributionControl?.addAttribution(tiles.attribution)
-    }
+    // Styl MapLibre má vlastní atribuci, ale do Leaflet ovládacího prvku ji nepředá.
+    // Jedna věta patří sem; vlastní prvek MapLibre schová CSS, ať se text neopakuje.
     const layer = maplibreGL({
       style: tiles.styleUrl,
       interactive: false,
+      attributionControl: false,
     })
     layer.addTo(map)
+    if (tiles.attribution) map.attributionControl?.addAttribution(tiles.attribution)
     // Skryj POI symboly z podkladu — jinak se pletou s našimi značkami podniků.
     const hidePoi = () => {
       const gl = typeof layer.getMaplibreMap === 'function' ? layer.getMaplibreMap() : null
@@ -202,6 +203,8 @@ export default function RestaurantMap({
   const markersRef = useRef(new Map())
   const userLayerRef = useRef(null)
   const fittedFingerprintRef = useRef('')
+  const builtFingerprintRef = useRef('')
+  const selectedMarkerRef = useRef('')
   const flownFocusRef = useRef(0)
   const onSelectRef = useRef(onSelect)
   const pickRef = useRef(() => {})
@@ -248,6 +251,7 @@ export default function RestaurantMap({
       center: [BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon],
       zoom: BRNO_MAP_DEFAULT_ZOOM,
       minZoom: 10,
+      zoomControl: false,
       // MapLibre GL Leaflet vyžaduje maxZoom na L.map (jinak: "Map has no maxZoom specified").
       maxZoom: 19,
       maxBounds: BRNO_MAP_MAX_BOUNDS,
@@ -256,6 +260,7 @@ export default function RestaurantMap({
       attributionControl: true,
     })
     mapRef.current = map
+    L.control.zoom({ position: 'bottomright' }).addTo(map)
 
     const cluster = L.markerClusterGroup({
       showCoverageOnHover: false,
@@ -302,6 +307,8 @@ export default function RestaurantMap({
       markersRef.current = new Map()
       userLayerRef.current = null
       fittedFingerprintRef.current = ''
+      builtFingerprintRef.current = ''
+      selectedMarkerRef.current = ''
       setReady(false)
     }
   }, [])
@@ -320,21 +327,26 @@ export default function RestaurantMap({
     const cluster = clusterRef.current
     if (!map || !cluster || !ready) return
 
-    cluster.clearLayers()
-    markersRef.current = new Map()
+    if (builtFingerprintRef.current !== fingerprint) {
+      cluster.clearLayers()
+      markersRef.current = new Map()
 
-    for (const place of places) {
-      const marker = L.marker([place.lat, place.lon], {
-        title: place.name,
-        riseOnHover: true,
-        zIndexOffset: place.sponsored ? 200 : 0,
-        icon: markerIconFor(place, false),
-      })
-      marker.on('click', () => {
-        pickRef.current(place.id)
-      })
-      cluster.addLayer(marker)
-      markersRef.current.set(place.id, marker)
+      for (const place of places) {
+        const selected = place.id === visibleId
+        const marker = L.marker([place.lat, place.lon], {
+          title: place.name,
+          riseOnHover: true,
+          zIndexOffset: selected ? 800 : place.sponsored ? 200 : 0,
+          icon: markerIconFor(place, selected),
+        })
+        marker.on('click', () => {
+          pickRef.current(place.id)
+        })
+        cluster.addLayer(marker)
+        markersRef.current.set(place.id, marker)
+      }
+      builtFingerprintRef.current = fingerprint
+      selectedMarkerRef.current = visibleId
     }
 
     // FitBounds jen při změně množiny bodů — ne při každém re-renderu / psaní do hledání se stejným výsledkem.
@@ -348,17 +360,28 @@ export default function RestaurantMap({
       fittedFingerprintRef.current = fingerprint
     }
     requestAnimationFrame(() => map.invalidateSize())
-  }, [places, fingerprint, ready])
+  }, [places, fingerprint, ready, visibleId])
 
   useEffect(() => {
     if (!ready) return
-    for (const place of places) {
-      const marker = markersRef.current.get(place.id)
-      if (!marker) continue
-      const selected = place.id === visibleId
-      marker.setIcon(markerIconFor(place, selected))
-      marker.setZIndexOffset(selected ? 800 : place.sponsored ? 200 : 0)
+    const previousId = selectedMarkerRef.current
+    if (previousId && previousId !== visibleId) {
+      const previous = places.find((place) => place.id === previousId)
+      const marker = markersRef.current.get(previousId)
+      if (previous && marker) {
+        marker.setIcon(markerIconFor(previous, false))
+        marker.setZIndexOffset(previous.sponsored ? 200 : 0)
+      }
     }
+    if (visibleId) {
+      const current = places.find((place) => place.id === visibleId)
+      const marker = markersRef.current.get(visibleId)
+      if (current && marker) {
+        marker.setIcon(markerIconFor(current, true))
+        marker.setZIndexOffset(800)
+      }
+    }
+    selectedMarkerRef.current = visibleId
   }, [places, ready, visibleId])
 
   useEffect(() => {
@@ -487,7 +510,7 @@ export default function RestaurantMap({
             : `${places.length} ${places.length === 1 ? 'bod' : places.length < 5 ? 'body' : 'bodů'} na mapě`}
         </p>
         <p className="restaurant-map-hint">
-          Klikni na bod pro kartu. Při velkém přiblížení se ukážou názvy, které se vejdou vedle sebe. Podklad OpenFreeMap.
+          Klikni na bod pro kartu. Při přiblížení se ukážou názvy, které se vejdou vedle sebe.
         </p>
         <div className="restaurant-map-actions">
           <button
@@ -501,7 +524,7 @@ export default function RestaurantMap({
           </button>
           {places.length > 0 ? (
             <button type="button" className="btn btn-secondary restaurant-map-fit" onClick={fitAllPlaces}>
-              Zobrazit všechny body
+              Všechny body
             </button>
           ) : null}
           <button
@@ -510,7 +533,7 @@ export default function RestaurantMap({
             aria-pressed={expanded}
             onClick={() => setExpanded((value) => !value)}
           >
-            {expanded ? 'Zmenšit mapu' : 'Mapa na větší plochu'}
+            {expanded ? 'Zmenšit' : 'Zvětšit'}
           </button>
           {hasOrigin && onForget ? (
             <button type="button" className="btn btn-secondary" onClick={onForget}>

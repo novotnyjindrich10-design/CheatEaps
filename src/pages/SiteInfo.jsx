@@ -52,7 +52,7 @@ export default function SiteInfo({ kind = 'about' }) {
             <ul>
               <li>Neslibujeme počet zákazníků ani návratnost reklamy.</li>
               <li>Nejsme rozvozová služba ani rezervace stolů.</li>
-              <li>Právní texty a identita provozovatele musí být před ostrým spuštěním doplněné a schválené.</li>
+              <li>Obchodní podmínky a ochrana osobních údajů ještě nejsou právně schválené.</li>
             </ul>
           </section>
           <p>
@@ -90,8 +90,7 @@ export default function SiteInfo({ kind = 'about' }) {
               </ul>
             ) : (
               <p>
-                Veřejné údaje provozovatele ještě nejsou doplněné v <code>operator.js</code>. Doplnění je podmínkou
-                komerčního spuštění.
+                Jméno, adresa a IČO provozovatele tu zatím nejsou. Doplní je provozovatel, až budou ověřené.
               </p>
             )}
           </OperatorSlot>
@@ -109,7 +108,7 @@ export default function SiteInfo({ kind = 'about' }) {
           </ul>
           <p className="section-desc">
             Podrobnosti zpracování účtu a recenzí jsou v{' '}
-            <Link to="/ochrana-osobnich-udaju">ochraně osobních údajů</Link> (kostra k právní kontrole).
+            <Link to="/ochrana-osobnich-udaju">ochraně osobních údajů</Link>. Text ještě není právně schválený.
           </p>
         </section>
       ) : null}

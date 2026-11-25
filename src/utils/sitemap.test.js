@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { CANONICAL_ORIGIN } from '../constants/site.js'
-import { publicSiteOrigin, sitemapOrigin, sitemapUrls, sitemapXml } from './sitemap.js'
+import { publicSiteOrigin, sitemapOrigin, sitemapUrls, sitemapXml, isSearchPreviewBuild } from './sitemap.js'
 
 describe('sitemap', () => {
   it('prázdnou nebo ne-https adresu nahradí produkční kanonickou', () => {
@@ -27,5 +27,11 @@ describe('sitemap', () => {
     assert.equal(xml.includes('/porovnani'), false)
     assert.equal(xml.includes('/nabidka'), false)
     assert.equal(xml.includes('/podpor-me'), false)
+  })
+
+  it('preview build pozná podle VERCEL_ENV', () => {
+    assert.equal(isSearchPreviewBuild({ VERCEL_ENV: 'preview' }), true)
+    assert.equal(isSearchPreviewBuild({ VERCEL_ENV: 'production' }), false)
+    assert.equal(isSearchPreviewBuild({}), false)
   })
 })

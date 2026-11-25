@@ -56,6 +56,7 @@ describe('otevírací doba z OSM', () => {
       'Po–Pá 11:00–19:00\nSo 11:00–18:00',
     )
     assert.equal(formatOpeningHoursForDisplay('24/7'), 'Nonstop (24/7)')
+    assert.equal(formatOpeningHoursForDisplay('Mo-Sa 09:00-23:00; Su off'), 'Po–So 09:00–23:00\nNe zavřeno')
     assert.equal(formatOpeningHoursForDisplay('closed'), null)
   })
 })
@@ -79,5 +80,14 @@ describe('extract a present', () => {
     assert.equal(empty.hoursDisplay, null)
     assert.equal(empty.phoneTel, null)
     assert.match(empty.unverifiedNote, /OpenStreetMap/)
+  })
+
+  it('zavřený den z OSM ukáže jako zavřeno', () => {
+    const view = presentOsmContact({
+      osmOpeningHours: 'Mo-Sa 09:00-23:00; Su off',
+      osmOpeningHoursDisplay: 'Po–So 09:00–23:00\nNe off',
+    })
+    assert.match(view.hoursDisplay, /Ne zavřeno/)
+    assert.equal(view.hoursDisplay.includes('off'), false)
   })
 })

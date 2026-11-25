@@ -172,8 +172,8 @@ export default function BusinessAccount() {
             ) : null}
             {!payments.loading && !payments.enabled && !order.paid ? (
               <p className="section-desc">
-                Online platba ještě není zapojená. Po nastavení Comgate se tu objeví tlačítko. Do té doby stačí poptávka
-                a potvrzení e-mailem.
+                Online platba ještě není k dispozici. Stačí nezávazná poptávka a potvrzení e-mailem. Nic se
+                nestrhává.
               </p>
             ) : null}
             <p>

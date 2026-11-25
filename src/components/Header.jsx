@@ -256,14 +256,6 @@ export default function Header() {
         <div className="header-menu-drawer-inner">
           <div className="header-menu-panel-head">
             <p>Menu</p>
-            <button
-              type="button"
-              className="header-menu-close"
-              aria-label="Zavřít menu"
-              onClick={close}
-            >
-              ×
-            </button>
           </div>
 
           <ul className="header-menu-list">

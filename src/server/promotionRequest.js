@@ -283,7 +283,7 @@ export function assessPromotionRequest(payload, now = Date.now()) {
       : 'Fotografie: žádné',
     '',
     'Stav: nezávazná poptávka. Platba neproběhla. Propagace není aktivní. Předplatné se nespustilo.',
-    'Obchodní podmínky a zásady ochrany osobních údajů jsou na webu kostra k právní kontrole.',
+    'Obchodní podmínky a ochrana osobních údajů ještě nejsou právně schválené. Tahle zpráva není smlouva ani výzva k platbě.',
   ].join('\n')
 
   return {

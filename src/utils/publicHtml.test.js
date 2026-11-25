@@ -53,6 +53,13 @@ describe('veřejné HTML', () => {
     assert.equal(html.includes('openingHours'), false)
   })
 
+  it('vypnutá indexace schová snapshot z vyhledávání', () => {
+    const html = renderPublicPage(TEMPLATE, '/pro-podniky', CANONICAL_ORIGIN, { indexable: false })
+    assert.match(html, /noindex, nofollow/)
+    assert.match(html, /Buďte vidět, když lidé hledají/)
+    assert.equal(html.includes('application/ld+json'), false)
+  })
+
   it('úvod má kanonickou adresu a soukromé stránky nemají obsah katalogu', () => {
     const home = renderPublicPage(TEMPLATE, '/')
     assert.match(home, /Najdi jídlo v Brně/)

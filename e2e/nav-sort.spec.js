@@ -22,7 +22,8 @@ test.describe('mobilní navigace 390', () => {
 
     const menu = page.getByRole('navigation', { name: 'Mobilní menu' })
     await expect(menu).toBeVisible()
-    const closeToggle = page.getByRole('button', { name: 'Zavřít menu' }).first()
+    const closeToggle = page.getByRole('button', { name: 'Zavřít menu' })
+    await expect(closeToggle).toHaveCount(1)
     await expect(closeToggle).toHaveAttribute('aria-expanded', 'true')
 
     const firstLink = menu.getByRole('link').first()

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import BusinessApplicationForm from '../components/BusinessApplicationForm'
 import BusinessPlanCards from '../components/BusinessPlanCards'
 import PromotionInquiryForm from '../components/PromotionInquiryForm'
-import { operatorIsComplete, presentPrice } from '../constants/operator'
+import { presentPrice } from '../constants/operator'
 import { PROMOTION_MONTHLY_PRICES } from '../constants/promotionPrice'
 import { PUBLIC_V1 } from '../constants/publicV1'
 
@@ -11,34 +11,32 @@ export default function ForBusinesses() {
   const [mode, setMode] = useState('')
   const [planId, setPlanId] = useState('plus')
   const vat = presentPrice(PROMOTION_MONTHLY_PRICES.plus)
-  const operatorReady = operatorIsComplete()
+  const priceNote =
+    vat.vatStatus === 'unconfirmed'
+      ? 'Uvedené ceny jsou ceníkové. Konečná částka na faktuře se upřesní, než cokoli zaplatíte. Teď se nic nestrhává.'
+      : vat.vatNote
   return (
     <main className="page biz-page">
       <section className="biz-hero">
-        <p className="biz-kicker">Pro podniky</p>
-        <h1>Propagujte svůj podnik</h1>
+        <p className="biz-kicker">Pro podniky · Brno</p>
+        <h1>Buďte vidět, když lidé hledají, kde se najíst</h1>
         <p className="biz-lead">
-          Placené zvýraznění v katalogu FoodGo. Hledání restaurací pro návštěvníky zůstává zdarma.
+          FoodGo je katalog restaurací, kaváren a rychlého občerstvení v Brně. Návštěvníci hledají podle
+          chuti, ceny a vzdálenosti. Placené zvýraznění ukáže podnik ve zvláštním bloku s označením
+          Sponzorováno.
         </p>
-        <p className="biz-note">
-          Nejdřív odešleš nezávaznou poptávku. Online platba se otevře až po nastavení Comgate a jen z účtu
-          podniku přes kód poptávky. Ostré platby zůstávají vypnuté, dokud není výslovně zapnutý ostrý režim.
-          Návštěvnost, prokliky ani tržby negarantujeme.
-        </p>
-        {!operatorReady ? (
-          <p className="biz-note" role="status">
-            Identita provozovatele a daňový režim ještě nejsou doplněné. Ceník není ostrý prodej.
-            Obchodní podmínky a ochrana osobních údajů zůstávají kostrou k právní kontrole.
-          </p>
-        ) : null}
+        <ul className="biz-points">
+          <li>Hledání pro návštěvníky zůstává zdarma.</li>
+          <li>Běžný zápis do katalogu jde požádat zvlášť a bez poplatku.</li>
+          <li>Propagace se zapne až po domluvě. Teď posíláte jen nezávaznou poptávku.</li>
+        </ul>
       </section>
 
       <section className="biz-section" id="balicky" aria-labelledby="biz-plans-title">
         <h2 id="biz-plans-title">Balíčky propagace</h2>
         <p className="section-desc">
-          Ceny jsou v Kč a drží je konfigurace projektu. Měsíční období trvá 30 dní, roční 12 měsíců.
-          Obě varianty jsou jednorázová platba a samy se neobnovují. Placený výsledek nese označení
-          Sponzorováno a nemění hodnocení. {vat.vatNote}
+          Ceny jsou v korunách. Měsíční období trvá 30 dní, roční 12 měsíců. Obě varianty se platí
+          jednorázově a samy se neobnovují. Placené umístění nemění hodnocení. {priceNote}
         </p>
         <div className="biz-compare-wrap">
           <table className="biz-compare">
@@ -54,27 +52,27 @@ export default function ForBusinesses() {
             <tbody>
               <tr>
                 <th scope="row">Cena za 30 dní</th>
-                <td>{PROMOTION_MONTHLY_PRICES.start} Kč</td>
-                <td>{PROMOTION_MONTHLY_PRICES.plus} Kč</td>
-                <td>{PROMOTION_MONTHLY_PRICES.premium} Kč</td>
+                <td data-label="Start">{PROMOTION_MONTHLY_PRICES.start} Kč</td>
+                <td data-label="Plus">{PROMOTION_MONTHLY_PRICES.plus} Kč</td>
+                <td data-label="Premium">{PROMOTION_MONTHLY_PRICES.premium} Kč</td>
               </tr>
               <tr>
                 <th scope="row">Obnovení</th>
-                <td>Ne</td>
-                <td>Ne</td>
-                <td>Ne</td>
+                <td data-label="Start">Ne</td>
+                <td data-label="Plus">Ne</td>
+                <td data-label="Premium">Ne</td>
               </tr>
               <tr>
                 <th scope="row">Označení</th>
-                <td>Sponzorováno</td>
-                <td>Sponzorováno</td>
-                <td>Sponzorováno</td>
+                <td data-label="Start">Sponzorováno</td>
+                <td data-label="Plus">Sponzorováno</td>
+                <td data-label="Premium">Sponzorováno</td>
               </tr>
               <tr>
                 <th scope="row">Prezentace</th>
-                <td>Základní zvýraznění</td>
-                <td>Výraznější karta a delší text</td>
-                <td>Přednost v reklamním bloku</td>
+                <td data-label="Start">Základní zvýraznění</td>
+                <td data-label="Plus">Výraznější karta a delší text</td>
+                <td data-label="Premium">Přednost v reklamním bloku</td>
               </tr>
             </tbody>
           </table>
@@ -89,7 +87,7 @@ export default function ForBusinesses() {
           Účet podniku a stav poptávky:{' '}
           <Link to="/pro-podniky/ucet">Správa podniku</Link>
           {' · '}
-          <Link to="/obchodni-podminky">Návrh obchodních podmínek</Link>
+          <Link to="/obchodni-podminky">Obchodní podmínky</Link>
         </p>
       </section>
 

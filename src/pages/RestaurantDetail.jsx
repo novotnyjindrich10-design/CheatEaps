@@ -3,7 +3,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import { getRestaurantById, mapsNavigateUrl } from '../data/restaurants'
 import { PRICE_CATEGORY_LABELS, getCategoryMeta } from '../constants/filters'
 import { getRestaurantCategory } from '../utils/restaurantTags'
-import { formatPlacePrice, hasEstimatePrice, hasVerifiedPrice } from '../utils/price'
+import { formatPlacePrice, formatVerifiedDate, hasEstimatePrice, hasVerifiedPrice } from '../utils/price'
 import {
   formatReviewCount,
   hasGoogleRating,
@@ -388,7 +388,7 @@ export default function RestaurantDetail() {
                 {categoryLabel ? ` · ${categoryLabel}` : ''}
               </p>
               <p className="detail-address">
-                Ověřeno {priceVerifiedAt}
+                Ověřeno {formatVerifiedDate(priceVerifiedAt)}
                 {priceChannel === 'delivery' ? ' (rozvoz)' : ' (provozovna)'}
                 {menuSource ? (
                   <>

@@ -3,7 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
-import { sitemapOrigin, sitemapUrls, sitemapXml } from './src/utils/sitemap.js'
+import { sitemapOrigin, sitemapUrls, sitemapXml, isSearchPreviewBuild } from './src/utils/sitemap.js'
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -113,6 +113,10 @@ function sitemapPlugin(env) {
       mkdirSync(outDir, { recursive: true })
       writeFileSync(path.join(outDir, 'sitemap.xml'), xml)
       const robotsPath = path.join(outDir, 'robots.txt')
+      if (isSearchPreviewBuild(process.env)) {
+        writeFileSync(robotsPath, 'User-agent: *\nDisallow: /\n')
+        return
+      }
       let robots = readFileSync(robotsPath, 'utf8').replace(/\s+$/, '')
       // Nahraď existující Sitemap řádky, ať se v dist nerodí duplicity.
       robots = robots

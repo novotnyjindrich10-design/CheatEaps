@@ -267,6 +267,23 @@
   color: var(--muted);
 }
 
+.biz-points {
+  margin: 16px 0 0;
+  padding: 0;
+  max-width: 40em;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.biz-points li {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(12, 125, 104, 0.16);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
 .biz-section {
   margin: 28px 0 36px;
 }
@@ -862,6 +879,56 @@
   padding-top: 8px;
   color: var(--muted);
   text-align: left;
+}
+
+@media (max-width: 700px) {
+  .biz-compare-wrap {
+    overflow: visible;
+  }
+
+  .biz-compare thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .biz-compare,
+  .biz-compare tbody,
+  .biz-compare tr,
+  .biz-compare th,
+  .biz-compare td {
+    display: block;
+    width: 100%;
+  }
+
+  .biz-compare tr {
+    margin: 0 0 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: #fff;
+  }
+
+  .biz-compare th[scope='row'] {
+    padding: 0 0 8px;
+    border: 0;
+  }
+
+  .biz-compare td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border: 0;
+  }
+
+  .biz-compare td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-weight: 750;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

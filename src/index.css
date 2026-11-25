@@ -500,7 +500,7 @@ html.nav-drawer-open .site-header {
   flex-direction: column;
   height: 100%;
   padding:
-    max(16px, env(safe-area-inset-top, 0px))
+    calc(92px + env(safe-area-inset-top, 0px))
     max(16px, env(safe-area-inset-right, 0px))
     max(20px, env(safe-area-inset-bottom, 0px))
     max(16px, env(safe-area-inset-left, 0px));
@@ -525,24 +525,6 @@ html.nav-drawer-open .site-header {
   font-weight: 750;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-.header-menu-close {
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 12px;
-  background: #eef4f1;
-  color: var(--text);
-  font-size: 1.5rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.header-menu-close:hover,
-.header-menu-close:focus-visible {
-  background: #e2ece7;
-  outline: none;
 }
 
 .header-menu-list {
@@ -2030,6 +2012,7 @@ button.category-card {
   display: inline-flex;
   flex-direction: column;
   gap: 1px;
+  max-width: calc(100% - 24px);
   padding: 8px 12px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.94);
@@ -2064,6 +2047,14 @@ button.category-card {
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.restaurant-card-price-updated {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .restaurant-card-price-chip--verified .restaurant-card-price-status {
@@ -2185,6 +2176,10 @@ button.category-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+}
+
+.restaurant-card-actions .btn-card--primary {
+  grid-column: 1 / -1;
 }
 
 .btn-card--primary {
@@ -3145,6 +3140,20 @@ button.category-card {
     text-align: left;
   }
 
+  .location-bar-actions {
+    width: 100%;
+  }
+
+  .location-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .location-manual-toggle {
+    min-height: 44px;
+    padding: 8px 2px;
+  }
+
   .restaurant-list,
   .restaurant-list--deals,
   .restaurant-grid,
@@ -4019,6 +4028,10 @@ body:has(#root .app) #seo-snapshot {
   }
 }
 
+.restaurant-map-canvas .maplibregl-ctrl-attrib {
+  display: none;
+}
+
 .restaurant-map-canvas {
   width: 100%;
   height: min(68vh, 620px);
@@ -4259,9 +4272,21 @@ body:has(#root .app) #seo-snapshot {
     height: 160px;
   }
 
+  .restaurant-map-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
   .restaurant-map-actions .btn,
   .map-place-actions .btn {
+    width: 100%;
     min-height: 44px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .restaurant-map-actions .btn-primary {
+    grid-column: 1 / -1;
   }
 
   .results-view-btn {

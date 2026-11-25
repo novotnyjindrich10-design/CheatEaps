@@ -322,16 +322,14 @@ export default function BusinessApplicationForm({ onClose }) {
           <div className="biz-check-card">
             <h3>Kontrola a vylepšení popisu</h3>
             <p className="biz-form-hint">
-              Spustí pravidlovou kontrolu FoodGo (oprava mezer/pravopisu drobných chyb). Nejde o jazykový model a nic si nevymýšlí.
+              Zkontroluje mezery a drobné překlepy v textu, který jsi napsal. Nic si nevymýšlí.
             </p>
             <button type="button" className="btn btn-primary" disabled={busy === 'review'} onClick={runDescriptionReview}>
               {busy === 'review' ? 'Kontroluji…' : 'Zkontrolovat a vylepšit'}
             </button>
             {review ? (
               <div className="biz-compare">
-                <p>
-                  <strong>Engine:</strong> {review.engineLabel}
-                </p>
+                <p>Kontrola je hotová.</p>
                 {review.warnings?.length ? (
                   <ul>
                     {review.warnings.map((item) => (
@@ -419,7 +417,7 @@ export default function BusinessApplicationForm({ onClose }) {
             </div>
             <div>
               <dt>Kontrola popisu</dt>
-              <dd>{review ? review.engineLabel : 'Zatím nespouštěna'}</dd>
+              <dd>{review ? 'Zkontrolováno' : 'Zatím nespouštěna'}</dd>
             </div>
             <div>
               <dt>Existence</dt>

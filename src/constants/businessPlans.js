@@ -21,10 +21,10 @@ export const SETUP_TIME = {
 
 /** Co musí provozovatel ještě potvrdit, než z poptávky vznikne smlouva a faktura. */
 export const ORDER_GAPS = [
-  'Obchodní podmínky mají stránku /obchodni-podminky. Text je kostra k právní kontrole, dokud ho provozovatel nedoplní a neschválí.',
-  'Zásady ochrany osobních údajů mají stránku /ochrana-osobnich-udaju. Identitu správce a právní text musí doplnit provozovatel.',
-  'Platební brána není zapojená. Z této stránky se nic nestrhává. Poptávka platbu ani reklamu nezapne.',
-  'Automatické obnovení předplatného je vypnuté. Po uplynutí doby se propagace sama neprodlužuje.',
+  'Obchodní podmínky na stránce /obchodni-podminky ještě nejsou právně schválené. Poptávka z nich smlouvu nedělá.',
+  'Zásady ochrany osobních údajů na stránce /ochrana-osobnich-udaju ještě nemají doplněnou identitu správce.',
+  'Online platba není zapojená. Z této stránky se nic nestrhává a poptávka reklamu nezapne.',
+  'Období se samo neobnovuje. Po jeho konci propagace nepokračuje.',
 ]
 
 export const BUSINESS_PLANS = [

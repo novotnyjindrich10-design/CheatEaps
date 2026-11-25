@@ -95,6 +95,9 @@ export default function RestaurantCard({ restaurant, index = 0, variant = 'defau
           <span className={`restaurant-card-price-chip restaurant-card-price-chip--${priceDisplay.tone}`}>
             <span className="restaurant-card-price-value">{priceDisplay.primary}</span>
             <span className="restaurant-card-price-status">{priceDisplay.status}</span>
+            {priceDisplay.updatedLabel ? (
+              <span className="restaurant-card-price-updated">Aktualizováno {priceDisplay.updatedLabel}</span>
+            ) : null}
           </span>
           {isDeal ? (
             <span className="restaurant-card-deal-chip" aria-label={`Nabídka: ${highlight}`}>
@@ -183,6 +186,12 @@ export default function RestaurantCard({ restaurant, index = 0, variant = 'defau
             </Link>
           ) : (
             <>
+              <Link to={`/restaurant/${id}`} state={detailState} className="btn btn-card btn-card--primary">
+                Detail
+                <span className="btn-card-arrow" aria-hidden="true">
+                  →
+                </span>
+              </Link>
               <a
                 href={mapsNavigateUrl(restaurant)}
                 target="_blank"
@@ -191,12 +200,6 @@ export default function RestaurantCard({ restaurant, index = 0, variant = 'defau
               >
                 Navigovat
               </a>
-              <Link to={`/restaurant/${id}`} state={detailState} className="btn btn-card btn-card--primary">
-                Detail
-                <span className="btn-card-arrow" aria-hidden="true">
-                  →
-                </span>
-              </Link>
               <button
                 type="button"
                 className={`btn btn-card compare-card-toggle${inCompare ? ' is-on' : ''}`}

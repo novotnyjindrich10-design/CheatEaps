@@ -26,16 +26,13 @@ export default function Privacy() {
       </OperatorSlot>
 
       <section>
-        <h2>Co se technicky ukládá</h2>
-        <p>
-          Následující seznam je popis kódu a databázových tabulek. Není to právní základ ani slib, jak
-          dlouho údaj zůstane.
-        </p>
+        <h2>Jaké údaje se ukládají</h2>
+        <p>Níže je, co aplikace ukládá. Není to právní základ ani slib, jak dlouho údaj zůstane.</p>
         <h3>Účet</h3>
         <ul>
           <li>E-mail a heslo jdou do přihlašovací služby. Heslo se v odpovědi aplikace nevrací.</li>
           <li>Profil drží e-mail účtu a volitelnou přezdívku. Přezdívka nesmí být e-mail.</li>
-          <li>Příznak správce se bere z profilu, ne z toho, co pošle prohlížeč.</li>
+          <li>Oprávnění správce se neřídí tím, co pošle prohlížeč.</li>
         </ul>
         <h3>Oblíbené, recenze a hlášení</h3>
         <ul>
@@ -69,15 +66,12 @@ export default function Privacy() {
         </ul>
         <h3>Poloha</h3>
         <p>
-          Souřadnice pro vzdálenost zůstávají v prohlížeči pod klíčem cheapeats.geo.origin. Na server
-          FoodGo se neposílají. Vzdálenost v katalogu se počítá lokálně vzdušnou čarou. Externí služba
-          pěších tras se ve výchozí konfiguraci nevolá. Vypnutím polohy se záznam v prohlížeči smaže.
-          Jinou dobu mazání aplikace nestanovuje.
+          Souřadnice pro vzdálenost zůstávají jen v tomto prohlížeči. Na server FoodGo se neposílají.
+          Vzdálenost v katalogu se počítá v prohlížeči. Vypnutím polohy se záznam smaže.
         </p>
         <h3>Věrnostní body</h3>
         <p>
-          Kód umí držet stav bodů, pohyby a uplatněný kód. Endpoint odměn teď vrací, že věrnost není
-          zapnutá. Body se z veřejné stránky neodečítají.
+          Věrnostní body teď nejsou zapnuté. Z veřejné stránky se nic neodečítá.
         </p>
       </section>
 
@@ -90,15 +84,15 @@ export default function Privacy() {
 
       <section>
         <h2>Kam údaje odcházejí</h2>
-        <p>Tohle je seznam volání v kódu, ne hotový seznam zpracovatelů.</p>
+        <p>Údaje mohou odejít těmto službám:</p>
         <ul>
-          <li>Účet, profil, oblíbené, recenze, hlášení a žádosti podniků jdou do databáze, jejíž adresa je v nastavení serveru. Oblast, ve které databáze běží, v projektu zapsaná není.</li>
-          <li>E-mail se posílá na api.resend.com, jen když je odesílání nastavené.</li>
-          <li>Stránky se nasazují na Vercel. Jak dlouho platforma drží provozní záznamy, v tomhle projektu není.</li>
+          <li>Účet, profil, oblíbené, recenze, hlášení a žádosti podniků jdou do databáze nastavené na serveru.</li>
+          <li>E-mail se odesílá přes Resend, jen když je odesílání zapnuté.</li>
+          <li>Stránky běží na Vercel.</li>
           <li>Písmo Plus Jakarta Sans a Fraunces je uložené u FoodGo. Prohlížeč ho nenačítá z cizího serveru. Analytický ani reklamní skript v aplikaci není.</li>
           <li>
-            Podklad mapy se načítá z OpenFreeMap (nebo z vlastní šablony dlaždic / Carto, pokud je v env
-            nastavená). Souřadnice podniků zůstávají u FoodGo.
+            Podklad mapy se načítá z mapové služby (OpenFreeMap, nebo z vlastní šablony dlaždic, pokud je nastavená).
+            Souřadnice podniků zůstávají u FoodGo.
           </li>
         </ul>
       </section>
@@ -121,10 +115,10 @@ export default function Privacy() {
         </ul>
         <h3>Jen v prohlížeči</h3>
         <ul>
-          <li>localStorage cheapeats.geo.origin drží zvolenou polohu, dokud ji nevypneš nebo nesmažeš data stránek.</li>
-          <li>localStorage cheapeats.favorites.v1 drží oblíbené podniky bez přihlášení v tomto prohlížeči.</li>
-          <li>sessionStorage cheapeats.compare.v1 drží identifikátory podniků v porovnání do zavření panelu.</li>
-          <li>sessionStorage cheapeats-reset-next drží návrat po změně hesla do zavření panelu.</li>
+          <li>Poloha zvolená pro vzdálenost zůstává v tomto prohlížeči, dokud ji nevypneš nebo nesmažeš data stránek.</li>
+          <li>Oblíbené podniky bez přihlášení zůstávají v tomto prohlížeči.</li>
+          <li>Porovnání podniků zůstává jen do zavření panelu.</li>
+          <li>Návrat po změně hesla zůstává jen do zavření panelu.</li>
         </ul>
         <h3>Analytické</h3>
         <p>Žádné.</p>

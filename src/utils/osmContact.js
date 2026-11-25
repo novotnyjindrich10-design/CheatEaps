@@ -80,6 +80,7 @@ export function formatOpeningHoursForDisplay(raw) {
     .map((part) =>
       part
         .replace(/\b(Mo|Tu|We|Th|Fr|Sa|Su)\b/gi, (day) => mapDayToken(day))
+        .replace(/\boff\b/gi, 'zavřeno')
         .replace(/-/g, '–'),
     )
     .join('\n')
@@ -108,7 +109,7 @@ export function extractOsmContact(tags = {}) {
 export function presentOsmContact(restaurant) {
   const hoursRaw = restaurant?.osmOpeningHours
   const hoursDisplay =
-    restaurant?.osmOpeningHoursDisplay || formatOpeningHoursForDisplay(hoursRaw)
+    formatOpeningHoursForDisplay(hoursRaw) || restaurant?.osmOpeningHoursDisplay || null
   const phoneDisplay = restaurant?.osmPhone || null
   const phoneTel = restaurant?.osmPhoneTel || normalizeOsmPhone(phoneDisplay)?.tel || null
 

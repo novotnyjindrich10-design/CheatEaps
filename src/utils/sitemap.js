@@ -46,6 +46,11 @@ function escapeXml(value) {
   return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
+/** Preview build nesmí soutěžit s produkcí ve vyhledávání. */
+export function isSearchPreviewBuild(env = process.env) {
+  return String(env?.VERCEL_ENV || '').toLowerCase() === 'preview'
+}
+
 export function sitemapXml(urls) {
   const body = urls.map((url) => `  <url><loc>${escapeXml(url)}</loc></url>`).join('\n')
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`

@@ -45,7 +45,7 @@ export default function SearchBar({
           id={id}
           type="search"
           className="search-bar-input"
-          placeholder="Název, kuchyně, ulice nebo pizza do 200"
+          placeholder="Název, kuchyně nebo ulice"
           aria-label="Hledat restauraci"
           value={value}
           role="combobox"
