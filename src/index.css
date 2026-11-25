@@ -154,10 +154,23 @@ a {
   padding-bottom: 72px;
 }
 
-.home-page,
+.home-page {
+  /* Bez opacity:0 — jinak LCP padne na malý brand v headeru místo hero nadpisu. */
+  animation: pageInHome 0.45s ease both;
+}
+
 .results-page,
 .detail-page {
   animation: pageIn 0.45s ease both;
+}
+
+@keyframes pageInHome {
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: none;
+  }
 }
 
 @keyframes pageIn {
@@ -1054,26 +1067,19 @@ button.category-card {
   outline-offset: 3px;
 }
 
-.category-card-photo {
+.category-card[style*='--category-photo']::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.04);
-  transition: transform 0.55s ease;
-  pointer-events: none;
-  user-select: none;
-}
-
-.category-card-photo--soft {
-  inset: auto;
   top: -14%;
   left: -14%;
   width: 128%;
   height: 128%;
+  background-image: var(--category-photo);
+  background-size: cover;
+  background-position: var(--category-photo-pos, center);
   filter: blur(11px);
-  transform: none;
+  pointer-events: none;
+  z-index: 0;
   -webkit-mask-image: radial-gradient(
     ellipse 62% 54% at 50% 50%,
     transparent 0%,
@@ -1088,14 +1094,28 @@ button.category-card {
   );
 }
 
-.category-card:hover .category-card-photo:not(.category-card-photo--soft),
-.category-card:focus-visible .category-card-photo:not(.category-card-photo--soft) {
+.category-card-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.04);
+  transition: transform 0.55s ease;
+  pointer-events: none;
+  z-index: 1;
+  user-select: none;
+}
+
+.category-card:hover .category-card-photo,
+.category-card:focus-visible .category-card-photo {
   transform: scale(1.1);
 }
 
 .category-card-shade {
   position: absolute;
   inset: 0;
+  z-index: 2;
   background: radial-gradient(
     ellipse 72% 64% at 50% 50%,
     transparent 0%,
@@ -1108,7 +1128,7 @@ button.category-card {
 
 .category-card-label {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   margin: 0 14px;
   max-width: calc(100% - 28px);
   padding: 10px 16px 12px;
@@ -1478,18 +1498,25 @@ button.category-card {
 
 .location-prompt {
   position: fixed;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 90;
   display: grid;
-  place-items: center;
-  padding: max(16px, env(safe-area-inset-top)) 18px max(16px, env(safe-area-inset-bottom));
+  place-items: end center;
+  padding: 0 14px max(12px, env(safe-area-inset-bottom));
+  pointer-events: none;
 }
 
 .location-prompt-backdrop {
   position: absolute;
-  inset: 0;
-  background: rgba(18, 28, 24, 0.52);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: min(52vh, 420px);
+  background: linear-gradient(to top, rgba(18, 28, 24, 0.42), transparent 88%);
   animation: location-prompt-fade 0.28s ease;
+  pointer-events: none;
 }
 
 .location-prompt-card {
@@ -1506,6 +1533,7 @@ button.category-card {
   box-shadow: 0 24px 60px rgba(18, 28, 24, 0.28);
   text-align: center;
   animation: location-prompt-rise 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: auto;
 }
 
 .location-prompt-icon {
@@ -3365,8 +3393,8 @@ button.category-card {
     transition: none;
   }
 
-  .category-card:hover .category-card-photo:not(.category-card-photo--soft),
-  .category-card:focus-visible .category-card-photo:not(.category-card-photo--soft) {
+  .category-card:hover .category-card-photo,
+  .category-card:focus-visible .category-card-photo {
     transform: none;
   }
 
@@ -4895,6 +4923,10 @@ body:has(#root .app) #seo-snapshot {
   .home-page,
   .results-page,
   .detail-page {
+    animation: none;
+  }
+
+  .home-page {
     animation: none;
   }
 }

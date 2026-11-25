@@ -54,7 +54,7 @@ function optionLabel(options, value) {
 export default function Results() {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
-  const { restaurants } = useCatalog()
+  const { restaurants, catalogReady } = useCatalog()
   const { session } = useAuth()
   const filters = parseResultsSearchParams(searchParams)
   const activeType = getActiveCategoryKey(filters)
@@ -202,7 +202,9 @@ export default function Results() {
   }, [categoryMeta, filters.maxBudget, filters.openNowOnly, searchParams, viewMode])
 
   let emptyMessage = 'Žádný podnik neodpovídá filtrům. Zkus uvolnit rozpočet, vzdálenost nebo hledání.'
-  if (waitingForDistance) {
+  if (!catalogReady) {
+    emptyMessage = 'Načítám katalog podniků…'
+  } else if (waitingForDistance) {
     emptyMessage = 'Počítám pěší vzdálenost. Filtr vzdálenosti se použije, až budou čísla známá.'
   } else if (distanceUnavailable) {
     emptyMessage =
@@ -525,14 +527,16 @@ export default function Results() {
                 ) : null}
                 {filtered.length === 0 && sponsored.length === 0 ? (
                   <div className="empty-state">
-                    <p>{emptyMessage}</p>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={clearAllFilters}
-                    >
-                      Resetovat filtry
-                    </button>
+                    <p role={!catalogReady ? 'status' : undefined}>{emptyMessage}</p>
+                    {catalogReady ? (
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={clearAllFilters}
+                      >
+                        Resetovat filtry
+                      </button>
+                    ) : null}
                   </div>
                 ) : (
                   <>

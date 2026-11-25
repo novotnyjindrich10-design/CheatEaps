@@ -1,4 +1,4 @@
-import { DATA_SOURCE_NOTES } from '../data/restaurants'
+import { DATA_SOURCE_NOTES } from '../data/sourceNotes'
 
 export default function DataSources() {
   return (

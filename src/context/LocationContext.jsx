@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { restaurants } from '../data/restaurants'
 import { geolocationErrorMessage, hasFiniteLatLon, hasVerifiedCoordinates } from '../utils/geo'
 import {
   geolocationOptions,
@@ -354,19 +353,27 @@ export function LocationProvider({ children }) {
 
     const controller = new AbortController()
     let cancelled = false
-    const targets = restaurants.filter((place) => hasVerifiedCoordinates(place))
 
-    collectRouteDistances(origin, targets, {
-      signal: controller.signal,
-      endpoint: resolveFootRouteTableUrl(),
-      onChunk(distances) {
-        if (!cancelled) {
-          setRouteState({ key: originCacheKey, distances, status: 'loading', message: '' })
-        }
-      },
-    })
+    // Katalog nenačítej synchronně — pěší routing je volitelný a nesmí blokovat úvod.
+    import('../data/restaurants.js')
+      .then(({ ensureRestaurantsLoaded, listRestaurants }) =>
+        ensureRestaurantsLoaded().then(() => listRestaurants()),
+      )
+      .then((places) => {
+        if (cancelled) return undefined
+        const targets = places.filter((place) => hasVerifiedCoordinates(place))
+        return collectRouteDistances(origin, targets, {
+          signal: controller.signal,
+          endpoint: resolveFootRouteTableUrl(),
+          onChunk(distances) {
+            if (!cancelled) {
+              setRouteState({ key: originCacheKey, distances, status: 'loading', message: '' })
+            }
+          },
+        })
+      })
       .then((result) => {
-        if (cancelled) return
+        if (cancelled || !result) return
         const failedAll = result.chunkCount > 0 && result.failedChunks === result.chunkCount
         const next = {
           key: originCacheKey,

@@ -1,0 +1,102 @@
+{
+  "before": {
+    "mobile": {
+      "perf": 63,
+      "lcp": 8000,
+      "tbt": 480,
+      "cls": 0
+    },
+    "desktop": {
+      "perf": 51,
+      "lcp": 8100,
+      "tbt": 390,
+      "cls": 0
+    },
+    "note": "single-run baseline from prior polish pass (reports/lighthouse-data-quality-pass.md)"
+  },
+  "afterRuns": {
+    "mobile": [
+      {
+        "perf": 90,
+        "lcp": 3389,
+        "tbt": 151,
+        "cls": 0,
+        "fcp": 927,
+        "lcpEl": "main.page > section.home-hero > div.home-hero-panel > p.home-hero-lead"
+      },
+      {
+        "perf": 77,
+        "lcp": 3470,
+        "tbt": 561,
+        "cls": 0,
+        "fcp": 916,
+        "lcpEl": "main.page > section.home-hero > div.home-hero-panel > p.home-hero-lead"
+      },
+      {
+        "perf": 89,
+        "lcp": 3621,
+        "tbt": 131,
+        "cls": 0,
+        "fcp": 914,
+        "lcpEl": "main.page > section.home-hero > div.home-hero-panel > p.home-hero-lead"
+      }
+    ],
+    "desktop": [
+      {
+        "perf": 94,
+        "lcp": 1626,
+        "tbt": 0,
+        "cls": 0.002,
+        "fcp": 260,
+        "lcpEl": "section.home-discover > div.category-grid-wrap > div.category-grid > a.category-card"
+      },
+      {
+        "perf": 94,
+        "lcp": 1634,
+        "tbt": 0,
+        "cls": 0.002,
+        "fcp": 259,
+        "lcpEl": "section.home-discover > div.category-grid-wrap > div.category-grid > a.category-card"
+      },
+      {
+        "perf": 94,
+        "lcp": 1651,
+        "tbt": 0,
+        "cls": 0.002,
+        "fcp": 260,
+        "lcpEl": "div.category-grid-wrap > div.category-grid > a.category-card > img.category-card-photo"
+      }
+    ]
+  },
+  "afterMedian": {
+    "mobile": {
+      "perf": 89,
+      "lcp": 3470,
+      "tbt": 151,
+      "cls": 0,
+      "fcp": 916
+    },
+    "desktop": {
+      "perf": 94,
+      "lcp": 1634,
+      "tbt": 0,
+      "cls": 0.002,
+      "fcp": 260
+    }
+  },
+  "bundles": {
+    "before": {
+      "indexKb": 414,
+      "restaurantsModulepreloadKb": 1147,
+      "mapLazyKb": 1240
+    },
+    "after": {
+      "indexKb": 334,
+      "demoRestaurantsAsyncKb": 1076,
+      "restaurantsThinKb": 1.2,
+      "mapLazyKb": 1270,
+      "pixabayKb": 97,
+      "categoryStripLazyKb": 9.8
+    }
+  }
+}

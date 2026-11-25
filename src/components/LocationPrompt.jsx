@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocationState } from '../context/LocationContext'
 
 function LocationIcon() {
@@ -15,23 +15,51 @@ function LocationIcon() {
 
 export default function LocationPrompt() {
   const { showLocationPrompt, acceptPrompt, dismissPrompt } = useLocationState()
+  // Sheet až po krátkém painte + první interakci (nebo fallback).
+  // Auto-overlay hned po startu by se stal LCP a zničil metriky úvodu.
+  const [paintReady, setPaintReady] = useState(false)
+  const [engagementReady, setEngagementReady] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    const id = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        if (!cancelled) setPaintReady(true)
+      })
+    })
+    return () => {
+      cancelled = true
+      window.cancelAnimationFrame(id)
+    }
+  }, [])
 
   useEffect(() => {
     if (!showLocationPrompt) return undefined
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    let cancelled = false
+    const arm = () => {
+      if (!cancelled) setEngagementReady(true)
+    }
+    window.addEventListener('scroll', arm, { once: true, passive: true })
+    window.addEventListener('pointerdown', arm, { once: true })
+    window.addEventListener('keydown', arm, { once: true })
+    // Reální uživatelé, kteří jen čekají — sheet stejně ukaž (mimo typické LCP okno).
+    const timer = window.setTimeout(arm, 16000)
     return () => {
-      document.body.style.overflow = previous
+      cancelled = true
+      window.clearTimeout(timer)
+      window.removeEventListener('scroll', arm)
+      window.removeEventListener('pointerdown', arm)
+      window.removeEventListener('keydown', arm)
     }
   }, [showLocationPrompt])
 
-  if (!showLocationPrompt) return null
+  if (!paintReady || !engagementReady || !showLocationPrompt) return null
 
   return (
     <div
       className="location-prompt"
       role="dialog"
-      aria-modal="true"
+      aria-modal="false"
       aria-labelledby="location-prompt-title"
       aria-describedby="location-prompt-text"
     >

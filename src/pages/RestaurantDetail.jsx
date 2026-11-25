@@ -40,7 +40,7 @@ export default function RestaurantDetail() {
   const backTo = safeInternalPath(location.state?.from, '/results')
   const backLabel = backTo === '/' || backTo.startsWith('/?') ? '← Domů' : '← Zpět'
   const { attachDistances } = useLocationState()
-  const { restaurants } = useCatalog()
+  const { restaurants, catalogReady } = useCatalog()
   const restaurant = restaurants.find((place) => place.id === decodeURIComponent(id ?? '')) ?? getRestaurantById(id)
   const [shareNote, setShareNote] = useState('')
 
@@ -102,6 +102,15 @@ export default function RestaurantDetail() {
   }, [id, restaurant, location.origin])
 
   if (!restaurant) {
+    if (!catalogReady) {
+      return (
+        <main className="page detail-page">
+          <p className="section-desc" role="status">
+            Načítám katalog…
+          </p>
+        </main>
+      )
+    }
     return (
       <main className="page detail-page">
         <h1 className="section-title">Restaurace nenalezena</h1>

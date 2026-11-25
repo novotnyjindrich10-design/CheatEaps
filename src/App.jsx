@@ -5,19 +5,18 @@ import MobileTabBar from './components/MobileTabBar'
 import ErrorBoundary from './components/ErrorBoundary'
 import LocationPrompt from './components/LocationPrompt'
 import Home from './pages/Home'
-import Results from './pages/Results'
-import RestaurantDetail from './pages/RestaurantDetail'
 import { LocationProvider } from './context/LocationContext'
 import { AuthProvider } from './context/AuthContext'
 import { CatalogProvider } from './context/CatalogContext'
 import DataSources from './components/DataSources'
-import { pixabayLibraryReady } from './data/pixabayLibrary'
 import RecoveryRedirect from './components/RecoveryRedirect'
 import PageMeta from './components/PageMeta'
 import CompareBar from './components/CompareBar'
 import { CompareProvider } from './context/CompareContext'
 import { CONTACT_EMAIL } from './constants/brand'
 
+const Results = lazy(() => import('./pages/Results'))
+const RestaurantDetail = lazy(() => import('./pages/RestaurantDetail'))
 const Support = lazy(() => import('./pages/ForBusiness'))
 const ForBusinesses = lazy(() => import('./pages/ForBusinesses'))
 const BusinessAccount = lazy(() => import('./pages/BusinessAccount'))
@@ -135,21 +134,19 @@ function App() {
               {' · '}
               <Link to="/obchodni-podminky">Obchodní podmínky</Link>
             </p>
-            {pixabayLibraryReady ? (
-              <p className="footer-photo-credit">
-                <a href="https://pixabay.com/" target="_blank" rel="noreferrer">
-                  Fotografie z Pixabay
-                </a>
-                {' · '}
-                <a href="https://unsplash.com/" target="_blank" rel="noreferrer">
-                  Unsplash
-                </a>
-                {' · '}
-                <a href="https://www.pexels.com/" target="_blank" rel="noreferrer">
-                  Pexels
-                </a>
-              </p>
-            ) : null}
+            <p className="footer-photo-credit">
+              <a href="https://pixabay.com/" target="_blank" rel="noreferrer">
+                Fotografie z Pixabay
+              </a>
+              {' · '}
+              <a href="https://unsplash.com/" target="_blank" rel="noreferrer">
+                Unsplash
+              </a>
+              {' · '}
+              <a href="https://www.pexels.com/" target="_blank" rel="noreferrer">
+                Pexels
+              </a>
+            </p>
             <DataSources />
           </footer>
         </div>

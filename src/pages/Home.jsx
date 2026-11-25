@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { QUICK_BUDGETS } from '../constants/filters'
-import CategoryStrip from '../components/CategoryStrip'
 import HomeSearch from '../components/HomeSearch'
+
+const CategoryStrip = lazy(() => import('../components/CategoryStrip'))
 import LocationBar from '../components/LocationBar'
 import RestaurantCard from '../components/RestaurantCard'
 import { useCatalog } from '../context/CatalogContext'
@@ -11,7 +12,6 @@ import { partitionPlacements } from '../constants/monetization'
 import { compareByRecordQuality } from '../utils/recordQuality'
 import { suppressCatalogDuplicates } from '../utils/catalogDuplicates'
 import { filterAndSortRestaurants } from '../utils/filterRestaurants'
-import { varyPixabayOnPage } from '../utils/pageIllustrations'
 import { mealPeriodForHour } from '../utils/mealPeriod'
 import { listRecentViews } from '../utils/recentViews'
 import { getRestaurantById } from '../data/restaurants'
@@ -86,13 +86,14 @@ function isWeakRecommendation(place) {
 }
 
 export default function Home() {
-  const { restaurants } = useCatalog()
+  const { restaurants, catalogReady } = useCatalog()
   const { attachDistances, origin } = useLocationState()
   const hasOrigin = Boolean(origin)
   const period = useMemo(() => mealPeriodForHour(new Date().getHours()), [])
   const organic = useMemo(() => partitionPlacements(restaurants).organic, [restaurants])
   const located = useMemo(() => attachDistances(organic), [attachDistances, organic])
-  const featured = useMemo(() => {
+  const featuredBase = useMemo(() => {
+    if (!located.length) return []
     const usable = located.filter((place) => !isWeakRecommendation(place))
     const source = usable.length >= 6 ? usable : located
     let pool = source
@@ -106,15 +107,35 @@ export default function Home() {
     }
     let picked = hasOrigin ? pickNearest(pool) : pickRecommended(pool)
     if (period.preferOpen) picked = preferOpenPlaces(picked).slice(0, FEATURED_COUNT)
-    return varyPixabayOnPage(picked)
+    return picked
   }, [hasOrigin, located, period])
 
+  // Pixabay knihovna je velká — apply after paint, mimo kritickou cestu.
+  const [featuredVaried, setFeaturedVaried] = useState(null)
+  useEffect(() => {
+    if (featuredBase.length < 2) {
+      setFeaturedVaried(null)
+      return undefined
+    }
+    let cancelled = false
+    import('../utils/pageIllustrations')
+      .then(({ varyPixabayOnPage }) => {
+        if (!cancelled) setFeaturedVaried(varyPixabayOnPage(featuredBase))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [featuredBase])
+  const featured = featuredVaried ?? featuredBase
+
   const recentPlaces = useMemo(() => {
+    if (!catalogReady) return []
     return listRecentViews()
       .map((id) => getRestaurantById(id))
       .filter(Boolean)
       .slice(0, 4)
-  }, [])
+  }, [catalogReady])
 
   const sectionTitle = hasOrigin ? 'Nejbližší podniky' : period.title
   const sectionDesc = hasOrigin
@@ -157,7 +178,9 @@ export default function Home() {
             Objevuj podle chuti
           </h2>
         </div>
-        <CategoryStrip asLinks variant="grid" />
+        <Suspense fallback={<div className="category-grid-wrap" style={{ minHeight: 200 }} aria-hidden="true" />}>
+          <CategoryStrip asLinks variant="grid" />
+        </Suspense>
       </section>
 
       <section className="home-listings" aria-labelledby="featured-title">
@@ -173,13 +196,19 @@ export default function Home() {
           </Link>
         </div>
 
-        <ul className="restaurant-list">
-          {featured.map((restaurant, index) => (
-            <li key={restaurant.id}>
-              <RestaurantCard restaurant={restaurant} index={index} />
-            </li>
-          ))}
-        </ul>
+        {!catalogReady ? (
+          <p className="section-desc" role="status">
+            Načítám tipy z katalogu…
+          </p>
+        ) : (
+          <ul className="restaurant-list">
+            {featured.map((restaurant, index) => (
+              <li key={restaurant.id}>
+                <RestaurantCard restaurant={restaurant} index={index} />
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {recentPlaces.length > 0 ? (
