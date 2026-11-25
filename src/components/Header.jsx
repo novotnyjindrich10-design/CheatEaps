@@ -3,9 +3,26 @@ import { Link, useLocation } from 'react-router-dom'
 import Logo from './Logo'
 import { useAuth } from '../context/authSession'
 import { loginPath } from '../utils/authReturn'
+import {
+  IconAdmin,
+  IconHeart,
+  IconHome,
+  IconInfo,
+  IconLogout,
+  IconMail,
+  IconMap,
+  IconSearch,
+  IconStore,
+  IconUser,
+} from './navIcons'
 
-function isActive(pathname, search, to) {
+function isActive(pathname, search, to, hash = '') {
   if (to === '/') return pathname === '/'
+  if (to === '/oblibene') return pathname === '/oblibene' && hash !== '#ucet'
+  if (to.includes('#')) {
+    const [path, wantHash = ''] = to.split('#')
+    return pathname === path && hash === `#${wantHash}`
+  }
   const [path, query = ''] = to.split('?')
   if (!(pathname === path || pathname.startsWith(`${path}/`))) return false
   const want = new URLSearchParams(query)
@@ -20,9 +37,19 @@ function isActive(pathname, search, to) {
   return true
 }
 
-function NavLinks({ links, pathname, search, onNavigate, linkClass, firstItemRef }) {
+function NavLinks({
+  links,
+  pathname,
+  search,
+  hash = '',
+  onNavigate,
+  linkClass,
+  firstItemRef,
+  withIcons = false,
+}) {
   return links.map((item, index) => {
-    const active = isActive(pathname, search, item.to)
+    const active = isActive(pathname, search, item.to, hash)
+    const Icon = item.Icon
     return (
       <li key={`${item.to}-${item.label}`}>
         <Link
@@ -32,7 +59,12 @@ function NavLinks({ links, pathname, search, onNavigate, linkClass, firstItemRef
           aria-current={active ? 'page' : undefined}
           onClick={onNavigate}
         >
-          {item.label}
+          {withIcons && Icon ? (
+            <span className="header-menu-icon" aria-hidden="true">
+              <Icon />
+            </span>
+          ) : null}
+          <span>{item.label}</span>
         </Link>
       </li>
     )
@@ -46,9 +78,20 @@ const PRIMARY_LINKS = [
   { to: '/oblibene', label: 'Oblíbené' },
 ]
 
-/** Vedlejší cesty — nepatří do hlavní lišty, dokud nejsou jádrem produktu. */
-const SECONDARY_LINKS = [
-  { to: '/pro-podniky', label: 'Pro podniky' },
+/** Vedlejší cesty — desktop „Více“. */
+const SECONDARY_LINKS = [{ to: '/pro-podniky', label: 'Pro podniky' }]
+
+const MOBILE_PRIMARY_LINKS = [
+  { to: '/', label: 'Domů', Icon: IconHome },
+  { to: '/results', label: 'Hledat', Icon: IconSearch },
+  { to: '/results?view=map', label: 'Mapa', Icon: IconMap },
+  { to: '/oblibene', label: 'Oblíbené', Icon: IconHeart },
+]
+
+const MOBILE_SECONDARY_LINKS = [
+  { to: '/pro-podniky', label: 'Pro podniky', Icon: IconStore },
+  { to: '/o-foodgo', label: 'O FoodGo', Icon: IconInfo },
+  { to: '/kontakt', label: 'Kontakt', Icon: IconMail },
 ]
 
 export default function Header() {
@@ -56,7 +99,7 @@ export default function Header() {
   const { pathname } = location
   const { session, logout } = useAuth()
   const returnTo = `${pathname}${location.search || ''}`
-  const pathKey = `${pathname}${location.search || ''}`
+  const pathKey = `${pathname}${location.search || ''}${location.hash || ''}`
   const [open, setOpen] = useState(false)
   const [moreOpen, setMoreOpen] = useState(false)
   const [menuPath, setMenuPath] = useState(pathKey)
@@ -67,6 +110,7 @@ export default function Header() {
   const moreRef = useRef(null)
   const firstItemRef = useRef(null)
   const toggleRef = useRef(null)
+  const closeRef = useRef(null)
 
   if (menuPath !== pathKey) {
     setMenuPath(pathKey)
@@ -78,15 +122,21 @@ export default function Header() {
 
   const adminLinks = isAdmin
     ? [
-        { to: '/admin/zadosti', label: 'Administrace žádostí' },
-        { to: '/admin/propagace', label: 'Propagace' },
-        { to: '/admin/odmeny', label: 'Odměny a recenze' },
+        { to: '/admin/zadosti', label: 'Administrace žádostí', Icon: IconAdmin },
+        { to: '/admin/propagace', label: 'Propagace', Icon: IconAdmin },
+        { to: '/admin/odmeny', label: 'Odměny a recenze', Icon: IconAdmin },
       ]
     : []
 
-  const moreLinks = [...SECONDARY_LINKS, ...adminLinks]
+  const moreLinks = [...SECONDARY_LINKS, ...adminLinks.map(({ to, label }) => ({ to, label }))]
+  const mobileSecondary = [...MOBILE_SECONDARY_LINKS, ...adminLinks]
   const search = location.search || ''
-  const moreActive = moreLinks.some((item) => isActive(pathname, search, item.to))
+  const hash = location.hash || ''
+  const moreActive = moreLinks.some((item) => isActive(pathname, search, item.to, hash))
+  const profileTo = session.authenticated ? '/oblibene#ucet' : loginPath(returnTo)
+  const profileLabel = session.authenticated ? 'Účet' : 'Profil'
+  const profileActive =
+    hash === '#ucet' || pathname.startsWith('/prihlaseni') || pathname.startsWith('/registrace')
 
   useEffect(() => {
     if (!session.authenticated) {
@@ -224,11 +274,12 @@ export default function Header() {
           <button
             type="button"
             ref={toggleRef}
-            className={`header-menu-toggle${open ? ' is-open' : ''}`}
-            aria-label={open ? 'Zavřít menu' : 'Otevřít menu'}
+            className="header-menu-toggle"
+            aria-label="Otevřít menu"
             aria-expanded={open}
             aria-controls={menuId}
-            onClick={() => setOpen((value) => !value)}
+            hidden={open || undefined}
+            onClick={() => setOpen(true)}
           >
             <span className="header-menu-bars" aria-hidden="true">
               <span />
@@ -256,19 +307,57 @@ export default function Header() {
         <div className="header-menu-drawer-inner">
           <div className="header-menu-panel-head">
             <p>Menu</p>
+            <button
+              type="button"
+              ref={closeRef}
+              className="header-menu-close"
+              aria-label="Zavřít menu"
+              onClick={() => {
+                close()
+                toggleRef.current?.focus()
+              }}
+            >
+              <span aria-hidden="true">×</span>
+            </button>
           </div>
 
           <ul className="header-menu-list">
             <li className="header-menu-group" aria-hidden="true">
-              Další
+              Navigace
             </li>
             <NavLinks
-              links={moreLinks}
+              links={MOBILE_PRIMARY_LINKS}
               pathname={pathname}
               search={search}
               onNavigate={close}
               linkClass="header-menu-link"
               firstItemRef={firstItemRef}
+              withIcons
+            />
+            <li>
+              <Link
+                to={profileTo}
+                className={`header-menu-link${profileActive ? ' is-active' : ''}`}
+                aria-current={profileActive ? 'page' : undefined}
+                onClick={close}
+              >
+                <span className="header-menu-icon" aria-hidden="true">
+                  <IconUser />
+                </span>
+                <span>{profileLabel}</span>
+              </Link>
+            </li>
+
+            <li className="header-menu-group" aria-hidden="true">
+              Další
+            </li>
+            <NavLinks
+              links={mobileSecondary}
+              pathname={pathname}
+              search={search}
+              onNavigate={close}
+              linkClass="header-menu-link"
+              withIcons
             />
 
             {session.authenticated ? (
@@ -285,7 +374,10 @@ export default function Header() {
                       logout()
                     }}
                   >
-                    Odhlásit
+                    <span className="header-menu-icon" aria-hidden="true">
+                      <IconLogout />
+                    </span>
+                    <span>Odhlásit</span>
                   </button>
                 </li>
               </>
@@ -298,7 +390,10 @@ export default function Header() {
                   }`}
                   onClick={close}
                 >
-                  Přihlášení
+                  <span className="header-menu-icon" aria-hidden="true">
+                    <IconUser />
+                  </span>
+                  <span>Přihlášení</span>
                 </Link>
               </li>
             )}

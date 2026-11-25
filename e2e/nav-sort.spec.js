@@ -22,9 +22,14 @@ test.describe('mobilní navigace 390', () => {
 
     const menu = page.getByRole('navigation', { name: 'Mobilní menu' })
     await expect(menu).toBeVisible()
-    const closeToggle = page.getByRole('button', { name: 'Zavřít menu' })
-    await expect(closeToggle).toHaveCount(1)
-    await expect(closeToggle).toHaveAttribute('aria-expanded', 'true')
+    await expect(menu.getByRole('button', { name: 'Zavřít menu' })).toBeVisible()
+    await expect(menu.getByRole('link', { name: 'Domů' })).toBeVisible()
+    await expect(menu.getByRole('link', { name: 'Hledat' })).toBeVisible()
+    await expect(menu.getByRole('link', { name: 'Mapa' })).toBeVisible()
+    await expect(menu.getByRole('link', { name: 'Oblíbené' })).toBeVisible()
+    await expect(menu.getByRole('link', { name: 'Profil' })).toBeVisible()
+    await expect(menu.getByRole('link', { name: 'O FoodGo' })).toBeVisible()
+    await expect(menu.getByRole('link', { name: 'Kontakt' })).toBeVisible()
 
     const firstLink = menu.getByRole('link').first()
     await expect(firstLink).toBeFocused()
@@ -48,9 +53,29 @@ test.describe('mobilní navigace 390', () => {
     await expect(tabs).toBeVisible()
     await tabs.getByRole('link', { name: 'Hledat' }).click()
     await expect(page).toHaveURL(/\/results/)
+    await expect(tabs.getByRole('link', { name: 'Domů' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Mapa' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Oblíbené' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Profil' })).toBeVisible()
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)
     expect(overflow).toBe(false)
+  })
+
+  test('hamburger Mapa scrolluje k mapě a X zavře menu', async ({ page }) => {
+    await openAsGuest(page, { allowMapTiles: true })
+    await page.goto('/')
+    await ready(page)
+    await page.getByRole('button', { name: 'Otevřít menu' }).click()
+    const menu = page.getByRole('navigation', { name: 'Mobilní menu' })
+    await menu.getByRole('button', { name: 'Zavřít menu' }).click()
+    await expect(menu).toBeHidden()
+
+    await page.getByRole('button', { name: 'Otevřít menu' }).click()
+    await menu.getByRole('link', { name: 'Mapa' }).click()
+    await expect(page).toHaveURL(/view=map/)
+    await expect(menu).toBeHidden()
+    await expect(page.locator('.restaurant-map-canvas')).toBeVisible({ timeout: 20_000 })
   })
 })
 
