@@ -389,6 +389,8 @@ async function main() {
 
   const placeIdsByTheme = {}
   for (const place of places()) {
+    const override = getCategoryOverride(place.id)
+    if (override?.removeIllustration) continue
     const spec = dishSpecForPlace(place)
     const theme = idsByTheme[spec.key]?.length ? spec.key : 'neuvedeno'
     if (!idsByTheme[theme]?.length) continue

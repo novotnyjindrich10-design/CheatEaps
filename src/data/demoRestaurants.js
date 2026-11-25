@@ -28,10 +28,10 @@ function place(entry) {
     ...(coordinateOverrides[entry.id] || {}),
   }
   const photo = placePhotos[entry.id] || {}
-  const openverseIllustration = override?.removeIllustration
-    ? null
-    : getPlaceFoodIllustration(entry.id)
-  const foodIllustration = getPlacePixabayIllustration(entry.id) || openverseIllustration || {}
+  // removeIllustration platí pro celý stock (Pixabay i Openverse), ne jen Openverse.
+  const foodIllustration = override?.removeIllustration
+    ? {}
+    : getPlacePixabayIllustration(entry.id) || getPlaceFoodIllustration(entry.id) || {}
   const restaurant = {
     isDemo: false,
     vegetarianFriendly: false,

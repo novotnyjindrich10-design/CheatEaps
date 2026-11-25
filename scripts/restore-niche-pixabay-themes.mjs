@@ -108,6 +108,9 @@ async function main() {
   const placeIdsByTheme = {}
   for (const place of places()) {
     // Stejně jako fetch-pixabay: přiřazení i u oficiálních (UI bere official first).
+    // removeIllustration podniky do stock přiřazení nepatří.
+    const override = getCategoryOverride(place.id)
+    if (override?.removeIllustration) continue
     void placePhotos
     const spec = dishSpecForPlace(place)
     let theme = spec.key

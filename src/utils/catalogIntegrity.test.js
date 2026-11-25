@@ -63,6 +63,11 @@ describe('katalog podniků', () => {
     assert.equal(mergedPlaces().length, 775)
   })
 
+  it('školní jídelna nemá stock ilustraci (removeIllustration)', () => {
+    assert.equal(placePixabayPhotoId['skolni-jidelna-brno-horni-16'], undefined)
+    assert.equal(categoryOverrides['skolni-jidelna-brno-horni-16']?.removeIllustration, true)
+  })
+
   it('lokální Pixabay fotky přiřazené podnikům existují', () => {
     const ids = new Set(mergedPlaces().map((place) => place.id))
     for (const [placeId, photoId] of Object.entries(placePixabayPhotoId)) {
