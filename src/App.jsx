@@ -114,7 +114,7 @@ function App() {
           </Suspense>
           <footer className="site-footer">
             <p className="footer-brand">
-              <Logo height={40} showCity className="footer-logo" />
+              <Logo showCity className="footer-logo" />
             </p>
             <p className="footer-tagline">Katalog jídla v Brně. Ověřené údaje oddělujeme od odhadů.</p>
             <p className="footer-support">

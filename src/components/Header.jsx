@@ -202,7 +202,7 @@ export default function Header() {
     <header className="site-header">
       <div className="site-header-inner" ref={rootRef}>
         <Link to="/" className="brand" onClick={close} aria-label="FOODGO Brno — Domů">
-          <Logo height={48} showCity />
+          <Logo showCity />
         </Link>
 
         <nav className="header-desktop-nav" aria-label="Hlavní menu">
