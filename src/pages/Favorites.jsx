@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import RestaurantCard from '../components/RestaurantCard'
 import { useAuth } from '../context/authSession'
+import { useCatalog } from '../context/CatalogContext'
 import { useLocationState } from '../context/LocationContext'
 import { getRestaurantById } from '../data/restaurants'
 import { loginPath } from '../utils/authReturn'
@@ -15,6 +16,7 @@ function placeExists(id) {
 
 export default function Favorites() {
   const { session, logout } = useAuth()
+  const { catalogReady } = useCatalog()
   const { attachDistances } = useLocationState()
   const [ids, setIds] = useState([])
   const [missing, setMissing] = useState(0)
@@ -26,6 +28,10 @@ export default function Favorites() {
     if (!session.ready) return undefined
 
     if (!session.authenticated) {
+      if (!catalogReady) {
+        setLoading(true)
+        return undefined
+      }
       const cleaned = removeMissingLocalFavorites(placeExists)
       setIds(cleaned)
       setMissing(0)
@@ -37,15 +43,22 @@ export default function Favorites() {
 
     let cancelled = false
     setLoading(true)
+
     fetchWithTimeout('/api/favorites', { credentials: 'same-origin' })
       .then((response) => response.json().catch(() => ({})))
-      .then((body) => {
+      .then(async (body) => {
         if (cancelled) return
         if (!body.ok || !Array.isArray(body.ids)) {
           setError(body.message || 'Oblíbené se nepodařilo načíst.')
           setLoading(false)
           return
         }
+        // Katalog se načítá async — neoznačuj ID za chybějící dřív, než je ready.
+        if (!catalogReady) {
+          const { ensureRestaurantsLoaded } = await import('../data/restaurants')
+          await ensureRestaurantsLoaded()
+        }
+        if (cancelled) return
         const places = body.ids.map((id) => getRestaurantById(id)).filter(Boolean)
         setIds(places.map((place) => place.id))
         setMissing(body.ids.length - places.length)
@@ -58,10 +71,11 @@ export default function Favorites() {
         setError('Oblíbené se nepodařilo načíst.')
         setLoading(false)
       })
+
     return () => {
       cancelled = true
     }
-  }, [session.authenticated, session.ready])
+  }, [session.authenticated, session.ready, catalogReady])
 
   const restaurants = useMemo(
     () => varyPixabayOnPage(attachDistances(ids.map((id) => getRestaurantById(id)).filter(Boolean))),
@@ -93,47 +107,42 @@ export default function Favorites() {
         </div>
       ) : null}
 
-      {!session.ready || (session.authenticated && loading) ? (
+      {!session.ready || (session.authenticated && loading) || (!session.authenticated && !catalogReady) ? (
         <p className="page-subtitle">Načítám oblíbené…</p>
       ) : null}
 
       {session.ready && !session.authenticated ? (
-        <p className="favorite-auth-links">
-          <Link to={login} className="btn btn-secondary">
-            Přihlásit se
-          </Link>
-          <Link to={signup} className="btn btn-secondary">
-            Vytvořit účet
-          </Link>
+        <p className="page-subtitle">
+          <Link to={login}>Přihlas se</Link> nebo <Link to={signup}>vytvoř účet</Link> — oblíbené se pak
+          uloží k účtu.
         </p>
       ) : null}
 
       {error ? (
-        <p className="deal-warning" role="alert">
+        <p className="page-subtitle" role="alert">
           {error}
         </p>
       ) : null}
 
-      {session.ready && !loading && restaurants.length === 0 && !error ? (
+      {!loading && session.ready && restaurants.length === 0 && !error ? (
         <div className="empty-state">
           <p>Zatím tu nic není. Ulož podnik tlačítkem srdce v detailu.</p>
+          {missing > 0 ? (
+            <p className="section-desc" role="status">
+              {missing} uložených ID už v katalogu není.
+            </p>
+          ) : null}
           <Link to="/results" className="btn btn-primary">
             Najít podnik
           </Link>
         </div>
       ) : null}
 
-      {missing > 0 ? (
-        <p className="location-bar-caption" role="status">
-          {missing} uložených ID už v katalogu není.
-        </p>
-      ) : null}
-
       {restaurants.length > 0 ? (
         <ul className="restaurant-list">
           {restaurants.map((restaurant, index) => (
             <li key={restaurant.id}>
-              <RestaurantCard restaurant={restaurant} priority={index < 2} />
+              <RestaurantCard restaurant={restaurant} index={index} />
             </li>
           ))}
         </ul>

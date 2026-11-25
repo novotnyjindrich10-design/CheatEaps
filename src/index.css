@@ -209,14 +209,32 @@ a {
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
 }
 
+.foodgo-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.foodgo-logo-mark {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.foodgo-logo-word {
+  display: block;
+  width: auto;
+  max-width: min(42vw, 148px);
+}
+
 .brand-text {
-  font-size: clamp(1.28rem, 2.4vw, 1.55rem);
-  font-weight: 800;
-  letter-spacing: -0.045em;
+  font-size: clamp(1.05rem, 2.2vw, 1.28rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
   line-height: 1.05;
   white-space: nowrap;
 }

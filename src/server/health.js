@@ -12,6 +12,8 @@ export function healthSnapshot(env = process.env) {
   const auth = authConfig(env)
   const payments = paymentConfig(env)
   const resend = present(env.RESEND_API_KEY)
+  const emailFrom = present(env.EMAIL_FROM)
+  const inquiryTo = present(env.INQUIRY_TO_EMAIL)
   const siteUrl = present(env.PUBLIC_SITE_URL)
   const livePayments = String(env.PAYMENTS_LIVE || '').trim() === 'true'
 
@@ -23,7 +25,7 @@ export function healthSnapshot(env = process.env) {
       supabaseConfigured: Boolean(auth.configured),
       paymentsConfigured: Boolean(payments.enabled),
       paymentsLive: livePayments,
-      emailConfigured: resend,
+      emailConfigured: resend && emailFrom && inquiryTo,
       publicSiteUrl: siteUrl,
     },
   }

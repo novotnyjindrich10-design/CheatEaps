@@ -201,10 +201,10 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="site-header-inner" ref={rootRef}>
-        <Link to="/" className="brand" onClick={close}>
-          <Logo size={44} />
+        <Link to="/" className="brand" onClick={close} aria-label="FOODGO Brno — Domů">
+          <Logo size={40} withWordmark />
           <span className="brand-text">
-            FoodGo <em>Brno</em>
+            <em>Brno</em>
           </span>
         </Link>
 

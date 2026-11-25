@@ -112,7 +112,7 @@ function App() {
             <MobileTabBar />
           </Suspense>
           <footer className="site-footer">
-            <p className="footer-brand">FoodGo Brno</p>
+            <p className="footer-brand">FOODGO Brno</p>
             <p className="footer-tagline">Katalog jídla v Brně. Ověřené údaje oddělujeme od odhadů.</p>
             <p className="footer-support">
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

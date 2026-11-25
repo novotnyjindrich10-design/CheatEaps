@@ -3,8 +3,7 @@
  * Neoznačuje neodeslaný e-mail za úspěch.
  */
 import { CONTACT_EMAIL } from '../constants/brand.js'
-
-const SUPPORT_EMAIL = CONTACT_EMAIL
+import { wrapFoodGoEmail } from './emailTemplates.js'
 
 function configured(env) {
   const apiKey = String(env.RESEND_API_KEY ?? '').trim()
@@ -17,28 +16,29 @@ export function buildApprovalEmail({ businessName, placeUrl, ownerEmail }) {
   const name = String(businessName ?? '').trim() || 'váš podnik'
   const url = String(placeUrl ?? '').trim()
   const to = String(ownerEmail ?? '').trim()
-  const lines = [
+  const bodyLines = [
     'Dobrý den,',
-    '',
     `máme radost — podnik „${name}“ je teď zveřejněný na FoodGo Brno.`,
-    '',
     'Lidé, kteří u nás hledají, kde se dobře najíst, ho můžou najít ve výsledcích a na stránce podniku.',
   ]
   if (url) {
-    lines.push('', `Přímý odkaz na veřejný profil:`, url)
+    bodyLines.push(`Přímý odkaz na veřejný profil: ${url}`)
   }
-  lines.push(
-    '',
-    `Když budete chtít cokoli upravit (popis, fotku, údaje), napište nám na ${SUPPORT_EMAIL}.`,
-    '',
+  bodyLines.push(
+    `Když budete chtít cokoli upravit (popis, fotku, údaje), napište nám na ${CONTACT_EMAIL}.`,
     'Děkujeme, že jste s námi.',
-    '',
     'Tým FoodGo Brno',
   )
+  const letter = wrapFoodGoEmail({
+    title: 'Váš podnik je nyní na FoodGo',
+    preheader: 'Profil je zveřejněný v katalogu',
+    bodyLines,
+  })
   return {
     to,
     subject: 'Váš podnik je nyní na FoodGo!',
-    text: lines.join('\n'),
+    text: letter.text,
+    html: letter.html,
   }
 }
 
@@ -70,8 +70,10 @@ export async function sendBusinessApprovalEmail(payload, env, fetchImpl = fetch)
       body: JSON.stringify({
         from: mail.from,
         to: [letter.to],
+        reply_to: CONTACT_EMAIL,
         subject: letter.subject,
         text: letter.text,
+        html: letter.html,
       }),
     })
   } catch {

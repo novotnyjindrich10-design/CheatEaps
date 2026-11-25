@@ -9,6 +9,8 @@ describe('health', () => {
       SUPABASE_ANON_KEY: 'sb_publishable_test',
       SUPABASE_SERVICE_ROLE_KEY: 'sb_secret_SHOULD_NOT_LEAK',
       RESEND_API_KEY: 're_test',
+      EMAIL_FROM: 'FoodGo <onboarding@resend.dev>',
+      INQUIRY_TO_EMAIL: 'foodgocz@gmail.com',
       PAYMENT_SECRET: 'comgate-secret',
       PAYMENTS_LIVE: 'false',
       PUBLIC_SITE_URL: 'https://example.test',
@@ -17,6 +19,7 @@ describe('health', () => {
     assert.equal(snap.ok, true)
     assert.equal(snap.checks.supabaseConfigured, true)
     assert.equal(snap.checks.emailConfigured, true)
+    assert.equal(healthSnapshot({ RESEND_API_KEY: 're_test' }).checks.emailConfigured, false)
     assert.equal(snap.checks.paymentsLive, false)
     assert.equal(text.includes('sb_secret_'), false)
     assert.equal(text.includes('comgate-secret'), false)

@@ -1,6 +1,6 @@
 {
-  "name": "FoodGo Brno",
-  "short_name": "FoodGo",
+  "name": "FOODGO Brno",
+  "short_name": "FOODGO",
   "description": "Kde se najíst v Brně podle chuti, rozpočtu a vzdálenosti.",
   "start_url": "/",
   "scope": "/",
@@ -9,6 +9,12 @@
   "theme_color": "#0f7a4c",
   "lang": "cs",
   "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "/logo-mark.png",
       "sizes": "192x192",

@@ -5,6 +5,33 @@
 import { presentPrice } from '../constants/operator.js'
 import { quoteTrustedPrice } from '../constants/promotionPrice.js'
 
+const recentByIp = new Map()
+
+export function resetQuotePromotionLimits() {
+  recentByIp.clear()
+}
+
+function clientIp(request) {
+  const forwarded = request.headers.get('x-forwarded-for')
+  if (forwarded) return forwarded.split(',')[0].trim()
+  return 'local'
+}
+
+function rateLimited(ip) {
+  const now = Date.now()
+  const windowMs = 60_000
+  const max = 40
+  const bucket = recentByIp.get(ip) || []
+  const fresh = bucket.filter((ts) => now - ts < windowMs)
+  if (fresh.length >= max) {
+    recentByIp.set(ip, fresh)
+    return true
+  }
+  fresh.push(now)
+  recentByIp.set(ip, fresh)
+  return false
+}
+
 function json(body, status, headers) {
   return Response.json(body, { status, headers })
 }
@@ -24,6 +51,13 @@ export async function quotePromotionHttp(request, quote = quoteTrustedPrice) {
       { ok: false, error: 'method-not-allowed', message: 'Povolená je jen metoda POST.' },
       405,
       { Allow: 'POST' },
+    )
+  }
+
+  if (rateLimited(clientIp(request))) {
+    return json(
+      { ok: false, error: 'rate-limited', message: 'Příliš mnoho dotazů na cenu. Zkus to za chvíli.' },
+      429,
     )
   }
 

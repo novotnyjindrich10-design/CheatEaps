@@ -2,7 +2,7 @@
  * Profesionální české e-mailové šablony FoodGo (HTML + plain text).
  * HTML escapuje vstup. Neodesílá samo — volá je server po kontrole env.
  */
-import { BRAND_CITY, CONTACT_EMAIL } from '../constants/brand.js'
+import { BRAND_CITY, BRAND_MARK, CONTACT_EMAIL } from '../constants/brand.js'
 
 export function escapeEmailHtml(value) {
   return String(value ?? '')
@@ -41,8 +41,9 @@ ${safePre ? `<div style="display:none;max-height:0;overflow:hidden">${safePre}</
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f6f5;padding:24px 12px">
 <tr><td align="center">
 <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e2e8e4">
-<tr><td style="background:#0f7a4c;padding:20px 24px">
-<p style="margin:0;font-size:20px;font-weight:700;color:#ffffff">${escapeEmailHtml(BRAND_CITY)}</p>
+<tr><td style="background:#0f7a4c;padding:18px 24px">
+<p style="margin:0;font-size:22px;font-weight:800;letter-spacing:0.12em;color:#ffffff">${escapeEmailHtml(BRAND_MARK)}</p>
+<p style="margin:4px 0 0;font-size:13px;font-weight:600;color:rgba(255,255,255,0.88)">${escapeEmailHtml(BRAND_CITY)}</p>
 </td></tr>
 <tr><td style="padding:24px">
 <h1 style="margin:0 0 16px;font-size:20px;line-height:1.3;color:#0f2a1c">${safeTitle}</h1>

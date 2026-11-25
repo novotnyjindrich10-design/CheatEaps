@@ -9,6 +9,44 @@ import { fileURLToPath } from 'node:url'
 import { validatePlaceReport } from '../utils/placeReport.js'
 import { authConfig, resolveUser } from './supabaseAuth.js'
 import { supabaseApiHeaders } from './supabaseApiHeaders.js'
+import { wrapFoodGoEmail } from './emailTemplates.js'
+import { CONTACT_EMAIL } from '../constants/brand.js'
+
+async function notifyOperatorNewReport(report, env, fetchImpl = fetch) {
+  const apiKey = String(env?.RESEND_API_KEY ?? '').trim()
+  const from = String(env?.EMAIL_FROM ?? '').trim()
+  const to = String(env?.INQUIRY_TO_EMAIL ?? CONTACT_EMAIL).trim()
+  if (!apiKey || !from.includes('@') || !to.includes('@')) return
+  const letter = wrapFoodGoEmail({
+    title: 'Nové hlášení údaje',
+    preheader: 'Uloženo v administraci — bez osobních dat v e-mailu',
+    bodyLines: [
+      'V katalogu je nové hlášení o údajích podniku.',
+      report?.restaurantId ? `Podnik (id): ${report.restaurantId}` : '',
+      report?.category ? `Kategorie hlášení: ${report.category}` : '',
+      'Detail je v administraci. Tento e-mail neobsahuje kontakt hlásícího.',
+    ].filter(Boolean),
+  })
+  try {
+    await fetchImpl('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        reply_to: CONTACT_EMAIL,
+        subject: 'FOODGO — nové hlášení údaje',
+        text: letter.text,
+        html: letter.html,
+      }),
+    })
+  } catch {
+    /* hlášení už je uložené — e-mail je best-effort */
+  }
+}
 
 const recentByIp = new Map()
 const sqlPath = resolve(fileURLToPath(new URL('.', import.meta.url)), '../../supabase/place-reports.sql')
@@ -334,6 +372,9 @@ export async function placeReportsHttp(request, { placeExists, store, env, fetch
     }
     return storageUnavailable(saved.message || 'Hlášení se nepodařilo uložit.')
   }
+
+  // Best-effort: selhání e-mailu nesmí zahodit uložené hlášení.
+  void notifyOperatorNewReport(validated.report, runtimeEnv, http)
 
   return json({ ok: true, stored: true, received: true, id: saved.id || undefined })
 }
