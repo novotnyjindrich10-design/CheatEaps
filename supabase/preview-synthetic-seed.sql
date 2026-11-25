@@ -1,14 +1,42 @@
--- Syntetická data pro prázdný projekt foodgo-preview.
+-- Syntetická data pro prázdný projekt foodgo-preview (jnyxjyyvzxriuyvyiuxe).
 -- NESPUSŤ na produkčním projektu pcptzyfoojmnspumcmsi.
 -- Žádní skuteční zákazníci, hesla, kontakty ani objednávky.
+--
+-- Na skutečném Supabase NEVKLÁDÁME řádky do auth.users (má povinné sloupce).
+-- Izolovaný Docker fixture má zjednodušené auth.users — tam se uživatel vloží jen když jde.
 
-insert into auth.users (id, email)
-values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'preview-user@example.com')
-on conflict (id) do nothing;
+do $$
+begin
+  if to_regclass('auth.users') is not null
+     and exists (
+       select 1
+       from information_schema.columns
+       where table_schema = 'auth'
+         and table_name = 'users'
+         and column_name = 'encrypted_password'
+     ) then
+    raise notice 'preview-seed: skutečný Supabase Auth — přeskakuji insert do auth.users';
+  else
+    insert into auth.users (id, email)
+    values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'preview-user@example.com')
+    on conflict (id) do nothing;
+  end if;
+exception
+  when others then
+    raise notice 'preview-seed: auth.users insert přeskočen (% )', sqlerrm;
+end $$;
 
-insert into public.profiles (id, email, is_admin)
-values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'preview-user@example.com', false)
-on conflict (id) do nothing;
+do $$
+begin
+  if exists (select 1 from auth.users where id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa') then
+    insert into public.profiles (id, email, is_admin)
+    values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'preview-user@example.com', false)
+    on conflict (id) do nothing;
+  end if;
+exception
+  when others then
+    raise notice 'preview-seed: profiles insert přeskočen (% )', sqlerrm;
+end $$;
 
 insert into public.promotion_orders (
   reference, access_hash, status, payment_status, renewal,

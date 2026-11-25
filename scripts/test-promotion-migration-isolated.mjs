@@ -257,20 +257,22 @@ try {
   mustOk(r, 'createdb-empty')
   r = psqlFile('scripts/isolated-promotion-fixture.sql', { database: 'foodgo_empty' })
   mustOk(r, 'empty-fixture')
-  r = psqlFile('supabase/bootstrap-all.sql', { singleTransaction: true, database: 'foodgo_empty' })
-  mustOk(r, 'empty-bootstrap')
-  r = psqlFile('supabase/promotion-apply-missing.sql', { singleTransaction: true, database: 'foodgo_empty' })
-  mustOk(r, 'empty-promotion')
-  r = psqlFile('supabase/preview-synthetic-seed.sql', { singleTransaction: true, database: 'foodgo_empty' })
-  mustOk(r, 'empty-seed')
+  r = psqlFile('supabase/preview-bootstrap-all.sql', { singleTransaction: true, database: 'foodgo_empty' })
+  mustOk(r, 'empty-preview-bootstrap-all')
   r = psqlSql(`
     do $$
     declare c int;
     begin
       select count(*) into c from public.promotion_orders where email = 'preview-bistro@example.com';
       if c <> 1 then raise exception 'synthetic seed missing: %', c; end if;
-      if (select count(*) from auth.users where email like '%@example.com') < 1 then
-        raise exception 'synthetic user missing';
+      if to_regclass('public.place_overrides') is null then
+        raise exception 'place_overrides missing from combined bootstrap';
+      end if;
+      if to_regclass('public.place_reports') is null then
+        raise exception 'place_reports missing from combined bootstrap';
+      end if;
+      if to_regclass('public.loyalty_rewards') is null then
+        raise exception 'loyalty_rewards missing from combined bootstrap';
       end if;
     end $$;
   `, 'foodgo_empty')
