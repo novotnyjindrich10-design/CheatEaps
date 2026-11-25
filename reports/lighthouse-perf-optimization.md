@@ -59,3 +59,11 @@ Mobile Performance medián ~89 (těsně pod 90 kvůli variance TBT). LCP ~3.4 s 
 ## Proč mobile LCP není pod 2.5 s
 
 LCP element je `p.home-hero-lead` po React bootstrapu. Kritický JS (`index` ~334 kB gzip ~106 kB) pod mobile CPU throttlingem stále přidá ~2–3 s element render delay v simulačním skóre. Bez SSR/streaming Reactu nebo dalšího rozbití shellu pod ~200 kB nejde spolehlivě stlačit LCP pod 2.5 s při zachování současného SPA UX. Není to detekce Lighthouse — stejný bootstrap stojí i reálné mid-range telefony.
+
+## UX fix (GPS + category photos) — 2026-11-25
+
+Obnoveno automatické fullscreen GPS modal (po 2 rAF, bez scroll/click gate) a automatické načítání category fotek.
+
+- Category karty: 640px WebP/JPEG (~11–55 kB místo ~150 kB full JPG), `picture` + eager na prvních 3.
+- Index bundle dále ~329 kB (lazy MobileTabBar, CompareBar, RestaurantCard).
+- Medián LH po UX fixu (první návštěva se skutečným obsahem): **mobile Perf ~73 / LCP ~6.0 s** (LCP = category photo), **desktop Perf 95 / LCP ~1.6 s**. Skóre na mobilu kleslo záměrně — UX má přednost před audit-only gatingem.

@@ -20,6 +20,10 @@ describe('fotka kategorie Bez masa', () => {
       existsSync(new URL('../../public/food-illustrations/pixabay/4407744.jpg', import.meta.url)),
       true,
     )
+    assert.equal(
+      existsSync(new URL('../../public/food-illustrations/pixabay/category/4407744-640.webp', import.meta.url)),
+      true,
+    )
   })
 })
 
@@ -35,6 +39,10 @@ describe('fotka kategorie Vegan', () => {
     assert.match(photo.cardUrl, /^\/food-illustrations\/pixabay\/3746476\.jpg$/)
     assert.equal(
       existsSync(new URL('../../public/food-illustrations/pixabay/3746476.jpg', import.meta.url)),
+      true,
+    )
+    assert.equal(
+      existsSync(new URL('../../public/food-illustrations/pixabay/category/3746476-640.webp', import.meta.url)),
       true,
     )
   })

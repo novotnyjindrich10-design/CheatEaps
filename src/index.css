@@ -1498,25 +1498,18 @@ button.category-card {
 
 .location-prompt {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 90;
   display: grid;
-  place-items: end center;
-  padding: 0 14px max(12px, env(safe-area-inset-bottom));
-  pointer-events: none;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 18px max(16px, env(safe-area-inset-bottom));
 }
 
 .location-prompt-backdrop {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: min(52vh, 420px);
-  background: linear-gradient(to top, rgba(18, 28, 24, 0.42), transparent 88%);
+  inset: 0;
+  background: rgba(18, 28, 24, 0.52);
   animation: location-prompt-fade 0.28s ease;
-  pointer-events: none;
 }
 
 .location-prompt-card {
@@ -1533,7 +1526,6 @@ button.category-card {
   box-shadow: 0 24px 60px rgba(18, 28, 24, 0.28);
   text-align: center;
   animation: location-prompt-rise 0.34s cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: auto;
 }
 
 .location-prompt-icon {

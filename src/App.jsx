@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Link, Navigate, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
-import MobileTabBar from './components/MobileTabBar'
 import ErrorBoundary from './components/ErrorBoundary'
 import LocationPrompt from './components/LocationPrompt'
 import Home from './pages/Home'
@@ -11,9 +10,11 @@ import { CatalogProvider } from './context/CatalogContext'
 import DataSources from './components/DataSources'
 import RecoveryRedirect from './components/RecoveryRedirect'
 import PageMeta from './components/PageMeta'
-import CompareBar from './components/CompareBar'
 import { CompareProvider } from './context/CompareContext'
 import { CONTACT_EMAIL } from './constants/brand'
+
+const MobileTabBar = lazy(() => import('./components/MobileTabBar'))
+const CompareBar = lazy(() => import('./components/CompareBar'))
 
 const Results = lazy(() => import('./pages/Results'))
 const RestaurantDetail = lazy(() => import('./pages/RestaurantDetail'))
@@ -71,7 +72,9 @@ function App() {
           <PageMeta />
           <Header />
           <LocationPrompt />
-          <CompareBar />
+          <Suspense fallback={null}>
+            <CompareBar />
+          </Suspense>
           <div id="main-content" tabIndex={-1}>
           <ErrorBoundary>
           <Suspense fallback={<RouteFallback />}>
@@ -107,7 +110,9 @@ function App() {
           </Suspense>
           </ErrorBoundary>
           </div>
-          <MobileTabBar />
+          <Suspense fallback={null}>
+            <MobileTabBar />
+          </Suspense>
           <footer className="site-footer">
             <p className="footer-brand">FoodGo Brno</p>
             <p className="footer-tagline">Katalog jídla v Brně. Ověřené údaje oddělujeme od odhadů.</p>

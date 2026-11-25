@@ -2,10 +2,10 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { QUICK_BUDGETS } from '../constants/filters'
 import HomeSearch from '../components/HomeSearch'
+import LocationBar from '../components/LocationBar'
 
 const CategoryStrip = lazy(() => import('../components/CategoryStrip'))
-import LocationBar from '../components/LocationBar'
-import RestaurantCard from '../components/RestaurantCard'
+const RestaurantCard = lazy(() => import('../components/RestaurantCard'))
 import { useCatalog } from '../context/CatalogContext'
 import { useLocationState } from '../context/LocationContext'
 import { partitionPlacements } from '../constants/monetization'
@@ -201,13 +201,15 @@ export default function Home() {
             Načítám tipy z katalogu…
           </p>
         ) : (
-          <ul className="restaurant-list">
-            {featured.map((restaurant, index) => (
-              <li key={restaurant.id}>
-                <RestaurantCard restaurant={restaurant} index={index} />
-              </li>
-            ))}
-          </ul>
+          <Suspense fallback={<p className="section-desc">Načítám karty…</p>}>
+            <ul className="restaurant-list">
+              {featured.map((restaurant, index) => (
+                <li key={restaurant.id}>
+                  <RestaurantCard restaurant={restaurant} index={index} />
+                </li>
+              ))}
+            </ul>
+          </Suspense>
         )}
       </section>
 
@@ -221,13 +223,15 @@ export default function Home() {
               <p className="section-desc">Jen v tomto zařízení. Nic se neodesílá.</p>
             </div>
           </div>
-          <ul className="restaurant-list restaurant-list--compact">
-            {recentPlaces.map((restaurant, index) => (
-              <li key={restaurant.id}>
-                <RestaurantCard restaurant={restaurant} index={index} />
-              </li>
-            ))}
-          </ul>
+          <Suspense fallback={null}>
+            <ul className="restaurant-list restaurant-list--compact">
+              {recentPlaces.map((restaurant, index) => (
+                <li key={restaurant.id}>
+                  <RestaurantCard restaurant={restaurant} index={index} />
+                </li>
+              ))}
+            </ul>
+          </Suspense>
         </section>
       ) : null}
 

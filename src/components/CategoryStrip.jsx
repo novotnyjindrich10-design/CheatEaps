@@ -50,6 +50,10 @@ function categoryPhoto(value) {
   return photo
 }
 
+function photoSrcForSoft(photo) {
+  return photo.fallbackUrl || photo.cardUrl
+}
+
 const MARQUEE_SPEED = 20
 
 function subscribeReducedMotion(onChange) {
@@ -83,40 +87,9 @@ export default function CategoryStrip({
   const markManualRef = useRef(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
-  // Fotky až po LCP hero — jinak 1280px snímky v prvním viewportu přepíší LCP (~5–7 s mobil).
-  const [photosReady, setPhotosReady] = useState(false)
   const categories = variant === 'grid' ? HOME_CATEGORIES : STRIP_CATEGORIES
   const isGrid = variant === 'grid'
   const marquee = isGrid && autoScroll && !reducedMotion
-
-  useEffect(() => {
-    if (!isGrid) {
-      setPhotosReady(true)
-      return undefined
-    }
-    let cancelled = false
-    const enable = () => {
-      if (!cancelled) setPhotosReady(true)
-    }
-    // Na úzkém viewportu jsou karty hned v LCP okně — počkej na scroll (nebo fallback).
-    const narrow = window.matchMedia('(max-width: 700px)').matches
-    if (!narrow) {
-      const timer = window.setTimeout(enable, 200)
-      return () => {
-        cancelled = true
-        window.clearTimeout(timer)
-      }
-    }
-    window.addEventListener('scroll', enable, { once: true, passive: true })
-    window.addEventListener('pointerdown', enable, { once: true })
-    const timer = window.setTimeout(enable, 9000)
-    return () => {
-      cancelled = true
-      window.clearTimeout(timer)
-      window.removeEventListener('scroll', enable)
-      window.removeEventListener('pointerdown', enable)
-    }
-  }, [isGrid])
 
   useEffect(() => {
     if (!isGrid) return undefined
@@ -411,7 +384,7 @@ export default function CategoryStrip({
   function renderCard(category, cloneKey, photoPriority = 'lazy') {
     const { value, label } = category
     const clone = Boolean(cloneKey)
-    const photo = photosReady ? categoryPhoto(value) : null
+    const photo = categoryPhoto(value)
     const dealsTile = isDealsCategory(value)
     const selected = !clone && isSelected(value)
     const className = [
@@ -424,6 +397,7 @@ export default function CategoryStrip({
       .join(' ')
     const chooseHere = Boolean(onSelect) && !asLinks
     const eager = !clone && (photoPriority === 'eager' || photoPriority === 'high')
+    const softUrl = photo ? photoSrcForSoft(photo) : ''
     const shared = {
       className,
       'data-clone': clone ? cloneKey : undefined,
@@ -436,29 +410,32 @@ export default function CategoryStrip({
     const body = (
       <>
         {photo ? (
-          <img
-            className="category-card-photo"
-            src={photo.cardUrl}
-            alt=""
-            width={photo.width}
-            height={photo.height}
-            draggable="false"
-            decoding="async"
-            loading={eager ? 'eager' : 'lazy'}
-            fetchPriority={photoPriority === 'high' ? 'high' : eager ? 'auto' : 'low'}
-            style={{ objectPosition: CATEGORY_PHOTO_POSITION[value] || 'center' }}
-            title={clone ? undefined : `Foto: ${photo.user}, Pixabay`}
-            onLoad={(event) => {
-              // Soft blur vrstva až po načtení <img> — CSS background by jinak stáhl všech 12 fotek hned.
-              const card = event.currentTarget.closest('.category-card')
-              card?.style.setProperty('--category-photo', `url(${photo.cardUrl})`)
-            }}
-          />
-        ) : dealsTile ? null : photosReady ? (
+          <picture>
+            <source srcSet={photo.cardUrl} type="image/webp" />
+            <img
+              className="category-card-photo"
+              src={photo.fallbackUrl || photo.cardUrl}
+              alt=""
+              width={photo.width}
+              height={photo.height}
+              draggable="false"
+              decoding="async"
+              loading={eager ? 'eager' : 'lazy'}
+              fetchPriority={photoPriority === 'high' ? 'high' : eager ? 'auto' : 'low'}
+              style={{ objectPosition: CATEGORY_PHOTO_POSITION[value] || 'center' }}
+              title={clone ? undefined : `Foto: ${photo.user}, Pixabay`}
+              onLoad={(event) => {
+                // Soft blur až po load — CSS background by jinak stáhl vše hned.
+                const card = event.currentTarget.closest('.category-card')
+                card?.style.setProperty('--category-photo', `url(${softUrl})`)
+              }}
+            />
+          </picture>
+        ) : dealsTile ? null : (
           <span className="category-card-art" aria-hidden="true">
             %
           </span>
-        ) : null}
+        )}
         <span className="category-card-shade" aria-hidden="true" />
         <span className="category-card-label">{label}</span>
       </>
@@ -535,8 +512,9 @@ export default function CategoryStrip({
 
         {isGrid && marquee ? categories.map((category) => renderCard(category, 'a')) : null}
         {isGrid
-          ? // Všechny fotky lazy — eager 150KB snímky by přepsaly LCP z hero textu (~7 s na mobilu).
-            categories.map((category) => renderCard(category, '', 'lazy'))
+          ? categories.map((category, index) =>
+              renderCard(category, '', index === 0 ? 'high' : index < 3 ? 'eager' : 'lazy'),
+            )
           : categories.map((category) => {
               const { value, label, emoji } = category
               const selected = isSelected(value)

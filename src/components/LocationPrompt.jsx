@@ -15,10 +15,8 @@ function LocationIcon() {
 
 export default function LocationPrompt() {
   const { showLocationPrompt, acceptPrompt, dismissPrompt } = useLocationState()
-  // Sheet až po krátkém painte + první interakci (nebo fallback).
-  // Auto-overlay hned po startu by se stal LCP a zničil metriky úvodu.
+  // Až po 2 framech — ať neblokuje první paint hero, ale bez nutnosti scrollu/kliku.
   const [paintReady, setPaintReady] = useState(false)
-  const [engagementReady, setEngagementReady] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -34,32 +32,21 @@ export default function LocationPrompt() {
   }, [])
 
   useEffect(() => {
-    if (!showLocationPrompt) return undefined
-    let cancelled = false
-    const arm = () => {
-      if (!cancelled) setEngagementReady(true)
-    }
-    window.addEventListener('scroll', arm, { once: true, passive: true })
-    window.addEventListener('pointerdown', arm, { once: true })
-    window.addEventListener('keydown', arm, { once: true })
-    // Reální uživatelé, kteří jen čekají — sheet stejně ukaž (mimo typické LCP okno).
-    const timer = window.setTimeout(arm, 16000)
+    if (!showLocationPrompt || !paintReady) return undefined
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     return () => {
-      cancelled = true
-      window.clearTimeout(timer)
-      window.removeEventListener('scroll', arm)
-      window.removeEventListener('pointerdown', arm)
-      window.removeEventListener('keydown', arm)
+      document.body.style.overflow = previous
     }
-  }, [showLocationPrompt])
+  }, [showLocationPrompt, paintReady])
 
-  if (!paintReady || !engagementReady || !showLocationPrompt) return null
+  if (!paintReady || !showLocationPrompt) return null
 
   return (
     <div
       className="location-prompt"
       role="dialog"
-      aria-modal="false"
+      aria-modal="true"
       aria-labelledby="location-prompt-title"
       aria-describedby="location-prompt-text"
     >

@@ -54,8 +54,6 @@ test.describe('geolokace a vzdálenosti', () => {
     })
     await page.reload()
     await ready(page)
-    // Sheet se ukáže až po první interakci — ať nepřekryje LCP hero.
-    await page.evaluate(() => window.scrollBy(0, 40))
 
     const prompt = page.locator('.location-prompt')
     await expect(prompt).toBeVisible()
@@ -89,7 +87,6 @@ test.describe('geolokace a vzdálenosti', () => {
     })
     await page.reload()
     await ready(page)
-    await page.evaluate(() => window.scrollBy(0, 40))
     await page.locator('.location-prompt').getByRole('button', { name: 'Pokračovat bez polohy' }).click()
     await expect(page.locator('.location-prompt')).toHaveCount(0)
 
