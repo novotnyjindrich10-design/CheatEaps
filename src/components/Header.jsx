@@ -299,8 +299,7 @@ export default function Header() {
               aria-label="Otevřít menu"
               aria-expanded={open}
               aria-controls={menuId}
-              hidden={open || undefined}
-              tabIndex={headerAway ? -1 : undefined}
+              hidden={open || headerAway || undefined}
               onClick={() => setOpen(true)}
             >
               <span className="header-menu-bars" aria-hidden="true">
@@ -321,8 +320,7 @@ export default function Header() {
           aria-label="Otevřít menu"
           aria-expanded={open}
           aria-controls={menuId}
-          hidden={open || undefined}
-          tabIndex={headerAway ? undefined : -1}
+          hidden={open || !headerAway || undefined}
           onClick={() => setOpen(true)}
         >
           <span className="header-menu-bars" aria-hidden="true">
