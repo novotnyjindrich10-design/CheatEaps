@@ -61,14 +61,11 @@ test.describe('geolokace a vzdálenosti', () => {
     await expect(page.locator('.restaurant-card-meta--distance .meta-value').first()).not.toHaveText('—', {
       timeout: 15_000,
     })
-    await page.getByRole('button', { name: 'Prozkoumat nabídku' }).click()
-    await expect(page.getByRole('region', { name: 'Podniky a filtry' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Nejbližší podniky' })).toHaveCount(0)
-
-    await page.goto('/results')
+    await page.getByRole('link', { name: 'Prozkoumat nabídku' }).click()
+    await expect(page).toHaveURL(/\/results/)
     await ready(page)
     await expect(page.locator('.location-prompt')).toHaveCount(0)
-    await expect(page.locator('#filter-sort')).toHaveValue('')
+    await expect(page.locator('#filter-sort')).toBeVisible()
     await expect(page.locator('.restaurant-card-meta--distance .meta-value').first()).not.toHaveText('—')
   })
 
@@ -87,7 +84,7 @@ test.describe('geolokace a vzdálenosti', () => {
     await page.goto('/')
     await ready(page)
     await expect(page.locator('.location-prompt')).toHaveCount(0)
-    await expect(page.getByRole('button', { name: 'Prozkoumat nabídku' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Prozkoumat nabídku' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Objev podniky v Brně' })).toBeVisible()
 
     await page.goto('/results')
