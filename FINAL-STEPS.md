@@ -25,22 +25,24 @@ Tajné hodnoty sem nepatří.
 
 ### Ověřeno agentem (API / CLI)
 
-- Health, session host, place-overrides, published-places, sponsorships
+- Health, session host Preview, published-places, sponsorships
 - Admin bez session → `auth-required` / `admin: false`
-- Guest place-reports / place-stats → Forbidden
-- Poptávky se **ukládají** (`stored: true`, status `inquiry`, nezaplaceno)
-- Transakční e-mail na trial `onboarding@resend.dev` → `foodgocz@gmail.com` **nedoručí**, pokud Resend účet není tato schránka → `emailed: false`
-- Registrace na `foodgocz@gmail.com`: Auth vrací `email-delivery-failed` (SMTP/Resend trial — doručení potvrzení selhalo)
-- Offline `launch:check`: PASS + WARNING (lokální `.env` míří na produkční Supabase) + BLOCKED `legal-approval`
-- **Bug Preview DB:** veřejný insert `business_applications` → `permission denied` — oprav SQL níže
+- Guest place-stats → Forbidden; place-reports bez platného místa odmítnuté
+- **Žádosti podniků** → `ok: true`, `status: pending` (oprava: UUID + `return=minimal`, anon bez SELECT)
+- Poptávky → `stored: true`, `paid: false`, status `inquiry` (e-mail trial → `emailed: false`)
+- Registrace na `foodgocz@gmail.com`: Auth vrací `email-delivery-failed` (Resend trial — doručení mimo účet Resend)
+- Offline/online `launch:check`: PASS + WARNING (lokální `.env` → produkční Supabase) + BLOCKED `legal-approval`
 
-### Oprava GRANT (jen foodgo-preview)
+### SQL grants (doporučeno spustit i když API už funguje)
 
-V SQL Editoru projektu **jnyxjyyvzxriuyvyiuxe** spusť celý soubor:
+Hardened skript je ve Windows schránce / v gitu:
 
-`supabase/preview-fix-business-grants.sql`
+`supabase/preview-fix-business-grants.sql` (jen foodgo-preview)
 
-Očekávané: `anon_can_insert = true`.
+- `anon`: jen INSERT (bez SELECT/UPDATE/DELETE)
+- SELECT/UPDATE žádostí jen přes RLS `is_cheapeats_admin()`
+- INSERT `WITH CHECK` = pending/start/not_sent + prázdná admin pole
+- Očekávané: `anon_can_insert=true`, `anon_can_select/update/delete=false`
 
 ### Resend trial — důležité
 
@@ -54,6 +56,7 @@ Pro Auth i poptávky používej při testu tuto schránku, nebo ověř vlastní 
 - Preview DB oddělená, bootstrap SQL, env Preview (Supabase + Resend + PUBLIC_SITE_URL)
 - Auth SMTP Resend v foodgo-preview (ručně)
 - Anti-enumerace recovery + jasnější chyby signup při SMTP fail
+- Žádosti podniků na Preview funkční + hardened grants SQL
 - Skripty: `npm run resend:key`, `preview:email-stack`, `preview:auth-smtp`, `preview:email-wait`
 - Comgate kód připravený, LIVE vypnuté
 
@@ -61,8 +64,8 @@ Pro Auth i poptávky používej při testu tuto schránku, nebo ověř vlastní 
 
 ## Ty osobně (ke kompletnímu Auth E2E)
 
-1. Spusť `supabase/preview-fix-business-grants.sql` v foodgo-preview (oprava žádostí podniků).
-2. Registrace na Preview s **přesně e-mailem Resend účtu** (trial FROM `onboarding@resend.dev`).
+1. (Volitelně) Spusť SQL ze schránky v foodgo-preview — potvrzení grantů/RLS.
+2. Registrace na Preview s **přesně e-mailem Resend účtu**.
 3. Potvrď odkaz z e-mailu → přihlášení → Zapomenuté heslo.
 4. V SQL **jen** foodgo-preview:  
    `update public.profiles set is_admin = true where email = '<tvůj test>';`
@@ -72,12 +75,12 @@ Pro Auth i poptávky používej při testu tuto schránku, nebo ověř vlastní 
 
 ## Zbývá k veřejnému vydání
 
-### Musí provozovatel
+### Musí provozovatel (nelze dokončit bez tebe)
 
-1. **Právní texty** — schválit Obchodní podmínky / GDPR / kontakt provozovatele (`legal-approval` BLOCKED).
-2. **Provozovatel v kódu** — doplnit `src/constants/operator.js` (IČO, adresa, e-mail), pokud ještě prázdné.
+1. **Právní texty** — schválit Obchodní podmínky / GDPR / kontakt (`legal-approval` BLOCKED).
+2. **Provozovatel v kódu** — doplnit `src/constants/operator.js` (IČO, adresa, e-mail).
 3. **Vlastní doména** — Vercel Domains + DNS + Production `PUBLIC_SITE_URL`.
-4. **Resend doména** — ověřit DNS → `EMAIL_FROM=FoodGo <noreply@tvoje-domena.cz>` (Production + Auth SMTP produkce).
+4. **Resend doména** — ověřit DNS → `EMAIL_FROM=FoodGo <noreply@tvoje-domena.cz>` (+ Auth SMTP produkce).
 5. **Comgate** — KYC, Merchant ID/Secret, sandbox E2E, teprve potom `PAYMENTS_LIVE` (výslovně).
 6. **Produkční Supabase** — Auth redirects na produkční origin; migrace SQL jen po záloze a schválení.
 7. **Merge** `foodgo-launch-preview` → `main` jen na výslovný pokyn.
@@ -86,7 +89,7 @@ Pro Auth i poptávky používej při testu tuto schránku, nebo ověř vlastní 
 
 - Auth redirects produkce + Preview v allow listu
 - Resend Production env
-- `npm run launch:check` (online) + ruční smoke Production
+- `npm run launch:check` + ruční smoke Production
 - SEO index až na ostré doméně
 
 ---
