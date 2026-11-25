@@ -892,6 +892,14 @@ html.nav-drawer-open .site-header {
   scroll-margin-top: 80px;
 }
 
+.home-listings--compact {
+  margin-top: clamp(16px, 3vw, 24px);
+}
+
+.home-listings--compact .section-title {
+  margin-bottom: 12px;
+}
+
 .home-hero-title {
   margin: 0 auto;
   max-width: 14em;
