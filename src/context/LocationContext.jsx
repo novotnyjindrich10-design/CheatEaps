@@ -150,12 +150,18 @@ export function LocationProvider({ children }) {
             setErrorMessage(geolocationErrorMessage('invalid'))
             return
           }
+          const accuracyRaw = pos?.coords?.accuracy
+          const accuracy =
+            typeof accuracyRaw === 'number' && Number.isFinite(accuracyRaw) && accuracyRaw > 0
+              ? accuracyRaw
+              : undefined
           const next = {
             lat,
             lon,
             label: 'Moje poloha',
             type: 'gps',
             updatedAt: new Date().toISOString(),
+            ...(accuracy != null ? { accuracy } : {}),
           }
           persistOrigin(next)
           writePromptChoice('accepted')

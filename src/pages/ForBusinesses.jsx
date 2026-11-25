@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import BusinessApplicationForm from '../components/BusinessApplicationForm'
 import BusinessPlanCards from '../components/BusinessPlanCards'
@@ -6,15 +6,29 @@ import PromotionInquiryForm from '../components/PromotionInquiryForm'
 import { presentPrice } from '../constants/operator'
 import { PROMOTION_MONTHLY_PRICES } from '../constants/promotionPrice'
 import { PUBLIC_V1 } from '../constants/publicV1'
+import { smoothScrollTo } from '../utils/smoothScroll'
 
 export default function ForBusinesses() {
   const [mode, setMode] = useState('')
   const [planId, setPlanId] = useState('plus')
+  const inquiryRef = useRef(null)
+  const catalogRef = useRef(null)
   const vat = presentPrice(PROMOTION_MONTHLY_PRICES.plus)
   const priceNote =
     vat.vatStatus === 'unconfirmed'
       ? 'Uvedené ceny jsou ceníkové. Konečná částka na faktuře se upřesní, než cokoli zaplatíte. Teď se nic nestrhává.'
       : vat.vatNote
+
+  useEffect(() => {
+    if (mode === 'paid' && inquiryRef.current) {
+      return smoothScrollTo(inquiryRef.current, { offset: 96, duration: 520 })
+    }
+    if (mode === 'catalog' && catalogRef.current) {
+      return smoothScrollTo(catalogRef.current, { offset: 96, duration: 520 })
+    }
+    return undefined
+  }, [mode])
+
   return (
     <main className="page biz-page">
       <section className="biz-hero">
@@ -92,10 +106,12 @@ export default function ForBusinesses() {
       </section>
 
       {mode === 'paid' ? (
-        <PromotionInquiryForm planId={planId} onClose={() => setMode('')} />
+        <div ref={inquiryRef} className="biz-form-anchor">
+          <PromotionInquiryForm planId={planId} onClose={() => setMode('')} />
+        </div>
       ) : null}
 
-      <section className="biz-section biz-how" id="zapis">
+      <section className="biz-section biz-how" id="zapis" ref={catalogRef}>
         <h2>Neplacený zápis v katalogu</h2>
         <ol>
           <li>Vyplníš název, adresu a kontakt.</li>

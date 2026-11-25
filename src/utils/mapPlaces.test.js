@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { GOOGLE_STATUS_NEEDS_REVIEW, GOOGLE_STATUS_VERIFIED } from './googleRating.js'
-import { boundsFromPlaces, placesFingerprint, placesForMap, pickVisibleLabels, escapeMapLabel } from './mapPlaces.js'
+import {
+  boundsAroundPoint,
+  boundsFromPlaces,
+  placesFingerprint,
+  placesForMap,
+  pickVisibleLabels,
+  escapeMapLabel,
+} from './mapPlaces.js'
 
 describe('mapPlaces', () => {
   it('vynechá neplatné a mimo Brno souřadnice', () => {
@@ -103,6 +110,15 @@ describe('mapPlaces', () => {
   it('prázdný výsledek nemá bounds', () => {
     assert.equal(boundsFromPlaces([]), null)
     assert.ok(boundsFromPlaces([{ id: 'a', lat: 49.2, lon: 16.6 }]))
+  })
+
+  it('boundsAroundPoint pokrývá cca 2 km průměr', () => {
+    const box = boundsAroundPoint(49.1951, 16.6068, 1000)
+    assert.ok(box)
+    const [[minLat, minLon], [maxLat, maxLon]] = box
+    assert.ok(maxLat - minLat > 0.015 && maxLat - minLat < 0.025)
+    assert.ok(maxLon - minLon > 0.02 && maxLon - minLon < 0.04)
+    assert.equal(boundsAroundPoint(NaN, 16, 1000), null)
   })
 
   it('popisky blízko sebe schová a vybraný bod nechá', () => {

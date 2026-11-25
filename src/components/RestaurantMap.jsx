@@ -12,6 +12,7 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import { SPONSORED_LABEL } from '../constants/monetization'
 import { hasFiniteLatLon } from '../utils/geo'
 import {
+  boundsAroundPoint,
   boundsFromPlaces,
   BRNO_MAP_CENTER,
   BRNO_MAP_DEFAULT_ZOOM,
@@ -80,6 +81,11 @@ const MARKER_GLYPH = Object.freeze({
   default: '•',
 })
 
+/** Poloměr výchozího viewportu kolem polohy — průměr cca 2 km. */
+const AREA_RADIUS_M = 1000
+const GPS_DOT = '#2563eb'
+const GPS_RING = '#3b82f6'
+
 function markerIconFor(place, selected) {
   const tone = place.sponsored ? 'sponsored' : MARKER_TONES[place.category] || 'default'
   const glyph = MARKER_GLYPH[tone] || MARKER_GLYPH.default
@@ -106,7 +112,6 @@ async function addBasemap(map, tiles) {
     })
     layer.addTo(map)
     if (tiles.attribution) map.attributionControl?.addAttribution(tiles.attribution)
-    // Skryj POI symboly z podkladu — jinak se pletou s našimi značkami podniků.
     const hidePoi = () => {
       const gl = typeof layer.getMaplibreMap === 'function' ? layer.getMaplibreMap() : null
       if (!gl?.getStyle) return
@@ -152,25 +157,35 @@ function orderedPlaces(places) {
   return ranked.map((item) => item.place)
 }
 
-function PlaceCard({ place }) {
+function originKey(origin) {
+  if (!hasFiniteLatLon(origin?.lat, origin?.lon)) return ''
+  return `${origin.type || 'x'}:${origin.lat.toFixed(5)},${origin.lon.toFixed(5)}`
+}
+
+function PlaceCard({ place, onClose, compact = false }) {
   if (!place) return null
   return (
-    <article className="map-place-card" aria-live="polite">
-      {place.photoUrl ? (
+    <article className={`map-place-card${compact ? ' map-place-card--sheet' : ''}`} aria-live="polite">
+      {compact ? (
+        <button type="button" className="map-place-sheet-dismiss" onClick={onClose} aria-label="Zavřít kartu">
+          <span aria-hidden="true" />
+        </button>
+      ) : null}
+      {!compact && place.photoUrl ? (
         <img className="map-place-photo" src={place.photoUrl} alt={place.photoAlt || ''} loading="lazy" decoding="async" />
       ) : null}
       <div className="map-place-copy">
         {place.sponsored ? <p className="map-place-sponsored">{SPONSORED_LABEL}</p> : null}
         <h2 className="map-place-title">{place.name}</h2>
         {place.cuisineLabel ? <p className="map-place-meta">{place.cuisineLabel}</p> : null}
-        {place.address ? <p className="map-place-meta">{place.address}</p> : null}
+        {!compact && place.address ? <p className="map-place-meta">{place.address}</p> : null}
         {place.priceLabel ? (
           <p className="map-place-meta">
             {place.priceLabel}
             {place.priceStatus ? ` · ${place.priceStatus}` : ''}
           </p>
         ) : null}
-        {place.ratingLabel ? <p className="map-place-meta">{place.ratingLabel}</p> : null}
+        {!compact && place.ratingLabel ? <p className="map-place-meta">{place.ratingLabel}</p> : null}
         {place.distanceLabel ? <p className="map-place-meta">{place.distanceLabel}</p> : null}
         <div className="map-place-actions">
           <Link className="btn btn-primary" to={place.detailPath}>
@@ -195,6 +210,7 @@ export default function RestaurantMap({
   locationError = '',
   onForget,
   focusToken = 0,
+  onReady,
 }) {
   const mapId = useId().replace(/:/g, '')
   const containerRef = useRef(null)
@@ -206,7 +222,12 @@ export default function RestaurantMap({
   const builtFingerprintRef = useRef('')
   const selectedMarkerRef = useRef('')
   const flownFocusRef = useRef(0)
+  const userAdjustedRef = useRef(false)
+  const programmaticMoveRef = useRef(false)
+  const centeredOriginKeyRef = useRef('')
+  const readyNotifiedRef = useRef(false)
   const onSelectRef = useRef(onSelect)
+  const onReadyRef = useRef(onReady)
   const pickRef = useRef(() => {})
   const [ready, setReady] = useState(false)
   const [basemapError, setBasemapError] = useState('')
@@ -232,17 +253,45 @@ export default function RestaurantMap({
 
   const pickPlace = (id) => pickRef.current(id)
 
-  const fitAllPlaces = () => {
+  const runProgrammatic = (fn) => {
     const map = mapRef.current
     if (!map) return
+    programmaticMoveRef.current = true
+    fn(map)
+    map.once('moveend', () => {
+      programmaticMoveRef.current = false
+    })
+  }
+
+  const flyToArea = (lat, lon) => {
+    const bounds = boundsAroundPoint(lat, lon, AREA_RADIUS_M)
+    if (!bounds) return
+    runProgrammatic((map) => {
+      map.fitBounds(bounds, {
+        padding: [28, 28],
+        maxZoom: 16,
+        animate: true,
+        duration: 0.55,
+      })
+    })
+  }
+
+  const fitAllPlaces = () => {
     const bounds = boundsFromPlaces(places)
-    if (bounds) {
-      map.fitBounds(bounds, { padding: [28, 28], maxZoom: 15 })
-    } else {
-      map.setView([BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon], BRNO_MAP_DEFAULT_ZOOM)
-    }
+    userAdjustedRef.current = false
+    runProgrammatic((map) => {
+      if (bounds) {
+        map.fitBounds(bounds, { padding: [28, 28], maxZoom: 15, animate: true, duration: 0.45 })
+      } else {
+        map.setView([BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon], BRNO_MAP_DEFAULT_ZOOM, { animate: true })
+      }
+    })
     fittedFingerprintRef.current = fingerprint
   }
+
+  useEffect(() => {
+    onReadyRef.current = onReady
+  }, [onReady])
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return undefined
@@ -252,7 +301,6 @@ export default function RestaurantMap({
       zoom: BRNO_MAP_DEFAULT_ZOOM,
       minZoom: 10,
       zoomControl: false,
-      // MapLibre GL Leaflet vyžaduje maxZoom na L.map (jinak: "Map has no maxZoom specified").
       maxZoom: 19,
       maxBounds: BRNO_MAP_MAX_BOUNDS,
       maxBoundsViscosity: 0.65,
@@ -261,6 +309,12 @@ export default function RestaurantMap({
     })
     mapRef.current = map
     L.control.zoom({ position: 'bottomright' }).addTo(map)
+
+    const markUserAdjust = () => {
+      if (!programmaticMoveRef.current) userAdjustedRef.current = true
+    }
+    map.on('dragstart', markUserAdjust)
+    map.on('zoomstart', markUserAdjust)
 
     const cluster = L.markerClusterGroup({
       showCoverageOnHover: false,
@@ -301,6 +355,8 @@ export default function RestaurantMap({
       cancelled = true
       window.removeEventListener('resize', onResize)
       ro?.disconnect()
+      map.off('dragstart', markUserAdjust)
+      map.off('zoomstart', markUserAdjust)
       map.remove()
       mapRef.current = null
       clusterRef.current = null
@@ -309,6 +365,9 @@ export default function RestaurantMap({
       fittedFingerprintRef.current = ''
       builtFingerprintRef.current = ''
       selectedMarkerRef.current = ''
+      readyNotifiedRef.current = false
+      centeredOriginKeyRef.current = ''
+      userAdjustedRef.current = false
       setReady(false)
     }
   }, [])
@@ -321,6 +380,12 @@ export default function RestaurantMap({
       onSelectRef.current?.(id)
     }
   }, [onSelect])
+
+  useEffect(() => {
+    if (!ready || readyNotifiedRef.current) return
+    readyNotifiedRef.current = true
+    onReadyRef.current?.()
+  }, [ready])
 
   useEffect(() => {
     const map = mapRef.current
@@ -349,16 +414,8 @@ export default function RestaurantMap({
       selectedMarkerRef.current = visibleId
     }
 
-    // FitBounds jen při změně množiny bodů — ne při každém re-renderu / psaní do hledání se stejným výsledkem.
-    if (fittedFingerprintRef.current !== fingerprint) {
-      const bounds = boundsFromPlaces(places)
-      if (bounds) {
-        map.fitBounds(bounds, { padding: [28, 28], maxZoom: 15 })
-      } else {
-        map.setView([BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon], BRNO_MAP_DEFAULT_ZOOM)
-      }
-      fittedFingerprintRef.current = fingerprint
-    }
+    // Viewport řídí poloha / Brno / tlačítko Všechny body — ne automatický fit při každém filtru.
+    fittedFingerprintRef.current = fingerprint
     requestAnimationFrame(() => map.invalidateSize())
   }, [places, fingerprint, ready, visibleId])
 
@@ -453,15 +510,36 @@ export default function RestaurantMap({
     const marker = markersRef.current.get(visibleId)
     if (!marker || !mapRef.current) return
     const latLng = marker.getLatLng()
-    mapRef.current.setView(latLng, Math.max(mapRef.current.getZoom(), 15), { animate: true })
+    runProgrammatic((map) => {
+      map.setView(latLng, Math.max(map.getZoom(), 15), { animate: true })
+    })
   }, [panToken, visibleId, ready])
 
+  // Explicitní „Moje poloha“ (focusToken) vždy vycentruje — i po ručním posunu.
   useEffect(() => {
     if (!ready || !focusToken || flownFocusRef.current === focusToken) return
     if (!hasFiniteLatLon(userOrigin?.lat, userOrigin?.lon) || !mapRef.current) return
     flownFocusRef.current = focusToken
-    mapRef.current.setView([userOrigin.lat, userOrigin.lon], 15, { animate: true })
+    userAdjustedRef.current = false
+    centeredOriginKeyRef.current = originKey(userOrigin)
+    flyToArea(userOrigin.lat, userOrigin.lon)
   }, [focusToken, ready, userOrigin])
+
+  // První / nová známá poloha (GPS nebo ruční) — bez opakování po ručním pohybu.
+  useEffect(() => {
+    if (!ready || !hasOrigin || userAdjustedRef.current) return
+    const key = originKey(userOrigin)
+    if (!key || centeredOriginKeyRef.current === key) return
+    centeredOriginKeyRef.current = key
+    flyToArea(userOrigin.lat, userOrigin.lon)
+  }, [ready, userOrigin, hasOrigin])
+
+  // Bez polohy: výchozí oblast Brna (~2 km), jen jednou.
+  useEffect(() => {
+    if (!ready || hasOrigin || centeredOriginKeyRef.current || userAdjustedRef.current) return
+    centeredOriginKeyRef.current = 'brno'
+    flyToArea(BRNO_MAP_CENTER.lat, BRNO_MAP_CENTER.lon)
+  }, [ready, hasOrigin])
 
   useEffect(() => {
     const map = mapRef.current
@@ -473,6 +551,8 @@ export default function RestaurantMap({
     }
 
     if (!hasFiniteLatLon(userOrigin?.lat, userOrigin?.lon)) return
+    // Modrá tečka jen u skutečné GPS — ruční lokalita není „tvoje poloha“.
+    if (userOrigin.type !== 'gps') return
 
     const group = L.layerGroup()
     const accuracy =
@@ -481,18 +561,18 @@ export default function RestaurantMap({
         : 80
     L.circle([userOrigin.lat, userOrigin.lon], {
       radius: accuracy,
-      color: '#1d6b4f',
+      color: GPS_RING,
       weight: 1,
-      fillColor: '#2f9e73',
-      fillOpacity: 0.15,
+      fillColor: GPS_RING,
+      fillOpacity: 0.12,
       interactive: false,
       className: 'fg-user-location-accuracy',
     }).addTo(group)
     L.circleMarker([userOrigin.lat, userOrigin.lon], {
-      radius: 7,
+      radius: 8,
       color: '#fff',
-      weight: 2,
-      fillColor: '#1d6b4f',
+      weight: 2.5,
+      fillColor: GPS_DOT,
       fillOpacity: 1,
       className: 'fg-user-location',
       title: 'Tvoje poloha',
@@ -559,7 +639,18 @@ export default function RestaurantMap({
         role="application"
         aria-label="Interaktivní mapa Brna"
       />
-      {picked ? <PlaceCard place={picked} /> : null}
+      {picked ? (
+        <div className="map-place-sheet-host">
+          <PlaceCard
+            place={picked}
+            compact
+            onClose={() => {
+              setPickedId('')
+              onSelectRef.current?.('')
+            }}
+          />
+        </div>
+      ) : null}
       {places.length === 0 ? (
         <p className="restaurant-map-empty" role="status">
           Zkus uvolnit filtry, nebo přepni zpět na seznam.{' '}
@@ -579,7 +670,7 @@ export default function RestaurantMap({
                 >
                   <span>{place.name}</span>
                   <span className="map-place-sheet-meta">
-                    {[place.sponsored ? SPONSORED_LABEL : '', place.cuisineLabel, place.distanceLabel]
+                    {[place.sponsored ? SPONSORED_LABEL : '', place.cuisineLabel, place.priceLabel, place.distanceLabel]
                       .filter(Boolean)
                       .join(' · ')}
                   </span>

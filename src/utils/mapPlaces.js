@@ -68,7 +68,7 @@ export function placesForMap(restaurants) {
   const out = []
   for (const place of restaurants) {
     if (!place?.id || !hasVerifiedCoordinates(place)) continue
-    const verifiedPrice = place.priceVerified ? formatCardPrice(place) : null
+    const cardPrice = formatCardPrice(place)
     const photo = cardPhoto(place)
     const distance = cardDistance(place)
     const cuisineLabel = getCategoryMeta(place.category)?.label || ''
@@ -83,8 +83,8 @@ export function placesForMap(restaurants) {
       sponsored: Boolean(place.sponsored || place.placement === 'sponsored'),
       priceFrom: place.priceFrom ?? place.price ?? null,
       priceVerified: Boolean(place.priceVerified),
-      priceLabel: verifiedPrice && verifiedPrice.primary !== '—' ? verifiedPrice.primary : '',
-      priceStatus: verifiedPrice?.status || '',
+      priceLabel: cardPrice.primary !== '—' ? cardPrice.primary : '',
+      priceStatus: cardPrice.status || '',
       ratingLabel: cardRating(place),
       ...photo,
       ...distance,
@@ -111,6 +111,24 @@ export function boundsFromPlaces(places) {
   return [
     [minLat, minLon],
     [maxLat, maxLon],
+  ]
+}
+
+/**
+ * Čtverec kolem bodu — výchozí poloměr 1000 m = průměr cca 2 km.
+ * @returns {[[number, number], [number, number]] | null}
+ */
+export function boundsAroundPoint(lat, lon, radiusMeters = 1000) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || !Number.isFinite(radiusMeters) || radiusMeters <= 0) {
+    return null
+  }
+  const earth = 6378137
+  const dLat = (radiusMeters / earth) * (180 / Math.PI)
+  const cos = Math.cos((lat * Math.PI) / 180)
+  const dLon = cos > 0.01 ? dLat / cos : dLat
+  return [
+    [lat - dLat, lon - dLon],
+    [lat + dLat, lon + dLon],
   ]
 }
 

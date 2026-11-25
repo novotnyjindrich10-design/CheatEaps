@@ -459,6 +459,7 @@ html.nav-drawer-open .site-header {
   display: block;
   opacity: 1;
   pointer-events: auto;
+  animation: header-backdrop-in 0.2s ease;
 }
 
 .header-menu-drawer {
@@ -483,7 +484,7 @@ html.nav-drawer-open .site-header {
 
 .header-menu-drawer.is-open {
   display: block;
-  animation: header-drawer-in 0.24s ease;
+  animation: header-drawer-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes header-drawer-in {
@@ -492,6 +493,15 @@ html.nav-drawer-open .site-header {
   }
   to {
     transform: translateX(0);
+  }
+}
+
+@keyframes header-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -1279,6 +1289,24 @@ button.category-card {
 
 .detail-page {
   overflow: visible;
+  animation: detail-enter 0.32s ease;
+}
+
+@keyframes detail-enter {
+  from {
+    opacity: 0.72;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detail-page {
+    animation: none;
+  }
 }
 
 .results-page::before,
@@ -1914,6 +1942,10 @@ button.category-card {
 .restaurant-list--deals {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
+}
+
+.restaurant-list > li {
+  transition: opacity 0.2s ease;
 }
 
 .restaurant-card {
@@ -3323,9 +3355,31 @@ button.category-card {
   border-color: rgba(159, 18, 57, 0.28);
 }
 
+.favorite-button.is-pop svg {
+  animation: favorite-pop 0.22s ease;
+}
+
+@keyframes favorite-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.28);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .favorite-button:disabled {
   cursor: wait;
   opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .favorite-button.is-pop svg {
+    animation: none;
+  }
 }
 
 .favorite-note,
@@ -4014,7 +4068,7 @@ body:has(#root .app) #seo-snapshot {
 @keyframes map-card-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -4026,6 +4080,46 @@ body:has(#root .app) #seo-snapshot {
   .map-place-card {
     animation: none;
   }
+}
+
+.results-map-anchor {
+  scroll-margin-top: calc(92px + env(safe-area-inset-top, 0px));
+}
+
+.map-skeleton {
+  display: grid;
+  gap: 12px;
+}
+
+.map-skeleton-canvas {
+  width: 100%;
+  height: min(65dvh, 520px);
+  min-height: 280px;
+  border-radius: calc(var(--radius) - 6px);
+  border: 1px solid var(--border);
+  background: linear-gradient(110deg, var(--surface-soft) 30%, #fff 45%, var(--surface-soft) 60%);
+  background-size: 200% 100%;
+  animation: map-skeleton-shine 1.1s ease-in-out infinite;
+}
+
+@keyframes map-skeleton-shine {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-skeleton-canvas {
+    animation: none;
+  }
+}
+
+.restaurant-map {
+  scroll-margin-top: calc(92px + env(safe-area-inset-top, 0px));
+  overscroll-behavior: contain;
 }
 
 .restaurant-map-canvas .maplibregl-ctrl-attrib {
@@ -4041,6 +4135,63 @@ body:has(#root .app) #seo-snapshot {
   overflow: hidden;
   background: var(--surface-soft);
   z-index: 0;
+  touch-action: pan-x pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.map-place-sheet-host {
+  position: relative;
+  z-index: 5;
+}
+
+.map-place-card--sheet {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 14px 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: #fffdf9;
+  box-shadow: 0 10px 28px rgba(20, 16, 12, 0.12);
+  animation: map-card-in 0.28s ease;
+}
+
+.map-place-sheet-dismiss {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.map-place-sheet-dismiss span {
+  display: block;
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(28, 25, 23, 0.18);
+}
+
+.map-place-card--sheet .map-place-title {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.map-place-card--sheet .map-place-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.map-place-card--sheet .map-place-actions .btn {
+  min-height: 44px;
+  justify-content: center;
 }
 
 .restaurant-map.is-expanded {
@@ -4256,14 +4407,38 @@ body:has(#root .app) #seo-snapshot {
   color: #8a3b2f;
 }
 
+@media (max-width: 700px) {
+  .map-place-sheet-host {
+    position: sticky;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    z-index: 6;
+  }
+
+  .map-place-card--sheet {
+    margin-top: 0;
+    box-shadow: 0 -8px 30px rgba(20, 16, 12, 0.16);
+  }
+
+  .restaurant-map.is-expanded .map-place-sheet-host {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 @media (max-width: 640px) {
   .restaurant-map-canvas {
-    height: min(62dvh, 560px);
+    height: min(65dvh, 560px);
     min-height: 280px;
     border-radius: 16px;
   }
 
-  .map-place-card {
+  .map-skeleton-canvas {
+    height: min(65dvh, 520px);
+  }
+
+  .map-place-card:not(.map-place-card--sheet) {
     grid-template-columns: 1fr;
   }
 

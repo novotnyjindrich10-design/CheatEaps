@@ -30,6 +30,17 @@ export default function FavoriteButton({ restaurantId }) {
   const [ready, setReady] = useState(false)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
+  const [popping, setPopping] = useState(false)
+
+  const markFavorite = (next) => {
+    setFavorite(next)
+    if (!next) {
+      setPopping(false)
+      return
+    }
+    setPopping(true)
+    window.setTimeout(() => setPopping(false), 220)
+  }
 
   useEffect(() => {
     if (!session.ready) return undefined
@@ -73,7 +84,7 @@ export default function FavoriteButton({ restaurantId }) {
       setError(result.message || 'Oblíbené se nepodařilo uložit.')
       return
     }
-    setFavorite(Boolean(result.favorite))
+    markFavorite(Boolean(result.favorite))
   }
 
   const toggleAuth = async () => {
@@ -94,13 +105,15 @@ export default function FavoriteButton({ restaurantId }) {
         setError(body.message || 'Oblíbenou restauraci se nepodařilo uložit.')
         return
       }
-      setFavorite(body.ids.includes(restaurantId))
+      markFavorite(body.ids.includes(restaurantId))
     } catch {
       setError('Oblíbené se teď nepodařilo uložit.')
     } finally {
       setPending(false)
     }
   }
+
+  const heartClass = `favorite-button${favorite ? ' is-on' : ''}${popping ? ' is-pop' : ''}`
 
   let control
   if (!session.ready || (session.authenticated && !ready)) {
@@ -112,25 +125,14 @@ export default function FavoriteButton({ restaurantId }) {
     )
   } else if (!session.authenticated) {
     control = (
-      <button
-        type="button"
-        className={`favorite-button${favorite ? ' is-on' : ''}`}
-        aria-pressed={favorite}
-        onClick={toggleGuest}
-      >
+      <button type="button" className={heartClass} aria-pressed={favorite} onClick={toggleGuest}>
         <Heart filled={favorite} />
         {favorite ? 'V oblíbených' : 'Uložit'}
       </button>
     )
   } else {
     control = (
-      <button
-        type="button"
-        className={`favorite-button${favorite ? ' is-on' : ''}`}
-        aria-pressed={favorite}
-        disabled={pending}
-        onClick={toggleAuth}
-      >
+      <button type="button" className={heartClass} aria-pressed={favorite} disabled={pending} onClick={toggleAuth}>
         <Heart filled={favorite} />
         {pending ? 'Ukládám' : favorite ? 'V oblíbených' : 'Uložit'}
       </button>

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import RestaurantCard from '../components/RestaurantCard'
 import SearchBar from '../components/SearchBar'
@@ -34,6 +34,7 @@ import LocationBar from '../components/LocationBar'
 import { parsePageParam, slicePage } from '../utils/pagination'
 import { DEALS_RESULTS_PATH, loginPath } from '../utils/authReturn'
 import { PUBLIC_V1 } from '../constants/publicV1'
+import { smoothScrollTo } from '../utils/smoothScroll'
 
 function formatPlaceCount(n) {
   if (n === 1) return '1 místo'
@@ -56,7 +57,12 @@ export default function Results() {
   const theme = activeType || 'default'
   const rawType = searchParams.get('type') || ''
   const listTopRef = useRef(null)
+  const mapSectionRef = useRef(null)
+  const mapVisitRef = useRef(0)
+  const scrolledMapVisitRef = useRef(0)
   const [filtersExpanded, setFiltersExpanded] = useState(false)
+  const [mapReady, setMapReady] = useState(false)
+  const [mapSelectedId, setMapSelectedId] = useState('')
   const dealsGate = filters.dealsOnly
   const dealsLogin = loginPath(DEALS_RESULTS_PATH)
 
@@ -118,6 +124,27 @@ export default function Results() {
   const distanceUnavailable =
     Boolean(origin) && filters.maxDistance !== '' && routeStatus === 'error' && filtered.length === 0
   const mapPlaces = useMemo(() => [...sponsored, ...filtered], [sponsored, filtered])
+  const viewMode = filters.view === 'map' ? 'map' : 'list'
+
+  const handleMapReady = useCallback(() => {
+    setMapReady(true)
+  }, [])
+
+  useEffect(() => {
+    if (viewMode !== 'map') {
+      setMapReady(false)
+      setMapSelectedId('')
+      return
+    }
+    mapVisitRef.current += 1
+  }, [viewMode])
+
+  useEffect(() => {
+    if (viewMode !== 'map' || !mapReady || !mapSectionRef.current) return undefined
+    if (scrolledMapVisitRef.current === mapVisitRef.current) return undefined
+    scrolledMapVisitRef.current = mapVisitRef.current
+    return smoothScrollTo(mapSectionRef.current, { offset: 96, duration: 620 })
+  }, [viewMode, mapReady])
 
   let emptyMessage = 'Žádný podnik neodpovídá filtrům. Zkus uvolnit rozpočet, vzdálenost nebo hledání.'
   if (waitingForDistance) {
@@ -167,7 +194,7 @@ export default function Results() {
     const params = buildResultsSearchParams(filters)
     if (nextPage > 1) params.set('page', String(nextPage))
     setSearchParams(params)
-    listTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (listTopRef.current) smoothScrollTo(listTopRef.current, { offset: 96, duration: 420 })
   }
 
   const intentNotes = describeSearchIntent(filters.search)
@@ -207,7 +234,6 @@ export default function Results() {
     })
   }
   const filtersActive = chips.length > 0
-  const viewMode = filters.view === 'map' ? 'map' : 'list'
 
   return (
     <main className={`page results-page theme-${theme}`}>
@@ -389,20 +415,32 @@ export default function Results() {
             </div>
 
             {viewMode === 'map' ? (
-              <Suspense fallback={<p className="section-desc">Načítám mapu…</p>}>
-                <RestaurantMap
-                  restaurants={mapPlaces}
-                  userOrigin={origin}
-                  locating={locationStatus === 'locating'}
-                  locationError={locationError}
-                  focusToken={mapFocusToken}
-                  onLocate={() => {
-                    setMapFocusToken((token) => token + 1)
-                    locate({ forceRefresh: Boolean(origin), highAccuracy: Boolean(origin) })
-                  }}
-                  onForget={forgetOrigin}
-                />
-              </Suspense>
+              <div ref={mapSectionRef} className="results-map-anchor">
+                <Suspense
+                  fallback={
+                    <div className="map-skeleton" aria-busy="true" aria-label="Načítám mapu">
+                      <div className="map-skeleton-canvas" />
+                      <p className="section-desc">Načítám mapu…</p>
+                    </div>
+                  }
+                >
+                  <RestaurantMap
+                    restaurants={mapPlaces}
+                    selectedId={mapSelectedId}
+                    onSelect={setMapSelectedId}
+                    userOrigin={origin}
+                    locating={locationStatus === 'locating'}
+                    locationError={locationError}
+                    focusToken={mapFocusToken}
+                    onReady={handleMapReady}
+                    onLocate={() => {
+                      setMapFocusToken((token) => token + 1)
+                      locate({ forceRefresh: Boolean(origin), highAccuracy: Boolean(origin) })
+                    }}
+                    onForget={forgetOrigin}
+                  />
+                </Suspense>
+              </div>
             ) : (
               <>
                 {sponsored.length > 0 ? (
