@@ -75,6 +75,16 @@ function preferOpenPlaces(places) {
   return [...open, ...rest]
 }
 
+/** Nekvalitní / chybně zařazené tipy nepatří do první vlny doporučení. */
+function isWeakRecommendation(place) {
+  const name = String(place?.name || '')
+  if (/barber|holič|kadern|kadeřnict/i.test(name)) return true
+  if (!place?.category || place.category === 'neuvedeno') {
+    if (!presentOsmContact(place).hasHours && !place.officialWebsite && !place.website) return true
+  }
+  return false
+}
+
 export default function Home() {
   const { restaurants } = useCatalog()
   const { attachDistances, origin } = useLocationState()
@@ -83,9 +93,11 @@ export default function Home() {
   const organic = useMemo(() => partitionPlacements(restaurants).organic, [restaurants])
   const located = useMemo(() => attachDistances(organic), [attachDistances, organic])
   const featured = useMemo(() => {
-    let pool = located
+    const usable = located.filter((place) => !isWeakRecommendation(place))
+    const source = usable.length >= 6 ? usable : located
+    let pool = source
     if (period.category) {
-      const narrowed = filterAndSortRestaurants(located, {
+      const narrowed = filterAndSortRestaurants(source, {
         cuisineType: period.category,
         hasOrigin,
         sortBy: hasOrigin ? 'distance' : 'quality',

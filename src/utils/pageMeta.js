@@ -7,8 +7,9 @@ const PAGES = {
       'Kde se najíst v Brně: katalog restaurací, kaváren a rychlého občerstvení. Filtruj podle kategorie, ověřené ceny, vzdálenosti a studentských slev.',
   },
   '/results': {
-    title: 'Výsledky hledání | FoodGo Brno',
-    description: 'Levné restaurace a podniky v Brně podle kategorie, ceny, diety a vzdálenosti. Ověřené ceny oddělujeme od odhadů.',
+    title: 'Restaurace a kavárny v Brně | FoodGo Brno',
+    description:
+      'Najdi restauraci, kavárnu nebo bistro v Brně podle kategorie, ověřené ceny a vzdálenosti. Levné jídlo oddělujeme od odhadů.',
   },
   '/oblibene': {
     title: 'Oblíbené | FoodGo Brno',

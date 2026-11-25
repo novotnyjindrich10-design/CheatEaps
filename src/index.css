@@ -2020,6 +2020,8 @@ button.category-card {
   box-shadow: var(--shadow);
   animation: cardIn 0.5s ease both;
   transition: transform 0.22s ease, box-shadow 0.22s ease;
+  content-visibility: auto;
+  contain-intrinsic-size: 320px;
 }
 
 .restaurant-card:hover {

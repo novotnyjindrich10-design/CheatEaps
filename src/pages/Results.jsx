@@ -39,6 +39,7 @@ import { clearScrollPosition, readScrollPosition } from '../utils/scrollRestore'
 import { currentInternalPath } from '../utils/internalPath'
 import { readFilterPrefs, writeFilterPrefs } from '../utils/filterPrefs'
 import { rememberRecentSearch } from '../utils/recentSearches'
+import { applyPageMeta } from '../utils/pageMeta'
 
 function formatPlaceCount(n) {
   if (n === 1) return '1 místo'
@@ -178,6 +179,27 @@ export default function Results() {
     clearScrollPosition(key)
     window.scrollTo(0, y)
   }, [searchParams, viewMode])
+
+  useEffect(() => {
+    const label = categoryMeta?.label
+    const title = label
+      ? `${label} v Brně | FoodGo Brno`
+      : filters.openNowOnly
+        ? 'Právě otevřené podniky v Brně | FoodGo Brno'
+        : filters.maxBudget
+          ? `Jídlo do ${filters.maxBudget} Kč v Brně | FoodGo Brno`
+          : viewMode === 'map'
+            ? 'Mapa restaurací v Brně | FoodGo Brno'
+            : 'Restaurace a kavárny v Brně | FoodGo Brno'
+    const description = label
+      ? `${label} v Brně: podniky z katalogu FoodGo. Filtruj podle ověřené ceny a vzdálenosti.`
+      : 'Najdi restauraci, kavárnu nebo bistro v Brně. FoodGo odděluje ověřené ceny od odhadů.'
+    applyPageMeta({
+      title,
+      description: description.slice(0, 180),
+      path: `/results${searchParams.toString() ? `?${searchParams.toString()}` : ''}`,
+    })
+  }, [categoryMeta, filters.maxBudget, filters.openNowOnly, searchParams, viewMode])
 
   let emptyMessage = 'Žádný podnik neodpovídá filtrům. Zkus uvolnit rozpočet, vzdálenost nebo hledání.'
   if (waitingForDistance) {

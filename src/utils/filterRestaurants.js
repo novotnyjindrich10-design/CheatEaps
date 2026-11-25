@@ -200,8 +200,17 @@ export function filterAndSortRestaurants(restaurants, options) {
             'desc',
           ) || compareByNameThenId(a, b)
         )
-      case 'relevance':
-        return (scores.get(b.id) || 0) - (scores.get(a.id) || 0) || compareByNameThenId(a, b)
+      case 'relevance': {
+        const byScore = (scores.get(b.id) || 0) - (scores.get(a.id) || 0)
+        if (byScore !== 0) return byScore
+        // Při stejném skóre hledání: lépe zdokumentované a blížší podniky dřív.
+        const byQuality = compareByRecordQuality(a, b)
+        if (byQuality !== 0) return byQuality
+        if (hasOrigin) {
+          return missingLast(a, b, (r) => r.distanceKm, 'asc') || compareByNameThenId(a, b)
+        }
+        return compareByNameThenId(a, b)
+      }
       case 'quality':
         return compareByRecordQuality(a, b)
       default:

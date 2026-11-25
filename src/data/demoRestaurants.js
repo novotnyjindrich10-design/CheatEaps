@@ -11,6 +11,7 @@ import { placePhotos } from './placePhotos'
 import { getPlaceFoodIllustration } from './placeFoodIllustrations'
 import { getPlacePixabayIllustration, pixabayLibraryReady } from './pixabayLibrary'
 import { getCategoryOverride } from './categoryOverrides'
+import { isCatalogExcluded } from './catalogExclusions'
 import { hasVerifiedCoordinates } from '../utils/geo'
 
 /** Poznámky o zdrojích. Odpovídají tomu, co aplikace skutečně ukazuje. */
@@ -70,6 +71,7 @@ function place(entry) {
 
 const byId = new Map()
 for (const entry of [...curatedPlaces, ...osmPlaces]) {
+  if (!entry?.id || isCatalogExcluded(entry.id)) continue
   if (!byId.has(entry.id)) byId.set(entry.id, entry)
 }
 

@@ -370,6 +370,27 @@ describe('filtry dohromady', () => {
     assert.equal(buildResultsSearchParams({ openNowOnly: true }).get('open'), '1')
   })
 
+  it('relevance při stejném skóre upřednostní kvalitnější záznam', () => {
+    const thin = place('thin-pizza', {
+      name: 'Pizza Thin',
+      description: 'Záznam z OpenStreetMap (restaurace).',
+    })
+    const rich = place('rich-pizza', {
+      name: 'Pizza Rich',
+      description: 'Ověřená pizzerie s denním menu a vlastní stránkou v Brně.',
+      officialWebsite: 'https://example.com/pizza',
+      price: 129,
+      priceKind: 'menu',
+      priceSource: SOURCE,
+      priceVerifiedAt: VERIFIED_AT,
+    })
+    const ordered = filterAndSortRestaurants([thin, rich], {
+      search: 'pizza',
+      sortBy: 'relevance',
+    }).map((item) => item.id)
+    assert.equal(ordered[0], 'rich-pizza')
+  })
+
   it('filtr mapBounds nechá jen body uvnitř výřezu', () => {
     const matched = filterAndSortRestaurants(
       [

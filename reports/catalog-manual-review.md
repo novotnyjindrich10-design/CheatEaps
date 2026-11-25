@@ -12,6 +12,13 @@ Stav k 2026-11-05. Automatický `npm run audit:catalog` nenašel potvrzenou chyb
 - `kimono-bayerova-572-2` — amenity cafe a japanese, kategorie asijská. Ověřit koncept.
 - `plzensky-dvur-sumavska-29a` — po opravě steakhousu `neuvedeno`. Případně ručně česká kuchyně podle webu.
 
+## 2026-11-25 — nekulinární a blízké duplicity
+
+- `local-barber-shop-smetanova-5` — **opraveno**: skryto z veřejného katalogu (holičství).
+- `point-burger-namesti-svobody-8` / `point-cafe-namesti-svobody-8` — stejná adresa, různé amenity. Bez automatického sloučení.
+- `svedska-kavarna-skandinavska-4` / `svedska-restaurace-skandinavska-4` — stejná adresa, cafe vs fast_food. Bez automatického sloučení.
+- `trinity-trnita-7` / `trinity-ristorante-trnita-9` — sousední adresy. Bez automatického sloučení.
+
 ## Nově při hledání, bez automatické opravy
 
 - `let-s-steaking-dominikanska-3` (Let’s STEAKing) — OSM cuisine `burger;steak_house`, proto je v kategorii Burger. Název zní jako steakhouse. Hledání „Burger King“ ho už neshodí. Kategorii neměnit, dokud se neověří menu.

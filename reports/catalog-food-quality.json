@@ -1,0 +1,76 @@
+{
+  "generatedAt": "2026-11-25T15:33:35.897Z",
+  "totals": {
+    "places": 775,
+    "confirmedNonFood": 1,
+    "uncertainNonFood": 1,
+    "knownDuplicatePairs": 11,
+    "newNameAddressDuplicateGroups": 0,
+    "newCoordNameDuplicates": 3,
+    "suspiciousPrices": 0,
+    "coordsOutsideBrno": 0,
+    "oddWebsites": 0
+  },
+  "confirmedNonFood": [
+    {
+      "id": "local-barber-shop-smetanova-5",
+      "name": "LOCAL BARBER SHOP",
+      "category": "kava",
+      "amenity": "cafe",
+      "website": "http://www.localbarber-shop.cz/",
+      "reason": "Název/web jasně ukazuje holičství / kadeřnictví, ne gastronomii."
+    }
+  ],
+  "uncertainNonFood": [
+    {
+      "id": "restaurace-hotel-lazaretni-lazaretni-6",
+      "name": "Restaurace Hotel Lazaretní",
+      "category": "neuvedeno",
+      "amenity": "restaurant",
+      "website": "https://hotel-lazaretni.cz/",
+      "reason": "Slabší nekulinární signál bez jasného food kontextu."
+    }
+  ],
+  "nameAddressDuplicates": [],
+  "coordNameDuplicates": [
+    {
+      "ids": [
+        "point-burger-namesti-svobody-8",
+        "point-cafe-namesti-svobody-8"
+      ],
+      "names": [
+        "Point Burger",
+        "Point Cafe"
+      ],
+      "meters": 13,
+      "status": "uncertain"
+    },
+    {
+      "ids": [
+        "svedska-kavarna-skandinavska-4",
+        "svedska-restaurace-skandinavska-4"
+      ],
+      "names": [
+        "Švédská kavárna",
+        "Švédská restaurace"
+      ],
+      "meters": 12,
+      "status": "uncertain"
+    },
+    {
+      "ids": [
+        "trinity-trnita-7",
+        "trinity-ristorante-trnita-9"
+      ],
+      "names": [
+        "Trinity",
+        "Trinity ristorante"
+      ],
+      "meters": 19,
+      "status": "uncertain"
+    }
+  ],
+  "suspiciousPrices": [],
+  "coordsOutsideBrno": [],
+  "oddWebsites": []
+}

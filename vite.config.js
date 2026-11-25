@@ -85,19 +85,21 @@ async function handleDevApi(req, res) {
 function catalogIds() {
   const osm = readFileSync(path.resolve('src/data/osmPlaces.js'), 'utf8')
   const curated = readFileSync(path.resolve('src/data/curatedPlaces.js'), 'utf8')
+  const exclusions = readFileSync(path.resolve('src/data/catalogExclusions.js'), 'utf8')
+  const excluded = new Set(
+    [...exclusions.matchAll(/^\s*'([^']+)':\s*\{/gm)].map((match) => match[1]),
+  )
   const ids = []
   const seen = new Set()
   for (const match of curated.matchAll(/\bid:\s*'([^']+)'/g)) {
-    if (!seen.has(match[1])) {
-      seen.add(match[1])
-      ids.push(match[1])
-    }
+    if (excluded.has(match[1]) || seen.has(match[1])) continue
+    seen.add(match[1])
+    ids.push(match[1])
   }
   for (const match of osm.matchAll(/"id":\s*"([^"]+)"/g)) {
-    if (!seen.has(match[1])) {
-      seen.add(match[1])
-      ids.push(match[1])
-    }
+    if (excluded.has(match[1]) || seen.has(match[1])) continue
+    seen.add(match[1])
+    ids.push(match[1])
   }
   return ids
 }

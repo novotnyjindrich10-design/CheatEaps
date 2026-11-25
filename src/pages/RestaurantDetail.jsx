@@ -88,10 +88,14 @@ export default function RestaurantDetail() {
       })
       return
     }
-    const where = restaurant.address ? `, ${restaurant.address}` : ''
+    const where = restaurant.address ? ` na adrese ${restaurant.address}` : ' v Brně'
+    const kind = restaurant.type ? String(restaurant.type) : 'Podnik'
     applyPageMeta({
       title: `${restaurant.name} | FoodGo Brno`,
-      description: `${restaurant.name}${where}. Detail v katalogu FoodGo Brno.`.slice(0, 180),
+      description: `${kind} ${restaurant.name}${where}. Údaje z katalogu FoodGo Brno — ověřené ceny oddělujeme od odhadů.`.slice(
+        0,
+        180,
+      ),
       path: `/restaurant/${encodeURIComponent(restaurant.id)}`,
       image: typeof location !== 'undefined' ? shareImageUrl(restaurant, location.origin) : undefined,
     })

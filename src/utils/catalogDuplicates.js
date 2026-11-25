@@ -16,6 +16,25 @@ export const KNOWN_DUPLICATE_PAIRS = [
   ['yakitori-netroufalky-770', 'yakitori-sushi-poke-bar-netroufalky-770'],
 ]
 
+/**
+ * Blízké páry se stejným brandem, ale odlišným amenity / číslem popisným.
+ * Neskrýváme automaticky — jen evidence pro ruční kontrolu.
+ */
+export const UNCERTAIN_NEAR_DUPLICATES = [
+  {
+    ids: ['point-burger-namesti-svobody-8', 'point-cafe-namesti-svobody-8'],
+    note: 'Stejná adresa (~13 m). Burger a kavárna mohou být dva provozy.',
+  },
+  {
+    ids: ['svedska-kavarna-skandinavska-4', 'svedska-restaurace-skandinavska-4'],
+    note: 'Stejná adresa (~12 m). OSM cafe vs fast_food — ověřit, jestli jde o jeden podnik.',
+  },
+  {
+    ids: ['trinity-trnita-7', 'trinity-ristorante-trnita-9'],
+    note: 'Trnitá 7 (cafe) vs Trnitá 9 (ristorante, ~19 m). Pravděpodobně sousední provozy.',
+  },
+]
+
 function preferId(a, b, byId) {
   const left = byId.get(a)
   const right = byId.get(b)
