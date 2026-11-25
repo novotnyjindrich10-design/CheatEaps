@@ -29,9 +29,18 @@ Tajné hodnoty sem nepatří.
 - Admin bez session → `auth-required` / `admin: false`
 - Guest place-reports / place-stats → Forbidden
 - Poptávky se **ukládají** (`stored: true`, status `inquiry`, nezaplaceno)
-- Transakční e-mail na trial `onboarding@resend.dev` → `foodgocz@gmail.com` často **nedoručí** (Resend trial: typicky jen e-mail Resend účtu) → `emailed: false` očekávatelné
-- Registrace přes API: při chybě doručení potvrzovacího mailu teď vrací `email-delivery-failed` (ne „špatné heslo“)
-- Offline `launch:check`: PASS s WARNING (lokální `.env` ještě míří na produkční Supabase URL) + BLOCKED `legal-approval`
+- Transakční e-mail na trial `onboarding@resend.dev` → `foodgocz@gmail.com` **nedoručí**, pokud Resend účet není tato schránka → `emailed: false`
+- Registrace na `foodgocz@gmail.com`: Auth vrací `email-delivery-failed` (SMTP/Resend trial — doručení potvrzení selhalo)
+- Offline `launch:check`: PASS + WARNING (lokální `.env` míří na produkční Supabase) + BLOCKED `legal-approval`
+- **Bug Preview DB:** veřejný insert `business_applications` → `permission denied` — oprav SQL níže
+
+### Oprava GRANT (jen foodgo-preview)
+
+V SQL Editoru projektu **jnyxjyyvzxriuyvyiuxe** spusť celý soubor:
+
+`supabase/preview-fix-business-grants.sql`
+
+Očekávané: `anon_can_insert = true`.
 
 ### Resend trial — důležité
 
@@ -52,11 +61,12 @@ Pro Auth i poptávky používej při testu tuto schránku, nebo ověř vlastní 
 
 ## Ty osobně (ke kompletnímu Auth E2E)
 
-1. Registrace na Preview s **e-mailem Resend účtu** (ne libovolný Gmail při trial FROM).
-2. Potvrď odkaz z e-mailu → přihlášení.
-3. V SQL **jen** foodgo-preview:  
+1. Spusť `supabase/preview-fix-business-grants.sql` v foodgo-preview (oprava žádostí podniků).
+2. Registrace na Preview s **přesně e-mailem Resend účtu** (trial FROM `onboarding@resend.dev`).
+3. Potvrď odkaz z e-mailu → přihlášení → Zapomenuté heslo.
+4. V SQL **jen** foodgo-preview:  
    `update public.profiles set is_admin = true where email = '<tvůj test>';`
-4. UI: `/admin`, Zapomenuté heslo, `/pro-podniky`.
+5. UI: `/admin`, `/pro-podniky` (žádost + poptávka).
 
 ---
 
