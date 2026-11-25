@@ -70,13 +70,62 @@ HTTP 401 na `GET /domains` u sending-only klíče znamená `restricted_api_key` 
 
 Bez ověřené domény Resend obvykle dovolí trial odesílání jen na e-mail přihlášený v Resend účtu. Účet je registrovaný na **jinou** adresu než `foodgocz@gmail.com`, proto doručení na `foodgocz@gmail.com` nebo na zákazníky může selhat i s platným klíčem.
 
+## Dvě oddělené e-mailové cesty
+
+| Cesta | Kdo posílá | Co | Kde se nastaví |
+| --- | --- | --- | --- |
+| **Supabase Auth** | SMTP v projektu Auth | registrace / potvrzení / zapomenuté heslo | Supabase → Authentication → Emails → SMTP |
+| **FoodGo transakční** | Resend HTTP API | poptávky, schválení podniku | Vercel `RESEND_API_KEY`, `EMAIL_FROM`, `INQUIRY_TO_EMAIL` |
+
+`emailConfigured` v `/api/health` sleduje **jen** FoodGo/Resend. Obnova hesla **nejde** přes Resend API aplikace — jde přes Auth SMTP.
+
+### Výchozí SMTP Supabase (bez custom SMTP)
+
+- Doručuje **jen** na e-maily členů organizace (Team).
+- Limit **2 e-maily / hodinu** na projekt.
+- Jiná adresa → `email_address_not_authorized` (e-mail nedorazí).
+- Neexistující účet → Auth vrátí úspěch **bez** odeslání (anti-enumerace).
+
+Proto na `foodgo-preview` (`jnyxjyyvzxriuyvyiuxe`) bez Resend SMTP „Zapomenuté heslo“ na běžný e-mail nedorazí.
+
+### Auth SMTP přes Resend (Preview i později Production)
+
+1. V Resend měj API klíč `re_…` (nic nekupuj navíc, pokud už účet máš).
+2. Pro ostré doručení ověř vlastní doménu (DNS). Trial: `onboarding@resend.dev` doručí typicky jen na e-mail Resend účtu.
+3. Jen v projektu **foodgo-preview**: [Authentication → Emails → SMTP Settings](https://supabase.com/dashboard/project/jnyxjyyvzxriuyvyiuxe/auth/smtp)
+   - Enable Custom SMTP: **on**
+   - Sender email: např. `FoodGo <onboarding@resend.dev>` (trial) nebo `FoodGo <noreply@tvoje-domena.cz>`
+   - Host: `smtp.resend.com`
+   - Port: `465`
+   - Username: `resend`
+   - Password: stejný Resend API klíč (do chatu/gitu nepatří)
+4. Redirect URLs (stejný projekt): [URL Configuration](https://supabase.com/dashboard/project/jnyxjyyvzxriuyvyiuxe/auth/url-configuration)
+   - Site URL: `https://cheat-eaps-git-foodgo-launch-preview-jindrichcompany.vercel.app`
+   - Redirect URLs: `…/nove-heslo` (+ lokální `127.0.0.1` / `localhost` pokud testuješ lokálně)
+5. Auth logy: [Logs → Auth](https://supabase.com/dashboard/project/jnyxjyyvzxriuyvyiuxe/logs/auth-logs) — hledej `recover`, `email_address_not_authorized`, `over_email_send_rate_limit`.
+
+Produkční projekt `pcptzyfoojmnspumcmsi` v tomto kroku **neměň**.
+
+### FoodGo transakční e-maily (Vercel Preview)
+
+Stejný Resend klíč (nebo oddělený sending key), **bez** `VITE_*`:
+
+| Proměnná | Preview hodnota (příklad) |
+| --- | --- |
+| `RESEND_API_KEY` | `re_…` (Secret) |
+| `EMAIL_FROM` | `FoodGo <onboarding@resend.dev>` nebo ověřená doména |
+| `INQUIRY_TO_EMAIL` | schránka provozovatele (u trial musí sedět s Resend účtem) |
+
+Po nastavení: redeploy **jen** větve `foodgo-launch-preview`. `/api/health` → `emailConfigured: true`.
+
 ## Co chybí pro skutečné odesílání
 
 1. Uložený `RESEND_API_KEY` v lokálním `.env` (dialog výše).
 2. Stejné proměnné ve **Vercel Environment Variables** (Production + Preview) — bez `VITE_*`.
-3. Ověřená odesílací doména v Resend (DNS).
-4. `EMAIL_FROM` změněný z `onboarding@resend.dev` na adresu na ověřené doméně.
-5. Výslovný souhlas k zkušebnímu odeslání (aplikace sama ostré testy neposílá).
+3. **Custom SMTP Resend v Supabase Auth** (viz výše) — bez něj Auth e-maily na Preview nechodí.
+4. Ověřená odesílací doména v Resend (DNS).
+5. `EMAIL_FROM` změněný z `onboarding@resend.dev` na adresu na ověřené doméně.
+6. Výslovný souhlas k zkušebnímu odeslání (aplikace sama ostré testy neposílá).
 
 Poptávka propagace se i bez e-mailu **uloží** do evidence; e-mail je doplňkové upozornění.
 

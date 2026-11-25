@@ -7,8 +7,10 @@ import {
   clearSessionCookies,
   clientKey,
   mapAuthError,
+  isAuthEmailDeliveryDenied,
   mapRecoveryError,
   passwordResetRedirect,
+  recoveryAcceptedMessage,
   prepareRecoverySession,
   requestIsSecure,
   resolveUser,
@@ -130,6 +132,16 @@ export async function authActionHttp(action, request, deps = {}) {
     }
     const sent = await sendPasswordReset(config, email.email, redirectTo, deps)
     if (!sent.ok) {
+      // Výchozí Supabase SMTP odmítá ne-týmové adresy jen u existujících účtů.
+      // Stejná úspěšná odpověď jako u neexistujícího e-mailu = bez enumerace.
+      if (isAuthEmailDeliveryDenied(sent.body)) {
+        return json({
+          ok: true,
+          sent: true,
+          redirectTo,
+          message: recoveryAcceptedMessage(),
+        })
+      }
       const mapped = mapRecoveryError(sent.body)
       return json({ ok: false, sent: false, ...mapped }, sent.status || 400)
     }
@@ -137,7 +149,7 @@ export async function authActionHttp(action, request, deps = {}) {
       ok: true,
       sent: true,
       redirectTo,
-      message: 'Pokud k tomuto e-mailu účet patří, poslali jsme odkaz na nové heslo.',
+      message: recoveryAcceptedMessage(),
     })
   }
 
@@ -271,7 +283,8 @@ export async function authActionHttp(action, request, deps = {}) {
       configured: true,
       authenticated: false,
       needsConfirmation: true,
-      message: 'Účet je založený. Potvrď odkaz v e-mailu a pak se přihlas.',
+      message:
+        'Účet je založený. Pokud dorazí potvrzovací e-mail, otevři odkaz a pak se přihlas.',
     })
   }
   return json(

@@ -407,6 +407,22 @@ export function clearPkceCookie(secure) {
   return cookie(PKCE_COOKIE, '', 0, secure)
 }
 
+/** Chyby výchozího Supabase SMTP, které vznikají jen u existujících účtů — nesmí prozradit existenci. */
+export function isAuthEmailDeliveryDenied(body) {
+  const code = String(body?.error_code || body?.error || body?.code || '').toLowerCase()
+  const detail = String(body?.message || body?.msg || body?.error_description || '').toLowerCase()
+  const blob = `${code} ${detail}`
+  return (
+    blob.includes('email_address_not_authorized') ||
+    blob.includes('email address not authorized') ||
+    blob.includes('not authorized') && blob.includes('email')
+  )
+}
+
+export function recoveryAcceptedMessage() {
+  return 'Pokud k tomuto e-mailu účet patří, poslali jsme odkaz na nové heslo.'
+}
+
 export function mapRecoveryError(body) {
   const code = String(body?.error_code || body?.error || body?.msg || body?.message || '').toLowerCase()
   const detail = String(body?.message || body?.msg || body?.error_description || '').toLowerCase()
@@ -425,13 +441,17 @@ export function mapRecoveryError(body) {
   ) {
     return { error: 'link-expired', message: 'Odkaz je neplatný, vypršel, nebo už byl použitý. Pošli si nový.' }
   }
-  if (blob.includes('redirect') || blob.includes('not allowed')) {
+  // Až po kontrole tokenů — „not allowed“ u redirectu vs. „email not authorized“.
+  if (isAuthEmailDeliveryDenied(body)) {
+    return { error: 'email-delivery-denied', message: recoveryAcceptedMessage() }
+  }
+  if (blob.includes('redirect') || (blob.includes('not allowed') && !blob.includes('email'))) {
     return {
       error: 'redirect-not-allowed',
       message: 'Odkaz pro nové heslo se teď nepodařilo dokončit. Pošli si ho znovu ze stejného webu.',
     }
   }
-  if (blob.includes('rate') || blob.includes('too many')) {
+  if (blob.includes('rate') || blob.includes('too many') || blob.includes('over_email_send_rate_limit')) {
     return { error: 'rate-limited', message: 'Moc pokusů. Zkus to za chvíli.' }
   }
   if (blob.includes('weak') || (blob.includes('password') && blob.includes('character'))) {

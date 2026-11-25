@@ -236,6 +236,25 @@ describe('obnova hesla', () => {
     assert.equal(String(body.message).includes('poslali jsme'), false)
   })
 
+  it('email_address_not_authorized neprozradí existenci účtu', async () => {
+    const response = await authActionHttp('recover', recoverRequest('http://127.0.0.1:5173'), {
+      env: ENV,
+      authClient: () => ({
+        auth: {
+          resetPasswordForEmail: async () => ({
+            error: { message: 'Email address not authorized', error_code: 'email_address_not_authorized', status: 400 },
+          }),
+        },
+      }),
+    })
+    const body = await response.json()
+    assert.equal(response.status, 200)
+    assert.equal(body.ok, true)
+    assert.equal(body.sent, true)
+    assert.match(String(body.message), /Pokud k tomuto e-mailu/)
+    assert.equal(Object.hasOwn(body, 'error'), false)
+  })
+
   it('pošle resetPasswordForEmail na /nove-heslo a cizí origin odmítne', async () => {
     const calls = []
     const authClient = () => ({
