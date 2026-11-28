@@ -41,6 +41,7 @@ const AUTH_ACTIONS = {
   '/api/auth/recover': 'recover',
   '/api/auth/prepare-recovery': 'prepare-recovery',
   '/api/auth/update-password': 'update-password',
+  '/api/auth/delete-account': 'delete-account',
 }
 
 const COMMUNITY_PATHS = new Set(['/api/favorites', '/api/reviews', '/api/review-reports'])
@@ -134,7 +135,11 @@ export async function apiRouter(incoming) {
       return await placeOverridesHttp(request, { placeExists: catalogPlaceExists })
     }
 
-    if (pathname === '/api/place-stats' || pathname === '/api/place-stats/event') {
+    if (
+      pathname === '/api/place-stats' ||
+      pathname === '/api/place-stats/event' ||
+      pathname === '/api/place-stats/owner'
+    ) {
       return await placeStatsHttp(request, { placeExists: catalogPlaceExists })
     }
 

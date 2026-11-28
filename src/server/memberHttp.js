@@ -15,6 +15,7 @@ import {
   requestIsSecure,
   resolveUser,
   revokeSession,
+  deleteOwnAccount,
   sendPasswordReset,
   sessionCookies,
   signInWithPassword,
@@ -107,6 +108,33 @@ export async function authActionHttp(action, request, deps = {}) {
     const access = readCookie(request.headers.get('cookie'), ACCESS_COOKIE)
     if (access) await revokeSession(config, access, fetchImpl)
     return json({ ok: true, authenticated: false }, 200, clearSessionCookies(secure))
+  }
+
+  if (action === 'delete-account') {
+    if (!allowAttempt(clientKey(request))) {
+      return json({ ok: false, error: 'rate-limited', message: 'Moc pokusů. Zkus to za chvíli.' }, 429)
+    }
+    const payload = await readBody(request)
+    if (!payload.ok) return json({ ok: false, message: payload.message }, 400)
+    if (String(payload.value?.confirm || '') !== 'SMAZAT') {
+      return json({ ok: false, message: 'Pro smazání účtu napiš SMAZAT.' }, 400)
+    }
+    const resolved = await resolveUser(request, config, fetchImpl)
+    if (!resolved.user?.id || !resolved.accessToken) {
+      return json({ ok: false, authenticated: false, message: 'Nejdřív se přihlas.' }, 401, resolved.cookies)
+    }
+    const deleted = await deleteOwnAccount(config, resolved.accessToken, fetchImpl)
+    if (!deleted.ok) {
+      return json(
+        { ok: false, message: 'Účet se teď nepodařilo smazat. Nic dalšího jsme nesmazali.' },
+        deleted.status && deleted.status < 500 ? 400 : 502,
+      )
+    }
+    return json(
+      { ok: true, deleted: true, message: 'Účet je smazaný.' },
+      200,
+      clearSessionCookies(secure),
+    )
   }
 
   if (action === 'recover') {

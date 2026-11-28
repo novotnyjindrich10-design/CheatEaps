@@ -737,6 +737,7 @@ export async function adminReviewApplicationHttp(request, options = {}) {
         businessName: current.row.business_name,
         ownerEmail: current.row.owner_email,
         placeUrl,
+        idempotencyKey: `foodgo-approval-${id}`,
       },
       env,
       options.fetchImpl ?? fetch,
@@ -843,6 +844,22 @@ export async function adminResendEmailHttp(request, options = {}) {
       prepared.resolved.cookies,
     )
   }
+  if (current.row.email_status === 'sent') {
+    return json(
+      {
+        ok: true,
+        duplicate: true,
+        emailStatus: 'sent',
+        providerAccepted: true,
+        delivered: false,
+        message:
+          'Poskytovatel tenhle e-mail už přijal. Znovu ho neposíláme, protože přijetí není totéž co doručení a duplicita by nic neověřila.',
+        application: publicApplicationView(current.row),
+      },
+      200,
+      prepared.resolved.cookies,
+    )
+  }
 
   const env = options.env ?? process.env
   const origin = publicSiteOrigin(request, env)
@@ -855,6 +872,7 @@ export async function adminResendEmailHttp(request, options = {}) {
       businessName: current.row.business_name,
       ownerEmail: current.row.owner_email,
       placeUrl,
+      idempotencyKey: `foodgo-approval-${id}-${Math.floor(Date.now() / 60000)}`,
     },
     env,
     options.fetchImpl ?? fetch,

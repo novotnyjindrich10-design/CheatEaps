@@ -112,6 +112,21 @@ export default function HomeSearch({ id = 'home-search' }) {
           inputMode="search"
           spellCheck={false}
         />
+        {value ? (
+          <button
+            type="button"
+            className="search-clear"
+            aria-label="Smazat hledaný text"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              setValue('')
+              setOpen(false)
+              setActiveIndex(-1)
+            }}
+          >
+            ×
+          </button>
+        ) : null}
         <button type="submit" className="btn btn-primary home-search-submit">
           Hledat
         </button>

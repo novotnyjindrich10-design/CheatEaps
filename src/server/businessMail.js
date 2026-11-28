@@ -48,6 +48,8 @@ export async function sendBusinessApprovalEmail(payload, env, fetchImpl = fetch)
     return {
       ok: false,
       status: 'skipped',
+      providerAccepted: false,
+      delivered: false,
       error: 'email-not-configured',
       message:
         'Odesílání e-mailů není nastavené. Doplň RESEND_API_KEY a EMAIL_FROM na serveru. Žádost je schválená, e-mail neodešel.',
@@ -56,17 +58,26 @@ export async function sendBusinessApprovalEmail(payload, env, fetchImpl = fetch)
 
   const letter = buildApprovalEmail(payload)
   if (!letter.to.includes('@')) {
-    return { ok: false, status: 'failed', error: 'invalid-recipient', message: 'E-mail majitele není platný.' }
+    return {
+      ok: false,
+      status: 'failed',
+      providerAccepted: false,
+      delivered: false,
+      error: 'invalid-recipient',
+      message: 'E-mail majitele není platný.',
+    }
   }
 
   let response
   try {
+    const headers = {
+      Authorization: `Bearer ${mail.apiKey}`,
+      'Content-Type': 'application/json',
+    }
+    if (payload.idempotencyKey) headers['Idempotency-Key'] = String(payload.idempotencyKey).slice(0, 256)
     response = await fetchImpl('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${mail.apiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         from: mail.from,
         to: [letter.to],
@@ -80,6 +91,8 @@ export async function sendBusinessApprovalEmail(payload, env, fetchImpl = fetch)
     return {
       ok: false,
       status: 'failed',
+      providerAccepted: false,
+      delivered: false,
       error: 'email-failed',
       message: 'E-mail se nepodařilo odeslat.',
     }
@@ -89,10 +102,22 @@ export async function sendBusinessApprovalEmail(payload, env, fetchImpl = fetch)
     return {
       ok: false,
       status: 'failed',
+      providerAccepted: false,
+      delivered: false,
       error: 'email-failed',
       message: 'E-mail se nepodařilo odeslat (Resend odmítl požadavek).',
     }
   }
 
-  return { ok: true, status: 'sent', error: '', message: 'E-mail majiteli byl odeslán.' }
+  const body = typeof response.json === 'function' ? await response.json().catch(() => ({})) : {}
+  return {
+    ok: true,
+    status: 'sent',
+    providerAccepted: true,
+    delivered: false,
+    providerId: body?.id || '',
+    error: '',
+    message:
+      'Resend e-mail přijal k odeslání. To není potvrzení, že zpráva dorazila do schránky.',
+  }
 }

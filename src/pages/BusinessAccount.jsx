@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { CONTACT_EMAIL } from '../constants/brand'
 import { useAuth } from '../context/authSession'
 import { loginPath } from '../utils/authReturn'
+import { summarizeRange } from '../utils/placeStatWindows'
 
 function when(value) {
   const time = Date.parse(value)
@@ -27,6 +28,7 @@ export default function BusinessAccount() {
   const [loading, setLoading] = useState(false)
   const [paying, setPaying] = useState(false)
   const [payments, setPayments] = useState({ loading: true, enabled: false, live: false })
+  const [ownerStats, setOwnerStats] = useState({ loading: false, body: null })
 
   useEffect(() => {
     let cancelled = false
@@ -47,6 +49,31 @@ export default function BusinessAccount() {
       cancelled = true
     }
   }, [])
+
+  useEffect(() => {
+    if (!session.ready || !session.authenticated) {
+      setOwnerStats({ loading: false, body: null })
+      return undefined
+    }
+    let cancelled = false
+    setOwnerStats({ loading: true, body: null })
+    fetch('/api/place-stats/owner', { credentials: 'same-origin' })
+      .then((response) => response.json().catch(() => ({})))
+      .then((body) => {
+        if (!cancelled) setOwnerStats({ loading: false, body })
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setOwnerStats({
+            loading: false,
+            body: { ok: false, empty: true, message: 'Statistiky se teď nepodařilo načíst.' },
+          })
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [session.authenticated, session.ready])
 
   const lookup = async (event) => {
     event.preventDefault()
@@ -132,6 +159,8 @@ export default function BusinessAccount() {
         </Link>
       </section>
 
+      <OwnerStats session={session} stats={ownerStats} order={order} />
+
       <section className="biz-section" aria-labelledby="order-title">
         <h2 id="order-title">Stav propagace</h2>
         <p className="section-desc">
@@ -193,5 +222,91 @@ export default function BusinessAccount() {
         ) : null}
       </section>
     </main>
+  )
+}
+
+function countLine(label, value) {
+  return (
+    <div>
+      <dt>{label}</dt>
+      <dd>{value}</dd>
+    </div>
+  )
+}
+
+function WindowTable({ title, counts }) {
+  if (!counts) return null
+  return (
+    <div>
+      <h4>{title}</h4>
+      <dl className="detail-contact-list">
+        {countLine('Otevření detailu', counts.profileViews)}
+        {countLine('Kliknutí na navigaci', counts.routeClicks)}
+        {countLine('Kliknutí na web', counts.websiteClicks)}
+        {countLine('Kliknutí na telefon', counts.phoneClicks)}
+      </dl>
+    </div>
+  )
+}
+
+function OwnerStats({ session, stats, order }) {
+  if (!session.ready) return null
+  if (!session.authenticated) {
+    return (
+      <section className="biz-section" aria-labelledby="stats-title">
+        <h2 id="stats-title">Statistiky podniku</h2>
+        <p className="section-desc">
+          Naměřená čísla uvidíš po přihlášení, a jen u podniku, jehož správu máš ověřenou.
+        </p>
+      </section>
+    )
+  }
+  const body = stats.body
+  const places = Array.isArray(body?.places) ? body.places : []
+  const promo = places.find((place) => place.restaurantId === order?.placeId)
+  const promoWindow =
+    promo?.days && order?.startsAt && order?.endsAt
+      ? summarizeRange(promo.days, order.startsAt, order.endsAt)
+      : null
+
+  return (
+    <section className="biz-section" aria-labelledby="stats-title">
+      <h2 id="stats-title">Statistiky podniku</h2>
+      <p className="section-desc">
+        Počítáme jen skutečné otevření detailu, navigaci, web a telefon. Zobrazení v seznamu zatím neměříme,
+        proto tu není nula, která by vypadala jako výsledek.
+      </p>
+      {stats.loading ? <p role="status">Načítám statistiky…</p> : null}
+      {!stats.loading && body?.message ? <p>{body.message}</p> : null}
+      {!stats.loading && body?.empty && places.length === 0 ? (
+        <p className="empty-state">Zatím tu nejsou žádná naměřená data.</p>
+      ) : null}
+      {places.map((place) => (
+        <article key={place.restaurantId} className="biz-plan">
+          <h3>{place.restaurantId}</h3>
+          {!place.hasData ? (
+            <p>U tohoto podniku zatím není žádné naměřené zobrazení ani kliknutí.</p>
+          ) : (
+            <>
+              <WindowTable title="Posledních 7 dní" counts={place.windows?.d7} />
+              <WindowTable title="Posledních 30 dní" counts={place.windows?.d30} />
+            </>
+          )}
+        </article>
+      ))}
+      {order?.startsAt && order?.endsAt ? (
+        <article className="biz-plan">
+          <h3>Výsledky během propagace</h3>
+          <p>
+            Období {when(order.startsAt)} – {when(order.endsAt)}.
+          </p>
+          {promoWindow?.hasData ? (
+            <WindowTable title="Naměřeno v tomhle období" counts={promoWindow} />
+          ) : (
+            <p>V tomhle období zatím nejsou naměřená data. Neukazujeme odhad.</p>
+          )}
+        </article>
+      ) : null}
+    </section>
   )
 }

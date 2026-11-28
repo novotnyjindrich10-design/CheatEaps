@@ -256,9 +256,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-discover home-discover--compact" aria-label="Kategorie">
-        <Suspense fallback={<div className="category-grid-wrap" style={{ minHeight: 120 }} aria-hidden="true" />}>
-          <CategoryStrip asLinks variant="grid" />
+      <section className="home-discover home-discover--compact" aria-labelledby="craving-title">
+        <h2 id="craving-title" className="home-craving-title">
+          Na co máš chuť?
+        </h2>
+        <Suspense fallback={<div className="category-grid-wrap" style={{ minHeight: 112 }} aria-hidden="true" />}>
+          <CategoryStrip asLinks variant="grid" wideGrid />
         </Suspense>
         <div className="home-explore-row">
           <Link to="/results" className="btn btn-primary home-all-places-btn">

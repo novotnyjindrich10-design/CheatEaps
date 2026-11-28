@@ -55,19 +55,19 @@ export function foldSearchText(value) {
 
 /** Synonyma typu kuchyně. Konkrétní jídlo (sushi, taco, espresso) sem nepatří. */
 export const CATEGORY_SEARCH_ALIASES = {
-  pizza: ['pizza', 'pizzerie', 'pizzeria'],
-  burger: ['burger', 'burgery', 'hamburger'],
-  kebab: ['kebab', 'kebap'],
-  asijske: ['asie', 'asijske', 'asijska', 'asijsky'],
-  cina: ['cina', 'cinska', 'cinske', 'cinsky'],
-  mexiko: ['mexiko', 'mexicka', 'mexicke', 'mexicky'],
-  kava: ['kava', 'kavarna', 'kavarny'],
-  sladke: ['sladke', 'cukrarna'],
-  ceske: ['ceske', 'ceska', 'cesky'],
-  vegetarianske: ['vegetarianske'],
-  veganske: ['veganske'],
-  zdrave: ['zdrave', 'zdrava', 'zdravy'],
-  fastfood: ['fastfood'],
+  pizza: ['pizza', 'pizzy', 'pizze', 'pizzerie', 'pizzeria', 'pizzas'],
+  burger: ['burger', 'burgery', 'hamburger', 'hamburgery', 'burgers', 'hamburgers'],
+  kebab: ['kebab', 'kebap', 'kebaby', 'kebabs'],
+  asijske: ['asie', 'asijske', 'asijska', 'asijsky', 'asian', 'asia'],
+  cina: ['cina', 'cinska', 'cinske', 'cinsky', 'chinese', 'china'],
+  mexiko: ['mexiko', 'mexicka', 'mexicke', 'mexicky', 'mexican', 'mexico', 'taco', 'tacos', 'burrito', 'burritos'],
+  kava: ['kava', 'kavarna', 'kavarny', 'coffee', 'cafe'],
+  sladke: ['sladke', 'cukrarna', 'dessert', 'desserts', 'cake', 'cakes', 'sweet'],
+  ceske: ['ceske', 'ceska', 'cesky', 'czech'],
+  vegetarianske: ['vegetarianske', 'vegetarian', 'vegetarianska'],
+  veganske: ['veganske', 'vegan'],
+  zdrave: ['zdrave', 'zdrava', 'zdravy', 'healthy'],
+  fastfood: ['fastfood', 'fast-food'],
 }
 
 /**
@@ -180,9 +180,20 @@ export function tokenHits(token, text) {
   return ''
 }
 
-function categoryForToken(token) {
+function exactCategory(token) {
   for (const [value, aliases] of Object.entries(CATEGORY_SEARCH_ALIASES)) {
     if (value === token || aliases.includes(token)) return value
+  }
+  return ''
+}
+
+function categoryForToken(token) {
+  const direct = exactCategory(token)
+  if (direct) return direct
+  // Jednotné/množné jen když kmen je přesné synonymum (burgers → burger, kebaby → kebab).
+  if (token.length >= 5 && (token.endsWith('s') || token.endsWith('y'))) {
+    const stem = exactCategory(token.slice(0, -1))
+    if (stem) return stem
   }
   if (token.length < 4) return ''
   let found = ''
@@ -470,6 +481,27 @@ export function buildSearchSuggestions(restaurants, query, limit = 8) {
     })
   }
 
+  const dishes = new Map()
+  for (const restaurant of restaurants || []) {
+    const products = Array.isArray(restaurant?.verifiedProducts) ? restaurant.verifiedProducts : []
+    for (const product of products) {
+      const label = String(product || '').trim()
+      if (!label || tokenHits(needle, label) !== 'exact') continue
+      const key = foldSearchText(label)
+      if (!dishes.has(key)) dishes.set(key, label)
+    }
+  }
+  for (const label of dishes.values()) {
+    push({
+      kind: 'dish',
+      id: foldSearchText(label),
+      label,
+      hint: 'Ověřené jídlo',
+      query: label,
+    })
+    if (suggestions.length >= limit) break
+  }
+
   const places = new Map()
   for (const restaurant of restaurants || []) {
     for (const part of localityParts(restaurant.address)) {
@@ -484,4 +516,31 @@ export function buildSearchSuggestions(restaurants, query, limit = 8) {
   }
 
   return suggestions.slice(0, limit)
+}
+
+/** Doporučení při nule výsledků: jen silná shoda kategorie, ne podobná slova navíc. */
+export function emptyResultSuggestions(query) {
+  const intent = interpretSearchQuery(query)
+  const items = []
+  const pushCategory = (value, reason) => {
+    if (!value || items.some((item) => item.id === value)) return
+    const meta = getCategoryMeta(value)
+    if (!meta) return
+    items.push({
+      id: meta.value,
+      label: meta.label,
+      href: `/results?type=${encodeURIComponent(meta.value)}`,
+      reason,
+    })
+  }
+  if (intent.cuisineType) pushCategory(intent.cuisineType, 'Kategorie odpovídá hledání')
+  if (intent.text) {
+    for (const category of FOOD_CATEGORIES) {
+      const blob = foldSearchText(
+        [category.label, category.value, ...(CATEGORY_SEARCH_ALIASES[category.value] || [])].join(' '),
+      )
+      if (tokenHits(intent.text, blob) === 'exact') pushCategory(category.value, 'Kategorie odpovídá hledání')
+    }
+  }
+  return items.slice(0, 3)
 }

@@ -69,6 +69,21 @@ export default function SearchBar({
           inputMode="search"
           spellCheck={false}
         />
+        {value ? (
+          <button
+            type="button"
+            className="search-clear"
+            aria-label="Smazat hledaný text"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              onChange('')
+              setOpen(false)
+              setActiveIndex(-1)
+            }}
+          >
+            ×
+          </button>
+        ) : null}
       </div>
       {open ? (
         <SearchSuggest id={listId} suggestions={suggestions} activeIndex={activeIndex} onPick={pick} />

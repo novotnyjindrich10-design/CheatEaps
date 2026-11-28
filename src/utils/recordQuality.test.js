@@ -36,19 +36,26 @@ describe('kvalita záznamu', () => {
     assert.equal(recordQualityParts(estimate).price, 0)
   })
 
-  it('oficiální fotka je nad ilustrací jídla a chybějící obrázek má nulu', () => {
+  it('doložená oficiální fotka je nad ilustrací a nedoložený hotlink se nepočítá', () => {
     const official = place({
       heroImageKind: 'official',
+      heroImageRights: 'documented',
       heroImageUrl: 'https://example.com/jidlo.jpg',
     })
     const food = place({
-      foodIllustrationKind: 'openverse',
-      foodIllustrationUrl: '/food-illustrations/shared/pizza.jpg',
+      foodIllustrationKind: 'pixabay',
+      foodIllustrationUrl: '/food-illustrations/pixabay/1.jpg',
+      foodIllustrationLicense: 'pixabay',
+    })
+    const undocumented = place({
+      heroImageKind: 'official',
+      heroImageUrl: 'https://example.com/og.jpg',
     })
     const missing = place({ imageUrl: 'https://images.unsplash.com/photo-1' })
     const broken = place({ heroImageKind: 'official', heroImageUrl: 'javascript:alert(1)' })
     assert.ok(recordQualityParts(official).photo > recordQualityParts(food).photo)
     assert.equal(recordQualityParts(food).photo > 0, true)
+    assert.equal(recordQualityParts(undocumented).photo, 0)
     assert.equal(recordQualityParts(missing).photo, 0)
     assert.equal(recordQualityParts(broken).photo, 0)
   })

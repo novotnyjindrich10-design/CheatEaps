@@ -22,8 +22,8 @@ import PlaceReportForm from '../components/PlaceReportForm'
 import RestaurantReviews from '../components/RestaurantReviews'
 import { presentOsmContact } from '../utils/osmContact'
 import { openingStatusNow } from '../utils/openingStatus'
-import { fetchWithTimeout } from '../utils/fetchTimeout'
 import { applyPixabayChoice } from '../utils/pageIllustrations'
+import { recordPlaceStat } from '../utils/recordPlaceStat'
 import { applyPageMeta } from '../utils/pageMeta'
 import { shareImageUrl } from '../utils/placePhoto'
 import { useCatalog } from '../context/CatalogContext'
@@ -50,11 +50,7 @@ export default function RestaurantDetail() {
     const sponsored = Boolean(restaurant.sponsored)
     rememberRecentView(restaurantId)
     trackProductEvent('restaurant_detail_open', { restaurantId, sponsored })
-    fetchWithTimeout('/api/place-stats/event', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ restaurantId, event: 'profile_view' }),
-    }).catch(() => {})
+    recordPlaceStat(restaurantId, 'profile_view')
   }, [restaurant?.id, restaurant?.sponsored])
 
   const similar = useMemo(
@@ -262,12 +258,22 @@ export default function RestaurantDetail() {
 
         <div className="detail-actions">
           {officialWeb ? (
-            <a href={officialWeb} target="_blank" rel="noopener noreferrer" className="btn btn-official">
+            <a
+              href={officialWeb}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-official"
+              onClick={() => recordPlaceStat(restaurant.id, 'website_click')}
+            >
               Oficiální web
             </a>
           ) : null}
           {contact.hasPhone ? (
-            <a href={`tel:${contact.phoneTel}`} className="btn btn-secondary">
+            <a
+              href={`tel:${contact.phoneTel}`}
+              className="btn btn-secondary"
+              onClick={() => recordPlaceStat(restaurant.id, 'phone_click')}
+            >
               Zavolat
             </a>
           ) : null}
@@ -279,6 +285,7 @@ export default function RestaurantDetail() {
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary"
+            onClick={() => recordPlaceStat(restaurant.id, 'directions_click')}
           >
             Navigovat
           </a>

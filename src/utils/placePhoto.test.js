@@ -43,17 +43,18 @@ describe('placePhoto', () => {
     assert.match(photo.alt, /pizza/)
   })
 
-  it('resolveDetailHero dává přednost oficiální fotce před ilustrací', () => {
+  it('resolveDetailHero nezobrazí nedoložený hotlink, i když vedle něj je ilustrace', () => {
     const restaurant = {
       name: 'Test',
       heroImageKind: 'official',
-      heroImageUrl: '/official.jpg',
+      heroImageUrl: 'https://example.cz/og.jpg',
       foodIllustrationKind: 'openverse',
       foodIllustrationUrl: '/food-illustrations/x.jpg',
       foodIllustrationDish: 'pizza',
+      foodIllustrationLicense: 'by',
     }
-    assert.equal(resolveDetailHero(restaurant).kind, 'official')
-    assert.equal(resolveDetailHero(restaurant).url, '/official.jpg')
+    assert.equal(resolveDetailHero(restaurant).kind, 'illustration')
+    assert.equal(resolveDetailHero(restaurant).url, '/food-illustrations/x.jpg')
   })
 
   it('resolveDetailHero použije ilustraci, když oficiální chybí', () => {

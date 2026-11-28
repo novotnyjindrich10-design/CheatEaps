@@ -86,9 +86,18 @@ export function googlePlacesPhoto(restaurant) {
   }
 }
 
+function commercialIllustration(illustration) {
+  if (!illustration) return false
+  const provider = illustration.provider
+  if (provider === 'pixabay' || provider === 'unsplash' || provider === 'pexels') return true
+  const license = String(illustration.license || '').toLowerCase()
+  if (!license || license.includes('nc') || license.includes('nd')) return false
+  return license === 'cc0' || license === 'pdm' || license === 'by' || license === 'by-sa'
+}
+
 /**
  * Doložená oficiální fotka má přednost.
- * Ilustrace z Pixabay nahradí hotlink z webu podniku, u kterého není doložená licence.
+ * Hotlink z webu podniku bez doložené licence se nezobrazuje.
  * Google Places jen po explicitním zapnutí a lokálním uložení (bez živých API volání).
  */
 export function resolveDetailHero(restaurant) {
@@ -97,14 +106,8 @@ export function resolveDetailHero(restaurant) {
   const google = googlePlacesPhoto(restaurant)
   if (official?.rights === 'documented') return official
   if (google) return google
-  if (
-    illustration?.provider === 'pixabay' ||
-    illustration?.provider === 'unsplash' ||
-    illustration?.provider === 'pexels'
-  ) {
-    return illustration
-  }
-  return official || illustration || null
+  if (commercialIllustration(illustration)) return illustration
+  return null
 }
 
 /** Absolutní URL pro OG/share jen ze same-origin cest; jinak logo. */

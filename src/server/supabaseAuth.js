@@ -180,6 +180,19 @@ export async function revokeSession(config, accessToken, fetchImpl) {
   }).catch(() => null)
 }
 
+/** Smaže přihlášený účet přes uživatelský token. Service role se sem neposílá. */
+export async function deleteOwnAccount(config, accessToken, fetchImpl) {
+  const response = await fetchImpl(`${config.url}/auth/v1/user`, {
+    method: 'DELETE',
+    headers: {
+      apikey: config.anonKey,
+      authorization: `Bearer ${accessToken}`,
+    },
+  })
+  const body = await response.json().catch(() => ({}))
+  return { ok: response.ok, status: response.status, body }
+}
+
 export function tokensFromBody(body) {
   const access = body?.access_token || body?.session?.access_token || ''
   const refresh = body?.refresh_token || body?.session?.refresh_token || ''

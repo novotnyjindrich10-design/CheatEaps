@@ -41,6 +41,7 @@ import { TAB_RESELECT_EVENT, scrollViewportToTop } from '../utils/navReselect'
 import { currentInternalPath } from '../utils/internalPath'
 import { readFilterPrefs, writeFilterPrefs } from '../utils/filterPrefs'
 import { rememberRecentSearch } from '../utils/recentSearches'
+import { emptyResultSuggestions } from '../utils/smartSearch'
 import { applyPageMeta } from '../utils/pageMeta'
 
 function formatPlaceCount(n) {
@@ -552,6 +553,9 @@ export default function Results() {
                 {filtered.length === 0 && sponsored.length === 0 ? (
                   <div className="empty-state">
                     <p role={!catalogReady ? 'status' : undefined}>{emptyMessage}</p>
+                    {catalogReady && filters.search.trim() ? (
+                      <EmptySearchHints query={filters.search} />
+                    ) : null}
                     {catalogReady ? (
                       <button
                         type="button"
@@ -589,5 +593,28 @@ export default function Results() {
         </div>
       ) : null}
     </main>
+  )
+}
+
+function EmptySearchHints({ query }) {
+  const hints = emptyResultSuggestions(query)
+  if (hints.length === 0) {
+    return (
+      <p className="section-desc">
+        Nic podobného v názvech, kategoriích ani ověřených jídlech není. Zkus kratší výraz nebo jinou kategorii.
+      </p>
+    )
+  }
+  return (
+    <>
+      <p className="section-desc">Můžeš otevřít kategorii, která hledání odpovídá:</p>
+      <ul className="empty-suggest">
+        {hints.map((hint) => (
+          <li key={hint.id}>
+            <Link to={hint.href}>{hint.label}</Link>
+          </li>
+        ))}
+      </ul>
+    </>
   )
 }

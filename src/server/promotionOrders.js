@@ -718,7 +718,7 @@ export async function promotionOrdersHttp(request, options = {}) {
 
   let message
   if (saved && operatorNotified && restaurantNotified) {
-    message = 'Poptávka je uložená. Potvrzení šlo na e-mail restaurace a upozornění provozovateli. Nic se nezaplatilo a propagace se nezapnula.'
+    message = 'Poptávka je uložená. Resend přijal potvrzení pro restauraci i upozornění provozovateli. Přijetí ještě není doručení do schránky. Nic se nezaplatilo a propagace se nezapnula.'
   } else if (saved && operatorNotified) {
     message = 'Poptávka je uložená a provozovatel dostal upozornění. Potvrzení restauraci se nepodařilo odeslat. Nic se nezaplatilo a propagace se nezapnula.'
   } else if (saved && mailError === 'email-failed') {

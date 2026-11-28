@@ -8,6 +8,7 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { authConfig, resolveUser } from './supabaseAuth.js'
 import { supabaseApiHeaders } from './supabaseApiHeaders.js'
+import { emptyStatCounts, summarizeDailyStats } from '../utils/placeStatWindows.js'
 
 const sqlPath = resolve(fileURLToPath(new URL('.', import.meta.url)), '../../supabase/place-stats.sql')
 
@@ -68,6 +69,8 @@ function columnForEvent(event) {
   if (ev === 'phone_click') return 'phoneClicks'
   return null
 }
+
+export { summarizeDailyStats, summarizeRange } from '../utils/placeStatWindows.js'
 
 export function createMemoryPlaceStatsStore() {
   const byPlace = new Map()
@@ -131,7 +134,7 @@ export function createSupabasePlaceStatsStore({ config, accessToken = '', fetchI
     },
     async get(restaurantId) {
       const response = await fetchImpl(
-        `${config.url}/rest/v1/place_stats_daily?restaurant_id=eq.${encodeURIComponent(restaurantId)}&select=profile_views,route_clicks,website_clicks,phone_clicks`,
+        `${config.url}/rest/v1/place_stats_daily?restaurant_id=eq.${encodeURIComponent(restaurantId)}&select=day,profile_views,route_clicks,website_clicks,phone_clicks&order=day.asc`,
         {
           headers: supabaseApiHeaders({ apiKey: config.anonKey, accessToken }),
         },
@@ -143,29 +146,31 @@ export function createSupabasePlaceStatsStore({ config, accessToken = '', fetchI
       }
       if (!response.ok) return { ok: false, error: 'forbidden', status: response.status }
       const rows = Array.isArray(body) ? body : []
+      const days = rows.map((row) => ({
+        day: String(row.day || ''),
+        profileViews: Number(row.profile_views || 0),
+        routeClicks: Number(row.route_clicks || 0),
+        websiteClicks: Number(row.website_clicks || 0),
+        phoneClicks: Number(row.phone_clicks || 0),
+      }))
+      const windows = summarizeDailyStats(days)
       if (rows.length === 0) {
         return {
           ok: true,
           stats: {
             restaurantId,
-            profileViews: 0,
-            routeClicks: 0,
-            websiteClicks: 0,
-            phoneClicks: 0,
+            ...emptyStatCounts(),
           },
+          days,
+          windows,
         }
       }
-      const stats = rows.reduce(
-        (acc, row) => ({
-          restaurantId,
-          profileViews: acc.profileViews + Number(row.profile_views || 0),
-          routeClicks: acc.routeClicks + Number(row.route_clicks || 0),
-          websiteClicks: acc.websiteClicks + Number(row.website_clicks || 0),
-          phoneClicks: acc.phoneClicks + Number(row.phone_clicks || 0),
-        }),
-        { restaurantId, profileViews: 0, routeClicks: 0, websiteClicks: 0, phoneClicks: 0 },
-      )
-      return { ok: true, stats }
+      return {
+        ok: true,
+        stats: { restaurantId, ...windows.all },
+        days,
+        windows,
+      }
     },
   }
 }
@@ -216,7 +221,21 @@ export async function placeStatsHttp(request, { placeExists, isAdmin, store, env
     store
     || (config.configured ? createSupabasePlaceStatsStore({ config, fetchImpl: http }) : null)
 
+  if (url.pathname === '/api/place-stats/owner' && request.method === 'GET') {
+    return ownerPlaceStatsHttp(request, { config, fetchImpl: http })
+  }
+
   if (url.pathname === '/api/place-stats/event' && request.method === 'POST') {
+    const origin = request.headers.get('origin')
+    if (origin) {
+      try {
+        if (new URL(origin).host !== url.host) {
+          return json({ ok: false, stored: false, message: 'Forbidden' }, 403)
+        }
+      } catch {
+        return json({ ok: false, stored: false, message: 'Forbidden' }, 403)
+      }
+    }
     if (rateLimited(clientIp(request))) {
       return json({ ok: false, stored: false, message: 'Too many events.' }, 429)
     }
@@ -279,10 +298,96 @@ export async function placeStatsHttp(request, { placeExists, isAdmin, store, env
       if (result?.error === 'not-ready') return storageUnavailable()
       return json({ ok: false, message: 'Not found' }, 404)
     }
-    return json({ ok: true, persistent: true, stats: result.stats || result })
+    return json({
+      ok: true,
+      persistent: true,
+      stats: result.stats || result,
+      windows: result.windows || null,
+      days: result.days || [],
+      listImpressionsMeasured: false,
+    })
   }
 
   return json({ ok: false, message: 'Not found' }, 404)
+}
+
+async function ownerPlaceStatsHttp(request, { config, fetchImpl }) {
+  if (!config.configured) {
+    return json(
+      {
+        ok: false,
+        readable: false,
+        places: [],
+        empty: true,
+        listImpressionsMeasured: false,
+        error: 'storage-unavailable',
+        message: 'Statistiky zatím nejsou připojené. Nezobrazujeme odhad.',
+      },
+      503,
+    )
+  }
+  const resolved = await resolveUser(request, config, fetchImpl)
+  if (!resolved.user?.id || !resolved.accessToken) {
+    return json({ ok: false, message: 'Forbidden' }, 403)
+  }
+  const claimsResponse = await fetchImpl(
+    `${config.url}/rest/v1/place_owner_claims?user_id=eq.${encodeURIComponent(resolved.user.id)}&status=eq.verified&select=place_id`,
+    { headers: supabaseApiHeaders({ apiKey: config.anonKey, accessToken: resolved.accessToken }) },
+  )
+  const claimsBody = await claimsResponse.json().catch(() => [])
+  if (!claimsResponse.ok || !Array.isArray(claimsBody)) {
+    return json({
+      ok: true,
+      readable: false,
+      places: [],
+      empty: true,
+      listImpressionsMeasured: false,
+      message: 'Ověřené podniky se teď nepodařilo načíst.',
+    })
+  }
+  const ids = [...new Set(claimsBody.map((row) => String(row.place_id || '').trim()).filter(Boolean))]
+  if (ids.length === 0) {
+    return json({
+      ok: true,
+      readable: true,
+      places: [],
+      empty: true,
+      listImpressionsMeasured: false,
+      message: 'Zatím nemáš ověřený podnik. Statistiky uvidíš až po schválení správy profilu.',
+    })
+  }
+  if (!config.serviceRoleKey) {
+    return json({
+      ok: true,
+      readable: false,
+      places: ids.map((restaurantId) => ({ restaurantId, windows: null, days: [], hasData: false })),
+      empty: true,
+      listImpressionsMeasured: false,
+      message: 'Denní statistiky zatím nejde načíst. Nezobrazujeme odhad.',
+    })
+  }
+  const reader = createSupabasePlaceStatsStore({
+    config: { url: config.url, anonKey: config.serviceRoleKey },
+    fetchImpl,
+  })
+  const places = []
+  for (const restaurantId of ids) {
+    const result = await reader.get(restaurantId)
+    places.push({
+      restaurantId,
+      windows: result?.ok ? result.windows : null,
+      days: result?.ok ? result.days : [],
+      hasData: Boolean(result?.ok && result.windows?.hasData),
+      readable: Boolean(result?.ok),
+    })
+  }
+  return json({
+    ok: true,
+    readable: places.some((place) => place.readable),
+    places,
+    empty: places.every((place) => !place.hasData),
+    listImpressionsMeasured: false,
+  })
 }
 
 export const PLACE_STATS_SQL = readFileSync(sqlPath, 'utf8')

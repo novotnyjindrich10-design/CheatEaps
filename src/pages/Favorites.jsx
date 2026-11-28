@@ -23,6 +23,8 @@ export default function Favorites() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [source, setSource] = useState('local')
+  const [confirmDelete, setConfirmDelete] = useState('')
+  const [deleteState, setDeleteState] = useState('')
 
   useEffect(() => {
     if (!session.ready) return undefined
@@ -85,6 +87,27 @@ export default function Favorites() {
   const login = loginPath('/oblibene')
   const signup = loginPath('/oblibene', 'signup')
 
+  async function deleteAccount(event) {
+    event.preventDefault()
+    setDeleteState('Mažu účet…')
+    try {
+      const response = await fetchWithTimeout('/api/auth/delete-account', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ confirm: confirmDelete.trim() }),
+      })
+      const body = await response.json().catch(() => ({}))
+      if (!response.ok || !body.ok) {
+        setDeleteState(body.message || 'Účet se nepodařilo smazat.')
+        return
+      }
+      window.location.assign('/')
+    } catch {
+      setDeleteState('Účet se nepodařilo smazat.')
+    }
+  }
+
   return (
     <main className="page">
       <div className="page-head">
@@ -104,6 +127,24 @@ export default function Favorites() {
           <button type="button" className="btn btn-secondary" onClick={logout}>
             Odhlásit
           </button>
+          <form className="account-delete" onSubmit={deleteAccount}>
+            <p className="section-desc">
+              Smazání účtu zruší přihlášení a účet ve FoodGo. Katalog podniků se tím nemění.
+            </p>
+            <label>
+              Pro potvrzení napiš SMAZAT
+              <input
+                value={confirmDelete}
+                onChange={(event) => setConfirmDelete(event.target.value)}
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </label>
+            <button type="submit" className="btn btn-secondary" disabled={confirmDelete.trim() !== 'SMAZAT'}>
+              Smazat účet natrvalo
+            </button>
+            {deleteState ? <p role="status">{deleteState}</p> : null}
+          </form>
         </div>
       ) : null}
 

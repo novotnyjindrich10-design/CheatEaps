@@ -340,12 +340,14 @@ export function buildRestaurantConfirmation(assessment) {
 
 async function postOne(mail, letter, fetchImpl) {
   try {
+    const headers = {
+      Authorization: `Bearer ${mail.apiKey}`,
+      'Content-Type': 'application/json',
+    }
+    if (letter.idempotencyKey) headers['Idempotency-Key'] = String(letter.idempotencyKey).slice(0, 256)
     const response = await fetchImpl('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${mail.apiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         from: mail.from,
         to: [letter.to],
@@ -355,10 +357,11 @@ async function postOne(mail, letter, fetchImpl) {
         ...(letter.html ? { html: letter.html } : {}),
       }),
     })
-    if (!response.ok) return { ok: false, error: 'email-failed' }
-    return { ok: true }
+    if (!response.ok) return { ok: false, error: 'email-failed', providerAccepted: false, delivered: false }
+    const body = typeof response.json === 'function' ? await response.json().catch(() => ({})) : {}
+    return { ok: true, providerAccepted: true, delivered: false, providerId: body?.id || '' }
   } catch {
-    return { ok: false, error: 'email-failed' }
+    return { ok: false, error: 'email-failed', providerAccepted: false, delivered: false }
   }
 }
 
@@ -373,12 +376,14 @@ export async function sendPromotionInquiryMail(assessment, env, fetchImpl) {
   const operatorHtml = inquiryOperatorEmail({
     subjectLines: operatorText.split('\n'),
   }).html
+  const reference = assessment.reference || ''
   const operatorSent = await postOne(mail, {
     to: mail.to,
     replyTo: assessment.replyTo,
     subject: assessment.subject,
     text: operatorText,
     html: operatorHtml,
+    idempotencyKey: reference ? `foodgo-promo-op-${reference}` : '',
   }, fetchImpl)
   if (!operatorSent.ok) {
     return { ok: false, operator: false, restaurant: false, error: operatorSent.error }
@@ -387,11 +392,14 @@ export async function sendPromotionInquiryMail(assessment, env, fetchImpl) {
   const restaurantSent = await postOne(mail, {
     ...confirmation,
     replyTo: mail.to,
+    idempotencyKey: reference ? `foodgo-promo-rest-${reference}` : '',
   }, fetchImpl)
   return {
     ok: true,
     operator: true,
     restaurant: restaurantSent.ok,
+    providerAccepted: true,
+    delivered: false,
     error: restaurantSent.ok ? '' : 'restaurant-email-failed',
   }
 }

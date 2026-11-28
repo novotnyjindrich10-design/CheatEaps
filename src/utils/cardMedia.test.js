@@ -3,15 +3,14 @@ import { describe, it } from 'node:test'
 import { resolveCardMedia } from './cardMedia.js'
 
 describe('media na kartě', () => {
-  it('upřednostní oficiální foto před ilustrací', () => {
+  it('nedoložený hotlink z webu se na kartě neukáže', () => {
     const media = resolveCardMedia({
       heroImageKind: 'official',
       heroImageUrl: 'https://example.cz/a.jpg',
       foodIllustrationKind: 'openverse',
       foodIllustrationUrl: 'https://example.cz/b.jpg',
     })
-    assert.equal(media.kind, 'official')
-    assert.equal(media.url, 'https://example.cz/a.jpg')
+    assert.equal(media, null)
   })
 
   it('ilustrace z Pixabay nahradí nedoložený hotlink z webu podniku', () => {

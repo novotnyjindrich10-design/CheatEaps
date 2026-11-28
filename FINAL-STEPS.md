@@ -1,9 +1,24 @@
 # FOODGO 1.0 — postup vydání
 
 Jediný hlavní návod. Větev: `foodgo-launch-preview`.  
-**Vývojová fáze je ukončená.** Zbývá provozní konfigurace (doména, Comgate, právní) a schválení vydání.
+**Kód Preview je připravený k ručnímu vydání.** Tahle větev se nemerguje do `main`, ostré platby zůstávají vypnuté a produkční databáze se z tohohle kroku nemění.
 
 Tajné hodnoty sem nepatří.
+
+---
+
+## Stav po vizuálním a provozním doladění (2026-11-28)
+
+| Oblast | Stav |
+| --- | --- |
+| Kategorie na úvodu | Nadpis „Na co máš chuť?“, fotka přes celou kartu, bez rámečku kolem názvu. Mobil: nízký vodorovný pás. Desktop od 960 px: mřížka na šířku stránky. |
+| Hledání | Bez diakritiky, jeden překlep, jednotné/množné u synonym, česko-anglická synonyma kategorií, našeptávání podniků, kategorií a ověřených jídel, nedávná hledání, tlačítko pro smazání textu, návrhy kategorií při nule výsledků. |
+| Oficiální fotky | 93 hotlinků z webů podniků **nemá doloženou komerční licenci**. Veřejné UI je neukazuje. Nahrazuje je už přiřazená ilustrace Pixabay/Pexels/Unsplash. Evidence: `reports/official-photo-rights.md`. |
+| Statistiky majitele | Otevření detailu, navigace, web a telefon se zapisují jako denní součty. Přehled 7 a 30 dní a období propagace jen z naměřených řádků, jen u ověřeného podniku. Zobrazení v seznamu se neměří a neukazuje se jako nula. |
+| E-mail | `sent` znamená, že Resend požadavek přijal. Doručení do schránky se nepotvrzuje. Schválený e-mail se znovu neposílá. Neúspěšný lze zopakovat. Poptávka propagace má idempotency key podle čísla evidence. |
+| Účet | Přihlášený uživatel může účet smazat na Oblíbených po napsání `SMAZAT`. |
+| SEO | Preview zůstává `noindex` a `Disallow: /`. Produkční indexace je v kódu připravená a **není zapnutá**. |
+| Platby | `paymentsLive` zůstává vypnuté. |
 
 ---
 
@@ -21,10 +36,21 @@ Tajné hodnoty sem nepatří.
 | Produkční DB | Nedotčená |
 | `main` | Nemergováno |
 
-### Resend trial
+### Resend trial a vlastní doména
 
-S `EMAIL_FROM=FoodGo <onboarding@resend.dev>` Resend doručí spolehlivě jen na **e-mail přihlášený v Resend účtu**.  
-Pro Auth i poptávky používej při testu tuto schránku, nebo ověř vlastní doménu v Resend. Gmail (`foodgocz@gmail.com`) je kontakt / Reply-To, ne neověřený From.
+S `EMAIL_FROM=FoodGo <onboarding@resend.dev>` Resend doručí spolehlivě jen na **e-mail přihlášený v Resend účtu**. Trial se neobchází.
+
+Až budeš mít doménu, v Resend postupuj přesně takto:
+
+1. Resend → Domains → Add domain → zadej odesílací doménu (například `foodgo.cz`).
+2. U záznamů, které Resend vypíše (SPF, DKIM a případně return-path), je přidej u registrátora DNS. Na hodnoty nesahej.
+3. V Resend počkej na stav Verified. Dokud verified není, `EMAIL_FROM` neměň.
+4. Teprve potom nastav Preview i Production env: `EMAIL_FROM=FOODGO <noreply@tvoje-domena>`.
+5. `INQUIRY_TO_EMAIL` a Reply-To nech `foodgocz@gmail.com`.
+6. V Supabase Auth (Preview i později Production) nastav SMTP na Resend a stejný From. Redirect URL doplň až pro konkrétní doménu.
+7. Pošli zkušební registraci, obnovu hesla a poptávku na schránku, která není jen trial inbox, a ověř, že zpráva opravdu dorazila. Přijetí API není doručení.
+
+Gmail (`foodgocz@gmail.com`) je kontakt / Reply-To, ne neověřený From.
 
 ---
 
@@ -78,6 +104,18 @@ Pro Auth i poptávky používej při testu tuto schránku, nebo ověř vlastní 
 - Persistovaný stav e-mailu u poptávek propagace (admin resend) — zatím HTTP/`admin_note`, ne sloupec jako u žádostí
 - Veřejné UI claim ownership + transakční maily po ověřené platbě (LIVE vypnuté)
 - Auto-retry e-mailů — ruční resend u žádostí; poptávky bez admin resend UI
+- Zobrazení karty v seznamu se neměří. Statistiky majitele ukazují jen zapsané události (detail, navigace, web, telefon).
+- Rate limit formulářů je v paměti jedné serverless instance. Sdílený limit by potřeboval novou tabulku; na produkční databázi se nepřidával.
+- `sent` u e-mailu znamená přijetí Resendem, ne doručení do schránky.
+
+### Ověření v prohlížeči (emulace, ne fyzický telefon)
+
+- Šířky 320, 375, 390 a 430 px: kategorie jedou vodorovně, karty drží poměr 4:3, sekce zůstává nízká.
+- Desktop: od 960 px mřížka na šířku stránky, 12 karet, nadpis „Na co máš chuť?“.
+- Pizza na úvodu otevře `/results?type=pizza` s titulkem „Pizza v Brně | FoodGo Brno“.
+- Mapa je `/results?view=map` a v emulaci 320 px vykreslí canvas. Adresa `/map` správně padá na 404.
+- CSP na lokálním Vite neběží. Styl OpenFreeMap Positron bere glyfy, sprite i dlaždice z `tiles.openfreemap.org`, které CSP v `vercel.json` povoluje. Po nasazení Preview je potřeba mapu ještě jednou otevřít.
+- Testy: `npm test` 423/423, `oxlint` bez nových chyb, `npm run build` prošel, Playwright 39/39. Vstupní JS po buildu: 362 kB, gzip 115 kB (dřívější zápis ~111 kB gzip). Lighthouse v tomhle kole nebyl spuštěn.
 
 ---
 

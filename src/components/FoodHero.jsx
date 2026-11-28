@@ -115,13 +115,22 @@ function photoKey(photo) {
 export default function FoodHero({ restaurant }) {
   const preferred = resolveDetailHero(restaurant)
   const official = officialHero(restaurant)
+  const licensedOfficial = official?.rights === 'documented' ? official : null
   const illustration = foodIllustration(restaurant)
+  const licensedIllustration =
+    illustration &&
+    (illustration.provider === 'pixabay' ||
+      illustration.provider === 'unsplash' ||
+      illustration.provider === 'pexels' ||
+      ['cc0', 'pdm', 'by', 'by-sa'].includes(String(illustration.license || '').toLowerCase()))
+      ? illustration
+      : null
   const [brokenKeys, setBrokenKeys] = useState(() => new Set())
   const category = getRestaurantCategory(restaurant) || 'neuvedeno'
 
   const candidates = []
   const seen = new Set()
-  for (const candidate of [preferred, official, illustration]) {
+  for (const candidate of [preferred, licensedOfficial, licensedIllustration]) {
     const key = photoKey(candidate)
     if (!candidate || !key || seen.has(key) || brokenKeys.has(key)) continue
     seen.add(key)

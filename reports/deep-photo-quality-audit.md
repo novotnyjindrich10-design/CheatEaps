@@ -62,6 +62,12 @@ Contact sheet pro manuální kontrolu: `reports/pixabay-contact-sheet.html` (ži
 
 Fotky jsou samostatné soubory pod `/food-illustrations/`; hlavní JS bundle se nezvětšil.
 
+## Follow-up (commit `5057469`)
+
+- `removeIllustration` nyní blokuje **celý** stock (Pixabay i Openverse), ne jen Openverse.
+- `skolni-jidelna-brno-horni-16`: bez stock ilustrace (ověřeno v datech + test `catalogIntegrity`).
+- Assignment skriptů (`fetch` / `restore`) přeskočí místa s `removeIllustration`.
+
 ## Artefakty
 
 - `reports/deep-photo-quality-ledger.json`

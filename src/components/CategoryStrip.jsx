@@ -70,6 +70,20 @@ function usePrefersReducedMotion() {
   return useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, () => false)
 }
 
+function subscribeWideLayout(onChange) {
+  const media = window.matchMedia('(min-width: 960px)')
+  media.addEventListener('change', onChange)
+  return () => media.removeEventListener('change', onChange)
+}
+
+function wideLayoutNow() {
+  return window.matchMedia('(min-width: 960px)').matches
+}
+
+function useWideLayout() {
+  return useSyncExternalStore(subscribeWideLayout, wideLayoutNow, () => false)
+}
+
 export default function CategoryStrip({
   activeType = '',
   dealsActive = false,
@@ -77,9 +91,11 @@ export default function CategoryStrip({
   asLinks = false,
   variant = 'pills',
   autoScroll = true,
+  wideGrid = false,
 }) {
   const navigate = useNavigate()
   const reducedMotion = usePrefersReducedMotion()
+  const wide = useWideLayout()
   const scrollerRef = useRef(null)
   const loopRef = useRef(0)
   const wrapLockRef = useRef(false)
@@ -89,7 +105,8 @@ export default function CategoryStrip({
   const [canScrollRight, setCanScrollRight] = useState(false)
   const categories = variant === 'grid' ? HOME_CATEGORIES : STRIP_CATEGORIES
   const isGrid = variant === 'grid'
-  const marquee = isGrid && autoScroll && !reducedMotion
+  const fill = isGrid && wideGrid && wide
+  const marquee = isGrid && autoScroll && !reducedMotion && !fill
 
   useEffect(() => {
     if (!isGrid) return undefined
@@ -475,7 +492,7 @@ export default function CategoryStrip({
   }
 
   return (
-    <div className={isGrid ? 'category-grid-wrap' : 'category-strip-wrap'}>
+    <div className={isGrid ? `category-grid-wrap${fill ? ' category-grid-wrap--fill' : ''}` : 'category-strip-wrap'}>
       {isGrid ? (
         <button
           type="button"
@@ -489,7 +506,11 @@ export default function CategoryStrip({
       ) : null}
       <div
         ref={isGrid ? scrollerRef : undefined}
-        className={isGrid ? `category-grid${marquee ? ' category-grid--marquee' : ''}` : 'category-strip'}
+        className={
+          isGrid
+            ? `category-grid${marquee ? ' category-grid--marquee' : ''}${fill ? ' category-grid--fill' : ''}`
+            : 'category-strip'
+        }
         onKeyDown={isGrid ? onGridKeyDown : undefined}
       >
         {!isGrid &&
